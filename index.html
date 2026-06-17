@@ -7,71 +7,46 @@
 
 <body>
 
-<!-- TOP NAV BAR -->
+<div class="version">v0.3.0</div>
+
+<!-- TOP BAR -->
 <div class="topbar">
 
-    <div class="tab active" onclick="showScreen('overview')">
-        Overview
-    </div>
-
-    <div class="tab" onclick="showScreen('dungeon')">
-        Dungeon
-    </div>
-
-    <div class="tab" onclick="showScreen('research')">
-        Research
-    </div>
-
-    <div class="tab" onclick="showScreen('world')">
-        World
-    </div>
+    <button class="tab active" onclick="showScreen('overview')">Overview</button>
+    <button class="tab" onclick="showScreen('dungeon')">Dungeon</button>
+    <button class="tab" onclick="showScreen('research')">Research</button>
+    <button class="tab" onclick="showScreen('world')">World</button>
 
 </div>
 
 <!-- MAIN LAYOUT -->
 <div class="layout">
 
-    <!-- LEFT SIDEBAR -->
+    <!-- SIDEBAR (ALWAYS VISIBLE) -->
     <div class="sidebar">
 
         <h2>Resources</h2>
 
-        <div class="resource">
-            Food: <span id="food">0</span>
-        </div>
-
-        <div class="resource">
-            Wood: <span id="wood">0</span>
-        </div>
-
-        <div class="resource">
-            Stone: <span id="stone">0</span>
-        </div>
+        <div>Food: <span id="food">0</span></div>
+        <div>Wood: <span id="wood">0</span></div>
+        <div>Stone: <span id="stone">0</span></div>
 
         <hr>
 
-        <h3>Dungeon Stats</h3>
-
-        <div class="resource">
-            Nests: <span id="nestCount">0</span>
-        </div>
+        <h3>Dungeon</h3>
+        <div>Nests: <span id="nestCount">0</span></div>
 
     </div>
 
     <!-- MAIN CONTENT -->
     <div class="main">
 
-        <div class="version">v0.03</div>
         <!-- OVERVIEW -->
-        <div class="screen" id="screen-overview">
+        <div class="screen active" id="overview">
 
-            <h1>Dungeon Keeper</h1>
+            <h1>Overview</h1>
 
-            <p>Build your dungeon, expand your species, survive the world.</p>
-
-            <hr>
-
-            <h2>Actions</h2>
+            <p>Build your dungeon. Expand your species. Survive the world.</p>
 
             <button onclick="gatherFood()">Gather Food</button>
             <button onclick="gatherWood()">Gather Wood</button>
@@ -80,33 +55,28 @@
         </div>
 
         <!-- DUNGEON -->
-        <div class="screen" id="screen-dungeon">
+        <div class="screen" id="dungeon">
 
             <h1>Dungeon</h1>
 
-            <h2>Rooms</h2>
+            <p>Build structures to grow your dungeon.</p>
 
-            <div class="resource">
-                Nest (Cost: 10 Wood, 5 Stone)
-                <button onclick="buildNest()">Build</button>
-            </div>
+            <button onclick="buildNest()">Build Nest (10 Wood / 5 Stone)</button>
 
         </div>
 
         <!-- RESEARCH -->
-        <div class="screen" id="screen-research">
+        <div class="screen" id="research">
 
             <h1>Research</h1>
-
             <p>Coming soon...</p>
 
         </div>
 
         <!-- WORLD -->
-        <div class="screen" id="screen-world">
+        <div class="screen" id="world">
 
             <h1>World</h1>
-
             <p>Coming soon...</p>
 
         </div>
@@ -114,12 +84,6 @@
     </div>
 
 </div>
-
-<!-- SCRIPTS -->
-<script src="data/resources.js"></script>
-<script src="data/rooms.js"></script>
-<script src="data/monsters.js"></script>
-<script src="data/research.js"></script>
 
 <script src="save.js"></script>
 <script src="game.js"></script>

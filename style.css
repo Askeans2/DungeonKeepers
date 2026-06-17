@@ -5,43 +5,58 @@ body {
     color: #e6e6e6;
 }
 
+/* VERSION LABEL */
+.version {
+    position: fixed;
+    top: 8px;
+    right: 10px;
+    font-size: 12px;
+    color: #888;
+    background: rgba(0,0,0,0.5);
+    padding: 4px 8px;
+    border-radius: 4px;
+    border: 1px solid #333;
+    z-index: 1000;
+    pointer-events: none;
+}
+
 /* TOP BAR */
 .topbar {
     display: flex;
     background-color: #1f1f1f;
     border-bottom: 1px solid #333;
-    padding: 10px;
-    gap: 10px;
 }
 
 .tab {
-    padding: 8px 14px;
-    background-color: #2a2a2a;
-    border-radius: 5px;
+    flex: 1;
+    padding: 12px;
+    background: #2a2a2a;
+    border: none;
+    color: white;
     cursor: pointer;
 }
 
 .tab:hover {
-    background-color: #3a3a3a;
+    background: #3a3a3a;
 }
 
 .tab.active {
-    background-color: #5a3d1a;
+    background: #5a3d1a;
     color: #ffd27a;
 }
 
 /* LAYOUT */
 .layout {
     display: flex;
-    height: calc(100vh - 50px);
+    height: calc(100vh - 45px);
 }
 
 /* SIDEBAR */
 .sidebar {
-    width: 250px;
-    background-color: #181818;
-    border-right: 1px solid #333;
+    width: 220px;
+    background: #181818;
     padding: 15px;
+    border-right: 1px solid #333;
 }
 
 .sidebar h2,
@@ -49,13 +64,13 @@ body {
     color: #ffd27a;
 }
 
-/* MAIN AREA */
+/* MAIN */
 .main {
     flex: 1;
     padding: 20px;
 }
 
-/* SCREEN SYSTEM */
+/* SCREENS */
 .screen {
     display: none;
 }
@@ -68,42 +83,21 @@ h1 {
     color: #ffd27a;
 }
 
-hr {
-    border: none;
-    border-top: 1px solid #333;
-    margin: 15px 0;
-}
-
-/* BUTTONS */
 button {
-    background-color: #2a2a2a;
+    background: #2a2a2a;
     color: white;
     border: 1px solid #444;
     padding: 8px 12px;
     margin: 5px 5px 5px 0;
     cursor: pointer;
-    border-radius: 5px;
 }
 
 button:hover {
-    background-color: #3a3a3a;
+    background: #3a3a3a;
 }
 
-/* RESOURCE BLOCKS */
-.resource {
-    margin-bottom: 8px;
-}
-
-.version {
-    position: fixed;
-    top: 8px;
-    right: 12px;
-    font-size: 12px;
-    color: #888;
-    background-color: rgba(0, 0, 0, 0.4);
-    padding: 4px 8px;
-    border-radius: 4px;
-    border: 1px solid #333;
-    z-index: 1000;
-    pointer-events: none;
+hr {
+    border: none;
+    border-top: 1px solid #333;
+    margin: 15px 0;
 }
