@@ -9,9 +9,9 @@ const gameState = {
     },
 
     caps: {
-        food: 100,
-        wood: 100,
-        stone: 100
+        food: 1000,
+        wood: 1000,
+        stone: 1000
     },
 
     buildings: {
@@ -29,25 +29,14 @@ const gameState = {
     }
 };
 
-function clampResource(name, value) {
-    return Math.min(gameState.caps[name], value);
-}
-
 // --------------------
-// GATHER (FIXED)
+// GATHER
 // --------------------
 
 function gather(resource) {
-
     if (gameState.resources[resource] < gameState.caps[resource]) {
-        gameState.resources[resource] += 1;
+        gameState.resources[resource]++;
     }
-
-    gameState.resources[resource] = clampResource(
-        resource,
-        gameState.resources[resource]
-    );
-
     updateUI();
 }
 
@@ -84,10 +73,9 @@ function buildQuarry() {
 }
 
 function buildNest() {
-    if (
-        gameState.resources.wood >= 10 &&
-        gameState.resources.stone >= 5
-    ) {
+    if (gameState.resources.wood >= 10 &&
+        gameState.resources.stone >= 5) {
+
         gameState.resources.wood -= 10;
         gameState.resources.stone -= 5;
 
@@ -112,18 +100,22 @@ function buildStorage() {
 }
 
 // --------------------
-// GAME LOOP (FIXED HARD CAP)
+// LOOP
 // --------------------
 
 function gameLoop() {
 
-    gameState.resources.food += gameState.buildings.farm * 2;
-    gameState.resources.wood += gameState.buildings.lumber * 2;
-    gameState.resources.stone += gameState.buildings.quarry * 2;
+    gameState.resources.food =
+        Math.min(gameState.caps.food,
+            gameState.resources.food + gameState.buildings.farm * 2);
 
-    gameState.resources.food = clampResource("food", gameState.resources.food);
-    gameState.resources.wood = clampResource("wood", gameState.resources.wood);
-    gameState.resources.stone = clampResource("stone", gameState.resources.stone);
+    gameState.resources.wood =
+        Math.min(gameState.caps.wood,
+            gameState.resources.wood + gameState.buildings.lumber * 2);
+
+    gameState.resources.stone =
+        Math.min(gameState.caps.stone,
+            gameState.resources.stone + gameState.buildings.quarry * 2);
 
     gameState.time.day++;
 
@@ -149,26 +141,15 @@ function updateUI() {
     updateResource("wood");
     updateResource("stone");
 
-    document.getElementById("farmCount").textContent =
-        gameState.buildings.farm;
+    document.getElementById("farmCount").textContent = gameState.buildings.farm;
+    document.getElementById("lumberCount").textContent = gameState.buildings.lumber;
+    document.getElementById("quarryCount").textContent = gameState.buildings.quarry;
+    document.getElementById("nestCount").textContent = gameState.buildings.nest;
+    document.getElementById("storageCount").textContent = gameState.buildings.storage;
 
-    document.getElementById("lumberCount").textContent =
-        gameState.buildings.lumber;
-
-    document.getElementById("quarryCount").textContent =
-        gameState.buildings.quarry;
-
-    document.getElementById("nestCount").textContent =
-        gameState.buildings.nest;
-
-    document.getElementById("day").textContent =
-        gameState.time.day;
-
-    document.getElementById("year").textContent =
-        gameState.time.year;
-
-    document.getElementById("season").textContent =
-        seasons[gameState.time.seasonIndex];
+    document.getElementById("day").textContent = gameState.time.day;
+    document.getElementById("year").textContent = gameState.time.year;
+    document.getElementById("season").textContent = seasons[gameState.time.seasonIndex];
 }
 
 function updateResource(name) {
@@ -176,10 +157,10 @@ function updateResource(name) {
     const value = gameState.resources[name];
     const cap = gameState.caps[name];
 
-    const line = document.getElementById(name + "Line");
-
     document.getElementById(name).textContent = value;
     document.getElementById(name + "Cap").textContent = cap;
+
+    const line = document.getElementById(name + "Line");
 
     if (value >= cap) {
         line.classList.add("full");
@@ -189,34 +170,14 @@ function updateResource(name) {
 }
 
 // --------------------
-// SCREEN SYSTEM
-// --------------------
-
-function showScreen(name) {
-
-    document.querySelectorAll(".screen")
-        .forEach(s => s.classList.remove("active"));
-
-    document.getElementById(name).classList.add("active");
-
-    document.querySelectorAll(".tab")
-        .forEach(t => t.classList.remove("active"));
-
-    event.target.classList.add("active");
-}
-
-// --------------------
 // INIT
 // --------------------
 
 window.onload = () => {
 
     loadGame();
-
     updateUI();
 
     setInterval(gameLoop, 1000);
     setInterval(saveGame, 5000);
-
-    showScreen("overview");
 };

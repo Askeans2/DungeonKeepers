@@ -1,8 +1,8 @@
 body {
     margin: 0;
-    font-family: Arial;
-    background: #121212;
-    color: #e6e6e6;
+    font-family: Arial, sans-serif;
+    background: #0f0f0f;
+    color: #dcdcdc;
 }
 
 /* VERSION */
@@ -10,8 +10,8 @@ body {
     position: fixed;
     top: 6px;
     right: 10px;
-    font-size: 12px;
-    color: #888;
+    font-size: 11px;
+    color: #777;
 }
 
 /* STATUS BAR */
@@ -19,80 +19,73 @@ body {
     display: flex;
     gap: 20px;
     padding: 6px 12px;
-    background: #151515;
-    border-bottom: 1px solid #333;
+    background: #141414;
+    border-bottom: 1px solid #222;
     font-size: 12px;
+    color: #aaa;
 }
 
-/* TOP BAR */
-.topbar {
-    display: flex;
-    background: #1f1f1f;
-}
-
-.tab {
-    flex: 1;
-    padding: 10px;
-    background: #2a2a2a;
-    border: none;
-    color: white;
-    cursor: pointer;
-}
-
-.tab.active {
-    background: #5a3d1a;
-    color: #ffd27a;
-}
-
-/* LAYOUT */
+/* MAIN LAYOUT */
 .layout {
     display: flex;
-    height: calc(100vh - 80px);
+    height: calc(100vh - 60px);
 }
 
-/* SIDEBAR */
-.sidebar {
-    width: 230px;
-    background: #181818;
-    padding: 10px;
-    border-right: 1px solid #333;
+/* PANELS */
+.panel {
+    padding: 12px;
+    overflow-y: auto;
 }
 
-.sidebar h2, .sidebar h3 {
-    color: #ffd27a;
+.left {
+    width: 260px;
+    background: #151515;
+    border-right: 1px solid rgba(255,255,255,0.05);
 }
 
-/* MAIN */
-.main {
+.center {
     flex: 1;
-    padding: 20px;
+    background: #101010;
+    border-right: 1px solid rgba(255,255,255,0.05);
 }
 
-/* SCREENS */
-.screen {
-    display: none;
+.right {
+    width: 260px;
+    background: #151515;
 }
 
-.screen.active {
-    display: block;
+/* HEADERS */
+h2, h3 {
+    color: #d4a24c;
+    margin-top: 10px;
 }
 
 /* BUTTONS */
 button {
-    margin: 5px;
+    display: block;
+    width: 100%;
+    margin: 6px 0;
     padding: 8px;
-    background: #2a2a2a;
-    color: white;
-    border: 1px solid #444;
+    background: #1c1c1c;
+    color: #ddd;
+    border: 1px solid rgba(255,255,255,0.08);
     cursor: pointer;
+    text-align: left;
 }
 
 button:hover {
-    background: #3a3a3a;
+    background: #252525;
 }
 
-/* CAP FULL WARNING */
+/* DIVIDERS */
+hr {
+    border: none;
+    border-top: 1px solid #222;
+    margin: 12px 0;
+}
+
+/* CAP WARNING (Evolve-style highlight) */
 .full {
-    color: #ff9c4a !important;
+    color: #d48a3a !important;
     font-weight: bold;
 }

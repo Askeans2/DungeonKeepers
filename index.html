@@ -7,9 +7,9 @@
 
 <body>
 
-<div class="version">v0.4.0</div>
+<div class="version">v0.7.0-dev</div>
 
-<!-- STATUS BAR -->
+<!-- TOP STATUS BAR -->
 <div class="statusbar">
 
     <div>Day: <span id="day">1</span></div>
@@ -18,20 +18,11 @@
 
 </div>
 
-<!-- TOP BAR -->
-<div class="topbar">
-
-    <button class="tab active" onclick="showScreen('overview')">Overview</button>
-    <button class="tab" onclick="showScreen('dungeon')">Dungeon</button>
-    <button class="tab" onclick="showScreen('research')">Research</button>
-    <button class="tab" onclick="showScreen('world')">World</button>
-
-</div>
-
+<!-- MAIN 3-PANEL LAYOUT -->
 <div class="layout">
 
-    <!-- SIDEBAR -->
-    <div class="sidebar">
+    <!-- LEFT PANEL -->
+    <div class="panel left">
 
         <h2>Resources</h2>
 
@@ -43,49 +34,57 @@
 
         <h3>Buildings</h3>
 
-        <div>Nests: <span id="nestCount">0</span></div>
         <div>Farms: <span id="farmCount">0</span></div>
         <div>Lumber Camps: <span id="lumberCount">0</span></div>
         <div>Quarries: <span id="quarryCount">0</span></div>
+        <div>Nests: <span id="nestCount">0</span></div>
+        <div>Storage: <span id="storageCount">0</span></div>
 
     </div>
 
-    <!-- MAIN -->
-    <div class="main">
+    <!-- CENTER PANEL -->
+    <div class="panel center">
 
-        <!-- OVERVIEW -->
-        <div class="screen active" id="overview">
+        <h2>Actions</h2>
 
-            <h1>Overview</h1>
+        <button onclick="gatherFood()">Gather Food</button>
+        <button onclick="gatherWood()">Gather Wood</button>
+        <button onclick="gatherStone()">Gather Stone</button>
 
-            <button onclick="gatherFood()">Gather Food</button>
-            <button onclick="gatherWood()">Gather Wood</button>
-            <button onclick="gatherStone()">Gather Stone</button>
+        <hr>
 
-        </div>
+        <h3>Production Buildings</h3>
 
-        <!-- DUNGEON -->
-        <div class="screen" id="dungeon">
+        <button onclick="buildFarm()">Build Farm (10 Wood)</button>
+        <button onclick="buildLumber()">Build Lumber Camp (10 Wood)</button>
+        <button onclick="buildQuarry()">Build Quarry (10 Wood)</button>
 
-            <h1>Dungeon</h1>
+        <hr>
 
-            <h2>Production Buildings</h2>
+        <h3>Utility</h3>
 
-            <button onclick="buildFarm()">Build Farm (10 Wood)</button>
-            <button onclick="buildLumber()">Build Lumber Camp (10 Wood)</button>
-            <button onclick="buildQuarry()">Build Quarry (10 Wood)</button>
+        <button onclick="buildNest()">Build Nest (10 Wood / 5 Stone)</button>
+        <button onclick="buildStorage()">Build Storage (+50 cap all)</button>
 
-            <hr>
+    </div>
 
-            <h2>Utility</h2>
+    <!-- RIGHT PANEL -->
+    <div class="panel right">
 
-            <button onclick="buildNest()">Build Nest (10W / 5S)</button>
-            <button onclick="buildStorage()">Build Storage (20 Wood)</button>
+        <h2>Context</h2>
 
-        </div>
+        <p>This panel will later show:</p>
 
-        <div class="screen" id="research"><h1>Research</h1></div>
-        <div class="screen" id="world"><h1>World</h1></div>
+        <ul>
+            <li>Selected building info</li>
+            <li>Upgrade paths</li>
+            <li>Research tree</li>
+            <li>Event log</li>
+        </ul>
+
+        <hr>
+
+        <p><b>Tip:</b> This is where “Evolve-style depth” lives.</p>
 
     </div>
 
