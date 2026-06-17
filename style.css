@@ -5,14 +5,6 @@ body {
     color: #dcdcdc;
 }
 
-.version {
-    position: fixed;
-    top: 6px;
-    right: 10px;
-    font-size: 11px;
-    color: #777;
-}
-
 /* TOP BAR */
 .statusbar {
     display: flex;
@@ -21,12 +13,6 @@ body {
     background: #141414;
     border-bottom: 1px solid #222;
     font-size: 12px;
-    color: #aaa;
-}
-
-.status-center {
-    display: flex;
-    gap: 20px;
 }
 
 /* LAYOUT */
@@ -56,23 +42,23 @@ body {
     background: #151515;
 }
 
-/* HEADERS */
-h2 {
-    color: #d4a24c;
+/* GRID LIKE EVOLVE */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
 }
 
-/* BUTTONS */
+/* BUTTON TILE (EQUAL SIZE) */
 .build-btn {
-    width: 100%;
-    margin: 6px 0;
-    padding: 14px;
-    border-radius: 6px;
+    height: 90px;
+    position: relative;
     background: #1c1c1c;
     border: 1px solid #333;
-    color: #ddd;
-    text-align: left;
-    position: relative;
+    border-radius: 6px;
     cursor: pointer;
+    color: #ddd;
+    overflow: hidden;
 }
 
 .build-btn:hover {
@@ -81,31 +67,48 @@ h2 {
 
 /* TITLE */
 .btn-title {
+    position: absolute;
+    top: 10px;
+    left: 10px;
     font-size: 14px;
 }
 
-/* COST */
-.btn-cost {
-    font-size: 11px;
-    color: #888;
-    margin-top: 3px;
-}
-
-/* COUNT (TOP RIGHT LIKE EVOLVE) */
+/* COUNT (TOP RIGHT) */
 .btn-count {
     position: absolute;
-    top: 6px;
+    top: 8px;
     right: 10px;
     font-size: 12px;
     color: #aaa;
 }
 
+/* COST (HIDDEN BY DEFAULT) */
+.btn-cost {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    font-size: 12px;
+    color: #888;
+
+    opacity: 0;
+    transition: opacity 0.15s ease-in-out;
+}
+
+/* SHOW COST ON HOVER ONLY */
+.build-btn:hover .btn-cost {
+    opacity: 1;
+}
+
 /* DISABLED STATE */
 .disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+    opacity: 0.4;
 }
 
 .disabled .btn-cost {
     color: #ff4c4c;
+}
+
+/* HEADERS */
+h2 {
+    color: #d4a24c;
 }
