@@ -7,21 +7,28 @@
 
 <body>
 
-<div class="version">v0.7.0-dev</div>
+<div class="version">v0.08</div>
 
-<!-- TOP STATUS BAR -->
+<!-- TOP BAR (CENTERED TIME) -->
 <div class="statusbar">
 
-    <div>Day: <span id="day">1</span></div>
-    <div>Year: <span id="year">1</span></div>
-    <div>Season: <span id="season">Spring</span></div>
+    <div class="status-left"></div>
+
+    <div class="status-center">
+
+        <div>Day: <span id="day">1</span></div>
+        <div>Year: <span id="year">1</span></div>
+        <div>Season: <span id="season">Spring</span></div>
+
+    </div>
+
+    <div class="status-right"></div>
 
 </div>
 
-<!-- MAIN 3-PANEL LAYOUT -->
 <div class="layout">
 
-    <!-- LEFT PANEL -->
+    <!-- LEFT: RESOURCES ONLY -->
     <div class="panel left">
 
         <h2>Resources</h2>
@@ -30,19 +37,9 @@
         <div id="woodLine">Wood: <span id="wood">0</span> / <span id="woodCap">100</span></div>
         <div id="stoneLine">Stone: <span id="stone">0</span> / <span id="stoneCap">100</span></div>
 
-        <hr>
-
-        <h3>Buildings</h3>
-
-        <div>Farms: <span id="farmCount">0</span></div>
-        <div>Lumber Camps: <span id="lumberCount">0</span></div>
-        <div>Quarries: <span id="quarryCount">0</span></div>
-        <div>Nests: <span id="nestCount">0</span></div>
-        <div>Storage: <span id="storageCount">0</span></div>
-
     </div>
 
-    <!-- CENTER PANEL -->
+    <!-- CENTER: ACTIONS -->
     <div class="panel center">
 
         <h2>Actions</h2>
@@ -53,18 +50,36 @@
 
         <hr>
 
-        <h3>Production Buildings</h3>
+        <h3>Production</h3>
 
-        <button onclick="buildFarm()">Build Farm (10 Wood)</button>
-        <button onclick="buildLumber()">Build Lumber Camp (10 Wood)</button>
-        <button onclick="buildQuarry()">Build Quarry (10 Wood)</button>
+        <button class="build-btn" onclick="buildFarm()">
+            Build Farm
+            <span class="count" id="farmCount">0</span>
+        </button>
+
+        <button class="build-btn" onclick="buildLumber()">
+            Build Lumber Camp
+            <span class="count" id="lumberCount">0</span>
+        </button>
+
+        <button class="build-btn" onclick="buildQuarry()">
+            Build Quarry
+            <span class="count" id="quarryCount">0</span>
+        </button>
 
         <hr>
 
         <h3>Utility</h3>
 
-        <button onclick="buildNest()">Build Nest (10 Wood / 5 Stone)</button>
-        <button onclick="buildStorage()">Build Storage (+50 cap all)</button>
+        <button class="build-btn" onclick="buildNest()">
+            Build Nest
+            <span class="count" id="nestCount">0</span>
+        </button>
+
+        <button class="build-btn" onclick="buildStorage()">
+            Storage Upgrade
+            <span class="count" id="storageCount">0</span>
+        </button>
 
     </div>
 
@@ -72,19 +87,7 @@
     <div class="panel right">
 
         <h2>Context</h2>
-
-        <p>This panel will later show:</p>
-
-        <ul>
-            <li>Selected building info</li>
-            <li>Upgrade paths</li>
-            <li>Research tree</li>
-            <li>Event log</li>
-        </ul>
-
-        <hr>
-
-        <p><b>Tip:</b> This is where “Evolve-style depth” lives.</p>
+        <p>Future system panel</p>
 
     </div>
 

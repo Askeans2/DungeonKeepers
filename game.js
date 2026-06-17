@@ -9,9 +9,9 @@ const gameState = {
     },
 
     caps: {
-        food: 1000,
-        wood: 1000,
-        stone: 1000
+        food: 100,
+        wood: 100,
+        stone: 100
     },
 
     buildings: {
@@ -174,10 +174,8 @@ function updateResource(name) {
 // --------------------
 
 window.onload = () => {
-
     loadGame();
     updateUI();
-
     setInterval(gameLoop, 1000);
     setInterval(saveGame, 5000);
 };
