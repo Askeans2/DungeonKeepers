@@ -14,7 +14,10 @@ const gameState = {
         stone: 100
     },
 
-    rooms: {
+    buildings: {
+        farm: 0,
+        lumber: 0,
+        quarry: 0,
         nest: 0,
         storage: 0
     },
@@ -26,15 +29,24 @@ const gameState = {
     }
 };
 
+function clampResource(name, value) {
+    return Math.min(gameState.caps[name], value);
+}
+
 // --------------------
-// GATHER
+// GATHER (FIXED)
 // --------------------
 
 function gather(resource) {
 
     if (gameState.resources[resource] < gameState.caps[resource]) {
-        gameState.resources[resource]++;
+        gameState.resources[resource] += 1;
     }
+
+    gameState.resources[resource] = clampResource(
+        resource,
+        gameState.resources[resource]
+    );
 
     updateUI();
 }
@@ -47,26 +59,49 @@ function gatherStone() { gather("stone"); }
 // BUILDINGS
 // --------------------
 
+function buildFarm() {
+    if (gameState.resources.wood >= 10) {
+        gameState.resources.wood -= 10;
+        gameState.buildings.farm++;
+        updateUI();
+    }
+}
+
+function buildLumber() {
+    if (gameState.resources.wood >= 10) {
+        gameState.resources.wood -= 10;
+        gameState.buildings.lumber++;
+        updateUI();
+    }
+}
+
+function buildQuarry() {
+    if (gameState.resources.wood >= 10) {
+        gameState.resources.wood -= 10;
+        gameState.buildings.quarry++;
+        updateUI();
+    }
+}
+
 function buildNest() {
-
-    if (gameState.resources.wood >= 10 &&
-        gameState.resources.stone >= 5) {
-
+    if (
+        gameState.resources.wood >= 10 &&
+        gameState.resources.stone >= 5
+    ) {
         gameState.resources.wood -= 10;
         gameState.resources.stone -= 5;
 
-        gameState.rooms.nest++;
+        gameState.buildings.nest++;
 
         updateUI();
     }
 }
 
 function buildStorage() {
-
     if (gameState.resources.wood >= 20) {
         gameState.resources.wood -= 20;
 
-        gameState.rooms.storage++;
+        gameState.buildings.storage++;
 
         gameState.caps.food += 50;
         gameState.caps.wood += 50;
@@ -77,16 +112,18 @@ function buildStorage() {
 }
 
 // --------------------
-// GAME LOOP
+// GAME LOOP (FIXED HARD CAP)
 // --------------------
 
 function gameLoop() {
 
-    const nestBonus = gameState.rooms.nest * 2;
+    gameState.resources.food += gameState.buildings.farm * 2;
+    gameState.resources.wood += gameState.buildings.lumber * 2;
+    gameState.resources.stone += gameState.buildings.quarry * 2;
 
-    gameState.resources.food =
-        Math.min(gameState.caps.food,
-            gameState.resources.food + 1 + nestBonus);
+    gameState.resources.food = clampResource("food", gameState.resources.food);
+    gameState.resources.wood = clampResource("wood", gameState.resources.wood);
+    gameState.resources.stone = clampResource("stone", gameState.resources.stone);
 
     gameState.time.day++;
 
@@ -112,11 +149,17 @@ function updateUI() {
     updateResource("wood");
     updateResource("stone");
 
-    document.getElementById("nestCount").textContent =
-        gameState.rooms.nest;
+    document.getElementById("farmCount").textContent =
+        gameState.buildings.farm;
 
-    document.getElementById("storageCount").textContent =
-        gameState.rooms.storage;
+    document.getElementById("lumberCount").textContent =
+        gameState.buildings.lumber;
+
+    document.getElementById("quarryCount").textContent =
+        gameState.buildings.quarry;
+
+    document.getElementById("nestCount").textContent =
+        gameState.buildings.nest;
 
     document.getElementById("day").textContent =
         gameState.time.day;
@@ -133,10 +176,10 @@ function updateResource(name) {
     const value = gameState.resources[name];
     const cap = gameState.caps[name];
 
+    const line = document.getElementById(name + "Line");
+
     document.getElementById(name).textContent = value;
     document.getElementById(name + "Cap").textContent = cap;
-
-    const line = document.getElementById(name + "Line");
 
     if (value >= cap) {
         line.classList.add("full");

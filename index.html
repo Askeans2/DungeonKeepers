@@ -7,22 +7,14 @@
 
 <body>
 
-<div class="version">v0.3.2</div>
+<div class="version">v0.4.0</div>
 
 <!-- STATUS BAR -->
 <div class="statusbar">
 
-    <div class="status-item">
-        Day: <span id="day">1</span>
-    </div>
-
-    <div class="status-item">
-        Year: <span id="year">1</span>
-    </div>
-
-    <div class="status-item">
-        Season: <span id="season">Spring</span>
-    </div>
+    <div>Day: <span id="day">1</span></div>
+    <div>Year: <span id="year">1</span></div>
+    <div>Season: <span id="season">Spring</span></div>
 
 </div>
 
@@ -49,16 +41,19 @@
 
         <hr>
 
-        <h3>Dungeon</h3>
-        <div>Nests: <span id="nestCount">0</span></div>
+        <h3>Buildings</h3>
 
-        <div>Storage Piles: <span id="storageCount">0</span></div>
+        <div>Nests: <span id="nestCount">0</span></div>
+        <div>Farms: <span id="farmCount">0</span></div>
+        <div>Lumber Camps: <span id="lumberCount">0</span></div>
+        <div>Quarries: <span id="quarryCount">0</span></div>
 
     </div>
 
     <!-- MAIN -->
     <div class="main">
 
+        <!-- OVERVIEW -->
         <div class="screen active" id="overview">
 
             <h1>Overview</h1>
@@ -69,22 +64,28 @@
 
         </div>
 
+        <!-- DUNGEON -->
         <div class="screen" id="dungeon">
 
             <h1>Dungeon</h1>
+
+            <h2>Production Buildings</h2>
+
+            <button onclick="buildFarm()">Build Farm (10 Wood)</button>
+            <button onclick="buildLumber()">Build Lumber Camp (10 Wood)</button>
+            <button onclick="buildQuarry()">Build Quarry (10 Wood)</button>
+
+            <hr>
+
+            <h2>Utility</h2>
 
             <button onclick="buildNest()">Build Nest (10W / 5S)</button>
             <button onclick="buildStorage()">Build Storage (20 Wood)</button>
 
         </div>
 
-        <div class="screen" id="research">
-            <h1>Research</h1>
-        </div>
-
-        <div class="screen" id="world">
-            <h1>World</h1>
-        </div>
+        <div class="screen" id="research"><h1>Research</h1></div>
+        <div class="screen" id="world"><h1>World</h1></div>
 
     </div>
 

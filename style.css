@@ -93,6 +93,6 @@ button:hover {
 
 /* CAP FULL WARNING */
 .full {
-    color: #ff9c4a;
+    color: #ff9c4a !important;
     font-weight: bold;
 }
