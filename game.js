@@ -1,14 +1,20 @@
 // game.js
 
 const gameState = {
-
     resources: {
         food: 0,
         wood: 0,
         stone: 0
-    }
+    },
 
+    rooms: {
+        nest: 0
+    }
 };
+
+// -----------------------------
+// RESOURCE GATHERING
+// -----------------------------
 
 function gatherFood() {
     gameState.resources.food += 1;
@@ -25,27 +31,62 @@ function gatherStone() {
     updateUI();
 }
 
-function updateUI() {
+// -----------------------------
+// ROOM SYSTEM
+// -----------------------------
 
-    document.getElementById("food")
-        .textContent =
-        gameState.resources.food;
+function buildNest() {
+    const woodCost = 10;
+    const stoneCost = 5;
 
-    document.getElementById("wood")
-        .textContent =
-        gameState.resources.wood;
+    if (
+        gameState.resources.wood >= woodCost &&
+        gameState.resources.stone >= stoneCost
+    ) {
+        gameState.resources.wood -= woodCost;
+        gameState.resources.stone -= stoneCost;
 
-    document.getElementById("stone")
-        .textContent =
-        gameState.resources.stone;
+        gameState.rooms.nest += 1;
+
+        updateUI();
+    }
 }
 
-function gameLoop() {
+// -----------------------------
+// GAME LOOP
+// -----------------------------
 
-    gameState.resources.food += 1;
+function gameLoop() {
+    const nests = gameState.rooms.nest;
+
+    // Passive food generation
+    gameState.resources.food += 1 + (nests * 2);
 
     updateUI();
 }
+
+// -----------------------------
+// UI UPDATE
+// -----------------------------
+
+function updateUI() {
+
+    document.getElementById("food").textContent =
+        Math.floor(gameState.resources.food);
+
+    document.getElementById("wood").textContent =
+        Math.floor(gameState.resources.wood);
+
+    document.getElementById("stone").textContent =
+        Math.floor(gameState.resources.stone);
+
+    document.getElementById("nestCount").textContent =
+        gameState.rooms.nest;
+}
+
+// -----------------------------
+// INIT
+// -----------------------------
 
 window.onload = () => {
 
@@ -53,7 +94,9 @@ window.onload = () => {
 
     updateUI();
 
+    // Main tick loop (1 second)
     setInterval(gameLoop, 1000);
 
+    // Auto-save loop (5 seconds)
     setInterval(saveGame, 5000);
 };

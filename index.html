@@ -1,13 +1,8 @@
 <!DOCTYPE html>
-
 <html>
-
 <head>
-
     <title>Dungeon Keeper</title>
-
     <link rel="stylesheet" href="style.css">
-
 </head>
 
 <body>
@@ -17,46 +12,46 @@
     <h2>Resources</h2>
 
     <div class="resource">
-        Food:
-        <span id="food">0</span>
+        Food: <span id="food">0</span>
     </div>
 
     <div class="resource">
-        Wood:
-        <span id="wood">0</span>
+        Wood: <span id="wood">0</span>
     </div>
 
     <div class="resource">
-        Stone:
-        <span id="stone">0</span>
+        Stone: <span id="stone">0</span>
     </div>
 
     <br>
 
-    <button onclick="gatherFood()">
-        Gather Food
-    </button>
+    <button onclick="gatherFood()">Gather Food</button>
+    <button onclick="gatherWood()">Gather Wood</button>
+    <button onclick="gatherStone()">Gather Stone</button>
 
-    <button onclick="gatherWood()">
-        Gather Wood
-    </button>
+    <hr>
 
-    <button onclick="gatherStone()">
-        Gather Stone
-    </button>
+    <h2>Dungeon</h2>
 
+    <div class="resource">
+        Nest (Cost: 10 Wood, 5 Stone)
+        <button onclick="buildNest()">Build</button>
+    </div>
+
+    <div class="resource">
+        Nests Built: <span id="nestCount">0</span>
+    </div>
+
+    <hr>
+
+    <!-- Scripts -->
     <script src="data/resources.js"></script>
-
     <script src="data/rooms.js"></script>
-
     <script src="data/monsters.js"></script>
-
     <script src="data/research.js"></script>
 
     <script src="save.js"></script>
-
     <script src="game.js"></script>
 
 </body>
-
 </html>
