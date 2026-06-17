@@ -7,9 +7,27 @@
 
 <body>
 
-<div class="version">v0.3.0</div>
+<!-- VERSION -->
+<div class="version">v0.3.1</div>
 
-<!-- TOP BAR -->
+<!-- STATUS BAR -->
+<div class="statusbar">
+
+    <div class="status-item">
+        Day: <span id="day">1</span>
+    </div>
+
+    <div class="status-item">
+        Year: <span id="year">1</span>
+    </div>
+
+    <div class="status-item">
+        Season: <span id="season">Spring</span>
+    </div>
+
+</div>
+
+<!-- TOP NAV -->
 <div class="topbar">
 
     <button class="tab active" onclick="showScreen('overview')">Overview</button>
@@ -22,7 +40,7 @@
 <!-- MAIN LAYOUT -->
 <div class="layout">
 
-    <!-- SIDEBAR (ALWAYS VISIBLE) -->
+    <!-- SIDEBAR -->
     <div class="sidebar">
 
         <h2>Resources</h2>
@@ -46,7 +64,7 @@
 
             <h1>Overview</h1>
 
-            <p>Build your dungeon. Expand your species. Survive the world.</p>
+            <p>Your dungeon grows in the dark below the world.</p>
 
             <button onclick="gatherFood()">Gather Food</button>
             <button onclick="gatherWood()">Gather Wood</button>
@@ -59,7 +77,7 @@
 
             <h1>Dungeon</h1>
 
-            <p>Build structures to grow your dungeon.</p>
+            <p>Construct rooms to expand your dungeon core.</p>
 
             <button onclick="buildNest()">Build Nest (10 Wood / 5 Stone)</button>
 
