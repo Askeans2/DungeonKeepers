@@ -1,5 +1,5 @@
 const SEASONS        = ["Spring", "Summer", "Autumn", "Winter"];
-const TICKS_PER_DAY  = 10;
+const TICKS_PER_DAY  = 2;
 const DAYS_PER_SEASON = 30;
 const GROWTH_TICKS   = 15;   // ticks between attracting a new creature
 const STARVE_TICKS   = 5;    // ticks of zero-food before a creature dies
@@ -160,8 +160,13 @@ function tick() {
         if (gameState.time.day > totalDays) {
             gameState.time.day = 1;
             gameState.time.year++;
+            flashEl('year');
         }
         gameState.time.seasonIndex = Math.floor((gameState.time.day - 1) / DAYS_PER_SEASON) % 4;
+        flashEl('day');
+        if (gameState.time.day % DAYS_PER_SEASON === 1 && gameState.time.day !== 1) {
+            flashEl('season');
+        }
     }
 
     updateUI();
@@ -272,13 +277,21 @@ function setText(id, value) {
     if (el) el.textContent = value;
 }
 
+function flashEl(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.remove('flash');
+    void el.offsetWidth; // force reflow so animation restarts
+    el.classList.add('flash');
+}
+
 // ── Tabs ──────────────────────────────────────────────────────────────────────
 
 function switchTab(tabId) {
     document.querySelectorAll('.tab-content').forEach(el => { el.style.display = 'none'; });
     document.querySelectorAll('.tab-btn').forEach(btn => { btn.classList.remove('active'); });
     const content = document.getElementById('tab-' + tabId);
-    if (content) content.style.display = '';
+    if (content) content.style.display = 'block';
     const btn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
     if (btn) btn.classList.add('active');
 }
