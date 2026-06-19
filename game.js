@@ -546,10 +546,16 @@ function devWipeResources() {
 }
 
 function devRerollBiome() {
-    selectStartBiome(false);
-    saveGame();
-    updateIdentityPanel();
-    devShowBiomeInfo();
+    try {
+        selectStartBiome(false);
+        saveGame();
+        updateIdentityPanel();
+        devShowBiomeInfo();
+    } catch (e) {
+        console.error("[devRerollBiome] Error:", e);
+        const el = document.getElementById("dev-biome-info");
+        if (el) el.innerHTML = `<span style="color:#c84040">Error: ${e.message}</span>`;
+    }
 }
 
 function devShowBiomeInfo() {
@@ -655,10 +661,12 @@ function updateIdentityPanel() {
     const raceName  = gameState.run.race;
     const biome     = BIOME_DATA[biomeName];
 
-    // Compact row
+    // Compact row — guard against missing elements
     const nameEl  = document.getElementById("di-biome-name");
     const badgeEl = document.getElementById("di-biome-badge");
     const raceEl  = document.getElementById("di-race-name");
+
+    if (!nameEl || !badgeEl || !raceEl) return;
 
     if (biome) {
         nameEl.textContent  = biomeName;
