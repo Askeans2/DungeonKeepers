@@ -250,6 +250,13 @@ function updateUI() {
         if (btn) btn.classList.toggle("disabled", !canAfford(id));
     }
 
+    // Info tab live stats
+    setText("info-day",  gameState.time.day);
+    setText("info-year", gameState.time.year);
+    setText("info-pop",  pop.count + " / " + housing);
+    const totalBuilt = Object.values(gameState.buildings).reduce((a, b) => a + b, 0);
+    setText("info-buildings", totalBuilt);
+
     // Gather action buttons — disabled at cap
     for (const [key, action] of Object.entries(GATHER_ACTIONS)) {
         const btn = document.getElementById("action-" + key);
@@ -263,6 +270,17 @@ function updateUI() {
 function setText(id, value) {
     const el = document.getElementById(id);
     if (el) el.textContent = value;
+}
+
+// ── Tabs ──────────────────────────────────────────────────────────────────────
+
+function switchTab(tabId) {
+    document.querySelectorAll('.tab-content').forEach(el => { el.style.display = 'none'; });
+    document.querySelectorAll('.tab-btn').forEach(btn => { btn.classList.remove('active'); });
+    const content = document.getElementById('tab-' + tabId);
+    if (content) content.style.display = '';
+    const btn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
+    if (btn) btn.classList.add('active');
 }
 
 // ── Bootstrap ─────────────────────────────────────────────────────────────────

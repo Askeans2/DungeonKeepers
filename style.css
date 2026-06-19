@@ -102,6 +102,10 @@ html, body {
 .center {
     flex: 1;
     background: var(--bg);
+    padding: 0;        /* tabs handle their own layout */
+    overflow: hidden;  /* tab-body scrolls, not the panel */
+    display: flex;
+    flex-direction: column;
 }
 
 .right {
@@ -318,4 +322,207 @@ h3 {
 
 .build-btn.disabled::after {
     background: var(--disabled);
+}
+
+/* ── TABS ───────────────────────────────────────────────────────────────────── */
+
+.tab-bar {
+    display: flex;
+    align-items: flex-end;
+    padding: 0 12px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: 9px 12px 8px;
+    margin-bottom: -1px;
+    color: var(--text-muted);
+    font-family: 'Lato', Arial, sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: color 0.1s, border-color 0.1s;
+    white-space: nowrap;
+}
+
+.tab-btn:hover {
+    color: var(--text);
+}
+
+.tab-btn.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+}
+
+.tab-btn.dev-tab {
+    margin-left: auto;
+    color: #c27a28;
+}
+
+.tab-btn.dev-tab:hover {
+    color: #e09030;
+}
+
+.tab-btn.dev-tab.active {
+    color: #f39c12;
+    border-bottom-color: #f39c12;
+}
+
+.tab-body {
+    flex: 1;
+    padding: 10px 12px;
+    overflow-y: auto;
+}
+
+/* ── RESEARCH TAB ────────────────────────────────────────────────────────────── */
+
+.research-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.research-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    opacity: 0.45;
+}
+
+.research-card .research-name {
+    font-size: 13px;
+    font-weight: bold;
+    color: var(--text);
+}
+
+.research-card .research-desc {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+.research-card .research-cost {
+    font-size: 11px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    padding-left: 12px;
+}
+
+/* ── SETTINGS TAB ────────────────────────────────────────────────────────────── */
+
+.setting-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.setting-row .setting-label {
+    color: var(--text);
+}
+
+.setting-placeholder {
+    font-size: 11px;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 2px 8px;
+}
+
+/* ── INFO TAB ────────────────────────────────────────────────────────────────── */
+
+.info-text {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-bottom: 14px;
+}
+
+.info-stat-block {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 8px 12px;
+}
+
+.info-stat {
+    display: flex;
+    justify-content: space-between;
+    padding: 3px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.info-stat:last-child {
+    border-bottom: none;
+}
+
+.info-stat span:last-child {
+    color: var(--label);
+}
+
+/* ── DEV TAB ─────────────────────────────────────────────────────────────────── */
+
+.dev-section {
+    margin-bottom: 14px;
+}
+
+.dev-section h3 {
+    color: #c27a28;
+}
+
+.dev-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 5px;
+}
+
+.dev-btn {
+    height: 36px;
+    background: rgba(243, 156, 18, 0.08);
+    border: 1px solid rgba(243, 156, 18, 0.3);
+    border-radius: 3px;
+    color: #d4952a;
+    font-family: 'Lato', Arial, sans-serif;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background 0.08s, border-color 0.08s;
+}
+
+.dev-btn:hover {
+    background: rgba(243, 156, 18, 0.18);
+    border-color: rgba(243, 156, 18, 0.6);
+    color: #f39c12;
+}
+
+.dev-btn.danger {
+    background: rgba(192, 0, 0, 0.08);
+    border-color: rgba(192, 0, 0, 0.3);
+    color: #c20000;
+}
+
+.dev-btn.danger:hover {
+    background: rgba(192, 0, 0, 0.2);
+    border-color: var(--disabled);
+    color: #ff4444;
+}
+
+.placeholder-note {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-style: italic;
 }

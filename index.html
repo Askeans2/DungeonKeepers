@@ -68,65 +68,247 @@
 
     </div>
 
-    <!-- CENTER: Actions + Buildings -->
+    <!-- CENTER: Tabbed content -->
     <div class="panel center">
 
-        <h2>Actions</h2>
-        <div class="actions-list">
-
-            <button class="action-btn" id="action-food" onclick="gather('food')">
-                <span class="action-title">Scavenge Food</span>
-                <span class="action-yield">+5 Food</span>
-            </button>
-
-            <button class="action-btn" id="action-wood" onclick="gather('wood')">
-                <span class="action-title">Fell a Tree</span>
-                <span class="action-yield">+5 Wood</span>
-            </button>
-
-            <button class="action-btn" id="action-stone" onclick="gather('stone')">
-                <span class="action-title">Break Stones</span>
-                <span class="action-yield">+3 Stone</span>
-            </button>
-
+        <!-- Tab bar -->
+        <div class="tab-bar">
+            <button class="tab-btn active" data-tab="build"    onclick="switchTab('build')">Build</button>
+            <button class="tab-btn"        data-tab="research" onclick="switchTab('research')">Research</button>
+            <button class="tab-btn"        data-tab="info"     onclick="switchTab('info')">Info</button>
+            <button class="tab-btn"        data-tab="settings" onclick="switchTab('settings')">Settings</button>
+            <button class="tab-btn dev-tab" data-tab="dev"     onclick="switchTab('dev')">Dev</button>
         </div>
 
-        <h2 class="section-gap">Buildings</h2>
-        <div class="grid">
+        <!-- BUILD TAB -->
+        <div class="tab-body tab-content" id="tab-build">
 
-            <button class="build-btn disabled" onclick="build('lair')" id="btn-lair">
-                <div class="btn-title">Lair</div>
-                <div class="btn-count" id="lairCount">0</div>
-                <div class="btn-cost" id="lairCost">15 Wood</div>
-            </button>
+            <h2>Actions</h2>
+            <div class="actions-list">
 
-            <button class="build-btn disabled" onclick="build('farm')" id="btn-farm">
-                <div class="btn-title">Farm</div>
-                <div class="btn-count" id="farmCount">0</div>
-                <div class="btn-cost" id="farmCost">10 Wood</div>
-            </button>
+                <button class="action-btn" id="action-food" onclick="gather('food')">
+                    <span class="action-title">Scavenge Food</span>
+                    <span class="action-yield">+1 Food</span>
+                </button>
 
-            <button class="build-btn disabled" onclick="build('lumber')" id="btn-lumber">
-                <div class="btn-title">Lumber Camp</div>
-                <div class="btn-count" id="lumberCount">0</div>
-                <div class="btn-cost" id="lumberCost">10 Wood</div>
-            </button>
+                <button class="action-btn" id="action-wood" onclick="gather('wood')">
+                    <span class="action-title">Fell a Tree</span>
+                    <span class="action-yield">+1 Wood</span>
+                </button>
 
-            <button class="build-btn disabled" onclick="build('quarry')" id="btn-quarry">
-                <div class="btn-title">Quarry</div>
-                <div class="btn-count" id="quarryCount">0</div>
-                <div class="btn-cost" id="quarryCost">15 Wood</div>
-            </button>
+                <button class="action-btn" id="action-stone" onclick="gather('stone')">
+                    <span class="action-title">Break Stones</span>
+                    <span class="action-yield">+1 Stone</span>
+                </button>
 
-            <button class="build-btn disabled" onclick="build('storage')" id="btn-storage">
-                <div class="btn-title">Storage</div>
-                <div class="btn-count" id="storageCount">0</div>
-                <div class="btn-cost" id="storageCost">20 Wood, 10 Stone</div>
-            </button>
+            </div>
 
-        </div>
+            <h2 class="section-gap">Buildings</h2>
+            <div class="grid">
 
-    </div>
+                <button class="build-btn disabled" onclick="build('lair')" id="btn-lair">
+                    <div class="btn-title">Lair</div>
+                    <div class="btn-count" id="lairCount">0</div>
+                    <div class="btn-cost" id="lairCost">15 Wood</div>
+                </button>
+
+                <button class="build-btn disabled" onclick="build('farm')" id="btn-farm">
+                    <div class="btn-title">Farm</div>
+                    <div class="btn-count" id="farmCount">0</div>
+                    <div class="btn-cost" id="farmCost">10 Wood</div>
+                </button>
+
+                <button class="build-btn disabled" onclick="build('lumber')" id="btn-lumber">
+                    <div class="btn-title">Lumber Camp</div>
+                    <div class="btn-count" id="lumberCount">0</div>
+                    <div class="btn-cost" id="lumberCost">10 Wood</div>
+                </button>
+
+                <button class="build-btn disabled" onclick="build('quarry')" id="btn-quarry">
+                    <div class="btn-title">Quarry</div>
+                    <div class="btn-count" id="quarryCount">0</div>
+                    <div class="btn-cost" id="quarryCost">15 Wood</div>
+                </button>
+
+                <button class="build-btn disabled" onclick="build('storage')" id="btn-storage">
+                    <div class="btn-title">Storage</div>
+                    <div class="btn-count" id="storageCount">0</div>
+                    <div class="btn-cost" id="storageCost">20 Wood, 10 Stone</div>
+                </button>
+
+            </div>
+
+        </div><!-- /tab-build -->
+
+        <!-- RESEARCH TAB -->
+        <div class="tab-body tab-content" id="tab-research" style="display:none">
+
+            <h2>Research</h2>
+            <p class="placeholder-note">Unlock technologies to expand your dungeon.</p>
+
+            <div class="research-list" style="margin-top:10px">
+
+                <div class="research-card">
+                    <div>
+                        <div class="research-name">Improved Foraging</div>
+                        <div class="research-desc">Increases manual gathering yield.</div>
+                    </div>
+                    <div class="research-cost">— requires research tree</div>
+                </div>
+
+                <div class="research-card">
+                    <div>
+                        <div class="research-name">Creature Comfort</div>
+                        <div class="research-desc">Speeds up population growth rate.</div>
+                    </div>
+                    <div class="research-cost">— requires research tree</div>
+                </div>
+
+                <div class="research-card">
+                    <div>
+                        <div class="research-name">Reinforced Walls</div>
+                        <div class="research-desc">Unlocks stone construction options.</div>
+                    </div>
+                    <div class="research-cost">— requires research tree</div>
+                </div>
+
+                <div class="research-card">
+                    <div>
+                        <div class="research-name">Mining Techniques</div>
+                        <div class="research-desc">Improves quarry output per worker.</div>
+                    </div>
+                    <div class="research-cost">— requires research tree</div>
+                </div>
+
+                <div class="research-card">
+                    <div>
+                        <div class="research-name">Dark Arts</div>
+                        <div class="research-desc">Unlocks creature-specific research branch.</div>
+                    </div>
+                    <div class="research-cost">— requires research tree</div>
+                </div>
+
+            </div>
+
+        </div><!-- /tab-research -->
+
+        <!-- INFO TAB -->
+        <div class="tab-body tab-content" id="tab-info" style="display:none">
+
+            <h2>About</h2>
+            <p class="info-text">
+                You are the keeper of a fledgling dungeon. Gather resources, house creatures,
+                and expand your underground empire. Keep your creatures fed or watch them
+                desert you — or worse.
+            </p>
+
+            <h2>Statistics</h2>
+            <div class="info-stat-block">
+                <div class="info-stat"><span>Version</span><span>0.10</span></div>
+                <div class="info-stat"><span>Current Day</span><span id="info-day">—</span></div>
+                <div class="info-stat"><span>Current Year</span><span id="info-year">—</span></div>
+                <div class="info-stat"><span>Creatures</span><span id="info-pop">—</span></div>
+                <div class="info-stat"><span>Buildings</span><span id="info-buildings">—</span></div>
+            </div>
+
+            <h2 class="section-gap">How to Play</h2>
+            <p class="info-text">
+                Start by gathering wood manually. Build a <strong>Lair</strong> to house your first
+                creatures, then stockpile food to attract them. Assign creatures to buildings
+                — each Farm worker produces 2 food per second, but every creature consumes 1.
+                Expand carefully: starvation kills.
+            </p>
+
+        </div><!-- /tab-info -->
+
+        <!-- SETTINGS TAB -->
+        <div class="tab-body tab-content" id="tab-settings" style="display:none">
+
+            <h2>Settings</h2>
+
+            <div class="setting-row">
+                <span class="setting-label">Autosave Frequency</span>
+                <span class="setting-placeholder">every tick</span>
+            </div>
+
+            <div class="setting-row">
+                <span class="setting-label">Show Tooltips</span>
+                <span class="setting-placeholder">on</span>
+            </div>
+
+            <div class="setting-row">
+                <span class="setting-label">Reduced Animations</span>
+                <span class="setting-placeholder">off</span>
+            </div>
+
+            <div class="setting-row">
+                <span class="setting-label">Notification Sound</span>
+                <span class="setting-placeholder">off</span>
+            </div>
+
+            <div class="setting-row">
+                <span class="setting-label">Number Format</span>
+                <span class="setting-placeholder">abbreviated</span>
+            </div>
+
+            <p class="placeholder-note" style="margin-top:14px">Settings not yet functional.</p>
+
+        </div><!-- /tab-settings -->
+
+        <!-- DEV TAB -->
+        <div class="tab-body tab-content" id="tab-dev" style="display:none">
+
+            <h2 style="color:#f39c12; border-color:rgba(243,156,18,0.3)">Developer Tools</h2>
+            <p class="placeholder-note" style="margin-bottom:14px">Placeholder actions — not yet wired up.</p>
+
+            <div class="dev-section">
+                <h3>Resources</h3>
+                <div class="dev-grid">
+                    <button class="dev-btn">+100 Food</button>
+                    <button class="dev-btn">+100 Wood</button>
+                    <button class="dev-btn">+100 Stone</button>
+                    <button class="dev-btn">Fill All Caps</button>
+                </div>
+            </div>
+
+            <div class="dev-section">
+                <h3>Population</h3>
+                <div class="dev-grid">
+                    <button class="dev-btn">+1 Creature</button>
+                    <button class="dev-btn">Fill Population</button>
+                    <button class="dev-btn">Kill All</button>
+                </div>
+            </div>
+
+            <div class="dev-section">
+                <h3>Time</h3>
+                <div class="dev-grid">
+                    <button class="dev-btn">+1 Day</button>
+                    <button class="dev-btn">+1 Season</button>
+                    <button class="dev-btn">+1 Year</button>
+                    <button class="dev-btn">Tick ×10</button>
+                </div>
+            </div>
+
+            <div class="dev-section">
+                <h3>Buildings</h3>
+                <div class="dev-grid">
+                    <button class="dev-btn">+1 Each</button>
+                    <button class="dev-btn">Max All</button>
+                </div>
+            </div>
+
+            <div class="dev-section">
+                <h3>Danger Zone</h3>
+                <div class="dev-grid">
+                    <button class="dev-btn danger">Reset Save</button>
+                    <button class="dev-btn danger">Wipe Resources</button>
+                </div>
+            </div>
+
+        </div><!-- /tab-dev -->
+
+    </div><!-- /center -->
 
     <!-- RIGHT: Log -->
     <div class="panel right">
