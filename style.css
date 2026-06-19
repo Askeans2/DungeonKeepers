@@ -347,14 +347,14 @@ h3 {
 }
 
 .tab-btn {
-    height: 28px;
-    padding: 0 12px;
+    height: 36px;
+    padding: 0 18px;
     background: var(--bg);
     border: 1px solid var(--border);
     border-radius: 3px;
     color: var(--text-muted);
     font-family: 'Lato', Arial, sans-serif;
-    font-size: 11px;
+    font-size: 13px;
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -449,22 +449,90 @@ h3 {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 8px 0;
+    padding: 10px 0;
     border-bottom: 1px solid rgba(255,255,255,0.04);
-    font-size: 13px;
-    color: var(--text-muted);
+    gap: 12px;
 }
 
-.setting-row .setting-label {
+.setting-label {
+    font-size: 13px;
     color: var(--text);
 }
 
-.setting-placeholder {
+.setting-desc {
     font-size: 11px;
     color: var(--text-muted);
+    margin-top: 2px;
+}
+
+.setting-toggle {
+    flex-shrink: 0;
+    min-width: 110px;
+    height: 28px;
+    padding: 0 12px;
+    background: var(--bg);
     border: 1px solid var(--border);
     border-radius: 3px;
-    padding: 2px 8px;
+    color: var(--text-muted);
+    font-family: 'Lato', Arial, sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+    transition: color 0.08s, border-color 0.08s, background 0.08s;
+}
+
+.setting-toggle:hover {
+    background: var(--bg-hover);
+    color: var(--text);
+}
+
+.setting-toggle.is-on {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(26, 188, 156, 0.07);
+}
+
+.setting-action-row {
+    display: flex;
+    gap: 8px;
+    padding-top: 10px;
+}
+
+.setting-action-btn {
+    height: 34px;
+    padding: 0 16px;
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    color: var(--text);
+    font-family: 'Lato', Arial, sans-serif;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background 0.08s, border-color 0.08s;
+}
+
+.setting-action-btn:hover {
+    background: var(--bg-hover);
+    border-color: var(--text-muted);
+}
+
+.setting-action-btn.danger {
+    color: var(--disabled);
+    border-color: rgba(194, 0, 0, 0.3);
+}
+
+.setting-action-btn.danger:hover {
+    background: rgba(194, 0, 0, 0.12);
+    border-color: var(--disabled);
+}
+
+/* Disable all animations when reduce-motion is active */
+body.reduce-motion *,
+body.reduce-motion *::before,
+body.reduce-motion *::after {
+    animation: none !important;
+    transition: none !important;
 }
 
 /* ── INFO TAB ────────────────────────────────────────────────────────────────── */

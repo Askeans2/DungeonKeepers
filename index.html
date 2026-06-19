@@ -8,7 +8,7 @@
 
 <body>
 
-<div class="version">v0.10</div>
+<div class="version">v0.15</div>
 
 <div class="statusbar">
     <div class="status-center">
@@ -195,28 +195,45 @@
         <!-- INFO TAB -->
         <div class="tab-body tab-content" id="tab-info" style="display:none">
 
-            <h2>About</h2>
-            <p class="info-text">
-                You are the keeper of a fledgling dungeon. Gather resources, house creatures,
-                and expand your underground empire. Keep your creatures fed or watch them
-                desert you — or worse.
-            </p>
-
-            <h2>Statistics</h2>
+            <h2>Current State</h2>
             <div class="info-stat-block">
-                <div class="info-stat"><span>Version</span><span>0.10</span></div>
-                <div class="info-stat"><span>Current Day</span><span id="info-day">—</span></div>
-                <div class="info-stat"><span>Current Year</span><span id="info-year">—</span></div>
-                <div class="info-stat"><span>Creatures</span><span id="info-pop">—</span></div>
-                <div class="info-stat"><span>Buildings</span><span id="info-buildings">—</span></div>
+                <div class="info-stat"><span>Season</span>        <span id="info-season">—</span></div>
+                <div class="info-stat"><span>Day of Season</span> <span id="info-day">—</span></div>
+                <div class="info-stat"><span>Year</span>          <span id="info-year">—</span></div>
+                <div class="info-stat"><span>Creatures</span>     <span id="info-pop">—</span></div>
+                <div class="info-stat"><span>Employed</span>      <span id="info-employed">—</span></div>
+                <div class="info-stat"><span>Buildings</span>     <span id="info-buildings">—</span></div>
             </div>
 
-            <h2 class="section-gap">How to Play</h2>
+            <h2 class="section-gap">Production</h2>
+            <div class="info-stat-block">
+                <div class="info-stat"><span>Food (net)</span>  <span id="info-food-rate">0/s</span></div>
+                <div class="info-stat"><span>Wood</span>        <span id="info-wood-rate">0/s</span></div>
+                <div class="info-stat"><span>Stone</span>       <span id="info-stone-rate">0/s</span></div>
+            </div>
+
+            <h2 class="section-gap">Lifetime Stats</h2>
+            <div class="info-stat-block">
+                <div class="info-stat"><span>Total Days</span>          <span id="info-total-days">0</span></div>
+                <div class="info-stat"><span>Peak Population</span>     <span id="info-peak-pop">0</span></div>
+                <div class="info-stat"><span>Buildings Constructed</span><span id="info-built-total">0</span></div>
+                <div class="info-stat"><span>Manual Gathers</span>      <span id="info-gathers">0</span></div>
+                <div class="info-stat"><span>Starvation Deaths</span>   <span id="info-starve-deaths">0</span></div>
+                <div class="info-stat"><span>Food Produced</span>       <span id="info-food-total">0</span></div>
+                <div class="info-stat"><span>Wood Produced</span>       <span id="info-wood-total">0</span></div>
+                <div class="info-stat"><span>Stone Produced</span>      <span id="info-stone-total">0</span></div>
+            </div>
+
+            <h2 class="section-gap">About</h2>
             <p class="info-text">
-                Start by gathering wood manually. Build a <strong>Lair</strong> to house your first
-                creatures, then stockpile food to attract them. Assign creatures to buildings
-                — each Farm worker produces 2 food per second, but every creature consumes 1.
-                Expand carefully: starvation kills.
+                Dungeon Keeper v0.15 — You are the keeper of a fledgling dungeon. Gather
+                resources, house creatures, and expand your underground empire. Keep your
+                creatures fed or watch them desert you — or worse.
+            </p>
+            <p class="info-text">
+                Build a <strong>Lair</strong> to unlock housing, stockpile food to attract
+                creatures, then assign them to buildings. Each Farm worker produces 2 food/s
+                but every creature eats 1 food/s. Expand carefully — starvation kills.
             </p>
 
         </div><!-- /tab-info -->
@@ -224,34 +241,40 @@
         <!-- SETTINGS TAB -->
         <div class="tab-body tab-content" id="tab-settings" style="display:none">
 
-            <h2>Settings</h2>
+            <h2>Game</h2>
 
             <div class="setting-row">
-                <span class="setting-label">Autosave Frequency</span>
-                <span class="setting-placeholder">every tick</span>
+                <div>
+                    <span class="setting-label">Autosave</span>
+                    <div class="setting-desc">How often the game saves automatically.</div>
+                </div>
+                <button class="setting-toggle is-on" id="set-autosave" onclick="cycleAutosave()">Every Tick</button>
             </div>
 
             <div class="setting-row">
-                <span class="setting-label">Show Tooltips</span>
-                <span class="setting-placeholder">on</span>
+                <div>
+                    <span class="setting-label">Number Format</span>
+                    <div class="setting-desc">Abbreviated (10k) or full (10,000) numbers.</div>
+                </div>
+                <button class="setting-toggle is-on" id="set-numfmt" onclick="cycleNumberFormat()">Abbreviated</button>
             </div>
+
+            <h2 class="section-gap">Display</h2>
 
             <div class="setting-row">
-                <span class="setting-label">Reduced Animations</span>
-                <span class="setting-placeholder">off</span>
+                <div>
+                    <span class="setting-label">Reduced Animations</span>
+                    <div class="setting-desc">Disables all CSS transitions and animations.</div>
+                </div>
+                <button class="setting-toggle" id="set-anim" onclick="toggleAnimations()">OFF</button>
             </div>
 
-            <div class="setting-row">
-                <span class="setting-label">Notification Sound</span>
-                <span class="setting-placeholder">off</span>
-            </div>
+            <h2 class="section-gap">Data</h2>
 
-            <div class="setting-row">
-                <span class="setting-label">Number Format</span>
-                <span class="setting-placeholder">abbreviated</span>
+            <div class="setting-action-row">
+                <button class="setting-action-btn" id="set-savenow" onclick="doSaveNow()">Save Now</button>
+                <button class="setting-action-btn danger" onclick="doResetSave()">Reset Save</button>
             </div>
-
-            <p class="placeholder-note" style="margin-top:14px">Settings not yet functional.</p>
 
         </div><!-- /tab-settings -->
 
@@ -259,50 +282,50 @@
         <div class="tab-body tab-content" id="tab-dev" style="display:none">
 
             <h2 style="color:#f39c12; border-color:rgba(243,156,18,0.3)">Developer Tools</h2>
-            <p class="placeholder-note" style="margin-bottom:14px">Placeholder actions — not yet wired up.</p>
 
             <div class="dev-section">
                 <h3>Resources</h3>
                 <div class="dev-grid">
-                    <button class="dev-btn">+100 Food</button>
-                    <button class="dev-btn">+100 Wood</button>
-                    <button class="dev-btn">+100 Stone</button>
-                    <button class="dev-btn">Fill All Caps</button>
+                    <button class="dev-btn" onclick="devAddResource('food', 100)">+100 Food</button>
+                    <button class="dev-btn" onclick="devAddResource('wood', 100)">+100 Wood</button>
+                    <button class="dev-btn" onclick="devAddResource('stone', 100)">+100 Stone</button>
+                    <button class="dev-btn" onclick="devFillAllCaps()">Fill All Caps</button>
                 </div>
             </div>
 
             <div class="dev-section">
                 <h3>Population</h3>
                 <div class="dev-grid">
-                    <button class="dev-btn">+1 Creature</button>
-                    <button class="dev-btn">Fill Population</button>
-                    <button class="dev-btn">Kill All</button>
+                    <button class="dev-btn" onclick="devAddCreature(1)">+1 Creature</button>
+                    <button class="dev-btn" onclick="devFillPopulation()">Fill Population</button>
+                    <button class="dev-btn danger" onclick="devAddCreature(-10)">Kill 10</button>
+                    <button class="dev-btn danger" onclick="devKillAll()">Kill All</button>
                 </div>
             </div>
 
             <div class="dev-section">
                 <h3>Time</h3>
                 <div class="dev-grid">
-                    <button class="dev-btn">+1 Day</button>
-                    <button class="dev-btn">+1 Season</button>
-                    <button class="dev-btn">+1 Year</button>
-                    <button class="dev-btn">Tick ×10</button>
+                    <button class="dev-btn" onclick="devAdvanceTicks(TICKS_PER_DAY)">+1 Day</button>
+                    <button class="dev-btn" onclick="devAdvanceTicks(TICKS_PER_DAY * DAYS_PER_SEASON)">+1 Season</button>
+                    <button class="dev-btn" onclick="devAdvanceTicks(TICKS_PER_DAY * DAYS_PER_SEASON * 4)">+1 Year</button>
+                    <button class="dev-btn" onclick="devAdvanceTicks(10)">Tick ×10</button>
                 </div>
             </div>
 
             <div class="dev-section">
                 <h3>Buildings</h3>
                 <div class="dev-grid">
-                    <button class="dev-btn">+1 Each</button>
-                    <button class="dev-btn">Max All</button>
+                    <button class="dev-btn" onclick="devAddOneEach()">+1 Each</button>
+                    <button class="dev-btn" onclick="devMaxAll()">+10 All Buildings</button>
                 </div>
             </div>
 
             <div class="dev-section">
                 <h3>Danger Zone</h3>
                 <div class="dev-grid">
-                    <button class="dev-btn danger">Reset Save</button>
-                    <button class="dev-btn danger">Wipe Resources</button>
+                    <button class="dev-btn danger" onclick="doResetSave()">Reset Save</button>
+                    <button class="dev-btn danger" onclick="devWipeResources()">Wipe Resources</button>
                 </div>
             </div>
 
