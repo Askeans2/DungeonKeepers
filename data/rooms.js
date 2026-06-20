@@ -86,7 +86,8 @@ const ROOMS = {
         costScale: 1.12,
         jobs: 1,
         production: { crystals: 0.4 },
-        unlock: { mine: 3 },
+        // Unlocked via the "Deep Mining Techniques" research, not a building count
+        requiresResearch: ["deepMining"],
     },
 
     // ── Stage 3 — Industry (small coin costs 100–500 cp) ────────────────────────
@@ -195,6 +196,7 @@ const ROOMS = {
         jobs: 1,
         converts: { inputs: { arcaneDust: 0.3 }, output: "essence", outputRate: 0.05 },
         unlock: { arcaneGrinder: 1 },
+        requiresResearch: ["ritualPrep"],
     },
     spiderNest: {
         name: "Spider Nest",
@@ -204,6 +206,7 @@ const ROOMS = {
         jobs: 1,
         converts: { inputs: { bones: 0.5, food: 0.5 }, output: "silk", outputRate: 0.1 },
         unlock: { armory: 1, huntingLodge: 1 },
+        requiresResearch: ["silkenWarren"],
     },
     arcaneCrucible: {
         name: "Arcane Crucible",
@@ -213,6 +216,7 @@ const ROOMS = {
         jobs: 1,
         converts: { inputs: { iron: 1.0, arcaneDust: 0.5 }, output: "manaGold", outputRate: 0.1 },
         unlock: { mageTower: 1, forge: 1 },
+        requiresResearch: ["manaConduit"],
     },
     darkAltar: {
         name: "Dark Altar",
@@ -222,6 +226,7 @@ const ROOMS = {
         jobs: 1,
         converts: { inputs: { bones: 1.0, essence: 0.1 }, output: "ichor", outputRate: 0.05 },
         unlock: { ritualCircle: 1, huntingLodge: 1 },
+        requiresResearch: ["darkTexts"],
     },
     mithrilForge: {
         name: "Mithril Forge",

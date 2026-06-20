@@ -481,6 +481,7 @@
 
             <div class="research-list" style="margin-top:10px">
 
+                <!-- Chain 1: Gathering -->
                 <div class="research-card" id="research-taxes">
                     <div class="research-info">
                         <div class="research-name">Taxation</div>
@@ -488,6 +489,418 @@
                         <div class="research-cost">Cost: 50 Stone, 30 Wood, 500 cp</div>
                     </div>
                     <button class="research-btn" id="btn-research-taxes" onclick="doResearch('taxes')">Research</button>
+                </div>
+                <div class="research-card" id="research-toolcraft">
+                    <div class="research-info">
+                        <div class="research-name">Iron Tool Crafting</div>
+                        <div class="research-desc">Forge crude iron implements for the whole settlement. All manual gathering yields +1 per action.</div>
+                        <div class="research-cost">Cost: 30 Wood, 20 Stone</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-toolcraft" onclick="doResearch('toolcraft')">Research</button>
+                </div>
+                <div class="research-card" id="research-foragerLore">
+                    <div class="research-info">
+                        <div class="research-name">Forager's Lore</div>
+                        <div class="research-desc">Teach your kind to identify medicinal plants on sight. Herb gathering yields +2 per action.</div>
+                        <div class="research-cost">Cost: 30 Food, 20 Wood</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-foragerLore" onclick="doResearch('foragerLore')">Research</button>
+                </div>
+                <div class="research-card" id="research-crystalLore">
+                    <div class="research-info">
+                        <div class="research-name">Crystal Lore</div>
+                        <div class="research-desc">Study the resonance of raw crystals. Crystal gathering yields +2 per action.</div>
+                        <div class="research-cost">Cost: 40 Stone, 20 Ore</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-crystalLore" onclick="doResearch('crystalLore')">Research</button>
+                </div>
+
+                <!-- Chain 2: Agriculture -->
+                <div class="research-card" id="research-cropRotation">
+                    <div class="research-info">
+                        <div class="research-name">Crop Rotation</div>
+                        <div class="research-desc">Rotate crops each season to replenish the soil. Farms produce 25% more food.</div>
+                        <div class="research-cost">Cost: 50 Food, 20 Wood</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-cropRotation" onclick="doResearch('cropRotation')">Research</button>
+                </div>
+                <div class="research-card" id="research-composting" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Composting</div>
+                        <div class="research-desc">Pile waste and scraps into the fields. Farms produce an additional 25% more food.</div>
+                        <div class="research-cost">Cost: 80 Food, 30 Wood, 20 Herbs</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-composting" onclick="doResearch('composting')">Research</button>
+                </div>
+                <div class="research-card" id="research-herbGarden">
+                    <div class="research-info">
+                        <div class="research-name">Herb Garden Plots</div>
+                        <div class="research-desc">Lay out organized herb beds behind the Herbalist's Den. Herb production +25%.</div>
+                        <div class="research-cost">Cost: 30 Wood, 20 Food</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-herbGarden" onclick="doResearch('herbGarden')">Research</button>
+                </div>
+                <div class="research-card" id="research-animalHusbandry">
+                    <div class="research-info">
+                        <div class="research-name">Animal Husbandry</div>
+                        <div class="research-desc">Domesticate local animals for a steady supply. Hunting Lodge output +15% and food cap +50.</div>
+                        <div class="research-cost">Cost: 60 Food, 25 Wood</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-animalHusbandry" onclick="doResearch('animalHusbandry')">Research</button>
+                </div>
+
+                <!-- Chain 3: Forestry & Stone -->
+                <div class="research-card" id="research-timberfelling">
+                    <div class="research-info">
+                        <div class="research-name">Timber Felling</div>
+                        <div class="research-desc">Proper axe technique and felling patterns. Lumber Camps produce 25% more wood.</div>
+                        <div class="research-cost">Cost: 40 Wood</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-timberfelling" onclick="doResearch('timberfelling')">Research</button>
+                </div>
+                <div class="research-card" id="research-carpentry" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Crude Carpentry</div>
+                        <div class="research-desc">Better tools mean more splinters and more wood. Manual wood gathering yields +1 per action.</div>
+                        <div class="research-cost">Cost: 60 Wood, 20 Stone</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-carpentry" onclick="doResearch('carpentry')">Research</button>
+                </div>
+                <div class="research-card" id="research-stonemason">
+                    <div class="research-info">
+                        <div class="research-name">Rough Stonemasonry</div>
+                        <div class="research-desc">Chisels, wedges, and knowhow. Quarries produce 25% more stone.</div>
+                        <div class="research-cost">Cost: 40 Stone, 20 Wood</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-stonemason" onclick="doResearch('stonemason')">Research</button>
+                </div>
+                <div class="research-card" id="research-quarrying" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Better Quarrying</div>
+                        <div class="research-desc">Systematic stone extraction techniques. Manual stone gathering yields +2 per action.</div>
+                        <div class="research-cost">Cost: 60 Stone, 10 Iron</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-quarrying" onclick="doResearch('quarrying')">Research</button>
+                </div>
+
+                <!-- Chain 4: Mining & Minerals -->
+                <div class="research-card" id="research-oreProspecting">
+                    <div class="research-info">
+                        <div class="research-name">Ore Prospecting</div>
+                        <div class="research-desc">Learn to read rock formations for ore deposits. Mines produce 25% more ore.</div>
+                        <div class="research-cost">Cost: 50 Stone, 20 Wood</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-oreProspecting" onclick="doResearch('oreProspecting')">Research</button>
+                </div>
+                <div class="research-card" id="research-deepMining" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Deep Mining Techniques</div>
+                        <div class="research-desc">Shafts, bracing, and lung-burning bravery. Mines produce 25% more ore and Crystal Seams become available.</div>
+                        <div class="research-cost">Cost: 80 Stone, 40 Ore, 200 cp</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-deepMining" onclick="doResearch('deepMining')">Research</button>
+                </div>
+                <div class="research-card" id="research-coalBunker">
+                    <div class="research-info">
+                        <div class="research-name">Coal Stockpiling</div>
+                        <div class="research-desc">Covered bunkers keep coal dry and ready. Coal Seams produce 20% more and coal cap +100.</div>
+                        <div class="research-cost">Cost: 40 Wood, 30 Stone</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-coalBunker" onclick="doResearch('coalBunker')">Research</button>
+                </div>
+                <div class="research-card" id="research-sulphurStudy" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Alchemical Sulphur</div>
+                        <div class="research-desc">Figure out what the yellow powder actually does. Sulphur Vents produce 30% more sulphur.</div>
+                        <div class="research-cost">Cost: 60 Stone, 30 Coal, 300 cp</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-sulphurStudy" onclick="doResearch('sulphurStudy')">Research</button>
+                </div>
+
+                <!-- Chain 5: Hunting -->
+                <div class="research-card" id="research-packHunting">
+                    <div class="research-info">
+                        <div class="research-name">Pack Hunting</div>
+                        <div class="research-desc">Coordinated drives and ambushes bring down more prey. Hunting Lodge output +25%.</div>
+                        <div class="research-cost">Cost: 50 Food, 30 Wood</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-packHunting" onclick="doResearch('packHunting')">Research</button>
+                </div>
+                <div class="research-card" id="research-trapLines" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Trap Lines</div>
+                        <div class="research-desc">String snares through the forest overnight. Hunting Lodges produce another 25% more bones.</div>
+                        <div class="research-cost">Cost: 50 Wood, 20 Bones</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-trapLines" onclick="doResearch('trapLines')">Research</button>
+                </div>
+                <div class="research-card" id="research-bonecraft" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Bonework</div>
+                        <div class="research-desc">Render, cure, and stack bones properly. Bone storage cap +100.</div>
+                        <div class="research-cost">Cost: 40 Bones, 20 Stone</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-bonecraft" onclick="doResearch('bonecraft')">Research</button>
+                </div>
+
+                <!-- Chain 6: Early Crafting Boosts -->
+                <div class="research-card" id="research-bellowsDesign">
+                    <div class="research-info">
+                        <div class="research-name">Crude Bellows</div>
+                        <div class="research-desc">A leather lung to stoke the forge fire. Smelter iron output +25%.</div>
+                        <div class="research-cost">Cost: 60 Stone, 20 Iron, 150 cp</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-bellowsDesign" onclick="doResearch('bellowsDesign')">Research</button>
+                </div>
+                <div class="research-card" id="research-concentratedExtracts">
+                    <div class="research-info">
+                        <div class="research-name">Concentrated Tinctures</div>
+                        <div class="research-desc">Reduce and concentrate herb extracts. Alchemy Lab potion output +25%.</div>
+                        <div class="research-cost">Cost: 50 Herbs, 10 Potions, 150 cp</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-concentratedExtracts" onclick="doResearch('concentratedExtracts')">Research</button>
+                </div>
+                <div class="research-card" id="research-highFireKiln">
+                    <div class="research-info">
+                        <div class="research-name">High-Fire Kiln</div>
+                        <div class="research-desc">Pack the kiln tighter and fire hotter. Kiln brick output +25%.</div>
+                        <div class="research-cost">Cost: 50 Stone, 20 Coal, 150 cp</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-highFireKiln" onclick="doResearch('highFireKiln')">Research</button>
+                </div>
+                <div class="research-card" id="research-loomMastery">
+                    <div class="research-info">
+                        <div class="research-name">Loom Mastery</div>
+                        <div class="research-desc">Refined threading patterns and treadle timing. Loom cloth output +25%.</div>
+                        <div class="research-cost">Cost: 20 Cloth, 30 Wood, 100 cp</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-loomMastery" onclick="doResearch('loomMastery')">Research</button>
+                </div>
+
+                <!-- Chain 7: Storage & Logistics -->
+                <div class="research-card" id="research-reinforcedShelving">
+                    <div class="research-info">
+                        <div class="research-name">Reinforced Shelving</div>
+                        <div class="research-desc">Iron-braced racks and raised floors. Each Storage building now grants +75 cap instead of +50.</div>
+                        <div class="research-cost">Cost: 80 Wood, 40 Stone, 10 Iron</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-reinforcedShelving" onclick="doResearch('reinforcedShelving')">Research</button>
+                </div>
+                <div class="research-card" id="research-dryCellar" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Dry Cellar</div>
+                        <div class="research-desc">Stone-lined underground stores keep food and herbs fresh longer. Food cap +100, herbs cap +100.</div>
+                        <div class="research-cost">Cost: 60 Stone, 40 Wood, 10 Bricks</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-dryCellar" onclick="doResearch('dryCellar')">Research</button>
+                </div>
+                <div class="research-card" id="research-ironLockbox">
+                    <div class="research-info">
+                        <div class="research-name">Iron Lockbox</div>
+                        <div class="research-desc">A bolted iron chest for the village treasury. Coin cap increased by 500 gp (50,000 cp).</div>
+                        <div class="research-cost">Cost: 60 Iron, 40 Stone, 500 cp</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-ironLockbox" onclick="doResearch('ironLockbox')">Research</button>
+                </div>
+
+                <!-- Chain 8: Economy & Society -->
+                <div class="research-card" id="research-taxCollector" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Tax Collector</div>
+                        <div class="research-desc">A dedicated ledger-keeper to squeeze out every copper. Taxation yields +1 cp per creature per day.</div>
+                        <div class="research-cost">Cost: 80 Stone, 50 Wood, 1000 cp</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-taxCollector" onclick="doResearch('taxCollector')">Research</button>
+                </div>
+                <div class="research-card" id="research-communalLiving">
+                    <div class="research-info">
+                        <div class="research-name">Communal Living</div>
+                        <div class="research-desc">Pack the burrows tighter and share the straw. Each Lair holds +2 extra creatures.</div>
+                        <div class="research-cost">Cost: 60 Wood, 40 Stone</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-communalLiving" onclick="doResearch('communalLiving')">Research</button>
+                </div>
+                <div class="research-card" id="research-bookkeeping" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Village Ledger</div>
+                        <div class="research-desc">Track debts, trades, and scrounging routes. Scrounge for Coin yields +25 cp per action.</div>
+                        <div class="research-cost">Cost: 40 Wood, 300 cp</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-bookkeeping" onclick="doResearch('bookkeeping')">Research</button>
+                </div>
+                <div class="research-card" id="research-tradeGoods" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Trade Caravans</div>
+                        <div class="research-desc">Send wagons of cloth and potions to nearby settlements. Cloth and potions in stock each generate 2 cp per unit per day.</div>
+                        <div class="research-cost">Cost: 30 Cloth, 15 Potions, 800 cp</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-tradeGoods" onclick="doResearch('tradeGoods')">Research</button>
+                </div>
+                <div class="research-card" id="research-roadNetwork" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Rutted Road Network</div>
+                        <div class="research-desc">Packed earth and stone fill the worst ruts. All building passive production +5%.</div>
+                        <div class="research-cost">Cost: 100 Stone, 60 Wood, 1000 cp</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-roadNetwork" onclick="doResearch('roadNetwork')">Research</button>
+                </div>
+                <div class="research-card" id="research-rationing" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Strict Rationing</div>
+                        <div class="research-desc">Half-portions and no complaints. Your population consumes 20% less food per tick.</div>
+                        <div class="research-cost">Cost: 100 Food, 30 Wood, 500 cp</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-rationing" onclick="doResearch('rationing')">Research</button>
+                </div>
+                <div class="research-card" id="research-militiaDrill">
+                    <div class="research-info">
+                        <div class="research-name">Militia Drill</div>
+                        <div class="research-desc">Weekly drills and bunk assignments. Each Armory houses +3 additional creatures.</div>
+                        <div class="research-cost">Cost: 40 Iron, 30 Wood, 500 cp</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-militiaDrill" onclick="doResearch('militiaDrill')">Research</button>
+                </div>
+
+                <!-- Chain 9: Advanced Crafting -->
+                <div class="research-card" id="research-forgeMastery" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Forge Mastery</div>
+                        <div class="research-desc">Quench, draw, and temper — the three secrets of the smith. Forge steel output +25%.</div>
+                        <div class="research-cost">Cost: 30 Steel, 40 Coal, 1000 cp</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-forgeMastery" onclick="doResearch('forgeMastery')">Research</button>
+                </div>
+                <div class="research-card" id="research-mortaredMasonry" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Mortared Masonry</div>
+                        <div class="research-desc">Lime mortar between courses of brick. Kiln output +25% and brick cap +50.</div>
+                        <div class="research-cost">Cost: 40 Bricks, 60 Stone, 500 cp</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-mortaredMasonry" onclick="doResearch('mortaredMasonry')">Research</button>
+                </div>
+                <div class="research-card" id="research-arcaneInscription">
+                    <div class="research-info">
+                        <div class="research-name">Arcane Inscription</div>
+                        <div class="research-desc">Carve runes with intent, not guesswork. Arcane Bench rune output +25%.</div>
+                        <div class="research-cost">Cost: 20 Runes, 30 Crystals, 1500 cp</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-arcaneInscription" onclick="doResearch('arcaneInscription')">Research</button>
+                </div>
+                <div class="research-card" id="research-crystalFocus" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Crystal Focus Arrays</div>
+                        <div class="research-desc">Arrange crystals to funnel resonance into the grinder. Arcane Grinder dust output +25%.</div>
+                        <div class="research-cost">Cost: 50 Crystals, 20 Arcane Dust, 1200 cp</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-crystalFocus" onclick="doResearch('crystalFocus')">Research</button>
+                </div>
+                <div class="research-card" id="research-arcaneTapping" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Arcane Tapping</div>
+                        <div class="research-desc">Draw raw ley energy through the tower's crystal spire. Mage Tower crystal output +50%.</div>
+                        <div class="research-cost">Cost: 40 Arcane Dust, 30 Crystals, 2000 cp</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-arcaneTapping" onclick="doResearch('arcaneTapping')">Research</button>
+                </div>
+                <div class="research-card" id="research-guildCharter" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Artisan's Guild Charter</div>
+                        <div class="research-desc">Formalize the craft guilds with rights and duties. Smelter, Forge, Loom, and Kiln material costs -20%.</div>
+                        <div class="research-cost">Cost: 60 Iron, 60 Wood, 2000 cp</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-guildCharter" onclick="doResearch('guildCharter')">Research</button>
+                </div>
+
+                <!-- Chain 10: Arcane Refinement -->
+                <div class="research-card" id="research-runicScript" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Runic Script</div>
+                        <div class="research-desc">A standardized glyph system makes inscribing faster. Arcane Bench rune output +25% more.</div>
+                        <div class="research-cost">Cost: 40 Runes, 30 Arcane Dust, 2000 cp</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-runicScript" onclick="doResearch('runicScript')">Research</button>
+                </div>
+                <div class="research-card" id="research-essenceHarvest" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Essence Harvesting</div>
+                        <div class="research-desc">Capture ambient magical resonance in the circle's stone. Ritual Circle essence output +50%.</div>
+                        <div class="research-cost">Cost: 15 Essence, 50 Arcane Dust, 3000 cp</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-essenceHarvest" onclick="doResearch('essenceHarvest')">Research</button>
+                </div>
+                <div class="research-card" id="research-ichorRefinement" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Ichor Refinement</div>
+                        <div class="research-desc">Render and purify dark altar drippings. Dark Altar ichor output +30%.</div>
+                        <div class="research-cost">Cost: 10 Ichor, 60 Bones, 3000 cp</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-ichorRefinement" onclick="doResearch('ichorRefinement')">Research</button>
+                </div>
+                <div class="research-card" id="research-silkCulture" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Spider Keeper's Art</div>
+                        <div class="research-desc">Keep the spiders well-fed and they weave faster. Spider Nest silk output +25%.</div>
+                        <div class="research-cost">Cost: 20 Silk, 40 Bones, 2500 cp</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-silkCulture" onclick="doResearch('silkCulture')">Research</button>
+                </div>
+                <div class="research-card" id="research-manaConductorCoils" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Mana Conductor Coils</div>
+                        <div class="research-desc">Wind copper coils into the crucible walls to focus mana flow. Arcane Crucible output +30%.</div>
+                        <div class="research-cost">Cost: 15 Mana Gold, 60 Iron, 4000 cp</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-manaConductorCoils" onclick="doResearch('manaConductorCoils')">Research</button>
+                </div>
+                <div class="research-card" id="research-mithrilTemper" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Mithril Tempering</div>
+                        <div class="research-desc">The precise heat range that turns grey metal silver-bright. Mithril Forge output +30%.</div>
+                        <div class="research-cost">Cost: 5 Mithril, 60 Steel, 6000 cp</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-mithrilTemper" onclick="doResearch('mithrilTemper')">Research</button>
+                </div>
+
+                <!-- Chain 11: Era 3 Gateway -->
+                <div class="research-card" id="research-ritualPrep" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Rites of the Ancients</div>
+                        <div class="research-desc">Recover the old ways from crumbling texts and stubborn elders. Unlocks the Ritual Circle. Essence cap +25.</div>
+                        <div class="research-cost">Cost: 100 Stone, 60 Arcane Dust, 3000 cp</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-ritualPrep" onclick="doResearch('ritualPrep')">Research</button>
+                </div>
+                <div class="research-card" id="research-darkTexts" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Forbidden Texts</div>
+                        <div class="research-desc">What you read cannot be unread. Unlocks the Dark Altar.</div>
+                        <div class="research-cost">Cost: 80 Bones, 20 Essence, 4000 cp</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-darkTexts" onclick="doResearch('darkTexts')">Research</button>
+                </div>
+                <div class="research-card" id="research-silkenWarren" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Silken Warren</div>
+                        <div class="research-desc">Prepare a sealed chamber and convince the spiders to cooperate. Unlocks the Spider Nest.</div>
+                        <div class="research-cost">Cost: 60 Bones, 40 Cloth, 2500 cp</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-silkenWarren" onclick="doResearch('silkenWarren')">Research</button>
+                </div>
+                <div class="research-card" id="research-manaConduit" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Mana Conduit Forging</div>
+                        <div class="research-desc">Forge a network of iron conduits to carry raw mana safely. Unlocks the Arcane Crucible.</div>
+                        <div class="research-cost">Cost: 80 Steel, 50 Arcane Dust, 5000 cp</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-manaConduit" onclick="doResearch('manaConduit')">Research</button>
+                </div>
+                <div class="research-card" id="research-dungeonBlueprint" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Dungeon Blueprint</div>
+                        <div class="research-desc">Maps, schematics, and the first load-bearing column of something far grander than a village. Era 3 awaits.</div>
+                        <div class="research-cost">Cost: 20 Mana Gold, 5 Mithril, 30 Essence, 15 Ichor, 10000 cp</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-dungeonBlueprint" onclick="doResearch('dungeonBlueprint')">Research</button>
                 </div>
 
             </div>

@@ -316,10 +316,48 @@ function devResetSave() {
 
 // ── Derived values ────────────────────────────────────────────────────────────
 
+// Accumulates research bonus for a given effect type.
+// Multiplicative types (productionBonus, converterBonus, foodConsumption) start at 1 and multiply.
+// All other types start at 0 and add. Pass `key` for dict-type effects.
+function getResearchBonus(type, key) {
+    const multiplicative = type === 'productionBonus' || type === 'converterBonus' || type === 'foodConsumption';
+    let total = multiplicative ? 1 : 0;
+    for (const [rKey, rDef] of Object.entries(RESEARCH)) {
+        if (!gameState.research || !gameState.research[rKey]) continue;
+        if (!rDef.effects) continue;
+        const effect = rDef.effects[type];
+        if (effect === undefined) continue;
+        if (key !== undefined) {
+            if (effect[key] !== undefined) {
+                if (multiplicative) total *= effect[key];
+                else total += effect[key];
+            }
+        } else {
+            total += effect;
+        }
+    }
+    return total;
+}
+
+// Returns the actual amount gained by a manual gather action, after all research bonuses.
+function getGatherAmount(resourceKey) {
+    const action = GATHER_ACTIONS[resourceKey];
+    if (!action) return 0;
+    let amount = action.amount;
+    amount += getResearchBonus('allGatherBonus');
+    amount += getResearchBonus('gatherBonus', resourceKey);
+    if (resourceKey === 'coins') amount += getResearchBonus('coinGatherBonus');
+    return Math.max(1, Math.floor(amount));
+}
+
 function getHousing() {
     let total = 0;
     for (const [id, def] of Object.entries(ROOMS)) {
-        if (def.housingBonus) total += (gameState.buildings[id] || 0) * def.housingBonus;
+        const count = gameState.buildings[id] || 0;
+        if (count === 0) continue;
+        if (def.housingBonus) total += count * def.housingBonus;
+        const researchExtra = getResearchBonus('housingBonus', id);
+        if (researchExtra > 0) total += count * researchExtra;
     }
     return total;
 }
@@ -350,15 +388,17 @@ function getWorkersPerBuilding() {
 }
 
 function getProduction() {
-    const prod    = {};
+    const prod      = {};
     for (const res of Object.keys(BASE_CAPS)) prod[res] = 0;
-    const workers = getWorkersPerBuilding();
+    const workers   = getWorkersPerBuilding();
+    const allBonus  = 1 + getResearchBonus('allProductionBonus');
     for (const [id, def] of Object.entries(ROOMS)) {
         const n = workers[id] || 0;
         // Skip converter buildings — they are processed separately in tick()
         if (n > 0 && def.production && !def.converts) {
+            const bldgMult = getResearchBonus('productionBonus', id);
             for (const [res, rate] of Object.entries(def.production)) {
-                prod[res] = (prod[res] || 0) + rate * n;
+                prod[res] = (prod[res] || 0) + rate * n * bldgMult * allBonus;
             }
         }
     }
@@ -367,22 +407,33 @@ function getProduction() {
 
 function getCaps() {
     const caps = Object.assign({}, BASE_CAPS);
+    // Flat cap bonuses from research (dryCellar, animalHusbandry, bonecraft, ritualPrep, etc.)
+    for (const res of Object.keys(BASE_CAPS)) {
+        const bonus = getResearchBonus('capBonus', res);
+        if (bonus > 0) caps[res] += bonus;
+    }
+    // Storage buildings; reinforcedShelving upgrades per-storage bonus from 50 to 75
+    const storageBonus = (gameState.research && gameState.research.reinforcedShelving) ? 75 : 50;
     const n = gameState.buildings.storage || 0;
     if (n > 0) {
-        for (const res of Object.keys(BASE_CAPS)) {
-            caps[res] += 50 * n;
-        }
+        for (const res of Object.keys(BASE_CAPS)) caps[res] += storageBonus * n;
     }
-    caps.coins = COIN_CAP;
+    // Coin cap; ironLockbox adds 50,000 cp
+    caps.coins = COIN_CAP + ((gameState.research && gameState.research.ironLockbox) ? 50000 : 0);
     return caps;
 }
+
+const GUILD_DISCOUNT_BUILDINGS = new Set(["smelter", "forge", "loom", "kiln"]);
 
 function getBuildCost(id) {
     const def = ROOMS[id];
     const n   = gameState.buildings[id] || 0;
     const out = {};
+    const guildDiscount = gameState.research && gameState.research.guildCharter && GUILD_DISCOUNT_BUILDINGS.has(id);
     for (const [res, base] of Object.entries(def.cost)) {
-        out[res] = Math.floor(base * Math.pow(def.costScale || 1.2, n));
+        let cost = Math.floor(base * Math.pow(def.costScale || 1.2, n));
+        if (guildDiscount) cost = Math.floor(cost * 0.80);
+        out[res] = cost;
     }
     return out;
 }
@@ -418,8 +469,10 @@ function gather(key) {
     const action = GATHER_ACTIONS[key];
     const caps   = getCaps();
     const cur    = gameState.resources[action.resource] || 0;
-    if (cur >= caps[action.resource]) return;
-    gameState.resources[action.resource] = Math.min(cur + action.amount, caps[action.resource]);
+    const cap    = caps[action.resource] !== undefined ? caps[action.resource] : 0;
+    if (cur >= cap) return;
+    const amount = getGatherAmount(key);
+    gameState.resources[action.resource] = Math.min(cur + amount, cap);
     gameState.stats.manualGathers = (gameState.stats.manualGathers || 0) + 1;
     updateUI();
 }
@@ -457,13 +510,15 @@ function tick() {
         for (const [res, rate] of Object.entries(conv.inputs)) {
             gameState.resources[res] = Math.max(0, (gameState.resources[res] || 0) - rate * w * ratio);
         }
-        const outAmt = conv.outputRate * w * ratio;
+        const convMult = getResearchBonus('converterBonus', id);
+        const outAmt = conv.outputRate * convMult * w * ratio;
         const outRes = conv.output;
         gameState.resources[outRes] = Math.min((gameState.resources[outRes] || 0) + outAmt, caps[outRes] || 0);
     }
 
-    // 2. Food consumption
-    const foodNeeded = pop.count;
+    // 2. Food consumption (rationing research reduces consumption by 20%)
+    const foodConsumptionMult = getResearchBonus('foodConsumption'); // 1.0 normally, 0.80 with rationing
+    const foodNeeded = Math.ceil(pop.count * foodConsumptionMult);
     if (gameState.resources.food >= foodNeeded) {
         gameState.resources.food -= foodNeeded;
         pop.starveTick = 0;
@@ -496,10 +551,16 @@ function tick() {
     // 4. Advance time
     gameState.time.tick++;
     if (gameState.time.tick % TICKS_PER_DAY === 0) {
-        // Taxation: 1 cp per creature per day
-        if (gameState.research && gameState.research.taxes) {
-            const taxIncome = gameState.population.count;
-            gameState.resources.coins = Math.min((gameState.resources.coins || 0) + taxIncome, COIN_CAP);
+        // Taxation: base 1 cp/creature/day + taxBonus from research (taxCollector adds 1 more)
+        const taxRate = getResearchBonus('taxBonus');
+        if (taxRate > 0) {
+            const taxIncome = gameState.population.count * taxRate;
+            gameState.resources.coins = Math.min((gameState.resources.coins || 0) + taxIncome, caps.coins);
+        }
+        // Trade Caravans: cloth and potions in stock each generate 2 cp per unit per day
+        if (gameState.research && gameState.research.tradeGoods) {
+            const tradeIncome = Math.floor(((gameState.resources.cloth || 0) + (gameState.resources.potions || 0)) * 2 / TICKS_PER_DAY);
+            gameState.resources.coins = Math.min((gameState.resources.coins || 0) + tradeIncome, caps.coins);
         }
         gameState.time.day++;
         const totalDays = DAYS_PER_SEASON * 4;
@@ -586,7 +647,7 @@ function updateUI() {
 
     // Coin Purse
     setText("coinsDisplay", formatCoins(gameState.resources.coins || 0));
-    setText("coinsCap",     formatCoins(COIN_CAP));
+    setText("coinsCap",     formatCoins(caps.coins));
 
     // Time
     setText("day",    gameState.time.day);
@@ -620,11 +681,14 @@ function updateUI() {
 
     // Research tab
     for (const [key, def] of Object.entries(RESEARCH)) {
-        const btn  = document.getElementById("btn-research-" + key);
         const card = document.getElementById("research-" + key);
-        if (!btn || !card) continue;
-        const done = gameState.research && gameState.research[key];
-        card.classList.toggle("researched", !!done);
+        if (!card) continue;
+        const prereqsMet = !def.requiresResearch || def.requiresResearch.every(k => gameState.research && gameState.research[k]);
+        card.style.display = prereqsMet ? "" : "none";
+        const btn = document.getElementById("btn-research-" + key);
+        if (!btn) continue;
+        const done = !!(gameState.research && gameState.research[key]);
+        card.classList.toggle("researched", done);
         btn.textContent = done ? "Researched" : "Research";
         btn.disabled    = done || !canAffordResearch(key);
     }
@@ -697,9 +761,16 @@ function formatCoins(n) {
 
 function checkUnlock(id) {
     const def = ROOMS[id];
-    if (!def || !def.unlock) return true;
-    for (const [reqId, reqCount] of Object.entries(def.unlock)) {
-        if ((gameState.buildings[reqId] || 0) < reqCount) return false;
+    if (!def) return false;
+    if (def.unlock) {
+        for (const [reqId, reqCount] of Object.entries(def.unlock)) {
+            if ((gameState.buildings[reqId] || 0) < reqCount) return false;
+        }
+    }
+    if (def.requiresResearch) {
+        for (const key of def.requiresResearch) {
+            if (!gameState.research || !gameState.research[key]) return false;
+        }
     }
     return true;
 }
@@ -718,6 +789,11 @@ function shouldShowResource(res) {
 function canAffordResearch(key) {
     const def = RESEARCH[key];
     if (!def) return false;
+    if (def.requiresResearch) {
+        for (const reqKey of def.requiresResearch) {
+            if (!gameState.research || !gameState.research[reqKey]) return false;
+        }
+    }
     for (const [res, amount] of Object.entries(def.cost)) {
         if ((gameState.resources[res] || 0) < amount) return false;
     }
@@ -750,7 +826,7 @@ function devAddResource(res, amount) {
 function devFillAllCaps() {
     const caps = getCaps();
     for (const res of Object.keys(BASE_CAPS)) gameState.resources[res] = caps[res];
-    gameState.resources.coins = COIN_CAP;
+    gameState.resources.coins = caps.coins;
     updateUI();
     saveGame();
 }
