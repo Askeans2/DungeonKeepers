@@ -1347,21 +1347,29 @@ function playRace(raceName) {
 // dropdown. The full bestiary now lives in the standalone wiki (wiki.html);
 // this constant keeps the Dev tools self-contained inside the game page.
 const CREATURE_ROSTER = {
-    "Draconic":    ["Chromatic Dragon", "Metallic Dragon", "Lizardfolk", "Kobold", "Yuan-ti", "Wyvern", "Dragonborn"],
-    "Undead":      ["Skeleton", "Zombie", "Vampire", "Lich", "Wight", "Ghoul", "Revenant", "Banshee", "Wraith", "Mummy", "Demilich", "Shadow"],
+    "Draconic":    ["Metallic Dragon", "Lizardfolk", "Kobold", "Yuan-ti", "Wyvern", "Dragonborn"],
+    "Undead":      ["Skeleton", "Zombie", "Vampire", "Wight", "Ghoul", "Revenant", "Banshee", "Wraith", "Mummy", "Demilich", "Shadow"],
     "Goblinoid":   ["Goblin", "Hobgoblin", "Bugbear", "Orc", "Gnoll"],
-    "Fey":         ["Pixie", "Dryad", "Satyr", "Quickling", "Green Hag"],
+    "Fey":         ["Pixie", "Dryad", "Satyr", "Quickling", "Green Hag", "Homunculus"],
     "Aberration":  ["Mind Flayer", "Beholder", "Aboleth", "Gibbering Mouther", "Nothic", "Chuul", "Grell", "Flumph"],
-    "Ooze":        ["Gelatinous Cube", "Black Pudding"],
-    "Elemental":   ["Fire Elemental", "Earth Elemental", "Shadow Demon"],
-    "Monstrous":   ["Harpy", "Medusa", "Minotaur", "Troll", "Werewolf", "Naga", "Basilisk", "Chimera", "Manticore", "Sphinx", "Griffon", "Hydra", "Ettin"],
-    "Fiend":       ["Imp", "Cambion", "Barbed Devil", "Night Hag", "Succubus/Incubus", "Pit Fiend", "Balor", "Rakshasa", "Quasit"],
+    "Ooze":        ["Gelatinous Cube", "Black Pudding", "Gray Ooze", "Ochre Jelly", "Void Ooze"],
+    "Elemental":   ["Fire Elemental", "Earth Elemental", "Water Elemental", "Air Elemental"],
+    "Monstrous":   ["Harpy", "Medusa", "Minotaur", "Troll", "Werewolf", "Naga", "Basilisk", "Chimera", "Manticore", "Griffon", "Hydra", "Ettin"],
+    "Fiend":       ["Imp", "Cambion", "Barbed Devil", "Night Hag", "Succubus/Incubus", "Pit Fiend", "Balor", "Rakshasa", "Quasit", "Shadow Demon"],
     "Giant":       ["Hill Giant", "Stone Giant", "Frost Giant", "Fire Giant", "Cloud Giant", "Storm Giant"],
-    "Construct":   ["Stone Golem", "Iron Golem", "Homunculus", "Animated Armor"],
+    "Construct":   ["Stone Golem", "Iron Golem", "Animated Armor"],
     "Lycanthrope": ["Werebear", "Wererat", "Wereboar", "Owlbear", "Displacer Beast"],
-    "Flora":       ["Treant", "Myconid", "Vegepygmy"],
+    "Flora":       ["Treant", "Myconid", "Vegepygmy", "Shambling Mound", "Vine Blight", "Wood Woad"],
     "Aquatic":     ["Merfolk", "Sahuagin", "Kuo-toa", "Triton"],
-    "Humanoid":    ["Kenku", "Tabaxi", "Aarakocra", "Tortle", "Centaur"]
+    "Humanoid":    ["Kenku", "Tabaxi", "Aarakocra", "Tortle", "Centaur", "Human", "Elf", "Dwarf", "Half-Orc", "Gnome"],
+};
+
+// Races hidden from the player — earned through special conditions.
+// Populated into RACE_DATA the same way as CREATURE_ROSTER entries.
+const LEGENDARY_ROSTER = {
+    "Draconic":  ["Chromatic Dragon"],
+    "Undead":    ["Lich"],
+    "Monstrous": ["Sphinx"],
 };
 
 // ── Populate RACE_DATA from type and creature definitions ─────────────────────
@@ -1408,28 +1416,28 @@ const CREATURE_ROSTER = {
         },
         "Undead": {
             tag: "tag-undead",
-            effects: { foodConsumption: 0.15, growthBonus: 3.0, productionBonus: { huntingLodge: 1.5 }, capBonus: { bones: 150, essence: 50 } },
+            effects: { foodConsumption: 0.15, growthBonus: 3.0, productionBonus: { huntingLodge: 1.15 }, capBonus: { bones: 150, essence: 50 } },
             mods: [
                 { name: "Deathless Hunger", pos: true,  desc: "Population eats only 15% of normal food — undead barely need sustenance." },
-                { name: "Bone Collectors",  pos: true,  desc: "Hunting Lodges produce 50% more. Bone (+150) and Essence (+50) caps increased." },
+                { name: "Bone Collectors",  pos: true,  desc: "Hunting Lodges produce 15% more. Bone (+150) and Essence (+50) caps increased." },
                 { name: "Undying Slow",     pos: false, desc: "Growth timer ×3 — undead must be raised, not born." },
             ],
         },
         "Draconic": {
             tag: "tag-draconic",
-            effects: { foodConsumption: 2.0, growthBonus: 2.5, allProductionBonus: 0.25, capBonus: { coins: 15000 } },
+            effects: { foodConsumption: 2.0, growthBonus: 2.5, allProductionBonus: 0.15, capBonus: { coins: 15000 } },
             mods: [
                 { name: "Dragon's Hoard",    pos: true,  desc: "Coin cap +15,000 cp — hoarding is instinct." },
-                { name: "Draconic Might",    pos: true,  desc: "All passive production +25%." },
+                { name: "Draconic Might",    pos: true,  desc: "All passive production +15%." },
                 { name: "Ravenous Appetite", pos: false, desc: "Population eats ×2 food per tick." },
                 { name: "Apex Rarity",       pos: false, desc: "Growth timer 2.5× longer — draconic creatures are few but formidable." },
             ],
         },
         "Fey": {
             tag: "tag-fey",
-            effects: { foodConsumption: 0.80, growthBonus: 0.85, productionBonus: { lumber: 1.4, herbalistDen: 1.4 }, gatherBonus: { wood: 1, food: 1 }, allGatherBonus: 1 },
+            effects: { foodConsumption: 0.80, growthBonus: 0.85, productionBonus: { lumber: 1.15, herbalistDen: 1.15 }, gatherBonus: { wood: 1, food: 1 }, allGatherBonus: 1 },
             mods: [
-                { name: "Children of the Forest", pos: true, desc: "Lumber Camps and Herbalist Dens produce 40% more." },
+                { name: "Children of the Forest", pos: true, desc: "Lumber Camps and Herbalist Dens produce 15% more." },
                 { name: "Fey Sustenance",          pos: true, desc: "Population eats 20% less food." },
                 { name: "Nimble Foragers",         pos: true, desc: "+1 wood, +1 food, and +1 to all manual gather yields." },
                 { name: "Mercurial Growth",        pos: true, desc: "Growth timer slightly reduced." },
@@ -1437,29 +1445,29 @@ const CREATURE_ROSTER = {
         },
         "Aberration": {
             tag: "tag-aberration",
-            effects: { foodConsumption: 1.30, growthBonus: 1.5, productionBonus: { crystalSeam: 1.5, mageTower: 1.5 }, converterBonus: { arcaneGrinder: 1.5, arcaneBench: 1.5 } },
+            effects: { foodConsumption: 1.30, growthBonus: 1.5, productionBonus: { crystalSeam: 1.15, mageTower: 1.15 }, converterBonus: { arcaneGrinder: 1.15, arcaneBench: 1.15 } },
             mods: [
-                { name: "Psychic Resonance",     pos: true,  desc: "Crystal Seams and Mage Towers produce 50% more." },
-                { name: "Alien Refinement",      pos: true,  desc: "Arcane Grinders and Arcane Benches process 50% more efficiently." },
+                { name: "Psychic Resonance",     pos: true,  desc: "Crystal Seams and Mage Towers produce 15% more." },
+                { name: "Alien Refinement",      pos: true,  desc: "Arcane Grinders and Arcane Benches process 15% more efficiently." },
                 { name: "Alien Metabolism",      pos: false, desc: "Population eats 30% more food — unusual appetites." },
                 { name: "Non-Euclidean Biology", pos: false, desc: "Growth timer 1.5× longer; aberrations emerge from... elsewhere." },
             ],
         },
         "Ooze": {
             tag: "tag-ooze",
-            effects: { foodConsumption: 0.45, growthBonus: 1.80, allProductionBonus: 0.08, storageBonus: 30 },
+            effects: { foodConsumption: 0.45, growthBonus: 1.80, allProductionBonus: 0.08, storageBonus: 20 },
             mods: [
                 { name: "Absorptive Physiology", pos: true,  desc: "Population eats only 45% of normal food — oozes absorb ambient nutrients." },
-                { name: "Vast Capacity",         pos: true,  desc: "Storage buildings hold 30 more of each resource per building." },
+                { name: "Vast Capacity",         pos: true,  desc: "Storage buildings hold 20 more of each resource per building." },
                 { name: "Pervasive Presence",    pos: true,  desc: "All passive production +8%; oozes seep into every process." },
                 { name: "Slow Division",         pos: false, desc: "Growth timer 1.8× longer." },
             ],
         },
         "Elemental": {
             tag: "tag-elemental",
-            effects: { foodConsumption: 0.30, growthBonus: 2.0, productionBonus: { coalSeam: 2.0, sulphurVent: 2.0, quarry: 1.3 }, capBonus: { coal: 150, stone: 100 } },
+            effects: { foodConsumption: 0.30, growthBonus: 2.0, productionBonus: { coalSeam: 1.15, sulphurVent: 1.15, quarry: 1.10 }, capBonus: { coal: 150, stone: 100 } },
             mods: [
-                { name: "Elemental Affinity", pos: true,  desc: "Coal Seams and Sulphur Vents produce ×2; Quarries +30%." },
+                { name: "Elemental Affinity", pos: true,  desc: "Coal Seams and Sulphur Vents produce 15% more; Quarries +10%." },
                 { name: "Infused Form",        pos: true,  desc: "70% reduced food consumption — elementals sustain from ambient energy." },
                 { name: "Raw Reserves",        pos: true,  desc: "Coal cap +150, Stone cap +100." },
                 { name: "Volatile Cycle",      pos: false, desc: "Growth timer ×2 — elementals coalesce slowly." },
@@ -1467,28 +1475,28 @@ const CREATURE_ROSTER = {
         },
         "Monstrous": {
             tag: "tag-monstrous",
-            effects: { foodConsumption: 1.35, growthBonus: 0.9, allProductionBonus: 0.15, productionBonus: { quarry: 1.4, mine: 1.4 } },
+            effects: { foodConsumption: 1.35, growthBonus: 0.9, allProductionBonus: 0.15, productionBonus: { quarry: 1.15, mine: 1.15 } },
             mods: [
-                { name: "Brute Labor",        pos: true,  desc: "Quarries and Mines produce 40% more. All passive production +15%." },
+                { name: "Brute Labor",        pos: true,  desc: "Quarries and Mines produce 15% more. All passive production +15%." },
                 { name: "Pack Instinct",      pos: true,  desc: "Growth timer slightly reduced — monsters rally quickly." },
                 { name: "Monster's Appetite", pos: false, desc: "Population eats 35% more food." },
             ],
         },
         "Fiend": {
             tag: "tag-fiend",
-            effects: { taxBonus: 2, foodConsumption: 0.90, productionBonus: { darkAltar: 2.0, ritualCircle: 1.5 }, growthBonus: 1.40 },
+            effects: { taxBonus: 2, foodConsumption: 0.90, productionBonus: { darkAltar: 1.15, ritualCircle: 1.15 }, growthBonus: 1.40 },
             mods: [
-                { name: "Infernal Tithe",     pos: true,  desc: "+2 extra cp per creature per day — fiends extract their due (base 2 cp/creature without taxation research)." },
-                { name: "Dark Mastery",       pos: true,  desc: "Dark Altars produce ×2; Ritual Circles produce 50% more." },
+                { name: "Infernal Tithe",     pos: true,  desc: "+2 extra cp per creature per day — fiends extract their due." },
+                { name: "Dark Mastery",       pos: true,  desc: "Dark Altars and Ritual Circles produce 15% more." },
                 { name: "Creature Comforts",  pos: true,  desc: "Population eats 10% less food." },
                 { name: "Hellish Provenance", pos: false, desc: "Growth timer 40% longer — fiends must be summoned or bargained, not born." },
             ],
         },
         "Giant": {
             tag: "tag-giant",
-            effects: { foodConsumption: 2.0, growthBonus: 3.0, allProductionBonus: 0.30, lairHousing: 2, capBonus: { food: 200, wood: 100, stone: 200 } },
+            effects: { foodConsumption: 2.0, growthBonus: 3.0, allProductionBonus: 0.15, lairHousing: 2, capBonus: { food: 200, wood: 100, stone: 200 } },
             mods: [
-                { name: "Titan's Strength", pos: true,  desc: "All passive production +30%." },
+                { name: "Titan's Strength", pos: true,  desc: "All passive production +15%." },
                 { name: "Vast Stores",      pos: true,  desc: "Food cap +200, Stone cap +200, Wood cap +100." },
                 { name: "Titan's Hunger",   pos: false, desc: "Population eats ×2 food per tick." },
                 { name: "Giant Footprint",  pos: false, desc: "Each Lair houses only 2 Giants — they need far more space." },
@@ -1497,39 +1505,39 @@ const CREATURE_ROSTER = {
         },
         "Construct": {
             tag: "tag-construct",
-            effects: { foodConsumption: 0.05, growthBonus: 4.0, productionBonus: { quarry: 1.3, mine: 1.3, smelter: 1.3 } },
+            effects: { foodConsumption: 0.05, growthBonus: 4.0, productionBonus: { quarry: 1.15, mine: 1.15, smelter: 1.15 } },
             mods: [
-                { name: "Mechanical Efficiency", pos: true,  desc: "Quarries, Mines, and Smelters produce 30% more." },
+                { name: "Mechanical Efficiency", pos: true,  desc: "Quarries, Mines, and Smelters produce 15% more." },
                 { name: "Tireless Frame",         pos: true,  desc: "Population requires almost no food — 95% reduction." },
                 { name: "Forged, Not Born",       pos: false, desc: "Growth timer ×4 — each unit must be painstakingly constructed." },
             ],
         },
         "Lycanthrope": {
             tag: "tag-lycanthrope",
-            effects: { foodConsumption: 1.30, growthBonus: 0.75, productionBonus: { huntingLodge: 2.0 }, allGatherBonus: 2, capBonus: { bones: 100, food: 75 } },
+            effects: { foodConsumption: 1.30, growthBonus: 0.75, productionBonus: { huntingLodge: 1.15 }, allGatherBonus: 1, capBonus: { bones: 100, food: 75 } },
             mods: [
-                { name: "Pack Hunters",      pos: true,  desc: "Hunting Lodges produce ×2. Bone (+100) and Food (+75) caps greatly increased." },
-                { name: "Feral Instincts",   pos: true,  desc: "+2 to all manual gather yields — keen predator senses find more." },
+                { name: "Pack Hunters",      pos: true,  desc: "Hunting Lodges produce 15% more. Bone (+100) and Food (+75) caps increased." },
+                { name: "Feral Instincts",   pos: true,  desc: "+1 to all manual gather yields — keen predator senses find more." },
                 { name: "Fast Pack",         pos: true,  desc: "Growth timer 25% shorter — the pack grows quickly." },
                 { name: "Predator's Hunger", pos: false, desc: "Population eats 30% more food." },
             ],
         },
         "Flora": {
             tag: "tag-flora",
-            effects: { foodConsumption: 0.25, growthBonus: 2.0, productionBonus: { lumber: 2.0, herbalistDen: 2.0 }, gatherBonus: { wood: 2, food: 1 }, capBonus: { herbs: 150, wood: 100 } },
+            effects: { foodConsumption: 0.25, growthBonus: 2.0, productionBonus: { lumber: 1.15, herbalistDen: 1.15 }, gatherBonus: { wood: 1, food: 1 }, capBonus: { herbs: 150, wood: 100 } },
             mods: [
-                { name: "Living Wood",      pos: true,  desc: "Lumber Camps and Herbalist Dens produce ×2." },
+                { name: "Living Wood",      pos: true,  desc: "Lumber Camps and Herbalist Dens produce 15% more." },
                 { name: "Photosynthesis",   pos: true,  desc: "75% reduced food consumption — flora draw energy from sunlight." },
-                { name: "Verdant Foraging", pos: true,  desc: "+2 wood and +1 food per manual gather." },
+                { name: "Verdant Foraging", pos: true,  desc: "+1 wood and +1 food per manual gather." },
                 { name: "Overgrown Stores", pos: true,  desc: "Herb cap +150, Wood cap +100." },
                 { name: "Ancient Growth",   pos: false, desc: "Growth timer ×2 — flora grow slowly but inexorably." },
             ],
         },
         "Aquatic": {
             tag: "tag-aquatic",
-            effects: { foodConsumption: 0.70, growthBonus: 0.80, productionBonus: { clayPit: 2.0, huntingLodge: 1.3 }, gatherBonus: { food: 2 }, capBonus: { clay: 150 } },
+            effects: { foodConsumption: 0.70, growthBonus: 0.80, productionBonus: { clayPit: 1.15, huntingLodge: 1.10 }, gatherBonus: { food: 2 }, capBonus: { clay: 150 } },
             mods: [
-                { name: "Coastal Mastery",    pos: true, desc: "Clay Pits produce ×2; Hunting Lodges produce 30% more." },
+                { name: "Coastal Mastery",    pos: true, desc: "Clay Pits produce 15% more; Hunting Lodges +10%." },
                 { name: "Seafood Diet",       pos: true, desc: "30% reduced food consumption — efficient aquatic metabolism." },
                 { name: "Tidal Foraging",     pos: true, desc: "+2 food per manual gather — rivers and coasts yield plenty." },
                 { name: "Swift Currents",     pos: true, desc: "Growth timer 20% shorter." },
@@ -1551,7 +1559,7 @@ const CREATURE_ROSTER = {
     // ── Creature-specific descriptions and optional extra effects / mods ──────
     const CREATURES = {
         // ── Draconic ─────────────────────────────────────────────────────────
-        "Chromatic Dragon": {
+        "Chromatic Dragon": { // legendary — earned, not chosen
             desc: "Ancient and terrifying, chromatic dragons are primal forces of destruction. Their very presence supercharges all magical production.",
             extraEffects: { allProductionBonus: 0.05 },
             extraMods: [{ name: "Primal Aura", pos: true, desc: "Extra +5% to all production beyond base Draconic bonus." }],
@@ -1568,13 +1576,13 @@ const CREATURE_ROSTER = {
         },
         "Kobold": {
             desc: "Scrappy and numerous for draconic creatures, kobolds breed faster than their kin and excel at mining their masters' lairs.",
-            extraEffects: { growthBonus: 0.85, productionBonus: { mine: 1.2 } },
-            extraMods: [{ name: "Draconic Servitude", pos: true, desc: "Mines produce 20% more. Breeds 15% faster than typical Draconic." }],
+            extraEffects: { growthBonus: 0.85, productionBonus: { mine: 1.10 } },
+            extraMods: [{ name: "Draconic Servitude", pos: true, desc: "Mines produce 10% more. Breeds 15% faster than typical Draconic." }],
         },
         "Yuan-ti": {
             desc: "Serpentine sorcerers who blend alchemy and arcane arts with cold, calculating precision.",
-            extraEffects: { converterBonus: { alchemyLab: 1.2 } },
-            extraMods: [{ name: "Serpent's Wisdom", pos: true, desc: "Alchemy Labs process 20% more efficiently." }],
+            extraEffects: { converterBonus: { alchemyLab: 1.10 } },
+            extraMods: [{ name: "Serpent's Wisdom", pos: true, desc: "Alchemy Labs process 10% more efficiently." }],
         },
         "Wyvern": {
             desc: "Swift aerial hunters whose keen eyes spot resources others miss. Less cunning than true dragons, but fast and fierce.",
@@ -1601,10 +1609,10 @@ const CREATURE_ROSTER = {
             extraEffects: { taxBonus: 1 },
             extraMods: [{ name: "Lord of the Night", pos: true, desc: "+1 extra cp/creature/day — vampires demand tribute." }],
         },
-        "Lich": {
+        "Lich": { // legendary — earned, not chosen
             desc: "Undead archmages of terrifying power. A lich's phylactery acts as a nexus, amplifying all arcane production.",
-            extraEffects: { productionBonus: { crystalSeam: 1.3, mageTower: 1.3 }, converterBonus: { arcaneGrinder: 1.3 } },
-            extraMods: [{ name: "Phylactery Nexus", pos: true, desc: "Crystal Seams and Mage Towers +30%; Arcane Grinders +30% efficiency." }],
+            extraEffects: { productionBonus: { crystalSeam: 1.15, mageTower: 1.15 }, converterBonus: { arcaneGrinder: 1.15 } },
+            extraMods: [{ name: "Phylactery Nexus", pos: true, desc: "Crystal Seams and Mage Towers +15%; Arcane Grinders +15% efficiency." }],
         },
         "Wight": {
             desc: "Fallen warriors animated by hate. They dominate lesser undead and push work quotas higher through sheer menace.",
@@ -1613,8 +1621,8 @@ const CREATURE_ROSTER = {
         },
         "Ghoul": {
             desc: "Feral undead that haunt graveyards and charnel houses, stripping bones with terrifying efficiency.",
-            extraEffects: { productionBonus: { huntingLodge: 1.2 }, capBonus: { bones: 50 } },
-            extraMods: [{ name: "Charnel Efficiency", pos: true, desc: "Hunting Lodges extra +20%; Bone cap +50." }],
+            extraEffects: { productionBonus: { huntingLodge: 1.10 }, capBonus: { bones: 50 } },
+            extraMods: [{ name: "Charnel Efficiency", pos: true, desc: "Hunting Lodges extra +10%; Bone cap +50." }],
         },
         "Revenant": {
             desc: "Driven by unyielding purpose, revenants pursue their singular goal with relentless determination — and grow slightly faster than most undead.",
@@ -1638,8 +1646,8 @@ const CREATURE_ROSTER = {
         },
         "Demilich": {
             desc: "A lich reduced to its phylactery core — a floating skull of incomprehensible arcane density. The ultimate arcane amplifier.",
-            extraEffects: { converterBonus: { arcaneBench: 1.4, ritualCircle: 1.4 } },
-            extraMods: [{ name: "Soul Condenser", pos: true, desc: "Arcane Benches and Ritual Circles +40% efficiency." }],
+            extraEffects: { converterBonus: { arcaneBench: 1.15, ritualCircle: 1.15 } },
+            extraMods: [{ name: "Soul Condenser", pos: true, desc: "Arcane Benches and Ritual Circles +15% efficiency." }],
         },
         "Shadow": {
             desc: "Creatures of pure darkness, shadows need almost no sustenance and multiply faster than their undead kin.",
@@ -1658,8 +1666,8 @@ const CREATURE_ROSTER = {
         },
         "Bugbear": {
             desc: "Massive goblinoids who excel at brute labor. Their size makes them less efficient in standard lairs.",
-            extraEffects: { productionBonus: { quarry: 1.2, mine: 1.2 }, lairHousing: 6 },
-            extraMods: [{ name: "Bugbear Brawn", pos: true, desc: "Quarries and Mines extra +20%. Lairs house 6 Bugbears (smaller than Goblin 8, bigger than default 5)." }],
+            extraEffects: { productionBonus: { quarry: 1.10, mine: 1.10 }, lairHousing: 6 },
+            extraMods: [{ name: "Bugbear Brawn", pos: true, desc: "Quarries and Mines extra +10%. Lairs house 6 Bugbears." }],
         },
         "Orc": {
             desc: "Fierce and relentless, orcs raid and conquer to fuel their dungeon's growth. Raw aggression yields more from the land.",
@@ -1668,8 +1676,8 @@ const CREATURE_ROSTER = {
         },
         "Gnoll": {
             desc: "Hyena-folk with an obsessive hunger. Gnolls consume more but their pack hunting brings exceptional bone and food yields.",
-            extraEffects: { foodConsumption: 1.2, productionBonus: { huntingLodge: 1.3 }, capBonus: { bones: 50 } },
-            extraMods: [{ name: "Gnoll Pack Hunt", pos: true, desc: "Hunting Lodges extra +30%; Bone cap +50. Eats 20% more (stacks with Goblinoid base)." }],
+            extraEffects: { foodConsumption: 1.2, productionBonus: { huntingLodge: 1.15 }, capBonus: { bones: 50 } },
+            extraMods: [{ name: "Gnoll Pack Hunt", pos: true, desc: "Hunting Lodges extra +15%; Bone cap +50. Eats 20% more (stacks with Goblinoid base)." }],
         },
 
         // ── Fey ──────────────────────────────────────────────────────────────
@@ -1680,8 +1688,8 @@ const CREATURE_ROSTER = {
         },
         "Dryad": {
             desc: "Tree spirits bonded to ancient wood. Dryads coax lumber from the forest at supernatural rates.",
-            extraEffects: { productionBonus: { lumber: 1.2 }, gatherBonus: { wood: 1 } },
-            extraMods: [{ name: "Grove Bond", pos: true, desc: "Lumber Camps extra +20%; +1 wood per manual gather." }],
+            extraEffects: { productionBonus: { lumber: 1.10 }, gatherBonus: { wood: 1 } },
+            extraMods: [{ name: "Grove Bond", pos: true, desc: "Lumber Camps extra +10%; +1 wood per manual gather." }],
         },
         "Satyr": {
             desc: "Hedonistic fey who turn labor into revelry. Their joie de vivre boosts morale and subtly increases all output.",
@@ -1695,8 +1703,13 @@ const CREATURE_ROSTER = {
         },
         "Green Hag": {
             desc: "Ancient fey crones who use dark herbalism to stretch resources and reduce food needs with bitter curses.",
-            extraEffects: { foodConsumption: 0.75, converterBonus: { alchemyLab: 1.3 }, capBonus: { herbs: 50 } },
-            extraMods: [{ name: "Wicked Herbalism", pos: true, desc: "Further 25% food reduction; Alchemy Labs +30%; Herb cap +50." }],
+            extraEffects: { foodConsumption: 0.75, converterBonus: { alchemyLab: 1.15 }, capBonus: { herbs: 50 } },
+            extraMods: [{ name: "Wicked Herbalism", pos: true, desc: "Further 25% food reduction; Alchemy Labs +15%; Herb cap +50." }],
+        },
+        "Homunculus": {
+            desc: "A tiny alchemical familiar born from arcane rituals. Though crafted rather than born, homunculi resonate with fey magic and amplify alchemical processes.",
+            extraEffects: { converterBonus: { alchemyLab: 1.15, arcaneGrinder: 1.10 }, growthBonus: 0.80 },
+            extraMods: [{ name: "Alchemical Familiar", pos: true, desc: "Alchemy Labs extra +15%; Arcane Grinders extra +10%; breeds faster than typical Fey." }],
         },
 
         // ── Aberration ────────────────────────────────────────────────────────
@@ -1707,8 +1720,8 @@ const CREATURE_ROSTER = {
         },
         "Beholder": {
             desc: "The paranoid many-eyed tyrant. A beholder's disintegration ray mines stone and ore at alarming rates.",
-            extraEffects: { productionBonus: { quarry: 1.3, mine: 1.3 } },
-            extraMods: [{ name: "Disintegration Mining", pos: true, desc: "Quarries and Mines extra +30%." }],
+            extraEffects: { productionBonus: { quarry: 1.15, mine: 1.15 } },
+            extraMods: [{ name: "Disintegration Mining", pos: true, desc: "Quarries and Mines extra +15%." }],
         },
         "Aboleth": {
             desc: "Ancient aquatic tyrants with memories older than civilization. Their thralls work with preternatural focus.",
@@ -1717,18 +1730,18 @@ const CREATURE_ROSTER = {
         },
         "Gibbering Mouther": {
             desc: "A mass of eyes and mouths that dissolves everything it contacts. Exceptional at conversion but terrible at containment.",
-            extraEffects: { storageBonus: -10, converterBonus: { alchemyLab: 1.2, smelter: 1.2 } },
-            extraMods: [{ name: "Endless Consumption", pos: false, desc: "Storage buildings hold 10 less per building, but converters run much hotter." }],
+            extraEffects: { storageBonus: -10, converterBonus: { alchemyLab: 1.10, smelter: 1.10 } },
+            extraMods: [{ name: "Endless Consumption", pos: false, desc: "Storage buildings hold 10 less per building; converters run 10% more efficiently." }],
         },
         "Nothic": {
             desc: "Warped scholars driven mad by forbidden knowledge. Their cursed insight accelerates arcane extraction.",
-            extraEffects: { productionBonus: { crystalSeam: 1.2 }, converterBonus: { arcaneGrinder: 1.2 } },
-            extraMods: [{ name: "Rotting Insight", pos: true, desc: "Crystal Seams +20%; Arcane Grinders +20%." }],
+            extraEffects: { productionBonus: { crystalSeam: 1.10 }, converterBonus: { arcaneGrinder: 1.10 } },
+            extraMods: [{ name: "Rotting Insight", pos: true, desc: "Crystal Seams +10%; Arcane Grinders +10%." }],
         },
         "Chuul": {
             desc: "Hulking crustacean aberrations who excel at heavy extraction work. Their alien constitution requires unusual feeding.",
-            extraEffects: { productionBonus: { quarry: 1.2, mine: 1.2 }, foodConsumption: 1.1 },
-            extraMods: [{ name: "Exoskeletal Labor", pos: true, desc: "Quarries and Mines extra +20%; slight extra food consumption." }],
+            extraEffects: { productionBonus: { quarry: 1.10, mine: 1.10 }, foodConsumption: 1.1 },
+            extraMods: [{ name: "Exoskeletal Labor", pos: true, desc: "Quarries and Mines extra +10%; slight extra food consumption." }],
         },
         "Grell": {
             desc: "Floating tentacled predators who stalk dungeon tunnels. Their efficient digestion extends food resources.",
@@ -1749,25 +1762,45 @@ const CREATURE_ROSTER = {
         },
         "Black Pudding": {
             desc: "A ravenous acidic ooze that corrodes metal — then absorbs it. Exceptional at refining ore, terrible at containment.",
-            extraEffects: { converterBonus: { smelter: 1.3 } },
-            extraMods: [{ name: "Acid Refinement", pos: true, desc: "Smelters extra +30% output — the pudding pre-processes ore." }],
+            extraEffects: { converterBonus: { smelter: 1.15 } },
+            extraMods: [{ name: "Acid Refinement", pos: true, desc: "Smelters extra +15% output — the pudding pre-processes ore." }],
+        },
+        "Gray Ooze": {
+            desc: "A corroding slime that seeps through ore deposits and pre-processes metal with its acidic secretions.",
+            extraEffects: { productionBonus: { mine: 1.10 }, converterBonus: { smelter: 1.10 } },
+            extraMods: [{ name: "Acid Seep", pos: true, desc: "Mines extra +10%; Smelters extra +10% — the ooze loosens ore before extraction." }],
+        },
+        "Ochre Jelly": {
+            desc: "A splitting ooze that divides when struck. This reproductive efficiency makes Ochre Jellies replenish their numbers far faster than other oozes.",
+            extraEffects: { growthBonus: 0.70 },
+            extraMods: [{ name: "Divide and Conquer", pos: true, desc: "Growth timer 30% shorter than base Ooze — Ochre Jellies split to reproduce." }],
+        },
+        "Void Ooze": {
+            desc: "A rare ooze infused with planar void energy. Its null-matter body consumes almost nothing and stores resources with supernatural efficiency.",
+            extraEffects: { foodConsumption: 0.5, storageBonus: 20 },
+            extraMods: [{ name: "Null Containment", pos: true, desc: "Further 50% food reduction; Storage buildings hold 20 more per building." }],
         },
 
         // ── Elemental ─────────────────────────────────────────────────────────
         "Fire Elemental": {
             desc: "Living flames that burn with purpose. Fire elementals supercharge smelting and forge operations beyond normal limits.",
-            extraEffects: { productionBonus: { coalSeam: 1.2 }, converterBonus: { smelter: 1.3, forge: 1.3 } },
-            extraMods: [{ name: "Living Flame", pos: true, desc: "Coal Seams extra +20%; Smelters and Forges extra +30%." }],
+            extraEffects: { productionBonus: { coalSeam: 1.10 }, converterBonus: { smelter: 1.15, forge: 1.15 } },
+            extraMods: [{ name: "Living Flame", pos: true, desc: "Coal Seams extra +10%; Smelters and Forges extra +15%." }],
         },
         "Earth Elemental": {
             desc: "Living stone that mines with intimate knowledge of rock and ore. Earth elementals tear through solid rock effortlessly.",
-            extraEffects: { productionBonus: { quarry: 1.3, mine: 1.3 }, capBonus: { stone: 50 } },
-            extraMods: [{ name: "Earth Sense", pos: true, desc: "Quarries and Mines extra +30%; Stone cap +50." }],
+            extraEffects: { productionBonus: { quarry: 1.15, mine: 1.15 }, capBonus: { stone: 50 } },
+            extraMods: [{ name: "Earth Sense", pos: true, desc: "Quarries and Mines extra +15%; Stone cap +50." }],
         },
-        "Shadow Demon": {
-            desc: "Creatures of elemental darkness who thrive deep underground. They corrupt and drain — but also refine essence from nothing.",
-            extraEffects: { foodConsumption: 0.5, converterBonus: { ritualCircle: 1.3 }, capBonus: { essence: 50 } },
-            extraMods: [{ name: "Shadow Essence", pos: true, desc: "Further 50% food reduction; Ritual Circles +30%; Essence cap +50." }],
+        "Water Elemental": {
+            desc: "Fluid and pervasive, water elementals flow into clay pits and herbalist operations, softening earth and accelerating growth.",
+            extraEffects: { productionBonus: { clayPit: 1.15, herbalistDen: 1.10 }, capBonus: { herbs: 50 } },
+            extraMods: [{ name: "Flowing Touch", pos: true, desc: "Clay Pits extra +15%; Herbalist Dens extra +10%; Herb cap +50." }],
+        },
+        "Air Elemental": {
+            desc: "Swift and invisible, air elementals carry resources through the dungeon with supernatural speed, boosting all gathering efforts.",
+            extraEffects: { allGatherBonus: 1, growthBonus: 0.85 },
+            extraMods: [{ name: "Wind Courier", pos: true, desc: "Extra +1 to all manual gather yields; slightly faster emergence than base Elemental." }],
         },
 
         // ── Monstrous ─────────────────────────────────────────────────────────
@@ -1778,8 +1811,8 @@ const CREATURE_ROSTER = {
         },
         "Medusa": {
             desc: "Stone-gazing terrors who accidentally (and deliberately) produce an endless supply of petrified stone resources.",
-            extraEffects: { productionBonus: { quarry: 1.3 }, capBonus: { stone: 75 } },
-            extraMods: [{ name: "Petrifying Gaze", pos: true, desc: "Quarries extra +30%; Stone cap +75." }],
+            extraEffects: { productionBonus: { quarry: 1.15 }, capBonus: { stone: 75 } },
+            extraMods: [{ name: "Petrifying Gaze", pos: true, desc: "Quarries extra +15%; Stone cap +75." }],
         },
         "Minotaur": {
             desc: "Legendary maze-guardians of immense strength. Minotaurs are brutally efficient in mines and quarries.",
@@ -1793,8 +1826,8 @@ const CREATURE_ROSTER = {
         },
         "Werewolf": {
             desc: "Lycanthropic monstrosities who hunt and howl. Werewolves bridge the gap between Monstrous and Lycanthrope instincts.",
-            extraEffects: { productionBonus: { huntingLodge: 1.3 }, allGatherBonus: 1 },
-            extraMods: [{ name: "Full Moon Hunt", pos: true, desc: "Hunting Lodges extra +30%; +1 to all gather yields." }],
+            extraEffects: { productionBonus: { huntingLodge: 1.15 }, allGatherBonus: 1 },
+            extraMods: [{ name: "Full Moon Hunt", pos: true, desc: "Hunting Lodges extra +15%; +1 to all gather yields." }],
         },
         "Naga": {
             desc: "Serpentine sages who blend monstrous cunning with arcane insight. Nagas amplify magical conversion processes.",
@@ -1803,8 +1836,8 @@ const CREATURE_ROSTER = {
         },
         "Basilisk": {
             desc: "Eight-legged stone-gazers whose very presence slowly petrifies the dungeon walls, extracting stone from thin air.",
-            extraEffects: { productionBonus: { quarry: 1.3 }, gatherBonus: { stone: 1 } },
-            extraMods: [{ name: "Stone Gaze", pos: true, desc: "Quarries extra +30%; +1 stone per manual gather." }],
+            extraEffects: { productionBonus: { quarry: 1.15 }, gatherBonus: { stone: 1 } },
+            extraMods: [{ name: "Stone Gaze", pos: true, desc: "Quarries extra +15%; +1 stone per manual gather." }],
         },
         "Chimera": {
             desc: "A chaotic amalgam of lion, goat, and dragon. Chimeras are unpredictable but their triple nature touches everything they do.",
@@ -1815,11 +1848,6 @@ const CREATURE_ROSTER = {
             desc: "Winged predators with venom-spiked tails. Manticores patrol vast territories, gathering more with each sweep.",
             extraEffects: { allGatherBonus: 1, capBonus: { food: 50, bones: 50 } },
             extraMods: [{ name: "Venomous Patrol", pos: true, desc: "Extra +1 all gather; Food and Bone caps +50." }],
-        },
-        "Sphinx": {
-            desc: "Ancient and enigmatic, a sphinx's riddling wisdom unlocks insights that improve all arcane processes.",
-            extraEffects: { converterBonus: { arcaneGrinder: 1.3, arcaneBench: 1.3 }, productionBonus: { crystalSeam: 1.2 } },
-            extraMods: [{ name: "Riddling Wisdom", pos: true, desc: "Arcane Grinders and Benches extra +30%; Crystal Seams extra +20%." }],
         },
         "Griffon": {
             desc: "Noble winged hunters whose aerial perspective reveals hidden veins of ore and pockets of resources.",
@@ -1855,8 +1883,8 @@ const CREATURE_ROSTER = {
         },
         "Night Hag": {
             desc: "Dream-devouring witches who harvest essence from sleeping creatures. Their nightmare brews are invaluable to dark alchemy.",
-            extraEffects: { converterBonus: { alchemyLab: 1.3, ritualCircle: 1.3 }, capBonus: { essence: 50 } },
-            extraMods: [{ name: "Nightmare Harvest", pos: true, desc: "Alchemy Labs and Ritual Circles extra +30%; Essence cap +50." }],
+            extraEffects: { converterBonus: { alchemyLab: 1.15, ritualCircle: 1.15 }, capBonus: { essence: 50 } },
+            extraMods: [{ name: "Nightmare Harvest", pos: true, desc: "Alchemy Labs and Ritual Circles extra +15%; Essence cap +50." }],
         },
         "Succubus/Incubus": {
             desc: "Shape-shifting seducers who manipulate through charm. Their influence makes taxation feel voluntary — and highly profitable.",
@@ -1870,8 +1898,8 @@ const CREATURE_ROSTER = {
         },
         "Balor": {
             desc: "A demon of pure destruction and fire. Balors incinerate waste and inefficiency, leaving only productive essence behind.",
-            extraEffects: { allProductionBonus: 0.15, converterBonus: { darkAltar: 1.3 } },
-            extraMods: [{ name: "Immolation Refinery", pos: true, desc: "Extra +15% all production; Dark Altars extra +30%." }],
+            extraEffects: { allProductionBonus: 0.15, converterBonus: { darkAltar: 1.15 } },
+            extraMods: [{ name: "Immolation Refinery", pos: true, desc: "Extra +15% all production; Dark Altars extra +15%." }],
         },
         "Rakshasa": {
             desc: "Tiger-headed sorcerer-lords who scheme and trade across planes. Their mercantile genius multiplies coin income dramatically.",
@@ -1883,6 +1911,11 @@ const CREATURE_ROSTER = {
             extraEffects: { allGatherBonus: 1 },
             extraMods: [{ name: "Spy's Report", pos: true, desc: "Extra +1 to all gather yields." }],
         },
+        "Shadow Demon": {
+            desc: "Pure shadow given malevolent will. Shadow Demons feed on no food, slip through solid stone, and warp dark ritual rites to terrifying effect.",
+            extraEffects: { foodConsumption: 0.5, converterBonus: { ritualCircle: 1.15 }, capBonus: { essence: 50 } },
+            extraMods: [{ name: "Shadow Rite", pos: true, desc: "Further 50% food reduction; Ritual Circles +15%; Essence cap +50." }],
+        },
 
         // ── Giant ─────────────────────────────────────────────────────────────
         "Hill Giant": {
@@ -1890,8 +1923,8 @@ const CREATURE_ROSTER = {
         },
         "Stone Giant": {
             desc: "Gifted sculptors and master quarrymen, stone giants work stone with an artistry bordering on the divine.",
-            extraEffects: { productionBonus: { quarry: 1.2 }, capBonus: { stone: 50 } },
-            extraMods: [{ name: "Stone Artistry", pos: true, desc: "Quarries extra +20%; Stone cap +50." }],
+            extraEffects: { productionBonus: { quarry: 1.10 }, capBonus: { stone: 50 } },
+            extraMods: [{ name: "Stone Artistry", pos: true, desc: "Quarries extra +10%; Stone cap +50." }],
         },
         "Frost Giant": {
             desc: "Cold raiders from icy peaks who preserve resources through natural refrigeration. Food spoilage is simply not a concern.",
@@ -1900,8 +1933,8 @@ const CREATURE_ROSTER = {
         },
         "Fire Giant": {
             desc: "Master smiths in fire-hardened armor. Fire giants supercharge all metal production processes with infernal expertise.",
-            extraEffects: { productionBonus: { mine: 1.2 }, converterBonus: { smelter: 1.3, forge: 1.3 } },
-            extraMods: [{ name: "Master Smithing", pos: true, desc: "Mines extra +20%; Smelters and Forges extra +30%." }],
+            extraEffects: { productionBonus: { mine: 1.10 }, converterBonus: { smelter: 1.15, forge: 1.15 } },
+            extraMods: [{ name: "Master Smithing", pos: true, desc: "Mines extra +10%; Smelters and Forges extra +15%." }],
         },
         "Cloud Giant": {
             desc: "Aristocratic giants who rule from sky castles and levy aerial tolls. Their elevated perspective brings unusual strategic insight.",
@@ -1925,11 +1958,6 @@ const CREATURE_ROSTER = {
             extraEffects: { productionBonus: { mine: 1.2 }, converterBonus: { smelter: 1.2 } },
             extraMods: [{ name: "Iron Constitution", pos: true, desc: "Mines extra +20%; Smelters extra +20%." }],
         },
-        "Homunculus": {
-            desc: "A tiny alchemical familiar — almost too small to matter. But homunculi swarm into arcane processes and amplify them significantly.",
-            extraEffects: { converterBonus: { alchemyLab: 1.3, arcaneGrinder: 1.2 }, growthBonus: 0.75 },
-            extraMods: [{ name: "Alchemical Familiar", pos: true, desc: "Alchemy Labs extra +30%; Arcane Grinders extra +20%; faster construction than base Constructs (×3)." }],
-        },
         "Animated Armor": {
             desc: "Hollow suits of enchanted armor that guard and work in equal measure. Their intimidating presence improves tax compliance.",
             extraEffects: { taxBonus: 1, allProductionBonus: 0.05 },
@@ -1939,8 +1967,8 @@ const CREATURE_ROSTER = {
         // ── Lycanthrope ───────────────────────────────────────────────────────
         "Werebear": {
             desc: "Powerful shapeshifters who combine human intelligence with bear strength. Werebears excel at both resource extraction and woodcutting.",
-            extraEffects: { productionBonus: { quarry: 1.2, lumber: 1.2 } },
-            extraMods: [{ name: "Bear Strength", pos: true, desc: "Quarries and Lumber Camps extra +20%." }],
+            extraEffects: { productionBonus: { quarry: 1.10, lumber: 1.10 } },
+            extraMods: [{ name: "Bear Strength", pos: true, desc: "Quarries and Lumber Camps extra +10%." }],
         },
         "Wererat": {
             desc: "Sly rat-shifters who excel at finding resources in the most unlikely places. Their scavenging network is unmatched.",
@@ -1949,35 +1977,50 @@ const CREATURE_ROSTER = {
         },
         "Wereboar": {
             desc: "Stubborn and savage, wereboars plow through work with unyielding momentum. Their brute extraction is excellent but appetite steep.",
-            extraEffects: { productionBonus: { quarry: 1.2, mine: 1.2 }, foodConsumption: 1.15 },
-            extraMods: [{ name: "Boar's Rush", pos: true, desc: "Quarries and Mines extra +20%; slight extra food consumption." }],
+            extraEffects: { productionBonus: { quarry: 1.10, mine: 1.10 }, foodConsumption: 1.15 },
+            extraMods: [{ name: "Boar's Rush", pos: true, desc: "Quarries and Mines extra +10%; slight extra food consumption." }],
         },
         "Owlbear": {
             desc: "Ferocious hybrid predators who combine owl precision with bear power. Exceptional hunters whose bone piles grow quickly.",
-            extraEffects: { productionBonus: { huntingLodge: 1.3 }, capBonus: { bones: 50 } },
-            extraMods: [{ name: "Feathered Fury", pos: true, desc: "Hunting Lodges extra +30%; Bone cap +50." }],
+            extraEffects: { productionBonus: { huntingLodge: 1.15 }, capBonus: { bones: 50 } },
+            extraMods: [{ name: "Feathered Fury", pos: true, desc: "Hunting Lodges extra +15%; Bone cap +50." }],
         },
         "Displacer Beast": {
             desc: "Six-legged predators who shift phase to avoid predators — and the tax collector. Fearsome hunters, elusive taxpayers.",
-            extraEffects: { productionBonus: { huntingLodge: 1.3 }, taxBonus: -1 },
-            extraMods: [{ name: "Phase Predator", pos: false, desc: "Hunting Lodges extra +30%; but -1 cp/creature/day — they dodge the tax collector." }],
+            extraEffects: { productionBonus: { huntingLodge: 1.15 }, taxBonus: -1 },
+            extraMods: [{ name: "Phase Predator", pos: false, desc: "Hunting Lodges extra +15%; but -1 cp/creature/day — they dodge the tax collector." }],
         },
 
         // ── Flora ─────────────────────────────────────────────────────────────
         "Treant": {
             desc: "Ancient tree-folk who are living lumber yet fiercely protect their forests. Treants boost wood production through deep symbiosis.",
-            extraEffects: { productionBonus: { lumber: 1.3 }, capBonus: { wood: 50 } },
-            extraMods: [{ name: "Forest Guardian", pos: true, desc: "Lumber Camps extra +30%; Wood cap +50." }],
+            extraEffects: { productionBonus: { lumber: 1.15 }, capBonus: { wood: 50 } },
+            extraMods: [{ name: "Forest Guardian", pos: true, desc: "Lumber Camps extra +15%; Wood cap +50." }],
         },
         "Myconid": {
             desc: "Fungal beings who spread their spores through the dungeon, dramatically increasing herb and alchemy yields.",
-            extraEffects: { productionBonus: { herbalistDen: 1.3 }, converterBonus: { alchemyLab: 1.2 }, capBonus: { herbs: 50 } },
-            extraMods: [{ name: "Spore Network", pos: true, desc: "Herbalist Dens extra +30%; Alchemy Labs extra +20%; Herb cap +50." }],
+            extraEffects: { productionBonus: { herbalistDen: 1.15 }, converterBonus: { alchemyLab: 1.10 }, capBonus: { herbs: 50 } },
+            extraMods: [{ name: "Spore Network", pos: true, desc: "Herbalist Dens extra +15%; Alchemy Labs extra +10%; Herb cap +50." }],
         },
         "Vegepygmy": {
             desc: "Small plant-folk who grow rapidly and tend to the dungeon's green corners. Their fast growth partially offsets the Flora growth penalty.",
             extraEffects: { growthBonus: 0.75, gatherBonus: { food: 1 } },
             extraMods: [{ name: "Rapid Growth Cycle", pos: true, desc: "Growth timer ×1.5 (much faster than other Flora at ×2); extra +1 food per gather." }],
+        },
+        "Shambling Mound": {
+            desc: "A massive heap of animate vegetation that absorbs nutrients from everything around it. Shambling Mounds dramatically boost farming and herb gathering.",
+            extraEffects: { productionBonus: { farm: 1.10, herbalistDen: 1.10 }, capBonus: { food: 75 } },
+            extraMods: [{ name: "Nutrient Absorption", pos: true, desc: "Farms and Herbalist Dens extra +10%; Food cap +75." }],
+        },
+        "Vine Blight": {
+            desc: "Creeping plant horrors that spread through dungeon corridors and pull in wood resources from every corner.",
+            extraEffects: { productionBonus: { lumber: 1.10 }, gatherBonus: { wood: 1 } },
+            extraMods: [{ name: "Creeping Spread", pos: true, desc: "Lumber Camps extra +10%; extra +1 wood per manual gather." }],
+        },
+        "Wood Woad": {
+            desc: "Ancient bark-skinned guardians who emerge from the deep forest. Their stoic resilience lets them work longer before needing rest.",
+            extraEffects: { growthBonus: 0.80, productionBonus: { quarry: 1.10 } },
+            extraMods: [{ name: "Bark Endurance", pos: true, desc: "Growth timer 20% faster than base Flora; Quarries extra +10%." }],
         },
 
         // ── Aquatic ───────────────────────────────────────────────────────────
@@ -1988,18 +2031,18 @@ const CREATURE_ROSTER = {
         },
         "Sahuagin": {
             desc: "Aggressive sea devils who raid coastal settlements. Their brutality at sea translates to extraordinary hunting and gathering yields.",
-            extraEffects: { productionBonus: { huntingLodge: 1.3 }, allGatherBonus: 1 },
-            extraMods: [{ name: "Sea Raid", pos: true, desc: "Hunting Lodges extra +30%; extra +1 to all gather yields." }],
+            extraEffects: { productionBonus: { huntingLodge: 1.15 }, allGatherBonus: 1 },
+            extraMods: [{ name: "Sea Raid", pos: true, desc: "Hunting Lodges extra +15%; extra +1 to all gather yields." }],
         },
         "Kuo-toa": {
             desc: "Mad fish-folk who worship inscrutable gods. Their collective religious fervor, though bizarre, produces ritual outputs others cannot match.",
-            extraEffects: { converterBonus: { ritualCircle: 1.3 }, capBonus: { essence: 25 } },
-            extraMods: [{ name: "Frenzied Worship", pos: true, desc: "Ritual Circles extra +30%; Essence cap +25." }],
+            extraEffects: { converterBonus: { ritualCircle: 1.15 }, capBonus: { essence: 25 } },
+            extraMods: [{ name: "Frenzied Worship", pos: true, desc: "Ritual Circles extra +15%; Essence cap +25." }],
         },
         "Triton": {
             desc: "Noble sea-folk guardians of the deep. Tritons bring military discipline and aquatic mastery to clay and stone extraction.",
-            extraEffects: { productionBonus: { clayPit: 1.3 }, allProductionBonus: 0.05 },
-            extraMods: [{ name: "Deep Warden", pos: true, desc: "Clay Pits extra +30%; extra +5% all production." }],
+            extraEffects: { productionBonus: { clayPit: 1.15 }, allProductionBonus: 0.05 },
+            extraMods: [{ name: "Deep Warden", pos: true, desc: "Clay Pits extra +15%; extra +5% all production." }],
         },
 
         // ── Humanoid ──────────────────────────────────────────────────────────
@@ -2028,10 +2071,71 @@ const CREATURE_ROSTER = {
             extraEffects: { allGatherBonus: 1, gatherBonus: { food: 1 } },
             extraMods: [{ name: "Swift Hooves", pos: true, desc: "Extra +1 to all gather yields and +1 food per gather." }],
         },
+        "Human": {
+            desc: "Adaptable generalists who excel at nothing in particular but fall behind in nothing either. Humans bring a modest boost to everything they touch.",
+            extraEffects: { allProductionBonus: 0.05 },
+            extraMods: [{ name: "Generalist Drive", pos: true, desc: "Extra +5% all production — humans work hard at whatever is needed." }],
+        },
+        "Elf": {
+            desc: "Long-lived forest folk with an affinity for wood and arcane crystal. Elves produce more from natural resources and help gather wood by hand.",
+            extraEffects: { productionBonus: { lumber: 1.10, crystalSeam: 1.10 }, gatherBonus: { wood: 1 } },
+            extraMods: [{ name: "Forest Attunement", pos: true, desc: "Lumber Camps and Crystal Seams extra +10%; extra +1 wood per gather." }],
+        },
+        "Dwarf": {
+            desc: "Stout miners and master smelters whose ancestral bond with stone and metal is unmatched among the surface races.",
+            extraEffects: { productionBonus: { mine: 1.10, quarry: 1.10 }, converterBonus: { smelter: 1.10 } },
+            extraMods: [{ name: "Stonecunning", pos: true, desc: "Mines and Quarries extra +10%; Smelters extra +10%." }],
+        },
+        "Half-Orc": {
+            desc: "Born of two worlds, half-orcs carry orcish physical power into a form that can direct it with humanoid focus.",
+            extraEffects: { allGatherBonus: 1, growthBonus: 0.90 },
+            extraMods: [{ name: "Orcish Vigor", pos: true, desc: "Extra +1 to all gather yields; slightly faster emergence than pure Humanoids." }],
+        },
+        "Gnome": {
+            desc: "Tinkering inventors with an insatiable curiosity for alchemy and arcane machinery. Gnomes improve all conversion processes.",
+            extraEffects: { converterBonus: { alchemyLab: 1.10, arcaneGrinder: 1.10 }, allGatherBonus: 1 },
+            extraMods: [{ name: "Tinker's Touch", pos: true, desc: "Alchemy Labs and Arcane Grinders extra +10%; extra +1 to all gather yields." }],
+        },
+
+        // ── Legendary ─────────────────────────────────────────────────────────
+        "Chromatic Dragon": { // legendary — earned, not chosen
+            desc: "An ancient chromatic dragon whose very presence warps the dungeon around it. Their dominance over lesser races increases all production dramatically.",
+            extraEffects: { allProductionBonus: 0.15, foodConsumption: 3.0, lairHousing: 1 },
+            extraMods: [
+                { name: "Chromatic Dominance", pos: true,  desc: "Extra +15% all production — lesser creatures work harder under a dragon's gaze." },
+                { name: "Dragon's Appetite",   pos: false, desc: "Consumes 3× the food of a normal Draconic creature; only 1 fits per lair." },
+            ],
+        },
+        "Lich": { // legendary — earned, not chosen
+            desc: "A powerful undead archmage who transcended death to pursue magical mastery. Liches push arcane infrastructure to impossible heights.",
+            extraEffects: { converterBonus: { crystalSeam: 1.15, mageTower: 1.15, arcaneGrinder: 1.15 }, foodConsumption: 0, lairHousing: 1 },
+            extraMods: [
+                { name: "Phylactery Focus",  pos: true,  desc: "Crystal Seams, Mage Towers, and Arcane Grinders extra +15%." },
+                { name: "Undying Hunger",    pos: true,  desc: "Liches do not eat — they subsist on soul energy alone; only 1 fits per lair." },
+            ],
+        },
+        "Sphinx": { // legendary — earned, not chosen
+            desc: "Ancient and enigmatic, a sphinx's riddling wisdom unlocks insights that improve all arcane processes.",
+            extraEffects: { converterBonus: { arcaneGrinder: 1.15, arcaneBench: 1.15 }, productionBonus: { crystalSeam: 1.10 } },
+            extraMods: [{ name: "Riddling Wisdom", pos: true, desc: "Arcane Grinders and Benches extra +15%; Crystal Seams extra +10%." }],
+        },
     };
 
     // ── Populate RACE_DATA by merging type base + creature overrides ──────────
     for (const [type, names] of Object.entries(CREATURE_ROSTER)) {
+        const td = TYPES[type] || {};
+        for (const name of names) {
+            const cd = CREATURES[name] || {};
+            RACE_DATA[name] = {
+                tag:      td.tag      || '',
+                tagLabel: type,
+                desc:     cd.desc    || td.desc || '',
+                mods:     [...(td.mods || []), ...(cd.extraMods || [])],
+                effects:  mergeEffects(td.effects || {}, cd.extraEffects || {}),
+            };
+        }
+    }
+    for (const [type, names] of Object.entries(LEGENDARY_ROSTER)) {
         const td = TYPES[type] || {};
         for (const name of names) {
             const cd = CREATURES[name] || {};

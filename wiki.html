@@ -1214,6 +1214,11 @@
             <h2>Changelog</h2>
 
             <div class="biome-card">
+                <div><span class="cl-ver">v0.37</span><span class="cl-date">2026-06-20</span></div>
+                <p class="biome-desc">Racial balance pass: capped all positive production and converter bonuses at 15% maximum. Added 5 new Ooze creatures (Gray Ooze, Ochre Jelly, Void Ooze) and 3 new Flora creatures (Shambling Mound, Vine Blight, Wood Woad). Added 5 new Humanoid creatures (Human, Elf, Dwarf, Half-Orc, Gnome) and 2 new Elementals (Water Elemental, Air Elemental). Moved Shadow Demon from Elemental to Fiend, moved Homunculus from Construct to Fey. Chromatic Dragon, Lich, and Sphinx are now hidden legendary races (removed from the Race Tree, accessible only through special in-game means).</p>
+            </div>
+
+            <div class="biome-card">
                 <div><span class="cl-ver">v0.36</span><span class="cl-date">2026-06-20</span></div>
                 <p class="biome-desc">Added Race Lineage Tree to the wiki. Interactive SVG starburst showing all 91 playable creatures across 15 race types organized into four lineage paths (Primal, Shadow, Arcane, Civilized). Supports pan, zoom, hover tooltips with type traits and creature lists, and a live search that dims non-matching nodes and highlights ancestors.</p>
             </div>
@@ -1659,21 +1664,21 @@ function showWiki(id) {
     ];
 
     var ROSTER = {
-        'Draconic':    ['Chromatic Dragon','Metallic Dragon','Lizardfolk','Kobold','Yuan-ti','Wyvern','Dragonborn'],
-        'Undead':      ['Skeleton','Zombie','Vampire','Lich','Wight','Ghoul','Revenant','Banshee','Wraith','Mummy','Demilich','Shadow'],
+        'Draconic':    ['Metallic Dragon','Lizardfolk','Kobold','Yuan-ti','Wyvern','Dragonborn'],
+        'Undead':      ['Skeleton','Zombie','Vampire','Wight','Ghoul','Revenant','Banshee','Wraith','Mummy','Demilich','Shadow'],
         'Goblinoid':   ['Goblin','Hobgoblin','Bugbear','Orc','Gnoll'],
-        'Fey':         ['Pixie','Dryad','Satyr','Quickling','Green Hag'],
+        'Fey':         ['Pixie','Dryad','Satyr','Quickling','Green Hag','Homunculus'],
         'Aberration':  ['Mind Flayer','Beholder','Aboleth','Gibbering Mouther','Nothic','Chuul','Grell','Flumph'],
-        'Ooze':        ['Gelatinous Cube','Black Pudding'],
-        'Elemental':   ['Fire Elemental','Earth Elemental','Shadow Demon'],
-        'Monstrous':   ['Harpy','Medusa','Minotaur','Troll','Werewolf','Naga','Basilisk','Chimera','Manticore','Sphinx','Griffon','Hydra','Ettin'],
-        'Fiend':       ['Imp','Cambion','Barbed Devil','Night Hag','Succubus/Incubus','Pit Fiend','Balor','Rakshasa','Quasit'],
+        'Ooze':        ['Gelatinous Cube','Black Pudding','Gray Ooze','Ochre Jelly','Void Ooze'],
+        'Elemental':   ['Fire Elemental','Earth Elemental','Water Elemental','Air Elemental'],
+        'Monstrous':   ['Harpy','Medusa','Minotaur','Troll','Werewolf','Naga','Basilisk','Chimera','Manticore','Griffon','Hydra','Ettin'],
+        'Fiend':       ['Imp','Cambion','Barbed Devil','Night Hag','Succubus/Incubus','Pit Fiend','Balor','Rakshasa','Quasit','Shadow Demon'],
         'Giant':       ['Hill Giant','Stone Giant','Frost Giant','Fire Giant','Cloud Giant','Storm Giant'],
-        'Construct':   ['Stone Golem','Iron Golem','Homunculus','Animated Armor'],
+        'Construct':   ['Stone Golem','Iron Golem','Animated Armor'],
         'Lycanthrope': ['Werebear','Wererat','Wereboar','Owlbear','Displacer Beast'],
-        'Flora':       ['Treant','Myconid','Vegepygmy'],
+        'Flora':       ['Treant','Myconid','Vegepygmy','Shambling Mound','Vine Blight','Wood Woad'],
         'Aquatic':     ['Merfolk','Sahuagin','Kuo-toa','Triton'],
-        'Humanoid':    ['Kenku','Tabaxi','Aarakocra','Tortle','Centaur'],
+        'Humanoid':    ['Kenku','Tabaxi','Aarakocra','Tortle','Centaur','Human','Elf','Dwarf','Half-Orc','Gnome'],
     };
 
     var TYPE_COLORS = {
