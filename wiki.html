@@ -55,31 +55,95 @@
 
             <h3 class="creature-category">Resources</h3>
             <p class="wiki-lead">
-                There are three core resources: <b>Food</b>, <b>Wood</b>, and <b>Stone</b>. Each has a
-                storage cap shown beside it. Gather resources by hand from the Build tab, or assign
-                creatures to production buildings to generate them automatically over time. Raise your
-                caps by constructing storage.
+                Resources are organized into three tiers of increasing complexity. Tier 1 materials are
+                gathered manually or produced by simple buildings. Tier 2 materials require converter
+                buildings that consume Tier 1 inputs. Tier 3 materials are rare magical substances
+                produced at the end of long processing chains. Each resource has a storage cap that
+                scales with the number of Storage buildings you have built (each Storage adds +50 to
+                every material cap).
             </p>
+
+            <h4 style="color:var(--label);margin:14px 0 6px">Tier 1 — Raw Materials</h4>
+            <table class="wiki-table">
+                <thead><tr><th>Resource</th><th>Base Cap</th><th>Sources</th></tr></thead>
+                <tbody>
+                    <tr><td>Food</td><td>100</td><td>Manual: Scavenge Food · Farm (passive)</td></tr>
+                    <tr><td>Wood</td><td>100</td><td>Manual: Fell a Tree · Lumber Camp (passive)</td></tr>
+                    <tr><td>Stone</td><td>100</td><td>Manual: Break Stones · Quarry (passive)</td></tr>
+                    <tr><td>Ore</td><td>150</td><td>Manual: Chip Ore · Mine (passive, req. 3 Quarry)</td></tr>
+                    <tr><td>Herbs</td><td>100</td><td>Manual: Forage Herbs · Herbalist's Den (req. 3 Farm)</td></tr>
+                    <tr><td>Crystals</td><td>75</td><td>Manual: Pry Crystals · Crystal Seam (req. 3 Mine)</td></tr>
+                    <tr><td>Coal</td><td>150</td><td>Coal Seam (req. 2 Mine)</td></tr>
+                    <tr><td>Clay</td><td>120</td><td>Clay Pit (req. 2 Quarry)</td></tr>
+                    <tr><td>Bones</td><td>100</td><td>Hunting Lodge (req. 3 Lair)</td></tr>
+                    <tr><td>Sulphur</td><td>80</td><td>Sulphur Vent (req. 3 Mine + 1 Smelter)</td></tr>
+                </tbody>
+            </table>
+
+            <h4 style="color:var(--label);margin:14px 0 6px">Tier 2 — Crafted</h4>
+            <p class="wiki-lead">Crafted by converter buildings. Converters consume inputs each tick proportional to assigned workers. If inputs run short, output is reduced proportionally.</p>
+            <table class="wiki-table">
+                <thead><tr><th>Resource</th><th>Base Cap</th><th>Converter</th><th>Inputs</th></tr></thead>
+                <tbody>
+                    <tr><td>Iron</td><td>150</td><td>Smelter</td><td>1 Ore → 0.5 Iron/worker/tick</td></tr>
+                    <tr><td>Potions</td><td>75</td><td>Alchemy Lab</td><td>0.8 Herbs → 0.3 Potions/w/t</td></tr>
+                    <tr><td>Arcane Dust</td><td>75</td><td>Arcane Grinder</td><td>0.5 Crystals → 0.3 Arcane Dust/w/t</td></tr>
+                    <tr><td>Steel</td><td>100</td><td>Forge</td><td>1 Iron + 0.5 Coal → 0.4 Steel/w/t</td></tr>
+                    <tr><td>Bricks</td><td>120</td><td>Kiln</td><td>1 Clay + 0.5 Stone → 0.6 Bricks/w/t</td></tr>
+                    <tr><td>Cloth</td><td>100</td><td>Loom</td><td>0.6 Herbs → 0.4 Cloth/w/t</td></tr>
+                    <tr><td>Runes</td><td>60</td><td>Arcane Bench</td><td>0.5 Crystals + 0.3 Arcane Dust → 0.2 Runes/w/t</td></tr>
+                </tbody>
+            </table>
+
+            <h4 style="color:var(--label);margin:14px 0 6px">Tier 3 — Magical &amp; Rare</h4>
+            <table class="wiki-table">
+                <thead><tr><th>Resource</th><th>Base Cap</th><th>Converter</th><th>Inputs</th></tr></thead>
+                <tbody>
+                    <tr><td>Essence</td><td>50</td><td>Ritual Circle</td><td>0.3 Arcane Dust → 0.05 Essence/w/t</td></tr>
+                    <tr><td>Silk</td><td>40</td><td>Spider Nest</td><td>0.5 Bones + 0.5 Food → 0.1 Silk/w/t</td></tr>
+                    <tr><td>Mana Gold</td><td>40</td><td>Arcane Crucible</td><td>1 Iron + 0.5 Arcane Dust → 0.1 Mana Gold/w/t</td></tr>
+                    <tr><td>Ichor</td><td>30</td><td>Dark Altar</td><td>1 Bones + 0.1 Essence → 0.05 Ichor/w/t</td></tr>
+                    <tr><td>Mithril</td><td>20</td><td>Mithril Forge</td><td>1 Steel + 0.5 Crystals → 0.02 Mithril/w/t</td></tr>
+                </tbody>
+            </table>
+
+            <h3 class="creature-category">Coin Economy</h3>
+            <p class="wiki-lead">
+                Coins are a parallel currency stored in copper pieces (cp). They are displayed as gold,
+                silver, and copper (100 cp = 1 sp, 10 sp = 1 gp) and cap at 1,000 gp. Unlike material
+                resources, coins are unaffected by Storage buildings. Mid-to-late buildings require coins
+                in addition to material costs.
+            </p>
+            <table class="wiki-table">
+                <thead><tr><th>Method</th><th>Amount</th><th>Availability</th></tr></thead>
+                <tbody>
+                    <tr><td>Scrounge for Coin</td><td>+15 cp per click</td><td>Always — manual action in Build tab</td></tr>
+                    <tr><td>Taxation</td><td>Population × 1 cp per in-game day</td><td>After researching <b>Taxation</b></td></tr>
+                </tbody>
+            </table>
 
             <h3 class="creature-category">Population &amp; Jobs</h3>
             <p class="wiki-lead">
                 Your dungeon's <b>Creatures</b> count grows toward a population maximum determined by
-                your housing. Population needs food to grow and survive; a sustained food deficit leads
-                to starvation. Creatures are assigned to <b>jobs</b> at production buildings — the
-                Population panel shows how many are employed out of the total job slots available.
+                your housing (Lairs and Armories each provide +5 pop cap per building). Population needs
+                food to grow and survive; a sustained food deficit leads to starvation. Creatures are
+                assigned to <b>jobs</b> at production buildings — the Population panel shows how many
+                are employed out of the total job slots available.
             </p>
 
             <h3 class="creature-category">Build</h3>
             <p class="wiki-lead">
                 The <b>Build</b> tab holds your manual gather actions and your buildings. Lairs provide
-                housing, storage raises resource caps, and production buildings create job slots that
-                turn worker creatures into a steady resource income.
+                housing, Storage raises all material resource caps by 50 per building, and production
+                buildings create job slots that turn worker creatures into steady resource income.
+                New building types unlock automatically once their prerequisite building counts are met.
             </p>
 
             <h3 class="creature-category">Research</h3>
             <p class="wiki-lead">
-                The <b>Research</b> tab lets you spend progress on upgrades that improve your dungeon's
-                output and unlock new options.
+                The <b>Research</b> tab lets you unlock technologies that improve your dungeon.
+                <b>Taxation</b> is the first available research — it requires 50 Stone, 30 Wood, and
+                500 cp, and enables a daily coin income equal to your current population count.
             </p>
 
             <h3 class="creature-category">Biome &amp; Race</h3>

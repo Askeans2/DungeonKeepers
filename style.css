@@ -158,6 +158,34 @@ html, body {
 .wiki-changelog .cl-ver { color: var(--label); font-weight: bold; font-size: 15px; }
 .wiki-changelog .cl-date { color: var(--text-muted); float: right; font-size: 12px; }
 
+.wiki-table {
+    width: 100%;
+    max-width: 780px;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+    font-size: 13px;
+}
+.wiki-table th {
+    text-align: left;
+    padding: 6px 10px;
+    background: var(--bg-panel);
+    color: var(--accent);
+    border-bottom: 1px solid var(--border);
+    font-weight: bold;
+}
+.wiki-table td {
+    padding: 5px 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    color: var(--text-muted);
+}
+.wiki-table td:first-child {
+    color: var(--text);
+    font-weight: bold;
+}
+.wiki-table tr:last-child td {
+    border-bottom: none;
+}
+
 /* TOP STATUS BAR */
 .statusbar {
     position: relative;
@@ -1054,11 +1082,20 @@ h3 {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 12px;
     padding: 8px 12px;
     background: var(--bg-panel);
     border: 1px solid var(--border);
     border-radius: 3px;
+}
+
+.research-card.researched {
     opacity: 0.45;
+}
+
+.research-card .research-info {
+    flex: 1;
+    min-width: 0;
 }
 
 .research-card .research-name {
@@ -1075,9 +1112,29 @@ h3 {
 
 .research-card .research-cost {
     font-size: 11px;
-    color: var(--text-muted);
-    white-space: nowrap;
-    padding-left: 12px;
+    color: var(--label);
+    margin-top: 4px;
+}
+
+.research-btn {
+    flex-shrink: 0;
+    padding: 5px 14px;
+    font-size: 12px;
+    font-weight: bold;
+    color: var(--bg);
+    background: var(--accent);
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.research-btn:hover:not(:disabled) {
+    background: #1edfb8;
+}
+.research-btn:disabled {
+    background: #555;
+    color: #999;
+    cursor: not-allowed;
 }
 
 /* ── SETTINGS TAB ────────────────────────────────────────────────────────────── */

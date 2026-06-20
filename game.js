@@ -4,7 +4,16 @@ const DAYS_PER_SEASON = 30;
 const GROWTH_TICKS   = 15;
 const STARVE_TICKS   = 5;
 
-const BASE_CAPS = { food: 100, wood: 100, stone: 100 };
+const BASE_CAPS = {
+    // Tier 1 — Raw
+    food: 100, wood: 100, stone: 100,
+    ore: 150, herbs: 100, crystals: 75, coal: 150, clay: 120, bones: 100, sulphur: 80,
+    // Tier 2 — Crafted
+    iron: 150, potions: 75, arcaneDust: 75, steel: 100, bricks: 120, cloth: 100, runes: 60,
+    // Tier 3 — Magical
+    essence: 50, silk: 40, manaGold: 40, ichor: 30, mithril: 20,
+};
+const COIN_CAP = 100000; // 1000 gp in copper pieces; coins do not use Storage bonuses
 
 // ── Biome data ────────────────────────────────────────────────────────────────
 
@@ -177,8 +186,21 @@ const MOD_DESCRIPTIONS = {
 const RACE_DATA = {};
 
 const gameState = {
-    resources:  { food: 0, wood: 0, stone: 0 },
-    buildings:  { lair: 0, farm: 0, lumber: 0, quarry: 0, storage: 0 },
+    resources: {
+        food: 0, wood: 0, stone: 0,
+        ore: 0, herbs: 0, crystals: 0, coal: 0, clay: 0, bones: 0, sulphur: 0,
+        iron: 0, potions: 0, arcaneDust: 0, steel: 0, bricks: 0, cloth: 0, runes: 0,
+        essence: 0, silk: 0, manaGold: 0, ichor: 0, mithril: 0,
+        coins: 0,
+    },
+    buildings: {
+        lair: 0, farm: 0, lumber: 0, quarry: 0, storage: 0,
+        mine: 0, coalSeam: 0, herbalistDen: 0, huntingLodge: 0, clayPit: 0, crystalSeam: 0,
+        smelter: 0, alchemyLab: 0, kiln: 0, loom: 0,
+        arcaneGrinder: 0, forge: 0, arcaneBench: 0, mageTower: 0, armory: 0, sulphurVent: 0,
+        ritualCircle: 0, spiderNest: 0, arcaneCrucible: 0, darkAltar: 0, mithrilForge: 0,
+    },
+    research:   {},
     population: { count: 0, growthTimer: 0, starveTick: 0 },
     run:        { biome: null, race: null, mods: [] },
     meta:       { seenBiomes: [], totalPrestiges: 0, racesPlayed: {} },
@@ -289,7 +311,11 @@ function doResetSave() {
 // ── Derived values ────────────────────────────────────────────────────────────
 
 function getHousing() {
-    return (gameState.buildings.lair || 0) * ROOMS.lair.housingBonus;
+    let total = 0;
+    for (const [id, def] of Object.entries(ROOMS)) {
+        if (def.housingBonus) total += (gameState.buildings[id] || 0) * def.housingBonus;
+    }
+    return total;
 }
 
 function getJobs() {
@@ -323,9 +349,10 @@ function getProduction() {
     const workers = getWorkersPerBuilding();
     for (const [id, def] of Object.entries(ROOMS)) {
         const n = workers[id] || 0;
-        if (n > 0 && def.production) {
+        // Skip converter buildings — they are processed separately in tick()
+        if (n > 0 && def.production && !def.converts) {
             for (const [res, rate] of Object.entries(def.production)) {
-                prod[res] += rate * n;
+                prod[res] = (prod[res] || 0) + rate * n;
             }
         }
     }
@@ -335,11 +362,12 @@ function getProduction() {
 function getCaps() {
     const caps = Object.assign({}, BASE_CAPS);
     const n = gameState.buildings.storage || 0;
-    if (n > 0 && ROOMS.storage.capBonus) {
-        for (const [res, bonus] of Object.entries(ROOMS.storage.capBonus)) {
-            caps[res] += bonus * n;
+    if (n > 0) {
+        for (const res of Object.keys(BASE_CAPS)) {
+            caps[res] += 50 * n;
         }
     }
+    caps.coins = COIN_CAP;
     return caps;
 }
 
@@ -357,6 +385,8 @@ function canAfford(id) {
     for (const [res, amount] of Object.entries(getBuildCost(id))) {
         if ((gameState.resources[res] || 0) < amount) return false;
     }
+    const def = ROOMS[id];
+    if (def.coinCost && (gameState.resources.coins || 0) < def.coinCost) return false;
     return true;
 }
 
@@ -367,6 +397,10 @@ function build(id) {
     const cost = getBuildCost(id);
     for (const [res, amount] of Object.entries(cost)) {
         gameState.resources[res] -= amount;
+    }
+    const def = ROOMS[id];
+    if (def.coinCost) {
+        gameState.resources.coins = Math.max(0, (gameState.resources.coins || 0) - def.coinCost);
     }
     gameState.buildings[id] = (gameState.buildings[id] || 0) + 1;
     gameState.stats.buildingsConstructed = (gameState.stats.buildingsConstructed || 0) + 1;
@@ -392,13 +426,35 @@ function tick() {
     const pop  = gameState.population;
     const st   = gameState.stats;
 
-    // 1. Building production
+    // 1. Building production (passive buildings only)
     for (const [res, rate] of Object.entries(prod)) {
         gameState.resources[res] = Math.min((gameState.resources[res] || 0) + rate, caps[res]);
     }
     st.foodProduced  = (st.foodProduced  || 0) + (prod.food  || 0);
     st.woodProduced  = (st.woodProduced  || 0) + (prod.wood  || 0);
     st.stoneProduced = (st.stoneProduced || 0) + (prod.stone || 0);
+
+    // 1b. Converter buildings
+    const workers2 = getWorkersPerBuilding();
+    for (const [id, def] of Object.entries(ROOMS)) {
+        if (!def.converts) continue;
+        const w = workers2[id] || 0;
+        if (w === 0 || (gameState.buildings[id] || 0) === 0) continue;
+        const conv = def.converts;
+        let ratio = 1;
+        for (const [res, rate] of Object.entries(conv.inputs)) {
+            const needed = rate * w;
+            if (needed > 0) ratio = Math.min(ratio, (gameState.resources[res] || 0) / needed);
+        }
+        ratio = Math.max(0, Math.min(1, ratio));
+        if (ratio === 0) continue;
+        for (const [res, rate] of Object.entries(conv.inputs)) {
+            gameState.resources[res] = Math.max(0, (gameState.resources[res] || 0) - rate * w * ratio);
+        }
+        const outAmt = conv.outputRate * w * ratio;
+        const outRes = conv.output;
+        gameState.resources[outRes] = Math.min((gameState.resources[outRes] || 0) + outAmt, caps[outRes] || 0);
+    }
 
     // 2. Food consumption
     const foodNeeded = pop.count;
@@ -434,6 +490,11 @@ function tick() {
     // 4. Advance time
     gameState.time.tick++;
     if (gameState.time.tick % TICKS_PER_DAY === 0) {
+        // Taxation: 1 cp per creature per day
+        if (gameState.research && gameState.research.taxes) {
+            const taxIncome = gameState.population.count;
+            gameState.resources.coins = Math.min((gameState.resources.coins || 0) + taxIncome, COIN_CAP);
+        }
         gameState.time.day++;
         const totalDays = DAYS_PER_SEASON * 4;
         if (gameState.time.day > totalDays) {
@@ -492,8 +553,11 @@ function updateUI() {
 
     // Resources
     for (const res of Object.keys(RESOURCES)) {
-        setText(res,          fmt(gameState.resources[res] || 0));
-        setText(res + "Cap",  fmt(caps[res]));
+        const rowEl = document.getElementById("res-row-" + res);
+        if (rowEl) rowEl.style.display = shouldShowResource(res) ? "" : "none";
+
+        setText(res,         fmt(gameState.resources[res] || 0));
+        setText(res + "Cap", fmt(caps[res] !== undefined ? caps[res] : 0));
         const rawRate = prod[res] || 0;
         const netRate = (res === "food") ? rawRate - pop.count : rawRate;
         const rateEl  = document.getElementById(res + "Rate");
@@ -514,6 +578,10 @@ function updateUI() {
         }
     }
 
+    // Coin Purse
+    setText("coinsDisplay", formatCoins(gameState.resources.coins || 0));
+    setText("coinsCap",     formatCoins(COIN_CAP));
+
     // Time
     setText("day",    gameState.time.day);
     setText("year",   gameState.time.year);
@@ -524,6 +592,11 @@ function updateUI() {
         const count   = gameState.buildings[id] || 0;
         const def     = ROOMS[id];
         const w       = workers[id] || 0;
+        const btn     = document.getElementById("btn-" + id);
+        if (btn) {
+            btn.style.display = checkUnlock(id) ? "" : "none";
+            btn.classList.toggle("disabled", !canAfford(id));
+        }
         const countEl = document.getElementById(id + "Count");
         if (countEl) {
             countEl.textContent = (def.jobs && count > 0) ? `${count} (${w}★)` : count;
@@ -531,12 +604,23 @@ function updateUI() {
         const costEl = document.getElementById(id + "Cost");
         if (costEl) {
             const cost = getBuildCost(id);
-            costEl.textContent = Object.entries(cost)
+            let costStr = Object.entries(cost)
                 .map(([res, n]) => `${fmt(n)} ${RESOURCES[res]?.name || res}`)
                 .join(", ");
+            if (def.coinCost) costStr += (costStr ? ", " : "") + formatCoins(def.coinCost);
+            costEl.textContent = costStr;
         }
-        const btn = document.getElementById("btn-" + id);
-        if (btn) btn.classList.toggle("disabled", !canAfford(id));
+    }
+
+    // Research tab
+    for (const [key, def] of Object.entries(RESEARCH)) {
+        const btn  = document.getElementById("btn-research-" + key);
+        const card = document.getElementById("research-" + key);
+        if (!btn || !card) continue;
+        const done = gameState.research && gameState.research[key];
+        card.classList.toggle("researched", !!done);
+        btn.textContent = done ? "Researched" : "Research";
+        btn.disabled    = done || !canAffordResearch(key);
     }
 
     // ── Info tab ──────────────────────────────────────────────────────────────
@@ -592,6 +676,62 @@ function flashEl(id) {
     el.classList.add("flash");
 }
 
+function formatCoins(n) {
+    n = Math.floor(n);
+    if (n <= 0) return "0 cp";
+    const gp = Math.floor(n / 1000);
+    const sp = Math.floor((n % 1000) / 100);
+    const cp = n % 100;
+    const parts = [];
+    if (gp) parts.push(gp + " gp");
+    if (sp) parts.push(sp + " sp");
+    if (cp) parts.push(cp + " cp");
+    return parts.length ? parts.join(" ") : "0 cp";
+}
+
+function checkUnlock(id) {
+    const def = ROOMS[id];
+    if (!def || !def.unlock) return true;
+    for (const [reqId, reqCount] of Object.entries(def.unlock)) {
+        if ((gameState.buildings[reqId] || 0) < reqCount) return false;
+    }
+    return true;
+}
+
+function shouldShowResource(res) {
+    if (res === "food" || res === "wood" || res === "stone") return true;
+    if ((gameState.resources[res] || 0) > 0) return true;
+    for (const [id, def] of Object.entries(ROOMS)) {
+        if ((gameState.buildings[id] || 0) === 0) continue;
+        if (def.production && def.production[res]) return true;
+        if (def.converts && def.converts.output === res) return true;
+    }
+    return false;
+}
+
+function canAffordResearch(key) {
+    const def = RESEARCH[key];
+    if (!def) return false;
+    for (const [res, amount] of Object.entries(def.cost)) {
+        if ((gameState.resources[res] || 0) < amount) return false;
+    }
+    return true;
+}
+
+function doResearch(key) {
+    const def = RESEARCH[key];
+    if (!def) return;
+    if (gameState.research && gameState.research[key]) return;
+    if (!canAffordResearch(key)) return;
+    for (const [res, amount] of Object.entries(def.cost)) {
+        gameState.resources[res] = Math.max(0, (gameState.resources[res] || 0) - amount);
+    }
+    if (!gameState.research) gameState.research = {};
+    gameState.research[key] = true;
+    updateUI();
+    saveGame();
+}
+
 // ── Dev tools ────────────────────────────────────────────────────────────────
 
 function devAddResource(res, amount) {
@@ -604,6 +744,7 @@ function devAddResource(res, amount) {
 function devFillAllCaps() {
     const caps = getCaps();
     for (const res of Object.keys(BASE_CAPS)) gameState.resources[res] = caps[res];
+    gameState.resources.coins = COIN_CAP;
     updateUI();
     saveGame();
 }
@@ -656,6 +797,7 @@ function devMaxAll() {
 
 function devWipeResources() {
     for (const res of Object.keys(BASE_CAPS)) gameState.resources[res] = 0;
+    gameState.resources.coins = 0;
     updateUI();
     saveGame();
 }
@@ -834,11 +976,14 @@ function doPrestige() {
     const savedMeta = JSON.parse(JSON.stringify(gameState.meta));
     savedMeta.totalPrestiges = (savedMeta.totalPrestiges || 0) + 1;
 
-    gameState.resources  = { food: 0, wood: 0, stone: 0 };
-    gameState.buildings  = { lair: 0, farm: 0, lumber: 0, quarry: 0, storage: 0 };
+    gameState.resources  = {};
+    for (const res of Object.keys(BASE_CAPS)) gameState.resources[res] = 0;
+    gameState.resources.coins = 0;
+    gameState.buildings  = {};
+    for (const id of Object.keys(ROOMS)) gameState.buildings[id] = 0;
+    gameState.research   = {};
     gameState.population = { count: 0, growthTimer: 0, starveTick: 0 };
     gameState.time       = { tick: 0, day: 1, year: 1, seasonIndex: 0 };
-    // Zero all per-run stats without hardcoding keys
     for (const k of Object.keys(gameState.stats)) gameState.stats[k] = 0;
     gameState.run  = { biome: null, race: null, mods: [] };
     gameState.meta = savedMeta;
@@ -956,11 +1101,12 @@ function switchTab(tabId) {
 
 loadSettings();
 loadGame();
-// Normalize meta fields that may be missing from older saves
+// Normalize fields that may be missing from older saves
 if (!gameState.meta)                         gameState.meta = {};
 if (!gameState.meta.seenBiomes)              gameState.meta.seenBiomes = [];
 if (gameState.meta.totalPrestiges == null)   gameState.meta.totalPrestiges = 0;
 if (!gameState.meta.racesPlayed)             gameState.meta.racesPlayed = {};
+if (!gameState.research)                     gameState.research = {};
 // Assign biome on first load (fresh game or old save with no mods yet)
 if (!gameState.run || !gameState.run.mods || gameState.run.mods.length === 0) {
     if (!gameState.run) gameState.run = { biome: null, race: null, mods: [] };
