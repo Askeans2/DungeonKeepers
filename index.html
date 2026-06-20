@@ -49,11 +49,11 @@
             </span>
         </div>
 
-        <div class="res-row">
-            <span class="res-name">Employed</span>
+        <div class="res-row" id="res-row-coins">
+            <span class="res-name">Money</span>
             <span class="res-right">
-                <span id="employed">0</span> / <span id="totalJobs">0</span>
-                <span class="res-label-sm">jobs</span>
+                <span id="coinsDisplay">0 cp</span>
+                <span class="res-label-sm"> / <span id="coinsCap">1000 gp</span></span>
             </span>
         </div>
 
@@ -235,16 +235,6 @@
             </span>
         </div>
 
-        <h2 class="section-gap">Coin Purse</h2>
-
-        <div class="res-row" id="res-row-coins">
-            <span class="res-name">Coins</span>
-            <span class="res-right">
-                <span id="coinsDisplay">0 cp</span>
-                <span class="rate" style="display:inline;color:var(--text-muted)"> / <span id="coinsCap">1000 gp</span></span>
-            </span>
-        </div>
-
     </div><!-- /panel.left -->
 
     </div><!-- /left-col -->
@@ -256,6 +246,7 @@
         <div class="tab-bar">
             <button class="tab-btn active" data-tab="build"    onclick="switchTab('build')">Build</button>
             <button class="tab-btn"        data-tab="research" onclick="switchTab('research')">Research</button>
+            <button class="tab-btn"        data-tab="workers"  onclick="switchTab('workers')">Workers</button>
             <button class="tab-btn"        data-tab="info"     onclick="switchTab('info')">Info</button>
             <button class="tab-btn"        data-tab="settings" onclick="switchTab('settings')">Settings</button>
             <button class="tab-btn dev-tab" data-tab="dev"     onclick="switchTab('dev')">Dev</button>
@@ -888,6 +879,315 @@
             </div>
 
         </div><!-- /tab-research -->
+
+        <!-- WORKERS TAB -->
+        <div class="tab-body tab-content" id="tab-workers" style="display:none">
+
+            <div class="worker-summary">
+                <span class="worker-summary-label">Assigned</span>
+                <span id="wtotal">0 / 0</span>
+            </div>
+
+            <!-- Peasants (always visible, read-only) -->
+            <div class="worker-row worker-peasant">
+                <div class="worker-left">
+                    <span class="worker-name">Peasants</span>
+                    <span class="worker-sub">Idle — no production</span>
+                </div>
+                <span class="worker-count" id="wpeasants">0</span>
+            </div>
+
+            <h2 class="section-gap">Assign Workers</h2>
+
+            <div class="worker-row" id="wrow-farm"          style="display:none">
+                <div class="worker-left">
+                    <span class="worker-name">Farm</span>
+                    <span class="worker-slots" id="wslots-farm">0 / 0</span>
+                </div>
+                <div class="worker-controls">
+                    <button class="wbtn" onclick="adjustWorkers('farm', -1)">&#9664;</button>
+                    <input  class="winput" type="number" id="winput-farm" value="0" min="0" oninput="setWorkers('farm', this.value)">
+                    <button class="wbtn" onclick="adjustWorkers('farm', 1)">&#9654;</button>
+                </div>
+            </div>
+
+            <div class="worker-row" id="wrow-lumber"        style="display:none">
+                <div class="worker-left">
+                    <span class="worker-name">Lumber Camp</span>
+                    <span class="worker-slots" id="wslots-lumber">0 / 0</span>
+                </div>
+                <div class="worker-controls">
+                    <button class="wbtn" onclick="adjustWorkers('lumber', -1)">&#9664;</button>
+                    <input  class="winput" type="number" id="winput-lumber" value="0" min="0" oninput="setWorkers('lumber', this.value)">
+                    <button class="wbtn" onclick="adjustWorkers('lumber', 1)">&#9654;</button>
+                </div>
+            </div>
+
+            <div class="worker-row" id="wrow-quarry"        style="display:none">
+                <div class="worker-left">
+                    <span class="worker-name">Quarry</span>
+                    <span class="worker-slots" id="wslots-quarry">0 / 0</span>
+                </div>
+                <div class="worker-controls">
+                    <button class="wbtn" onclick="adjustWorkers('quarry', -1)">&#9664;</button>
+                    <input  class="winput" type="number" id="winput-quarry" value="0" min="0" oninput="setWorkers('quarry', this.value)">
+                    <button class="wbtn" onclick="adjustWorkers('quarry', 1)">&#9654;</button>
+                </div>
+            </div>
+
+            <div class="worker-row" id="wrow-mine"          style="display:none">
+                <div class="worker-left">
+                    <span class="worker-name">Mine</span>
+                    <span class="worker-slots" id="wslots-mine">0 / 0</span>
+                </div>
+                <div class="worker-controls">
+                    <button class="wbtn" onclick="adjustWorkers('mine', -1)">&#9664;</button>
+                    <input  class="winput" type="number" id="winput-mine" value="0" min="0" oninput="setWorkers('mine', this.value)">
+                    <button class="wbtn" onclick="adjustWorkers('mine', 1)">&#9654;</button>
+                </div>
+            </div>
+
+            <div class="worker-row" id="wrow-coalSeam"      style="display:none">
+                <div class="worker-left">
+                    <span class="worker-name">Coal Seam</span>
+                    <span class="worker-slots" id="wslots-coalSeam">0 / 0</span>
+                </div>
+                <div class="worker-controls">
+                    <button class="wbtn" onclick="adjustWorkers('coalSeam', -1)">&#9664;</button>
+                    <input  class="winput" type="number" id="winput-coalSeam" value="0" min="0" oninput="setWorkers('coalSeam', this.value)">
+                    <button class="wbtn" onclick="adjustWorkers('coalSeam', 1)">&#9654;</button>
+                </div>
+            </div>
+
+            <div class="worker-row" id="wrow-herbalistDen"  style="display:none">
+                <div class="worker-left">
+                    <span class="worker-name">Herbalist's Den</span>
+                    <span class="worker-slots" id="wslots-herbalistDen">0 / 0</span>
+                </div>
+                <div class="worker-controls">
+                    <button class="wbtn" onclick="adjustWorkers('herbalistDen', -1)">&#9664;</button>
+                    <input  class="winput" type="number" id="winput-herbalistDen" value="0" min="0" oninput="setWorkers('herbalistDen', this.value)">
+                    <button class="wbtn" onclick="adjustWorkers('herbalistDen', 1)">&#9654;</button>
+                </div>
+            </div>
+
+            <div class="worker-row" id="wrow-huntingLodge"  style="display:none">
+                <div class="worker-left">
+                    <span class="worker-name">Hunting Lodge</span>
+                    <span class="worker-slots" id="wslots-huntingLodge">0 / 0</span>
+                </div>
+                <div class="worker-controls">
+                    <button class="wbtn" onclick="adjustWorkers('huntingLodge', -1)">&#9664;</button>
+                    <input  class="winput" type="number" id="winput-huntingLodge" value="0" min="0" oninput="setWorkers('huntingLodge', this.value)">
+                    <button class="wbtn" onclick="adjustWorkers('huntingLodge', 1)">&#9654;</button>
+                </div>
+            </div>
+
+            <div class="worker-row" id="wrow-clayPit"       style="display:none">
+                <div class="worker-left">
+                    <span class="worker-name">Clay Pit</span>
+                    <span class="worker-slots" id="wslots-clayPit">0 / 0</span>
+                </div>
+                <div class="worker-controls">
+                    <button class="wbtn" onclick="adjustWorkers('clayPit', -1)">&#9664;</button>
+                    <input  class="winput" type="number" id="winput-clayPit" value="0" min="0" oninput="setWorkers('clayPit', this.value)">
+                    <button class="wbtn" onclick="adjustWorkers('clayPit', 1)">&#9654;</button>
+                </div>
+            </div>
+
+            <div class="worker-row" id="wrow-crystalSeam"   style="display:none">
+                <div class="worker-left">
+                    <span class="worker-name">Crystal Seam</span>
+                    <span class="worker-slots" id="wslots-crystalSeam">0 / 0</span>
+                </div>
+                <div class="worker-controls">
+                    <button class="wbtn" onclick="adjustWorkers('crystalSeam', -1)">&#9664;</button>
+                    <input  class="winput" type="number" id="winput-crystalSeam" value="0" min="0" oninput="setWorkers('crystalSeam', this.value)">
+                    <button class="wbtn" onclick="adjustWorkers('crystalSeam', 1)">&#9654;</button>
+                </div>
+            </div>
+
+            <div class="worker-row" id="wrow-smelter"       style="display:none">
+                <div class="worker-left">
+                    <span class="worker-name">Smelter</span>
+                    <span class="worker-slots" id="wslots-smelter">0 / 0</span>
+                </div>
+                <div class="worker-controls">
+                    <button class="wbtn" onclick="adjustWorkers('smelter', -1)">&#9664;</button>
+                    <input  class="winput" type="number" id="winput-smelter" value="0" min="0" oninput="setWorkers('smelter', this.value)">
+                    <button class="wbtn" onclick="adjustWorkers('smelter', 1)">&#9654;</button>
+                </div>
+            </div>
+
+            <div class="worker-row" id="wrow-alchemyLab"    style="display:none">
+                <div class="worker-left">
+                    <span class="worker-name">Alchemy Lab</span>
+                    <span class="worker-slots" id="wslots-alchemyLab">0 / 0</span>
+                </div>
+                <div class="worker-controls">
+                    <button class="wbtn" onclick="adjustWorkers('alchemyLab', -1)">&#9664;</button>
+                    <input  class="winput" type="number" id="winput-alchemyLab" value="0" min="0" oninput="setWorkers('alchemyLab', this.value)">
+                    <button class="wbtn" onclick="adjustWorkers('alchemyLab', 1)">&#9654;</button>
+                </div>
+            </div>
+
+            <div class="worker-row" id="wrow-kiln"          style="display:none">
+                <div class="worker-left">
+                    <span class="worker-name">Kiln</span>
+                    <span class="worker-slots" id="wslots-kiln">0 / 0</span>
+                </div>
+                <div class="worker-controls">
+                    <button class="wbtn" onclick="adjustWorkers('kiln', -1)">&#9664;</button>
+                    <input  class="winput" type="number" id="winput-kiln" value="0" min="0" oninput="setWorkers('kiln', this.value)">
+                    <button class="wbtn" onclick="adjustWorkers('kiln', 1)">&#9654;</button>
+                </div>
+            </div>
+
+            <div class="worker-row" id="wrow-loom"          style="display:none">
+                <div class="worker-left">
+                    <span class="worker-name">Loom</span>
+                    <span class="worker-slots" id="wslots-loom">0 / 0</span>
+                </div>
+                <div class="worker-controls">
+                    <button class="wbtn" onclick="adjustWorkers('loom', -1)">&#9664;</button>
+                    <input  class="winput" type="number" id="winput-loom" value="0" min="0" oninput="setWorkers('loom', this.value)">
+                    <button class="wbtn" onclick="adjustWorkers('loom', 1)">&#9654;</button>
+                </div>
+            </div>
+
+            <div class="worker-row" id="wrow-arcaneGrinder" style="display:none">
+                <div class="worker-left">
+                    <span class="worker-name">Arcane Grinder</span>
+                    <span class="worker-slots" id="wslots-arcaneGrinder">0 / 0</span>
+                </div>
+                <div class="worker-controls">
+                    <button class="wbtn" onclick="adjustWorkers('arcaneGrinder', -1)">&#9664;</button>
+                    <input  class="winput" type="number" id="winput-arcaneGrinder" value="0" min="0" oninput="setWorkers('arcaneGrinder', this.value)">
+                    <button class="wbtn" onclick="adjustWorkers('arcaneGrinder', 1)">&#9654;</button>
+                </div>
+            </div>
+
+            <div class="worker-row" id="wrow-forge"         style="display:none">
+                <div class="worker-left">
+                    <span class="worker-name">Forge</span>
+                    <span class="worker-slots" id="wslots-forge">0 / 0</span>
+                </div>
+                <div class="worker-controls">
+                    <button class="wbtn" onclick="adjustWorkers('forge', -1)">&#9664;</button>
+                    <input  class="winput" type="number" id="winput-forge" value="0" min="0" oninput="setWorkers('forge', this.value)">
+                    <button class="wbtn" onclick="adjustWorkers('forge', 1)">&#9654;</button>
+                </div>
+            </div>
+
+            <div class="worker-row" id="wrow-arcaneBench"   style="display:none">
+                <div class="worker-left">
+                    <span class="worker-name">Arcane Bench</span>
+                    <span class="worker-slots" id="wslots-arcaneBench">0 / 0</span>
+                </div>
+                <div class="worker-controls">
+                    <button class="wbtn" onclick="adjustWorkers('arcaneBench', -1)">&#9664;</button>
+                    <input  class="winput" type="number" id="winput-arcaneBench" value="0" min="0" oninput="setWorkers('arcaneBench', this.value)">
+                    <button class="wbtn" onclick="adjustWorkers('arcaneBench', 1)">&#9654;</button>
+                </div>
+            </div>
+
+            <div class="worker-row" id="wrow-mageTower"     style="display:none">
+                <div class="worker-left">
+                    <span class="worker-name">Mage Tower</span>
+                    <span class="worker-slots" id="wslots-mageTower">0 / 0</span>
+                </div>
+                <div class="worker-controls">
+                    <button class="wbtn" onclick="adjustWorkers('mageTower', -1)">&#9664;</button>
+                    <input  class="winput" type="number" id="winput-mageTower" value="0" min="0" oninput="setWorkers('mageTower', this.value)">
+                    <button class="wbtn" onclick="adjustWorkers('mageTower', 1)">&#9654;</button>
+                </div>
+            </div>
+
+            <div class="worker-row" id="wrow-armory"        style="display:none">
+                <div class="worker-left">
+                    <span class="worker-name">Armory</span>
+                    <span class="worker-slots" id="wslots-armory">0 / 0</span>
+                </div>
+                <div class="worker-controls">
+                    <button class="wbtn" onclick="adjustWorkers('armory', -1)">&#9664;</button>
+                    <input  class="winput" type="number" id="winput-armory" value="0" min="0" oninput="setWorkers('armory', this.value)">
+                    <button class="wbtn" onclick="adjustWorkers('armory', 1)">&#9654;</button>
+                </div>
+            </div>
+
+            <div class="worker-row" id="wrow-sulphurVent"   style="display:none">
+                <div class="worker-left">
+                    <span class="worker-name">Sulphur Vent</span>
+                    <span class="worker-slots" id="wslots-sulphurVent">0 / 0</span>
+                </div>
+                <div class="worker-controls">
+                    <button class="wbtn" onclick="adjustWorkers('sulphurVent', -1)">&#9664;</button>
+                    <input  class="winput" type="number" id="winput-sulphurVent" value="0" min="0" oninput="setWorkers('sulphurVent', this.value)">
+                    <button class="wbtn" onclick="adjustWorkers('sulphurVent', 1)">&#9654;</button>
+                </div>
+            </div>
+
+            <div class="worker-row" id="wrow-ritualCircle"  style="display:none">
+                <div class="worker-left">
+                    <span class="worker-name">Ritual Circle</span>
+                    <span class="worker-slots" id="wslots-ritualCircle">0 / 0</span>
+                </div>
+                <div class="worker-controls">
+                    <button class="wbtn" onclick="adjustWorkers('ritualCircle', -1)">&#9664;</button>
+                    <input  class="winput" type="number" id="winput-ritualCircle" value="0" min="0" oninput="setWorkers('ritualCircle', this.value)">
+                    <button class="wbtn" onclick="adjustWorkers('ritualCircle', 1)">&#9654;</button>
+                </div>
+            </div>
+
+            <div class="worker-row" id="wrow-spiderNest"    style="display:none">
+                <div class="worker-left">
+                    <span class="worker-name">Spider Nest</span>
+                    <span class="worker-slots" id="wslots-spiderNest">0 / 0</span>
+                </div>
+                <div class="worker-controls">
+                    <button class="wbtn" onclick="adjustWorkers('spiderNest', -1)">&#9664;</button>
+                    <input  class="winput" type="number" id="winput-spiderNest" value="0" min="0" oninput="setWorkers('spiderNest', this.value)">
+                    <button class="wbtn" onclick="adjustWorkers('spiderNest', 1)">&#9654;</button>
+                </div>
+            </div>
+
+            <div class="worker-row" id="wrow-arcaneCrucible" style="display:none">
+                <div class="worker-left">
+                    <span class="worker-name">Arcane Crucible</span>
+                    <span class="worker-slots" id="wslots-arcaneCrucible">0 / 0</span>
+                </div>
+                <div class="worker-controls">
+                    <button class="wbtn" onclick="adjustWorkers('arcaneCrucible', -1)">&#9664;</button>
+                    <input  class="winput" type="number" id="winput-arcaneCrucible" value="0" min="0" oninput="setWorkers('arcaneCrucible', this.value)">
+                    <button class="wbtn" onclick="adjustWorkers('arcaneCrucible', 1)">&#9654;</button>
+                </div>
+            </div>
+
+            <div class="worker-row" id="wrow-darkAltar"     style="display:none">
+                <div class="worker-left">
+                    <span class="worker-name">Dark Altar</span>
+                    <span class="worker-slots" id="wslots-darkAltar">0 / 0</span>
+                </div>
+                <div class="worker-controls">
+                    <button class="wbtn" onclick="adjustWorkers('darkAltar', -1)">&#9664;</button>
+                    <input  class="winput" type="number" id="winput-darkAltar" value="0" min="0" oninput="setWorkers('darkAltar', this.value)">
+                    <button class="wbtn" onclick="adjustWorkers('darkAltar', 1)">&#9654;</button>
+                </div>
+            </div>
+
+            <div class="worker-row" id="wrow-mithrilForge"  style="display:none">
+                <div class="worker-left">
+                    <span class="worker-name">Mithril Forge</span>
+                    <span class="worker-slots" id="wslots-mithrilForge">0 / 0</span>
+                </div>
+                <div class="worker-controls">
+                    <button class="wbtn" onclick="adjustWorkers('mithrilForge', -1)">&#9664;</button>
+                    <input  class="winput" type="number" id="winput-mithrilForge" value="0" min="0" oninput="setWorkers('mithrilForge', this.value)">
+                    <button class="wbtn" onclick="adjustWorkers('mithrilForge', 1)">&#9654;</button>
+                </div>
+            </div>
+
+        </div><!-- /tab-workers -->
 
         <!-- INFO TAB -->
         <div class="tab-body tab-content" id="tab-info" style="display:none">

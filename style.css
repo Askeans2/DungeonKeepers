@@ -594,6 +594,123 @@ h3 {
     margin-top: 16px;
 }
 
+/* WORKERS TAB */
+.worker-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    margin-bottom: 8px;
+    font-size: 12px;
+    color: var(--text);
+}
+
+.worker-summary-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+}
+
+.worker-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    gap: 8px;
+}
+
+.worker-peasant {
+    background: rgba(255,255,255,0.02);
+    border-radius: 3px;
+    padding: 6px 4px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    margin-bottom: 2px;
+}
+
+.worker-left {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    flex: 1;
+}
+
+.worker-name {
+    font-size: 12px;
+    color: var(--label);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.worker-sub {
+    font-size: 10px;
+    color: var(--text-muted);
+}
+
+.worker-slots {
+    font-size: 10px;
+    color: var(--text-muted);
+}
+
+.worker-count {
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--text);
+    min-width: 28px;
+    text-align: right;
+}
+
+.worker-controls {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.wbtn {
+    width: 24px;
+    height: 24px;
+    background: var(--bg-mid);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    color: var(--text);
+    font-size: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    line-height: 1;
+}
+
+.wbtn:hover { background: var(--border); }
+.wbtn:active { opacity: 0.7; }
+
+.winput {
+    width: 44px;
+    height: 24px;
+    background: var(--bg-mid);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    color: var(--text);
+    font-size: 12px;
+    text-align: center;
+    padding: 0 2px;
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+.winput::-webkit-outer-spin-button,
+.winput::-webkit-inner-spin-button { -webkit-appearance: none; appearance: none; margin: 0; }
+
+.winput:focus {
+    outline: none;
+    border-color: rgba(255,255,255,0.3);
+}
+
 /* MANUAL ACTION BUTTONS */
 .actions-list {
     display: flex;

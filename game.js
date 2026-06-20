@@ -200,7 +200,8 @@ const gameState = {
         arcaneGrinder: 0, forge: 0, arcaneBench: 0, mageTower: 0, armory: 0, sulphurVent: 0,
         ritualCircle: 0, spiderNest: 0, arcaneCrucible: 0, darkAltar: 0, mithrilForge: 0,
     },
-    research:   {},
+    research:          {},
+    workerAssignments: {},
     population: { count: 0, growthTimer: 0, starveTick: 0 },
     run:        { biome: null, race: null, mods: [] },
     meta:       { seenBiomes: [], totalPrestiges: 0, racesPlayed: {} },
@@ -383,20 +384,42 @@ function getJobs() {
 }
 
 function getEmployed() {
-    return Math.min(gameState.population.count, getJobs());
+    return Object.values(getWorkersPerBuilding()).reduce((s, v) => s + v, 0);
 }
 
 function getWorkersPerBuilding() {
-    let remaining = getEmployed();
-    const out = {};
+    const assignments = gameState.workerAssignments || {};
+    const pop  = gameState.population.count;
+    const out  = {};
+    let budget = pop;
     for (const [id, def] of Object.entries(ROOMS)) {
         if (!def.jobs) { out[id] = 0; continue; }
-        const slots = (gameState.buildings[id] || 0) * def.jobs;
-        const here  = Math.min(slots, remaining);
-        out[id]     = here;
-        remaining  -= here;
+        const slots   = (gameState.buildings[id] || 0) * def.jobs;
+        const desired = Math.min(assignments[id] || 0, slots);
+        const actual  = Math.min(desired, budget);
+        out[id] = Math.max(0, actual);
+        budget -= out[id];
     }
     return out;
+}
+
+function setWorkers(id, rawCount) {
+    if (!gameState.workerAssignments) gameState.workerAssignments = {};
+    const def = ROOMS[id];
+    if (!def || !def.jobs) return;
+    const slots    = (gameState.buildings[id] || 0) * def.jobs;
+    const others   = Object.entries(gameState.workerAssignments)
+        .filter(([k]) => k !== id)
+        .reduce((sum, [, v]) => sum + v, 0);
+    const maxHere  = Math.max(0, Math.min(slots, gameState.population.count - others));
+    gameState.workerAssignments[id] = Math.max(0, Math.min(Math.floor(+rawCount || 0), maxHere));
+    updateUI();
+    saveGame();
+}
+
+function adjustWorkers(id, delta) {
+    const current = (gameState.workerAssignments || {})[id] || 0;
+    setWorkers(id, current + delta);
 }
 
 function getProduction() {
@@ -745,10 +768,12 @@ function updateUI() {
     // Population
     setText("popCount",  pop.count);
     setText("popMax",    housing);
-    setText("employed",  employed);
-    setText("totalJobs", jobs);
     const popRow = document.getElementById("pop-row");
     if (popRow) popRow.classList.toggle("starving", isStarving);
+
+    // Coins (now in Population section)
+    setText("coinsDisplay", formatCoins(gameState.resources.coins || 0));
+    setText("coinsCap",     formatCoins(caps.coins));
 
     // Resources
     for (const res of Object.keys(RESOURCES)) {
@@ -776,10 +801,6 @@ function updateUI() {
             }
         }
     }
-
-    // Coin Purse
-    setText("coinsDisplay", formatCoins(gameState.resources.coins || 0));
-    setText("coinsCap",     formatCoins(caps.coins));
 
     // Time
     setText("day",    gameState.time.day);
@@ -868,6 +889,30 @@ function updateUI() {
             yieldEl.textContent = `+${getGatherAmount(key)} ${resName}`;
         }
     }
+
+    // Workers tab
+    const assignments = gameState.workerAssignments || {};
+    const workersPop  = pop.count;
+    let   totalAssigned = 0;
+    for (const [id, def] of Object.entries(ROOMS)) {
+        if (!def.jobs) continue;
+        const rowEl = document.getElementById("wrow-" + id);
+        const built = (gameState.buildings[id] || 0) > 0;
+        if (rowEl) rowEl.style.display = built ? "" : "none";
+        if (!built) continue;
+        const slots   = (gameState.buildings[id] || 0) * def.jobs;
+        const actual  = workers[id] || 0;
+        totalAssigned += actual;
+        const slotsEl = document.getElementById("wslots-" + id);
+        if (slotsEl) slotsEl.textContent = `${actual} / ${slots}`;
+        const inputEl = document.getElementById("winput-" + id);
+        if (inputEl && document.activeElement !== inputEl) {
+            inputEl.value = assignments[id] || 0;
+            inputEl.max   = slots;
+        }
+    }
+    setText("wpeasants", workersPop - totalAssigned);
+    setText("wtotal",    `${totalAssigned} / ${workersPop}`);
 
     _refreshResTooltip();
 }
@@ -1327,6 +1372,7 @@ if (!gameState.meta)                         gameState.meta = {};
 if (!gameState.meta.seenBiomes)              gameState.meta.seenBiomes = [];
 if (gameState.meta.totalPrestiges == null)   gameState.meta.totalPrestiges = 0;
 if (!gameState.meta.racesPlayed)             gameState.meta.racesPlayed = {};
+if (!gameState.workerAssignments)            gameState.workerAssignments = {};
 if (!gameState.research)                     gameState.research = {};
 // Assign biome on first load (fresh game or old save with no mods yet)
 if (!gameState.run || !gameState.run.mods || gameState.run.mods.length === 0) {
