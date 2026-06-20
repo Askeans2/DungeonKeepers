@@ -3,7 +3,9 @@
 <head>
     <title>Dungeon Keeper</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato&display=swap">
-    <link rel="stylesheet" href="style.css">
+    <!-- Load the version fresh (timestamp-busted), then stamp local assets with ?v=GAME_VERSION. See version.js. -->
+    <script>document.write('<scr' + 'ipt src="version.js?t=' + Date.now() + '"></scr' + 'ipt>');</script>
+    <script>document.write('<link rel="stylesheet" href="style.css?v=' + window.GAME_VERSION + '">');</script>
 </head>
 
 <body>
@@ -14,7 +16,7 @@
         <div>Year: <span id="year">1</span></div>
         <div>Season: <span id="season">Spring</span></div>
     </div>
-    <a href="wiki.html" target="_blank" rel="noopener" class="wiki-btn" title="Open the Dungeon Keeper Wiki">v0.25</a>
+    <a href="wiki.html" target="_blank" rel="noopener" class="wiki-btn" title="Open the Dungeon Keeper Wiki"><script>document.write('v' + window.GAME_VERSION);</script></a>
 </div>
 
 <div class="layout">
@@ -378,10 +380,12 @@
 
 </div>
 
-<script src="data/resources.js"></script>
-<script src="data/rooms.js"></script>
-<script src="save.js"></script>
-<script src="game.js"></script>
+<script>
+    // Load local game scripts in dependency order, cache-busted by GAME_VERSION (see version.js).
+    ["data/resources.js", "data/rooms.js", "save.js", "game.js"].forEach(function (src) {
+        document.write('<scr' + 'ipt src="' + src + '?v=' + window.GAME_VERSION + '"></scr' + 'ipt>');
+    });
+</script>
 
 </body>
 </html>

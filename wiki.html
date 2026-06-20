@@ -4,7 +4,9 @@
     <meta charset="utf-8">
     <title>Dungeon Keeper — Wiki</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato&display=swap">
-    <link rel="stylesheet" href="style.css">
+    <!-- Load the version fresh (timestamp-busted), then stamp local assets with ?v=GAME_VERSION. See version.js. -->
+    <script>document.write('<scr' + 'ipt src="version.js?t=' + Date.now() + '"></scr' + 'ipt>');</script>
+    <script>document.write('<link rel="stylesheet" href="style.css?v=' + window.GAME_VERSION + '">');</script>
 </head>
 <body>
 <div class="wiki-layout">
