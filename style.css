@@ -55,6 +55,89 @@ html, body {
     pointer-events: none;
 }
 
+/* WIKI BUTTON (top-right, opens wiki.html) */
+.wiki-btn {
+    position: fixed;
+    top: 8px;
+    right: 12px;
+    z-index: 200;
+    padding: 4px 12px;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    color: var(--accent);
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    text-decoration: none;
+    cursor: pointer;
+}
+.wiki-btn:hover {
+    background: var(--bg-hover);
+    color: var(--label);
+}
+
+/* ── WIKI PAGE (wiki.html) ──────────────────────────────────────────────── */
+.wiki-layout {
+    display: flex;
+    align-items: flex-start;
+    max-width: 1120px;
+    margin: 0 auto;
+    min-height: 100vh;
+}
+.wiki-nav {
+    position: sticky;
+    top: 0;
+    flex-shrink: 0;
+    width: 190px;
+    padding: 26px 14px;
+    border-right: 1px solid var(--border);
+}
+.wiki-title {
+    color: var(--accent);
+    font-size: 15px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    padding: 0 10px;
+}
+.wiki-nav-link {
+    display: block;
+    padding: 8px 12px;
+    margin-bottom: 2px;
+    border-radius: 4px;
+    color: var(--text-muted);
+    text-decoration: none;
+    cursor: pointer;
+    user-select: none;
+}
+.wiki-nav-link:hover {
+    background: var(--bg-hover);
+    color: var(--text);
+}
+.wiki-nav-link.active {
+    background: var(--accent);
+    color: #fff;
+}
+.wiki-content {
+    flex: 1;
+    min-width: 0;
+    padding: 26px 34px 80px;
+}
+.wiki-content > .wiki-section > h2:first-child {
+    margin-top: 0;
+    color: var(--accent);
+}
+.wiki-lead {
+    color: var(--text-muted);
+    line-height: 1.55;
+    max-width: 760px;
+}
+.wiki-changelog .biome-card { max-width: 760px; }
+.wiki-changelog .cl-ver { color: var(--label); font-weight: bold; }
+.wiki-changelog .cl-date { color: var(--text-muted); float: right; font-size: 12px; }
+
 /* TOP STATUS BAR */
 .statusbar {
     display: flex;
@@ -1145,6 +1228,28 @@ body.reduce-motion *::after {
     background: rgba(192, 0, 0, 0.2);
     border-color: var(--disabled);
     color: #ff4444;
+}
+
+.dev-select {
+    height: 36px;
+    background: rgba(243, 156, 18, 0.08);
+    border: 1px solid rgba(243, 156, 18, 0.3);
+    border-radius: 3px;
+    color: #d4952a;
+    font-family: 'Lato', Arial, sans-serif;
+    font-size: 12px;
+    cursor: pointer;
+    padding: 0 6px;
+}
+
+.dev-select:hover {
+    border-color: rgba(243, 156, 18, 0.6);
+}
+
+.dev-select option,
+.dev-select optgroup {
+    background: #1a1410;
+    color: #d4952a;
 }
 
 .placeholder-note {

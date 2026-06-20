@@ -181,7 +181,7 @@ const gameState = {
     buildings:  { lair: 0, farm: 0, lumber: 0, quarry: 0, storage: 0 },
     population: { count: 0, growthTimer: 0, starveTick: 0 },
     run:        { biome: null, race: null, mods: [] },
-    meta:       { seenBiomes: [], totalPrestiges: 0 },
+    meta:       { seenBiomes: [], totalPrestiges: 0, racesPlayed: {} },
     time:       { tick: 0, day: 1, year: 1, seasonIndex: 0 },
     stats: {
         peakPopulation:       0,
@@ -679,13 +679,93 @@ function devShowBiomeInfo() {
     const r    = gameState.run;
     const meta = gameState.meta;
     const modList = (r.mods || []).map(m => (m.pos ? "+" : "−") + m.name).join(", ") || "(none)";
+    const played = meta.racesPlayed || {};
+    const playedNames = Object.keys(played);
+    const playedList = playedNames.length
+        ? playedNames.map(n => `${n} ×${played[n]}`).join(", ")
+        : "(none)";
     el.innerHTML = `
         <b>Biome:</b> ${r.biome || "—"}<br>
         <b>Race:</b> ${r.race || "Unselected"}<br>
         <b>Run Mods (${(r.mods||[]).length}):</b> ${modList}<br>
         <b>Seen Biomes (${meta.seenBiomes.length}/25):</b> ${meta.seenBiomes.join(", ") || "(none)"}<br>
-        <b>Total Prestiges:</b> ${meta.totalPrestiges || 0}
+        <b>Total Prestiges:</b> ${meta.totalPrestiges || 0}<br>
+        <b>Races Played (${playedNames.length}):</b> ${playedList}
     `;
+}
+
+// ── Race selection / play tracking ─────────────────────────────────────────────
+
+// Set the run's race and record that this race has been played (+1 to its count).
+// This is the single hook for "playing" a race; race-selection UI should call it.
+function playRace(raceName) {
+    if (!raceName) return;
+    gameState.run.race = raceName;
+    if (!gameState.meta.racesPlayed) gameState.meta.racesPlayed = {};
+    gameState.meta.racesPlayed[raceName] = (gameState.meta.racesPlayed[raceName] || 0) + 1;
+    saveGame();
+    updateIdentityPanel();
+}
+
+// Creature roster, grouped by type. Used as the source for the Dev tab race
+// dropdown. The full bestiary now lives in the standalone wiki (wiki.html);
+// this constant keeps the Dev tools self-contained inside the game page.
+const CREATURE_ROSTER = {
+    "Draconic":    ["Chromatic Dragon", "Metallic Dragon", "Lizardfolk", "Kobold", "Yuan-ti", "Wyvern", "Dragonborn"],
+    "Undead":      ["Skeleton", "Zombie", "Vampire", "Lich", "Wight", "Ghoul", "Revenant", "Banshee", "Wraith", "Mummy", "Demilich", "Shadow"],
+    "Goblinoid":   ["Goblin", "Hobgoblin", "Bugbear", "Orc", "Gnoll"],
+    "Fey":         ["Pixie", "Dryad", "Satyr", "Quickling", "Green Hag"],
+    "Aberration":  ["Mind Flayer", "Beholder", "Aboleth", "Gibbering Mouther", "Nothic", "Chuul", "Grell", "Flumph"],
+    "Ooze":        ["Gelatinous Cube", "Black Pudding"],
+    "Elemental":   ["Fire Elemental", "Earth Elemental", "Shadow Demon"],
+    "Monstrous":   ["Harpy", "Medusa", "Minotaur", "Troll", "Werewolf", "Naga", "Basilisk", "Chimera", "Manticore", "Sphinx", "Griffon", "Hydra", "Ettin"],
+    "Fiend":       ["Imp", "Cambion", "Barbed Devil", "Night Hag", "Succubus/Incubus", "Pit Fiend", "Balor", "Rakshasa", "Quasit"],
+    "Giant":       ["Hill Giant", "Stone Giant", "Frost Giant", "Fire Giant", "Cloud Giant", "Storm Giant"],
+    "Construct":   ["Stone Golem", "Iron Golem", "Homunculus", "Animated Armor"],
+    "Lycanthrope": ["Werebear", "Wererat", "Wereboar", "Owlbear", "Displacer Beast"],
+    "Flora":       ["Treant", "Myconid", "Vegepygmy"],
+    "Aquatic":     ["Merfolk", "Sahuagin", "Kuo-toa", "Triton"],
+    "Humanoid":    ["Kenku", "Tabaxi", "Aarakocra", "Tortle", "Centaur"]
+};
+
+// Populate the Dev tab race dropdown. Prefers any .creature-entry bestiary
+// cards present in the DOM, falling back to CREATURE_ROSTER (the live game page
+// no longer embeds the bestiary — it lives in the wiki). Safe to call repeatedly.
+function devPopulateRaceSelect() {
+    const sel = document.getElementById("dev-race-select");
+    if (!sel || sel.dataset.populated) return;
+    const groups = {};
+    document.querySelectorAll(".creature-entry").forEach(entry => {
+        const nameEl = entry.querySelector(".creature-name");
+        const tagEl  = entry.querySelector(".creature-tag");
+        if (!nameEl) return;
+        const name = nameEl.textContent.trim();
+        const type = tagEl ? tagEl.textContent.trim() : "Other";
+        (groups[type] = groups[type] || []).push(name);
+    });
+    if (Object.keys(groups).length === 0) {
+        for (const [type, names] of Object.entries(CREATURE_ROSTER)) groups[type] = names.slice();
+    }
+    for (const [type, names] of Object.entries(groups)) {
+        const og = document.createElement("optgroup");
+        og.label = type;
+        for (const n of names) {
+            const o = document.createElement("option");
+            o.value = n;
+            o.textContent = n;
+            og.appendChild(o);
+        }
+        sel.appendChild(og);
+    }
+    sel.dataset.populated = "1";
+}
+
+// Dev button: become the race currently chosen in the dropdown.
+function devSelectRace() {
+    const sel = document.getElementById("dev-race-select");
+    if (!sel || !sel.value) return;
+    playRace(sel.value);
+    devShowBiomeInfo();
 }
 
 // ── Biome Selection ───────────────────────────────────────────────────────────
@@ -880,6 +960,7 @@ loadGame();
 if (!gameState.meta)                         gameState.meta = {};
 if (!gameState.meta.seenBiomes)              gameState.meta.seenBiomes = [];
 if (gameState.meta.totalPrestiges == null)   gameState.meta.totalPrestiges = 0;
+if (!gameState.meta.racesPlayed)             gameState.meta.racesPlayed = {};
 // Assign biome on first load (fresh game or old save with no mods yet)
 if (!gameState.run || !gameState.run.mods || gameState.run.mods.length === 0) {
     if (!gameState.run) gameState.run = { biome: null, race: null, mods: [] };
@@ -887,4 +968,5 @@ if (!gameState.run || !gameState.run.mods || gameState.run.mods.length === 0) {
 }
 updateUI();
 updateIdentityPanel();
+devPopulateRaceSelect();
 setInterval(tick, 1000);
