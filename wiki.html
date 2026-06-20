@@ -1183,6 +1183,9 @@
                 <span class="rtleg"><span class="rtleg-sw" style="background:#5a1a7a"></span>Era 3 Gateway</span>
             </div>
             <div class="rtree-wrap" id="rtree-wrap">
+                <div class="rtree-corner-tr"></div>
+                <div class="rtree-corner-bl"></div>
+                <span class="rtree-zoom-label" id="rtree-zoom-label">×0.52</span>
                 <svg id="rtree-svg"></svg>
                 <div id="rtree-tip"></div>
             </div>
@@ -1204,6 +1207,9 @@
                 <span class="rtleg"><span class="rtleg-sw" style="background:#88a0b0"></span>Civilized</span>
             </div>
             <div class="rtree-wrap" id="rtrace-wrap">
+                <div class="rtree-corner-tr"></div>
+                <div class="rtree-corner-bl"></div>
+                <span class="rtree-zoom-label" id="rtrace-zoom-label">×0.44</span>
                 <svg id="rtrace-svg"></svg>
                 <div id="rtrace-tip"></div>
             </div>
@@ -1427,7 +1433,7 @@ function showWiki(id) {
             });
         }
 
-        /* 2. Group by column; sort within column by avg prereq index for less crossing */
+        /* 2. Group by column */
         var cols = {};
         keys.forEach(function (k) {
             var d = depths[k] >= 0 ? depths[k] : 0;
@@ -1439,12 +1445,9 @@ function showWiki(id) {
         var pos = {};
         var maxRows = 0;
         Object.keys(cols).forEach(function (c) { maxRows = Math.max(maxRows, cols[c].length); });
-
         Object.keys(cols).forEach(function (c) {
             var x = parseInt(c) * CGAP + PAD;
-            cols[c].forEach(function (k, i) {
-                pos[k] = { x: x, y: i * RGAP + PAD };
-            });
+            cols[c].forEach(function (k, i) { pos[k] = { x: x, y: i * RGAP + PAD }; });
         });
 
         var maxCol = Object.keys(cols).reduce(function (mx, c) { return Math.max(mx, parseInt(c)); }, 0);
@@ -1455,11 +1458,37 @@ function showWiki(id) {
         svg.setAttribute('width', svgW);
         svg.setAttribute('height', svgH);
 
+        /* Glow filter for hover */
+        var defs = document.createElementNS(NS, 'defs');
+        var filt = document.createElementNS(NS, 'filter');
+        filt.setAttribute('id', 'rtree-glow');
+        filt.setAttribute('x', '-40%'); filt.setAttribute('y', '-40%');
+        filt.setAttribute('width', '180%'); filt.setAttribute('height', '180%');
+        var fe = document.createElementNS(NS, 'feDropShadow');
+        fe.setAttribute('dx', '0'); fe.setAttribute('dy', '0');
+        fe.setAttribute('stdDeviation', '4'); fe.setAttribute('flood-color', '#e8c04088');
+        filt.appendChild(fe); defs.appendChild(filt); svg.appendChild(defs);
+
         var g = document.createElementNS(NS, 'g');
         g.id = 'rtree-g';
         svg.appendChild(g);
 
-        /* 4. Edges */
+        /* Subtle guide lines between columns */
+        var guideG = document.createElementNS(NS, 'g');
+        for (var ci = 1; ci <= maxCol; ci++) {
+            var gx = ci * CGAP + PAD - CGAP / 2;
+            var gl = document.createElementNS(NS, 'line');
+            gl.setAttribute('x1', gx); gl.setAttribute('y1', 0);
+            gl.setAttribute('x2', gx); gl.setAttribute('y2', svgH);
+            gl.setAttribute('stroke', 'rgba(255,255,255,0.03)');
+            gl.setAttribute('stroke-width', '1');
+            guideG.appendChild(gl);
+        }
+        g.appendChild(guideG);
+
+        /* 4. Edges — store refs keyed by "from→to" for hover highlighting */
+        var edgeMap = {}; /* key → [pathEl, ...] for edges leading INTO key */
+        var edgeG = document.createElementNS(NS, 'g');
         keys.forEach(function (k) {
             var pr = RESEARCH[k].requiresResearch || [];
             var tp = pos[k];
@@ -1469,23 +1498,34 @@ function showWiki(id) {
                 var x1 = fp.x + NW, y1 = fp.y + NH / 2;
                 var x2 = tp.x,      y2 = tp.y + NH / 2;
                 var cx = (x1 + x2) / 2;
-                var path = document.createElementNS(NS, 'path');
-                path.setAttribute('d', 'M'+x1+','+y1+' C'+cx+','+y1+' '+cx+','+y2+' '+x2+','+y2);
-                path.setAttribute('stroke', '#3a4a4a');
-                path.setAttribute('stroke-width', '1.5');
-                path.setAttribute('fill', 'none');
-                g.appendChild(path);
+                var pathEl = document.createElementNS(NS, 'path');
+                pathEl.setAttribute('d', 'M'+x1+','+y1+' C'+cx+','+y1+' '+cx+','+y2+' '+x2+','+y2);
+                pathEl.setAttribute('stroke', '#3a4a4a');
+                pathEl.setAttribute('stroke-width', '1.5');
+                pathEl.setAttribute('fill', 'none');
+                pathEl.setAttribute('opacity', '0.55');
+                pathEl.style.transition = 'stroke 0.15s, opacity 0.15s, stroke-width 0.15s';
+                edgeG.appendChild(pathEl);
+                if (!edgeMap[k]) edgeMap[k] = [];
+                edgeMap[k].push({ el: pathEl, fromColor: COLORS[p] || '#3a3a4a' });
             });
         });
+        g.appendChild(edgeG);
 
         /* 5. Nodes */
         var tip = document.getElementById('rtree-tip');
+        var nodeG = document.createElementNS(NS, 'g');
 
-        keys.forEach(function (k) {
+        keys.forEach(function (k, ki) {
             var p = pos[k];
             if (!p) return;
             var def = RESEARCH[k];
             var color = COLORS[k] || '#3a3a4a';
+
+            /* Node group for unified animation */
+            var ngrp = document.createElementNS(NS, 'g');
+            ngrp.style.animationDelay = (ki * 18) + 'ms';
+            ngrp.setAttribute('class', 'rnode-anim');
 
             var rect = document.createElementNS(NS, 'rect');
             rect.setAttribute('x', p.x); rect.setAttribute('y', p.y);
@@ -1495,7 +1535,17 @@ function showWiki(id) {
             rect.setAttribute('stroke', 'rgba(255,255,255,0.18)');
             rect.setAttribute('stroke-width', '1');
             rect.style.cursor = 'pointer';
-            g.appendChild(rect);
+            rect.style.transition = 'filter 0.15s, stroke 0.15s';
+            ngrp.appendChild(rect);
+
+            /* Top highlight stripe */
+            var shine = document.createElementNS(NS, 'rect');
+            shine.setAttribute('x', p.x + 2); shine.setAttribute('y', p.y + 2);
+            shine.setAttribute('width', NW - 4); shine.setAttribute('height', 3);
+            shine.setAttribute('rx', 2);
+            shine.setAttribute('fill', 'rgba(255,255,255,0.10)');
+            shine.style.pointerEvents = 'none';
+            ngrp.appendChild(shine);
 
             /* 2-line text */
             var words = def.name.split(' ');
@@ -1506,7 +1556,6 @@ function showWiki(id) {
                 var mid = Math.ceil(words.length / 2);
                 lines = [words.slice(0, mid).join(' '), words.slice(mid).join(' ')];
             }
-
             var txt = document.createElementNS(NS, 'text');
             txt.setAttribute('text-anchor', 'middle');
             txt.setAttribute('font-size', '10.5');
@@ -1514,7 +1563,6 @@ function showWiki(id) {
             txt.setAttribute('fill', '#e8e8d8');
             txt.style.pointerEvents = 'none';
             txt.style.userSelect = 'none';
-
             if (lines.length === 1) {
                 var ts = document.createElementNS(NS, 'tspan');
                 ts.setAttribute('x', p.x + NW / 2);
@@ -1530,16 +1578,36 @@ function showWiki(id) {
                     txt.appendChild(ts);
                 });
             }
-            g.appendChild(txt);
+            ngrp.appendChild(txt);
+            nodeG.appendChild(ngrp);
 
+            /* Hover: glow + tooltip + edge highlight */
             rect.addEventListener('mouseenter', function (e) {
+                rect.setAttribute('filter', 'url(#rtree-glow)');
+                rect.setAttribute('stroke', 'rgba(255,255,255,0.45)');
+                /* Highlight incoming edges */
+                (edgeMap[k] || []).forEach(function(ed) {
+                    ed.el.setAttribute('stroke', ed.fromColor);
+                    ed.el.setAttribute('stroke-width', '2.5');
+                    ed.el.setAttribute('opacity', '0.9');
+                });
                 tip.innerHTML = buildTip(k, def);
                 tip.style.display = 'block';
                 moveTip(e);
             });
             rect.addEventListener('mousemove', moveTip);
-            rect.addEventListener('mouseleave', function () { tip.style.display = 'none'; });
+            rect.addEventListener('mouseleave', function () {
+                rect.removeAttribute('filter');
+                rect.setAttribute('stroke', 'rgba(255,255,255,0.18)');
+                (edgeMap[k] || []).forEach(function(ed) {
+                    ed.el.setAttribute('stroke', '#3a4a4a');
+                    ed.el.setAttribute('stroke-width', '1.5');
+                    ed.el.setAttribute('opacity', '0.55');
+                });
+                tip.style.display = 'none';
+            });
         });
+        g.appendChild(nodeG);
 
         /* 6. Pan / zoom */
         setupPanZoom(g);
@@ -1612,13 +1680,15 @@ function showWiki(id) {
     }
 
     function setupPanZoom(g) {
-        var wrap = document.getElementById('rtree-wrap');
-        var svg  = document.getElementById('rtree-svg');
+        var wrap  = document.getElementById('rtree-wrap');
+        var svg   = document.getElementById('rtree-svg');
+        var zlbl  = document.getElementById('rtree-zoom-label');
         var panX = 0, panY = 0, scale = 0.52;
         var dragging = false, lx = 0, ly = 0;
 
         function apply() {
             g.setAttribute('transform', 'translate(' + panX + ',' + panY + ') scale(' + scale + ')');
+            if (zlbl) zlbl.textContent = '×' + scale.toFixed(2);
         }
         apply();
 
@@ -1847,7 +1917,9 @@ function showWiki(id) {
         el.setAttribute('stroke', color);
         el.setAttribute('stroke-width', '1');
         el.setAttribute('opacity', '0.28');
+        el.style.transition = 'stroke-width 0.15s, opacity 0.15s';
         parent.appendChild(el);
+        return el;
     }
 
     function mkTxt(parent, x, y, text, size, color) {
@@ -1938,59 +2010,137 @@ function showWiki(id) {
         svg.setAttribute('width', CX * 2);
         svg.setAttribute('height', CY * 2);
 
+        /* Glow filter */
+        var defs = document.createElementNS(NS, 'defs');
+        var filt = document.createElementNS(NS, 'filter');
+        filt.setAttribute('id', 'rtrace-glow');
+        filt.setAttribute('x', '-50%'); filt.setAttribute('y', '-50%');
+        filt.setAttribute('width', '200%'); filt.setAttribute('height', '200%');
+        var fe = document.createElementNS(NS, 'feDropShadow');
+        fe.setAttribute('dx', '0'); fe.setAttribute('dy', '0');
+        fe.setAttribute('stdDeviation', '6'); fe.setAttribute('flood-color', '#ffffff44');
+        filt.appendChild(fe); defs.appendChild(filt); svg.appendChild(defs);
+
         var g     = document.createElementNS(NS, 'g'); g.id = 'rtrace-g'; svg.appendChild(g);
         var edgeG = document.createElementNS(NS, 'g'); g.appendChild(edgeG);
         var nodeG = document.createElementNS(NS, 'g'); g.appendChild(nodeG);
 
+        /* Radial guide rings at R1, R2, R3, R3+80 */
+        var guideG = document.createElementNS(NS, 'g');
+        [R1, R2, R3, R3 + 80].forEach(function(r) {
+            var ring = document.createElementNS(NS, 'circle');
+            ring.setAttribute('cx', CX); ring.setAttribute('cy', CY); ring.setAttribute('r', r);
+            ring.setAttribute('fill', 'none');
+            ring.setAttribute('stroke', 'rgba(255,255,255,0.04)');
+            ring.setAttribute('stroke-width', '1');
+            ring.setAttribute('stroke-dasharray', '4 8');
+            guideG.appendChild(ring);
+        });
+        g.appendChild(guideG);
+
+        /* Edge store for hover ancestry highlighting */
+        /* edgeStore[typeName] = { pathEl: edge from path→type }
+           creatureEdges[cname] = { pathEl: edge from type→creature } */
+        var typeEdges = {}, creatureEdges = {};
+
         var allNodes = [];
+        var nodeDelay = 0;
+
+        /* Helper: animated node group */
+        function animGroup(delay) {
+            var grp = document.createElementNS(NS, 'g');
+            grp.setAttribute('class', 'rnode-anim');
+            grp.style.animationDelay = delay + 'ms';
+            return grp;
+        }
 
         /* Center */
+        var cgrp0 = animGroup(0);
         var cc = document.createElementNS(NS, 'circle');
         cc.setAttribute('cx', CX); cc.setAttribute('cy', CY); cc.setAttribute('r', 32);
         cc.setAttribute('fill', '#e8c040'); cc.setAttribute('stroke', '#a08010'); cc.setAttribute('stroke-width', '2');
-        nodeG.appendChild(cc);
-        mkTxt(nodeG, CX, CY - 7,  'Your', '11', '#18160a');
-        mkTxt(nodeG, CX, CY + 9,  'Path', '11', '#18160a');
-        allNodes.push({ el: cc, name: 'center', level: 0 });
+        cc.style.transition = 'filter 0.15s';
+        cgrp0.appendChild(cc);
+        mkTxt(cgrp0, CX, CY - 7, 'Your', '11', '#18160a');
+        mkTxt(cgrp0, CX, CY + 9, 'Path', '11', '#18160a');
+        nodeG.appendChild(cgrp0);
+        allNodes.push({ el: cgrp0, name: 'center', level: 0 });
 
-        RACE_PATHS.forEach(function (path) {
+        RACE_PATHS.forEach(function (path, pi) {
             var pp = rpos(path.angle, R1);
 
             /* center → path edge */
-            mkEdge(edgeG, CX, CY, pp.x, pp.y, path.color);
+            var cpEdge = mkEdge(edgeG, CX, CY, pp.x, pp.y, path.color);
 
             /* Path circle */
+            var pgrp = animGroup(80 + pi * 60);
             var pc = document.createElementNS(NS, 'circle');
             pc.setAttribute('cx', pp.x); pc.setAttribute('cy', pp.y); pc.setAttribute('r', 26);
             pc.setAttribute('fill', path.color); pc.setAttribute('fill-opacity', '0.22');
             pc.setAttribute('stroke', path.color); pc.setAttribute('stroke-width', '2');
             pc.style.cursor = 'pointer';
-            nodeG.appendChild(pc);
+            pc.style.transition = 'filter 0.15s, fill-opacity 0.15s';
+            pgrp.appendChild(pc);
             /* Path label just beyond circle */
             var lp = rpos(path.angle, R1 + 42);
-            mkTxt(nodeG, lp.x, lp.y, path.name, '13', path.color);
-            wireTooltip(pc, buildPathTip.bind(null, path));
-            allNodes.push({ el: pc, name: path.name, level: 1, pathName: path.name });
+            mkTxt(pgrp, lp.x, lp.y, path.name, '13', path.color);
+            nodeG.appendChild(pgrp);
 
-            var N = path.types.length;
+            /* Path hover: glow */
+            pc.addEventListener('mouseenter', function() {
+                pc.setAttribute('filter', 'url(#rtrace-glow)');
+                pc.setAttribute('fill-opacity', '0.40');
+            });
+            pc.addEventListener('mouseleave', function() {
+                pc.removeAttribute('filter');
+                pc.setAttribute('fill-opacity', '0.22');
+            });
+            wireTooltip(pc, buildPathTip.bind(null, path));
+            allNodes.push({ el: pgrp, name: path.name, level: 1, pathName: path.name });
+
+            /* --- Proportional angular allocation --- */
+            var typeCreatureCounts = path.types.map(function(t) { return (ROSTER[t] || []).length; });
+            var totalCreatures = typeCreatureCounts.reduce(function(a,b){return a+b;}, 0);
+            var typeAngles = [];
+            var cursor = path.angle - 45;
+            path.types.forEach(function(typeName, ti) {
+                var arc = typeCreatureCounts[ti] / totalCreatures * 90;
+                typeAngles.push({ start: cursor, mid: cursor + arc / 2, end: cursor + arc });
+                cursor += arc;
+            });
+
             path.types.forEach(function (typeName, ti) {
-                var typeAngle  = path.angle - 45 + (ti + 0.5) * 90 / N;
+                var typeAngle  = typeAngles[ti].mid;
+                var typeStart  = typeAngles[ti].start;
+                var typeEnd    = typeAngles[ti].end;
                 var tp         = rpos(typeAngle, R2);
                 var typeColor  = TYPE_COLORS[typeName] || '#888';
                 var creatures  = ROSTER[typeName] || [];
 
                 /* path → type edge */
-                mkEdge(edgeG, pp.x, pp.y, tp.x, tp.y, typeColor);
+                var ptEdge = mkEdge(edgeG, pp.x, pp.y, tp.x, tp.y, typeColor);
+                typeEdges[typeName] = { edge: ptEdge, pathEdge: cpEdge, color: typeColor };
 
                 /* Type rect group */
                 var TW = 112, TH = 30;
-                var tgrp = document.createElementNS(NS, 'g'); tgrp.style.cursor = 'pointer';
+                var tgrp = animGroup(200 + pi * 60 + ti * 40);
+                tgrp.style.cursor = 'pointer';
+
                 var trect = document.createElementNS(NS, 'rect');
                 trect.setAttribute('x', tp.x - TW/2); trect.setAttribute('y', tp.y - TH/2);
-                trect.setAttribute('width', TW); trect.setAttribute('height', TH); trect.setAttribute('rx', 3);
+                trect.setAttribute('width', TW); trect.setAttribute('height', TH); trect.setAttribute('rx', 5);
                 trect.setAttribute('fill', typeColor); trect.setAttribute('fill-opacity', '0.15');
                 trect.setAttribute('stroke', typeColor); trect.setAttribute('stroke-width', '1.5');
+                trect.style.transition = 'filter 0.15s, fill-opacity 0.15s, stroke-width 0.15s';
                 tgrp.appendChild(trect);
+
+                /* Top shine stripe */
+                var tshine = document.createElementNS(NS, 'rect');
+                tshine.setAttribute('x', tp.x - TW/2 + 3); tshine.setAttribute('y', tp.y - TH/2 + 2);
+                tshine.setAttribute('width', TW - 6); tshine.setAttribute('height', 2); tshine.setAttribute('rx', 1);
+                tshine.setAttribute('fill', 'rgba(255,255,255,0.12)'); tshine.style.pointerEvents = 'none';
+                tgrp.appendChild(tshine);
+
                 var ttxt = document.createElementNS(NS, 'text');
                 ttxt.setAttribute('x', tp.x); ttxt.setAttribute('y', tp.y);
                 ttxt.setAttribute('text-anchor', 'middle'); ttxt.setAttribute('dominant-baseline', 'middle');
@@ -1999,67 +2149,128 @@ function showWiki(id) {
                 ttxt.textContent = typeName + ' (' + creatures.length + ')';
                 tgrp.appendChild(ttxt);
                 nodeG.appendChild(tgrp);
+
+                /* Type hover: glow + edge highlight */
+                tgrp.addEventListener('mouseenter', function() {
+                    trect.setAttribute('filter', 'url(#rtrace-glow)');
+                    trect.setAttribute('fill-opacity', '0.28');
+                    trect.setAttribute('stroke-width', '2.2');
+                    ptEdge.setAttribute('stroke-width', '2.5'); ptEdge.setAttribute('opacity', '0.85');
+                });
+                tgrp.addEventListener('mouseleave', function() {
+                    trect.removeAttribute('filter');
+                    trect.setAttribute('fill-opacity', '0.15');
+                    trect.setAttribute('stroke-width', '1.5');
+                    ptEdge.setAttribute('stroke-width', '1'); ptEdge.setAttribute('opacity', '0.28');
+                });
+
                 wireTooltip(tgrp, buildTypeTip.bind(null, typeName, creatures));
                 allNodes.push({ el: tgrp, name: typeName, level: 2, typeName: typeName, pathName: path.name });
 
-                /* Creature rounded-rect nodes */
+                /* --- Two-ring stagger for dense types --- */
                 var M = creatures.length;
-                var subSector = 90 / N;
-                var NW = 92, NH = 22;
-                creatures.forEach(function (cname, ci) {
-                    var cAngle = typeAngle - subSector / 2 + (ci + 0.5) * subSector / M;
-                    var cp     = rpos(cAngle, R3);
-
-                    mkEdge(edgeG, tp.x, tp.y, cp.x, cp.y, typeColor);
-
-                    var cgrp = document.createElementNS(NS, 'g');
-                    cgrp.style.cursor = 'pointer';
-
-                    var crect = document.createElementNS(NS, 'rect');
-                    crect.setAttribute('x', cp.x - NW/2); crect.setAttribute('y', cp.y - NH/2);
-                    crect.setAttribute('width', NW); crect.setAttribute('height', NH);
-                    crect.setAttribute('rx', 6);
-                    crect.setAttribute('fill', typeColor); crect.setAttribute('fill-opacity', '0.18');
-                    crect.setAttribute('stroke', typeColor); crect.setAttribute('stroke-width', '1.2');
-                    cgrp.appendChild(crect);
-
-                    /* Vertical divider between icon and name */
-                    var divX = cp.x - NW/2 + 22;
-                    var divL = document.createElementNS(NS, 'line');
-                    divL.setAttribute('x1', divX); divL.setAttribute('y1', cp.y - NH/2 + 3);
-                    divL.setAttribute('x2', divX); divL.setAttribute('y2', cp.y + NH/2 - 3);
-                    divL.setAttribute('stroke', typeColor); divL.setAttribute('stroke-width', '0.8');
-                    divL.setAttribute('opacity', '0.35'); divL.style.pointerEvents = 'none';
-                    cgrp.appendChild(divL);
-
-                    /* Type icon (left 22px area) */
-                    mkIcon(cgrp, cp.x - NW/2 + 11, cp.y, typeName, typeColor);
-
-                    /* Creature name (right portion) */
-                    var nameEl = document.createElementNS(NS, 'text');
-                    nameEl.setAttribute('x', cp.x - NW/2 + 22 + (NW - 22) / 2);
-                    nameEl.setAttribute('y', cp.y);
-                    nameEl.setAttribute('text-anchor', 'middle');
-                    nameEl.setAttribute('dominant-baseline', 'middle');
-                    nameEl.setAttribute('font-size', '8');
-                    nameEl.setAttribute('font-family', 'Lato, sans-serif');
-                    nameEl.setAttribute('fill', typeColor);
-                    nameEl.style.pointerEvents = 'none';
-                    nameEl.style.userSelect = 'none';
-                    nameEl.textContent = cname;
-                    cgrp.appendChild(nameEl);
-
-                    nodeG.appendChild(cgrp);
-                    wireTooltip(cgrp, buildCreatureTip.bind(null, cname, typeName));
-                    allNodes.push({ el: cgrp, name: cname, level: 3, typeName: typeName, pathName: path.name });
+                var CNW = 92, CNH = 22;
+                var twoRing = M > 6;
+                var innerList = [], outerList = [];
+                creatures.forEach(function(cname, ci) {
+                    (twoRing && ci % 2 !== 0 ? outerList : innerList).push(cname);
                 });
+
+                function placeRing(list, radius, ringDelay) {
+                    var L = list.length;
+                    list.forEach(function(cname, i) {
+                        var cAngle = typeStart + (i + 0.5) * (typeEnd - typeStart) / L;
+                        var cp     = rpos(cAngle, radius);
+
+                        var tcEdge = mkEdge(edgeG, tp.x, tp.y, cp.x, cp.y, typeColor);
+                        creatureEdges[cname] = { edge: tcEdge, typeEdge: ptEdge, pathEdge: cpEdge };
+
+                        var cgrp = animGroup(380 + pi * 60 + ti * 40 + ringDelay + i * 12);
+                        cgrp.style.cursor = 'pointer';
+
+                        var crect = document.createElementNS(NS, 'rect');
+                        crect.setAttribute('x', cp.x - CNW/2); crect.setAttribute('y', cp.y - CNH/2);
+                        crect.setAttribute('width', CNW); crect.setAttribute('height', CNH);
+                        crect.setAttribute('rx', 6);
+                        crect.setAttribute('fill', typeColor); crect.setAttribute('fill-opacity', '0.18');
+                        crect.setAttribute('stroke', typeColor); crect.setAttribute('stroke-width', '1.2');
+                        crect.style.transition = 'filter 0.12s, fill-opacity 0.12s, stroke-width 0.12s';
+                        cgrp.appendChild(crect);
+
+                        /* Top shine */
+                        var cshine = document.createElementNS(NS, 'rect');
+                        cshine.setAttribute('x', cp.x - CNW/2 + 4); cshine.setAttribute('y', cp.y - CNH/2 + 2);
+                        cshine.setAttribute('width', CNW - 8); cshine.setAttribute('height', 2); cshine.setAttribute('rx', 1);
+                        cshine.setAttribute('fill', 'rgba(255,255,255,0.10)'); cshine.style.pointerEvents = 'none';
+                        cgrp.appendChild(cshine);
+
+                        /* Vertical divider */
+                        var divX = cp.x - CNW/2 + 22;
+                        var divL = document.createElementNS(NS, 'line');
+                        divL.setAttribute('x1', divX); divL.setAttribute('y1', cp.y - CNH/2 + 3);
+                        divL.setAttribute('x2', divX); divL.setAttribute('y2', cp.y + CNH/2 - 3);
+                        divL.setAttribute('stroke', typeColor); divL.setAttribute('stroke-width', '0.8');
+                        divL.setAttribute('opacity', '0.35'); divL.style.pointerEvents = 'none';
+                        cgrp.appendChild(divL);
+
+                        mkIcon(cgrp, cp.x - CNW/2 + 11, cp.y, typeName, typeColor);
+
+                        var nameEl = document.createElementNS(NS, 'text');
+                        nameEl.setAttribute('x', cp.x - CNW/2 + 22 + (CNW - 22) / 2);
+                        nameEl.setAttribute('y', cp.y);
+                        nameEl.setAttribute('text-anchor', 'middle');
+                        nameEl.setAttribute('dominant-baseline', 'middle');
+                        nameEl.setAttribute('font-size', '8');
+                        nameEl.setAttribute('font-family', 'Lato, sans-serif');
+                        nameEl.setAttribute('fill', typeColor);
+                        nameEl.style.pointerEvents = 'none';
+                        nameEl.style.userSelect = 'none';
+                        nameEl.textContent = cname;
+                        cgrp.appendChild(nameEl);
+
+                        nodeG.appendChild(cgrp);
+
+                        /* Creature hover: glow + full ancestry edge highlight */
+                        cgrp.addEventListener('mouseenter', (function(cr, tc, pc2, te, pe) {
+                            return function() {
+                                cr.setAttribute('filter', 'url(#rtrace-glow)');
+                                cr.setAttribute('fill-opacity', '0.35');
+                                cr.setAttribute('stroke-width', '2');
+                                tc.setAttribute('stroke-width', '2.5'); tc.setAttribute('opacity', '0.9');
+                                te.setAttribute('stroke-width', '2'); te.setAttribute('opacity', '0.75');
+                                pe.setAttribute('stroke-width', '2'); pe.setAttribute('opacity', '0.65');
+                            };
+                        })(crect, tcEdge, cpEdge, ptEdge, cpEdge));
+
+                        cgrp.addEventListener('mouseleave', (function(cr, tc, te, pe) {
+                            return function() {
+                                cr.removeAttribute('filter');
+                                cr.setAttribute('fill-opacity', '0.18');
+                                cr.setAttribute('stroke-width', '1.2');
+                                tc.setAttribute('stroke-width', '1'); tc.setAttribute('opacity', '0.28');
+                                te.setAttribute('stroke-width', '1'); te.setAttribute('opacity', '0.28');
+                                pe.setAttribute('stroke-width', '1'); pe.setAttribute('opacity', '0.28');
+                            };
+                        })(crect, tcEdge, ptEdge, cpEdge));
+
+                        wireTooltip(cgrp, buildCreatureTip.bind(null, cname, typeName));
+                        allNodes.push({ el: cgrp, name: cname, level: 3, typeName: typeName, pathName: path.name });
+                    });
+                }
+
+                placeRing(innerList, R3, 0);
+                placeRing(outerList, R3 + 80, innerList.length * 6);
             });
         });
 
-        /* Search */
+        /* Search — matching nodes pulse briefly then settle */
+        var searchTimeout;
         document.getElementById('rtrace-search').addEventListener('input', function () {
             var q = this.value.trim().toLowerCase();
-            if (!q) { allNodes.forEach(function (n) { n.el.style.opacity = ''; }); return; }
+            if (!q) {
+                allNodes.forEach(function (n) { n.el.style.opacity = ''; n.el.style.transition = ''; });
+                return;
+            }
 
             var hitTypes = new Set(), hitPaths = new Set();
             allNodes.forEach(function (n) {
@@ -2075,17 +2286,20 @@ function showWiki(id) {
                     || n.name.toLowerCase().indexOf(q) !== -1
                     || (n.level === 2 && hitTypes.has(n.typeName))
                     || (n.level === 1 && hitPaths.has(n.name));
-                n.el.style.opacity = match ? '1' : '0.07';
+                n.el.style.transition = 'opacity 0.2s';
+                n.el.style.opacity = match ? '1' : '0.06';
             });
         });
 
-        /* Pan / zoom */
+        /* Pan / zoom with label update */
         (function () {
             var wrap = document.getElementById('rtrace-wrap');
+            var zlbl = document.getElementById('rtrace-zoom-label');
             var scale = 0.44, dragging = false, lx = 0, ly = 0, panX = 0, panY = 0;
 
             function apply() {
                 g.setAttribute('transform', 'translate(' + panX + ',' + panY + ') scale(' + scale + ')');
+                if (zlbl) zlbl.textContent = '×' + scale.toFixed(2);
             }
 
             requestAnimationFrame(function () {
