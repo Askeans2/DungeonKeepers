@@ -55,16 +55,18 @@ html, body {
     pointer-events: none;
 }
 
-/* WIKI BUTTON (top-right, opens wiki.html) */
+/* WIKI BUTTON (inline in the status bar, pinned right, opens wiki.html) */
 .wiki-btn {
-    position: fixed;
-    top: 8px;
-    right: 12px;
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
     z-index: 200;
-    padding: 4px 12px;
-    font-size: 13px;
+    padding: 3px 10px;
+    font-size: 12px;
     font-weight: bold;
     letter-spacing: 0.5px;
+    line-height: 1;
     color: var(--accent);
     background: var(--bg-panel);
     border: 1px solid var(--border);
@@ -80,66 +82,85 @@ html, body {
 /* ── WIKI PAGE (wiki.html) ──────────────────────────────────────────────── */
 .wiki-layout {
     display: flex;
-    align-items: flex-start;
-    max-width: 1120px;
-    margin: 0 auto;
+    align-items: stretch;
     min-height: 100vh;
 }
 .wiki-nav {
     position: sticky;
     top: 0;
+    align-self: flex-start;
     flex-shrink: 0;
-    width: 190px;
-    padding: 26px 14px;
+    width: 230px;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 22px 16px;
+    background: var(--bg-panel);
     border-right: 1px solid var(--border);
 }
 .wiki-title {
     color: var(--accent);
-    font-size: 15px;
+    font-size: 16px;
     font-weight: bold;
-    letter-spacing: 1px;
+    letter-spacing: 1.5px;
     text-transform: uppercase;
-    margin-bottom: 20px;
-    padding: 0 10px;
+    line-height: 1.3;
+    margin-bottom: 22px;
+    padding: 0 6px 16px;
+    border-bottom: 1px solid var(--border);
 }
 .wiki-nav-link {
+    position: relative;
     display: block;
-    padding: 8px 12px;
-    margin-bottom: 2px;
-    border-radius: 4px;
+    padding: 11px 14px;
+    margin-bottom: 7px;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    background: var(--bg-dark);
     color: var(--text-muted);
+    font-size: 14px;
+    font-weight: bold;
     text-decoration: none;
     cursor: pointer;
     user-select: none;
+    transition: background 0.12s, color 0.12s, border-color 0.12s;
 }
 .wiki-nav-link:hover {
     background: var(--bg-hover);
+    border-color: var(--accent);
     color: var(--text);
 }
 .wiki-nav-link.active {
     background: var(--accent);
+    border-color: var(--accent);
     color: #fff;
+    box-shadow: 0 0 0 1px var(--accent);
 }
 .wiki-content {
     flex: 1;
     min-width: 0;
-    padding: 26px 34px 80px;
+    padding: 30px 40px 90px;
 }
 .wiki-content > .wiki-section > h2:first-child {
-    margin-top: 0;
+    margin: 0 0 18px;
+    padding-bottom: 12px;
+    font-size: 26px;
+    letter-spacing: 0.5px;
     color: var(--accent);
+    border-bottom: 2px solid var(--border);
 }
 .wiki-lead {
     color: var(--text-muted);
-    line-height: 1.55;
-    max-width: 760px;
+    font-size: 14px;
+    line-height: 1.6;
+    max-width: 780px;
 }
-.wiki-changelog .biome-card { max-width: 760px; }
-.wiki-changelog .cl-ver { color: var(--label); font-weight: bold; }
+.wiki-changelog .biome-card { max-width: 780px; }
+.wiki-changelog .cl-ver { color: var(--label); font-weight: bold; font-size: 15px; }
 .wiki-changelog .cl-date { color: var(--text-muted); float: right; font-size: 12px; }
 
 /* TOP STATUS BAR */
 .statusbar {
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
