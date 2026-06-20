@@ -1335,3 +1335,102 @@ body.reduce-motion *::after {
     color: var(--text-muted);
     font-style: italic;
 }
+
+/* ── Research Tree (wiki) ───────────────────────────────────────────────────── */
+
+.rtree-wrap {
+    position: relative;
+    width: 100%;
+    height: 620px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: #161c1c;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.rtree-wrap:active {
+    cursor: grabbing;
+}
+
+#rtree-svg {
+    display: block;
+    will-change: transform;
+}
+
+#rtree-tip {
+    display: none;
+    position: absolute;
+    background: #1e2828;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 13px;
+    max-width: 270px;
+    font-size: 12px;
+    color: var(--text);
+    pointer-events: none;
+    z-index: 200;
+    line-height: 1.55;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.6);
+}
+
+.rtip-name {
+    font-weight: bold;
+    font-size: 13px;
+    color: var(--label);
+    margin-bottom: 5px;
+}
+
+.rtip-desc {
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 7px;
+    font-size: 11px;
+}
+
+.rtip-row {
+    margin-bottom: 4px;
+    font-size: 11.5px;
+}
+
+.rtip-efx-head {
+    font-weight: bold;
+    margin: 5px 0 2px;
+    font-size: 11.5px;
+}
+
+.rtip-efx {
+    margin: 0 0 0 14px;
+    padding: 0;
+    font-size: 11px;
+}
+
+.rtip-efx li {
+    list-style: disc;
+    margin-bottom: 2px;
+}
+
+.rtree-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+    margin-bottom: 10px;
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+.rtleg {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.rtleg-sw {
+    width: 13px;
+    height: 13px;
+    border-radius: 3px;
+    flex-shrink: 0;
+    border: 1px solid rgba(255,255,255,0.15);
+}

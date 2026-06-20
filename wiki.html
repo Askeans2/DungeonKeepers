@@ -7,6 +7,7 @@
     <!-- Load the version fresh (timestamp-busted), then stamp local assets with ?v=GAME_VERSION. See version.js. -->
     <script>document.write('<scr' + 'ipt src="version.js?t=' + Date.now() + '"></scr' + 'ipt>');</script>
     <script>document.write('<link rel="stylesheet" href="style.css?v=' + window.GAME_VERSION + '">');</script>
+    <script>document.write('<scr' + 'ipt src="data/research.js?v=' + window.GAME_VERSION + '"></scr' + 'ipt>');</script>
 </head>
 <body>
 <div class="wiki-layout">
@@ -17,6 +18,7 @@
         <a class="wiki-nav-link"        data-section="gameplay"  onclick="showWiki('gameplay')">Gameplay</a>
         <a class="wiki-nav-link"        data-section="biomes"    onclick="showWiki('biomes')">Biomes</a>
         <a class="wiki-nav-link"        data-section="creatures" onclick="showWiki('creatures')">Creatures</a>
+        <a class="wiki-nav-link"        data-section="research"  onclick="showWiki('research')">Research</a>
         <a class="wiki-nav-link"        data-section="changelog" onclick="showWiki('changelog')">Changelog</a>
     </nav>
 
@@ -1158,6 +1160,33 @@
         
         </section>
 
+        <!-- RESEARCH TREE -->
+        <section id="wiki-research" class="wiki-section" style="display:none">
+            <h2>Research Tree</h2>
+            <p class="wiki-lead">
+                All 50 Era 2 researches and their prerequisites.
+                <b>Drag</b> to pan &middot; <b>Scroll</b> to zoom &middot; <b>Hover</b> a node for full details.
+                Only the 5 Tier 0 nodes are available at game start; each completed research unlocks 1&ndash;2 more.
+            </p>
+            <div class="rtree-legend">
+                <span class="rtleg"><span class="rtleg-sw" style="background:#7a6010"></span>Economy</span>
+                <span class="rtleg"><span class="rtleg-sw" style="background:#6a3c10"></span>Gathering</span>
+                <span class="rtleg"><span class="rtleg-sw" style="background:#1a6a1a"></span>Agriculture</span>
+                <span class="rtleg"><span class="rtleg-sw" style="background:#2a6a2a"></span>Herbalism</span>
+                <span class="rtleg"><span class="rtleg-sw" style="background:#3a5a10"></span>Hunting</span>
+                <span class="rtleg"><span class="rtleg-sw" style="background:#1a4a10"></span>Forestry</span>
+                <span class="rtleg"><span class="rtleg-sw" style="background:#4a4a5a"></span>Mining</span>
+                <span class="rtleg"><span class="rtleg-sw" style="background:#6a4a20"></span>Masonry</span>
+                <span class="rtleg"><span class="rtleg-sw" style="background:#6a3a10"></span>Smithing</span>
+                <span class="rtleg"><span class="rtleg-sw" style="background:#3a2a7a"></span>Arcane</span>
+                <span class="rtleg"><span class="rtleg-sw" style="background:#5a1a7a"></span>Era 3 Gateway</span>
+            </div>
+            <div class="rtree-wrap" id="rtree-wrap">
+                <svg id="rtree-svg"></svg>
+                <div id="rtree-tip"></div>
+            </div>
+        </section>
+
         <!-- CHANGELOG -->
         <section id="wiki-changelog" class="wiki-section wiki-changelog" style="display:none">
             <h2>Changelog</h2>
@@ -1201,11 +1230,287 @@ function showWiki(id) {
     if (link) link.classList.add('active');
     if (location.hash !== '#' + id) history.replaceState(null, '', '#' + id);
     window.scrollTo(0, 0);
+    if (id === 'research') rtreeMaybeBuild();
 }
 (function () {
     var id = (location.hash || '#intro').slice(1);
     if (!document.getElementById('wiki-' + id)) id = 'intro';
     showWiki(id);
+})();
+</script>
+
+<script>
+/* ── Research Tree Builder ──────────────────────────────────────────────────── */
+(function () {
+    var built = false;
+
+    window.rtreeMaybeBuild = function () {
+        if (!built && typeof RESEARCH !== 'undefined') { buildTree(); built = true; }
+    };
+
+    /* Node chain colours */
+    var COLORS = {
+        taxes:'#7a6010', bookkeeping:'#7a6010', taxCollector:'#7a6010',
+        communalLiving:'#7a6010', ironLockbox:'#7a6010', militiaDrill:'#7a6010', tradeGoods:'#7a6010',
+        toolcraft:'#6a3c10', foragerLore:'#6a3c10',
+        cropRotation:'#1a6a1a', composting:'#1a6a1a', animalHusbandry:'#1a6a1a', rationing:'#1a6a1a',
+        herbGarden:'#2a6a2a', concentratedExtracts:'#2a6a2a', loomMastery:'#2a6a2a',
+        packHunting:'#3a5a10', trapLines:'#3a5a10', bonecraft:'#3a5a10',
+        silkCulture:'#3a5a10', silkenWarren:'#3a5a10', ichorRefinement:'#5a3a0a',
+        timberfelling:'#1a4a10', carpentry:'#1a4a10', reinforcedShelving:'#1a4a10', dryCellar:'#1a4a10',
+        roadNetwork:'#2a5a18',
+        stonemason:'#4a4a5a', quarrying:'#4a4a5a', coalBunker:'#4a4a5a',
+        sulphurStudy:'#4a4a5a', oreProspecting:'#4a4a5a', deepMining:'#4a4a5a',
+        highFireKiln:'#6a4a20', mortaredMasonry:'#6a4a20',
+        bellowsDesign:'#6a3a10', forgeMastery:'#6a3a10', guildCharter:'#6a3a10',
+        mithrilTemper:'#5a5a6a', manaConductorCoils:'#5a5a6a',
+        crystalLore:'#3a2a7a', crystalFocus:'#3a2a7a', arcaneTapping:'#3a2a7a',
+        arcaneInscription:'#3a2a7a', runicScript:'#3a2a7a',
+        ritualPrep:'#5a1a7a', darkTexts:'#5a1a7a', manaConduit:'#5a1a7a',
+        essenceHarvest:'#5a1a7a', dungeonBlueprint:'#3a0a5a'
+    };
+
+    var BUILD_NAMES = {
+        crystalSeam:'Crystal Seam', ritualCircle:'Ritual Circle',
+        darkAltar:'Dark Altar', spiderNest:'Spider Nest', arcaneCrucible:'Arcane Crucible'
+    };
+
+    var NW = 170, NH = 40, CGAP = 212, RGAP = 58, PAD = 18;
+    var NS = 'http://www.w3.org/2000/svg';
+
+    function buildTree() {
+        var keys = Object.keys(RESEARCH);
+
+        /* 1. Topological depths */
+        var depths = {};
+        keys.forEach(function (k) { depths[k] = -1; });
+        var changed = true;
+        while (changed) {
+            changed = false;
+            keys.forEach(function (k) {
+                if (depths[k] >= 0) return;
+                var pr = RESEARCH[k].requiresResearch || [];
+                if (pr.length === 0) { depths[k] = 0; changed = true; return; }
+                if (pr.every(function (p) { return depths[p] >= 0; })) {
+                    depths[k] = pr.reduce(function (mx, p) { return Math.max(mx, depths[p]); }, 0) + 1;
+                    changed = true;
+                }
+            });
+        }
+
+        /* 2. Group by column; sort within column by avg prereq index for less crossing */
+        var cols = {};
+        keys.forEach(function (k) {
+            var d = depths[k] >= 0 ? depths[k] : 0;
+            if (!cols[d]) cols[d] = [];
+            cols[d].push(k);
+        });
+
+        /* 3. Assign positions */
+        var pos = {};
+        var maxRows = 0;
+        Object.keys(cols).forEach(function (c) { maxRows = Math.max(maxRows, cols[c].length); });
+
+        Object.keys(cols).forEach(function (c) {
+            var x = parseInt(c) * CGAP + PAD;
+            cols[c].forEach(function (k, i) {
+                pos[k] = { x: x, y: i * RGAP + PAD };
+            });
+        });
+
+        var maxCol = Object.keys(cols).reduce(function (mx, c) { return Math.max(mx, parseInt(c)); }, 0);
+        var svgW = maxCol * CGAP + NW + PAD * 2;
+        var svgH = maxRows * RGAP + NH + PAD * 2;
+
+        var svg = document.getElementById('rtree-svg');
+        svg.setAttribute('width', svgW);
+        svg.setAttribute('height', svgH);
+
+        var g = document.createElementNS(NS, 'g');
+        g.id = 'rtree-g';
+        svg.appendChild(g);
+
+        /* 4. Edges */
+        keys.forEach(function (k) {
+            var pr = RESEARCH[k].requiresResearch || [];
+            var tp = pos[k];
+            pr.forEach(function (p) {
+                var fp = pos[p];
+                if (!fp || !tp) return;
+                var x1 = fp.x + NW, y1 = fp.y + NH / 2;
+                var x2 = tp.x,      y2 = tp.y + NH / 2;
+                var cx = (x1 + x2) / 2;
+                var path = document.createElementNS(NS, 'path');
+                path.setAttribute('d', 'M'+x1+','+y1+' C'+cx+','+y1+' '+cx+','+y2+' '+x2+','+y2);
+                path.setAttribute('stroke', '#3a4a4a');
+                path.setAttribute('stroke-width', '1.5');
+                path.setAttribute('fill', 'none');
+                g.appendChild(path);
+            });
+        });
+
+        /* 5. Nodes */
+        var tip = document.getElementById('rtree-tip');
+
+        keys.forEach(function (k) {
+            var p = pos[k];
+            if (!p) return;
+            var def = RESEARCH[k];
+            var color = COLORS[k] || '#3a3a4a';
+
+            var rect = document.createElementNS(NS, 'rect');
+            rect.setAttribute('x', p.x); rect.setAttribute('y', p.y);
+            rect.setAttribute('width', NW); rect.setAttribute('height', NH);
+            rect.setAttribute('rx', 4);
+            rect.setAttribute('fill', color);
+            rect.setAttribute('stroke', 'rgba(255,255,255,0.18)');
+            rect.setAttribute('stroke-width', '1');
+            rect.style.cursor = 'pointer';
+            g.appendChild(rect);
+
+            /* 2-line text */
+            var words = def.name.split(' ');
+            var lines;
+            if (def.name.length <= 17 || words.length <= 2) {
+                lines = [def.name];
+            } else {
+                var mid = Math.ceil(words.length / 2);
+                lines = [words.slice(0, mid).join(' '), words.slice(mid).join(' ')];
+            }
+
+            var txt = document.createElementNS(NS, 'text');
+            txt.setAttribute('text-anchor', 'middle');
+            txt.setAttribute('font-size', '10.5');
+            txt.setAttribute('font-family', 'Lato, sans-serif');
+            txt.setAttribute('fill', '#e8e8d8');
+            txt.style.pointerEvents = 'none';
+            txt.style.userSelect = 'none';
+
+            if (lines.length === 1) {
+                var ts = document.createElementNS(NS, 'tspan');
+                ts.setAttribute('x', p.x + NW / 2);
+                ts.setAttribute('y', p.y + NH / 2 + 4);
+                ts.textContent = lines[0];
+                txt.appendChild(ts);
+            } else {
+                [0, 1].forEach(function (i) {
+                    var ts = document.createElementNS(NS, 'tspan');
+                    ts.setAttribute('x', p.x + NW / 2);
+                    ts.setAttribute('y', p.y + (i === 0 ? NH / 2 - 3 : NH / 2 + 11));
+                    ts.textContent = lines[i];
+                    txt.appendChild(ts);
+                });
+            }
+            g.appendChild(txt);
+
+            rect.addEventListener('mouseenter', function (e) {
+                tip.innerHTML = buildTip(k, def);
+                tip.style.display = 'block';
+                moveTip(e);
+            });
+            rect.addEventListener('mousemove', moveTip);
+            rect.addEventListener('mouseleave', function () { tip.style.display = 'none'; });
+        });
+
+        /* 6. Pan / zoom */
+        setupPanZoom(g);
+    }
+
+    function moveTip(e) {
+        var tip = document.getElementById('rtree-tip');
+        var wrap = document.getElementById('rtree-wrap');
+        var wr = wrap.getBoundingClientRect();
+        var x = e.clientX - wr.left + 16;
+        var y = e.clientY - wr.top  + 16;
+        if (x + 280 > wr.width)  x = e.clientX - wr.left - 294;
+        if (y + 220 > wr.height) y = e.clientY - wr.top  - 234;
+        tip.style.left = x + 'px';
+        tip.style.top  = y + 'px';
+    }
+
+    function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+    function buildTip(key, def) {
+        var h = '<div class="rtip-name">' + def.name + '</div>';
+        h += '<div class="rtip-desc">' + def.desc + '</div>';
+
+        var cp = [];
+        Object.keys(def.cost).forEach(function (r) {
+            var v = def.cost[r];
+            cp.push(r === 'coins' ? v + ' cp' : v + ' ' + cap(r));
+        });
+        h += '<div class="rtip-row"><b>Cost:</b> ' + cp.join(' &middot; ') + '</div>';
+
+        if (def.requiresResearch && def.requiresResearch.length) {
+            var ns2 = def.requiresResearch.map(function (k) {
+                return RESEARCH[k] ? RESEARCH[k].name : k;
+            });
+            h += '<div class="rtip-row"><b>Requires:</b> ' + ns2.join(', ') + '</div>';
+        }
+
+        var ef = def.effects;
+        if (ef) {
+            var lines = [];
+            if (ef.allGatherBonus)    lines.push('All gathering +' + ef.allGatherBonus + '/click');
+            if (ef.gatherBonus)       Object.keys(ef.gatherBonus).forEach(function (r) { lines.push(cap(r) + ' gather +' + ef.gatherBonus[r] + '/click'); });
+            if (ef.productionBonus)   Object.keys(ef.productionBonus).forEach(function (b) { lines.push(cap(b) + ' production ×' + ef.productionBonus[b] + ' (+' + Math.round((ef.productionBonus[b]-1)*100) + '%)'); });
+            if (ef.converterBonus)    Object.keys(ef.converterBonus).forEach(function (b) { lines.push(cap(b) + ' output ×' + ef.converterBonus[b] + ' (+' + Math.round((ef.converterBonus[b]-1)*100) + '%)'); });
+            if (ef.capBonus)          Object.keys(ef.capBonus).forEach(function (r) { lines.push(cap(r) + ' cap +' + ef.capBonus[r]); });
+            if (ef.housingBonus)      Object.keys(ef.housingBonus).forEach(function (b) { lines.push(cap(b) + ' housing +' + ef.housingBonus[b]); });
+            if (ef.taxBonus)          lines.push('+' + ef.taxBonus + ' cp/creature/day');
+            if (ef.coinGatherBonus)   lines.push('Coin scrounge +' + ef.coinGatherBonus + ' cp/click');
+            if (ef.allProductionBonus) lines.push('All passive production +' + Math.round(ef.allProductionBonus * 100) + '%');
+            if (ef.foodConsumption)   lines.push('Food consumption ' + (ef.foodConsumption < 1 ? '−' : '+') + Math.round(Math.abs(1 - ef.foodConsumption) * 100) + '%');
+            if (ef.unlockBuildings)   lines.push('Unlocks: ' + ef.unlockBuildings.map(function (b) { return BUILD_NAMES[b] || b; }).join(', '));
+            if (ef.flag) {
+                var fd = {
+                    reinforcedShelving: 'Storage cap +75/building (was +50)',
+                    ironLockbox:        'Coin cap +50,000 cp',
+                    tradeGoods:         'Cloth &amp; potions generate trade income',
+                    guildDiscount:      'Smelter/Forge/Loom/Kiln costs −20%',
+                    eraThreeUnlocked:   'Era 3 unlocked!',
+                    taxesEnabled:       'Taxation system enabled'
+                };
+                lines.push(fd[ef.flag] || ef.flag);
+            }
+            if (lines.length) {
+                h += '<div class="rtip-efx-head">Effects:</div><ul class="rtip-efx">';
+                lines.forEach(function (l) { h += '<li>' + l + '</li>'; });
+                h += '</ul>';
+            }
+        }
+        return h;
+    }
+
+    function setupPanZoom(g) {
+        var wrap = document.getElementById('rtree-wrap');
+        var svg  = document.getElementById('rtree-svg');
+        var panX = 0, panY = 0, scale = 0.52;
+        var dragging = false, lx = 0, ly = 0;
+
+        function apply() {
+            g.setAttribute('transform', 'translate(' + panX + ',' + panY + ') scale(' + scale + ')');
+        }
+        apply();
+
+        svg.addEventListener('mousedown', function (e) {
+            dragging = true; lx = e.clientX; ly = e.clientY;
+            e.preventDefault();
+        });
+        window.addEventListener('mouseup', function () { dragging = false; });
+        window.addEventListener('mousemove', function (e) {
+            if (!dragging) return;
+            panX += e.clientX - lx; panY += e.clientY - ly;
+            lx = e.clientX; ly = e.clientY;
+            apply();
+        });
+        wrap.addEventListener('wheel', function (e) {
+            e.preventDefault();
+            var f = e.deltaY < 0 ? 1.12 : 0.89;
+            scale = Math.min(3, Math.max(0.18, scale * f));
+            apply();
+        }, { passive: false });
+    }
 })();
 </script>
 </body>

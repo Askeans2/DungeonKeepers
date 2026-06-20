@@ -22,6 +22,7 @@ RESEARCH.foragerLore = {
     name: "Forager's Lore",
     desc: "Teach your kind to identify medicinal plants on sight. Herb gathering yields +2 per action.",
     cost: { food: 30, wood: 20 },
+    requiresResearch: ["toolcraft"],
     effects: { gatherBonus: { herbs: 2 } },
 };
 
@@ -29,6 +30,7 @@ RESEARCH.crystalLore = {
     name: "Crystal Lore",
     desc: "Study the resonance of raw crystals. Crystal gathering yields +2 per action.",
     cost: { stone: 40, ore: 20 },
+    requiresResearch: ["deepMining"],
     effects: { gatherBonus: { crystals: 2 } },
 };
 
@@ -53,6 +55,7 @@ RESEARCH.herbGarden = {
     name: "Herb Garden Plots",
     desc: "Lay out organized herb beds behind the Herbalist's Den. Herb production +25%.",
     cost: { wood: 30, food: 20 },
+    requiresResearch: ["foragerLore"],
     effects: { productionBonus: { herbalistDen: 1.25 } },
 };
 
@@ -60,6 +63,7 @@ RESEARCH.animalHusbandry = {
     name: "Animal Husbandry",
     desc: "Domesticate local animals for a steady supply. Hunting Lodge output +15% and food cap +50.",
     cost: { food: 60, wood: 25 },
+    requiresResearch: ["cropRotation"],
     effects: { productionBonus: { huntingLodge: 1.15 }, capBonus: { food: 50 } },
 };
 
@@ -101,6 +105,7 @@ RESEARCH.oreProspecting = {
     name: "Ore Prospecting",
     desc: "Learn to read rock formations for ore deposits. Mines produce 25% more ore.",
     cost: { stone: 50, wood: 20 },
+    requiresResearch: ["stonemason"],
     effects: { productionBonus: { mine: 1.25 } },
 };
 
@@ -116,6 +121,7 @@ RESEARCH.coalBunker = {
     name: "Coal Stockpiling",
     desc: "Covered bunkers keep coal dry and ready. Coal Seams produce 20% more and coal cap +100.",
     cost: { wood: 40, stone: 30 },
+    requiresResearch: ["stonemason"],
     effects: { productionBonus: { coalSeam: 1.20 }, capBonus: { coal: 100 } },
 };
 
@@ -133,6 +139,7 @@ RESEARCH.packHunting = {
     name: "Pack Hunting",
     desc: "Coordinated drives and ambushes bring down more prey. Hunting Lodge output +25%.",
     cost: { food: 50, wood: 30 },
+    requiresResearch: ["animalHusbandry"],
     effects: { productionBonus: { huntingLodge: 1.25 } },
 };
 
@@ -158,6 +165,7 @@ RESEARCH.bellowsDesign = {
     name: "Crude Bellows",
     desc: "A leather lung to stoke the forge fire. Smelter iron output +25%.",
     cost: { stone: 60, iron: 20, coins: 150 },
+    requiresResearch: ["oreProspecting"],
     effects: { converterBonus: { smelter: 1.25 } },
 };
 
@@ -165,6 +173,7 @@ RESEARCH.concentratedExtracts = {
     name: "Concentrated Tinctures",
     desc: "Reduce and concentrate herb extracts. Alchemy Lab potion output +25%.",
     cost: { herbs: 50, potions: 10, coins: 150 },
+    requiresResearch: ["herbGarden"],
     effects: { converterBonus: { alchemyLab: 1.25 } },
 };
 
@@ -172,6 +181,7 @@ RESEARCH.highFireKiln = {
     name: "High-Fire Kiln",
     desc: "Pack the kiln tighter and fire hotter. Kiln brick output +25%.",
     cost: { stone: 50, coal: 20, coins: 150 },
+    requiresResearch: ["coalBunker"],
     effects: { converterBonus: { kiln: 1.25 } },
 };
 
@@ -179,6 +189,7 @@ RESEARCH.loomMastery = {
     name: "Loom Mastery",
     desc: "Refined threading patterns and treadle timing. Loom cloth output +25%.",
     cost: { cloth: 20, wood: 30, coins: 100 },
+    requiresResearch: ["herbGarden"],
     effects: { converterBonus: { loom: 1.25 } },
 };
 
@@ -188,6 +199,7 @@ RESEARCH.reinforcedShelving = {
     name: "Reinforced Shelving",
     desc: "Iron-braced racks and raised floors. Each Storage building now grants +75 cap instead of +50.",
     cost: { wood: 80, stone: 40, iron: 10 },
+    requiresResearch: ["carpentry"],
     effects: { flag: "reinforcedShelving" },
 };
 
@@ -203,6 +215,7 @@ RESEARCH.ironLockbox = {
     name: "Iron Lockbox",
     desc: "A bolted iron chest for the village treasury. Coin cap increased by 500 gp (50,000 cp).",
     cost: { iron: 60, stone: 40, coins: 500 },
+    requiresResearch: ["taxCollector"],
     effects: { flag: "ironLockbox" },
 };
 
@@ -220,6 +233,7 @@ RESEARCH.communalLiving = {
     name: "Communal Living",
     desc: "Pack the burrows tighter and share the straw. Each Lair holds +2 extra creatures.",
     cost: { wood: 60, stone: 40 },
+    requiresResearch: ["taxes"],
     effects: { housingBonus: { lair: 2 } },
 };
 
@@ -243,7 +257,7 @@ RESEARCH.roadNetwork = {
     name: "Rutted Road Network",
     desc: "Packed earth and stone fill the worst ruts. All building passive production +5%.",
     cost: { stone: 100, wood: 60, coins: 1000 },
-    requiresResearch: ["stonemason", "timberfelling"],
+    requiresResearch: ["carpentry", "quarrying"],
     effects: { allProductionBonus: 0.05 },
 };
 
@@ -251,7 +265,7 @@ RESEARCH.rationing = {
     name: "Strict Rationing",
     desc: "Half-portions and no complaints. Your population consumes 20% less food per tick.",
     cost: { food: 100, wood: 30, coins: 500 },
-    requiresResearch: ["cropRotation"],
+    requiresResearch: ["composting"],
     effects: { foodConsumption: 0.80 },
 };
 
@@ -259,6 +273,7 @@ RESEARCH.militiaDrill = {
     name: "Militia Drill",
     desc: "Weekly drills and bunk assignments. Each Armory houses +3 additional creatures.",
     cost: { iron: 40, wood: 30, coins: 500 },
+    requiresResearch: ["communalLiving"],
     effects: { housingBonus: { armory: 3 } },
 };
 
@@ -276,7 +291,7 @@ RESEARCH.mortaredMasonry = {
     name: "Mortared Masonry",
     desc: "Lime mortar between courses of brick. Kiln output +25% and brick cap +50.",
     cost: { bricks: 40, stone: 60, coins: 500 },
-    requiresResearch: ["stonemason", "highFireKiln"],
+    requiresResearch: ["highFireKiln", "quarrying"],
     effects: { converterBonus: { kiln: 1.25 }, capBonus: { bricks: 50 } },
 };
 
@@ -284,6 +299,7 @@ RESEARCH.arcaneInscription = {
     name: "Arcane Inscription",
     desc: "Carve runes with intent, not guesswork. Arcane Bench rune output +25%.",
     cost: { runes: 20, crystals: 30, coins: 1500 },
+    requiresResearch: ["crystalFocus"],
     effects: { converterBonus: { arcaneBench: 1.25 } },
 };
 
