@@ -1213,67 +1213,67 @@
 
             <div class="biome-card">
                 <div><span class="cl-ver">v0.24</span></div>
-                <p class="biome-desc">Added detailed descriptions for all 100 biome modifiers. Enhanced tooltip display for active run modifiers and race traits shown in the identity panel.</p>
+                <p class="biome-desc">Added a <code>MOD_DESCRIPTIONS</code> map covering all 100 biome modifiers, organized into 7 categories: Resource Production, Population, Buildings, Combat &amp; Defense, Magic &amp; Research, Prestige &amp; Meta, and Hazards / Hard Mode. Modifier tooltips now appear when hovering active run modifiers in the identity panel, showing the exact mechanical effect of each modifier. Race trait tooltips similarly enhanced with full effect descriptions.</p>
             </div>
 
             <div class="biome-card">
                 <div><span class="cl-ver">v0.23</span></div>
-                <p class="biome-desc">Improved error handling in biome reroll. Hardened the identity panel against missing DOM elements to prevent console errors on edge-case saves.</p>
+                <p class="biome-desc">Hardened <code>devRerollBiome()</code> against crashes when called before the identity panel elements exist in the DOM. Added null guards throughout <code>updateIdentityPanel()</code> so older saves missing <code>run.mods</code> or <code>meta.seenBiomes</code> load cleanly without throwing. Both functions now bail gracefully if their required DOM targets are absent.</p>
             </div>
 
             <div class="biome-card">
                 <div><span class="cl-ver">v0.22</span></div>
-                <p class="biome-desc">Added a total prestiges counter that persists across resets. Enhanced prestige tracking and display in the identity panel.</p>
+                <p class="biome-desc">Added <code>totalPrestiges</code> to <code>gameState.meta</code>, persisting across resets via save/load. The Info tab now shows your lifetime prestige count alongside per-run stats. Prestige flow updated: now prompts for confirmation, zeroes all per-run stats without hardcoding keys, increments the counter atomically with the save, and then calls <code>selectStartBiome(false)</code> to assign the next run's biome and mods.</p>
             </div>
 
             <div class="biome-card">
                 <div><span class="cl-ver">v0.21</span></div>
-                <p class="biome-desc">Improved biome selection flow and display polish. General UI refinements to the identity panel.</p>
+                <p class="biome-desc">Added all 25 biome data objects to <code>game.js</code> (the <code>BIOMES</code> const), each with type, flavour description, starting resources, run modifier list, and best/hard creature affinities. Implemented <code>selectStartBiome(isFirstRun)</code>: first runs always receive Verdant Forest with four curated positive starter mods; prestige runs draw a weighted random biome from the unseen pool and append 1–2 extra wildcard mods from the positive/negative extra-mod pools. Biome seen-tracking stored in <code>meta.seenBiomes</code>.</p>
             </div>
 
             <div class="biome-card">
                 <div><span class="cl-ver">v0.20</span></div>
-                <p class="biome-desc">Added 25 fully-defined biomes (13 natural, 6 D&amp;D lore, 6 magical), each with starting resources, run modifiers, and creature suitability affinities. Introduced the identity panel showing the active biome and race for the current run.</p>
+                <p class="biome-desc">Introduced the in-game identity panel showing the active biome name, type badge, run modifiers (with positive/negative colouring), and selected race. Added 25 fully-specified biomes — 13 Natural, 6 D&amp;D Lore, 6 Magical — each carrying starting resources, a flavour description, 2–5 run modifiers, and creature affinity lists (best and hard picks). Added a dev tool to inspect current biome state and manually reroll the biome mid-run.</p>
             </div>
 
             <div class="biome-card">
                 <div><span class="cl-ver">v0.19</span></div>
-                <p class="biome-desc">Biome section labels and layout adjustments. Styling pass on the biome type chips and grouping headers.</p>
+                <p class="biome-desc">Reorganised the in-game biome display into three labelled sections (Natural Biomes · D&amp;D Lore Biomes · Magical Biomes) and the modifier glossary into 7 category headers. Added left-border colour coding to biome cards by origin type: green for Natural, purple for D&amp;D, gold for Magical. Tightened the biome card layout with a dedicated start-resource line and aligned modifier/affinity chip rows.</p>
             </div>
 
             <div class="biome-card">
                 <div><span class="cl-ver">v0.17–v0.18</span></div>
-                <p class="biome-desc">Added the biome tab visual system: suitability legend (Excellent / Good / Neutral / Challenging / Hostile scale), biome cards with modifier chips, and creature affinity chips. Added color-coded creature type tags for all 15 creature categories.</p>
+                <p class="biome-desc">Built the full biome tab visual system: five-tier suitability legend (Excellent / Good / Neutral / Challenging / Hostile) with per-tier production and growth effect callouts; biome cards with embedded modifier chips (green positive, red negative) and creature affinity chips with suitability colour coding. Added distinct colour-coded type tags for all 15 creature categories (Draconic, Undead, Goblinoid, Fey, Aberration, Ooze, Elemental, Monstrous, Fiend, Giant, Construct, Lycanthrope, Flora, Aquatic, Humanoid).</p>
             </div>
 
             <div class="biome-card">
                 <div><span class="cl-ver">v0.16</span></div>
-                <p class="biome-desc">Added the creature selector tab with the full bestiary, grouped by creature type with preferred and difficult biome callouts.</p>
+                <p class="biome-desc">Added the creature selector tab with the full bestiary: 70+ creatures spanning 15 type categories, each entry showing a flavour description and its preferred and difficult biome. Creature entries are grouped under styled category headers with matching type-tag chips. Introduced the <code>tag-*</code> CSS classes for all creature types.</p>
             </div>
 
             <div class="biome-card">
                 <div><span class="cl-ver">v0.15</span></div>
-                <p class="biome-desc">Added game settings (save/load/reset). Enhanced statistics display in the info tab.</p>
+                <p class="biome-desc">Added persistent game settings stored in a separate <code>localStorage</code> key. Three configurable options: autosave interval (Off / 1 s / 5 s / 30 s), number display format (Full Numbers / Abbreviated), and reduced animations toggle. Added a <code>peakPopulation</code> field to the stats object. The Info tab now shows current day, year, season, population, peak population, and a manual save button alongside the autosave status. Settings persist independently of the main save so a reset does not wipe preferences.</p>
             </div>
 
             <div class="biome-card">
                 <div><span class="cl-ver">v0.13–v0.14</span></div>
-                <p class="biome-desc">Implemented the tabbed interface (Build, Research, Info, Settings, Dev). Tuned the game tick rate and added flash animations on time-unit changes (day, season, year). Improved tab button styles and overall layout.</p>
+                <p class="biome-desc">Implemented the full 5-tab layout: Build (gather actions + buildings), Research (placeholder), Info (stats), Settings, and Dev (cheat tools). Each tab is a hidden <code>div</code> revealed by <code>switchTab()</code>. The Build tab shipped with the first 5 buildings (Lair, Farm, Lumber Camp, Quarry, Storage) and 3 manual gather actions. Added day/season/year flash animations that briefly highlight the relevant counter whenever a unit ticks over. Tuned the game tick rate and improved tab button hover and active styles. The Dev tab includes controls to fill all resource caps, force-advance time, and inspect game state.</p>
             </div>
 
             <div class="biome-card">
                 <div><span class="cl-ver">v0.12</span></div>
-                <p class="biome-desc">Added room definitions and the foundation for building mechanics: construction costs, scaling, job slots, housing bonuses, and production buildings.</p>
+                <p class="biome-desc">Added the <code>ROOMS</code> data structure in <code>data/rooms.js</code> defining the first five buildings with costs, exponential cost scaling, job slot counts, housing bonuses, and passive production rates. Implemented the core building engine in <code>game.js</code>: <code>build()</code>, <code>getBuildCost()</code>, <code>getHousing()</code>, <code>getProduction()</code>, <code>getCaps()</code>, and <code>checkUnlock()</code>. Buildings unlock automatically once their prerequisite building counts are met. Storage buildings raise all resource caps by a flat amount per building rather than producing a resource.</p>
             </div>
 
             <div class="biome-card">
                 <div><span class="cl-ver">v0.11</span></div>
-                <p class="biome-desc">Added Google Fonts (Lato) and a typography/styling pass across the UI.</p>
+                <p class="biome-desc">Replaced system fonts with Google Fonts (Lato). Full CSS overhaul establishing the dark colour theme via CSS custom properties: <code>--bg</code>, <code>--bg-panel</code>, <code>--bg-hover</code>, <code>--text</code>, <code>--text-muted</code>, <code>--accent</code>, <code>--label</code>, <code>--border</code>. Added styled scrollbars, a fixed version badge, and a base three-column layout grid (left sidebar · center content · right sidebar) that all subsequent UI builds on.</p>
             </div>
 
             <div class="biome-card">
                 <div><span class="cl-ver">v0.01–v0.10</span></div>
-                <p class="biome-desc">Early development. Established the core game loop: resource gathering, population growth, food consumption, starvation, prestige counter, and the basic in-game day/season/year timer. Built the initial UI shell and save/load system.</p>
+                <p class="biome-desc">Initial development. Established the core game loop: <code>tick()</code> runs on a fixed interval driving the day/season/year calendar, passive resource production from buildings, population growth when food is in surplus, and a starvation death timer when food hits zero. Manual gather buttons for food, wood, stone, and coins. Population grows toward a housing cap and consumes food each tick. Save and load via <code>localStorage</code> using <code>JSON.stringify</code>/<code>parse</code>. Prestige button resets all run progress while preserving meta stats. Basic resource cap display and flash-on-change UI feedback.</p>
             </div>
 
         </section>
