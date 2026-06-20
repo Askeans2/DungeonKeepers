@@ -2025,9 +2025,9 @@ function showWiki(id) {
         var edgeG = document.createElementNS(NS, 'g'); g.appendChild(edgeG);
         var nodeG = document.createElementNS(NS, 'g'); g.appendChild(nodeG);
 
-        /* Radial guide rings at R1, R2, R3, R3+80 */
+        /* Radial guide rings at R1 and R2 only (creature nodes use local grids now) */
         var guideG = document.createElementNS(NS, 'g');
-        [R1, R2, R3, R3 + 80].forEach(function(r) {
+        [R1, R2].forEach(function(r) {
             var ring = document.createElementNS(NS, 'circle');
             ring.setAttribute('cx', CX); ring.setAttribute('cy', CY); ring.setAttribute('r', r);
             ring.setAttribute('fill', 'none');
@@ -2167,99 +2167,103 @@ function showWiki(id) {
                 wireTooltip(tgrp, buildTypeTip.bind(null, typeName, creatures));
                 allNodes.push({ el: tgrp, name: typeName, level: 2, typeName: typeName, pathName: path.name });
 
-                /* --- Two-ring stagger for dense types --- */
-                var M = creatures.length;
-                var CNW = 92, CNH = 22;
-                var twoRing = M > 6;
-                var innerList = [], outerList = [];
-                creatures.forEach(function(cname, ci) {
-                    (twoRing && ci % 2 !== 0 ? outerList : innerList).push(cname);
+                /* --- Radial grid layout for creatures ---
+                   Creatures are placed in a 2- or 3-column grid extending radially
+                   outward from the type node, avoiding arc-based overlap entirely. */
+                var CNW = 88, CNH = 20;
+                var COLS = creatures.length > 8 ? 3 : 2;
+                var CROW = CNH + 7;    // row spacing (radial direction)
+                var CCOL = CNW + 8;    // col spacing (perpendicular direction)
+                var CSTART = TH / 2 + CNH / 2 + 14; // gap from type node center to first row center
+
+                /* Radial unit vector from SVG center toward this type node */
+                var rad_ang = (typeAngle - 90) * Math.PI / 180;
+                var ur = { x: Math.cos(rad_ang), y: Math.sin(rad_ang) };  // radial (outward)
+                var up = { x: -Math.sin(rad_ang), y: Math.cos(rad_ang) }; // perpendicular
+
+                creatures.forEach(function(cname, i) {
+                    var col = i % COLS;
+                    var row = Math.floor(i / COLS);
+                    var colOffset = (col - (COLS - 1) / 2) * CCOL;
+                    var rowOffset = CSTART + row * CROW;
+
+                    var cpx = tp.x + ur.x * rowOffset + up.x * colOffset;
+                    var cpy = tp.y + ur.y * rowOffset + up.y * colOffset;
+
+                    var tcEdge = mkEdge(edgeG, tp.x, tp.y, cpx, cpy, typeColor);
+                    creatureEdges[cname] = { edge: tcEdge, typeEdge: ptEdge, pathEdge: cpEdge };
+
+                    var cgrp = animGroup(380 + pi * 60 + ti * 40 + i * 10);
+                    cgrp.style.cursor = 'pointer';
+
+                    var crect = document.createElementNS(NS, 'rect');
+                    crect.setAttribute('x', cpx - CNW/2); crect.setAttribute('y', cpy - CNH/2);
+                    crect.setAttribute('width', CNW); crect.setAttribute('height', CNH);
+                    crect.setAttribute('rx', 5);
+                    crect.setAttribute('fill', typeColor); crect.setAttribute('fill-opacity', '0.18');
+                    crect.setAttribute('stroke', typeColor); crect.setAttribute('stroke-width', '1.2');
+                    crect.style.transition = 'filter 0.12s, fill-opacity 0.12s, stroke-width 0.12s';
+                    cgrp.appendChild(crect);
+
+                    /* Top shine */
+                    var cshine = document.createElementNS(NS, 'rect');
+                    cshine.setAttribute('x', cpx - CNW/2 + 3); cshine.setAttribute('y', cpy - CNH/2 + 2);
+                    cshine.setAttribute('width', CNW - 6); cshine.setAttribute('height', 2); cshine.setAttribute('rx', 1);
+                    cshine.setAttribute('fill', 'rgba(255,255,255,0.10)'); cshine.style.pointerEvents = 'none';
+                    cgrp.appendChild(cshine);
+
+                    /* Vertical divider between icon and name */
+                    var divX = cpx - CNW/2 + 20;
+                    var divL = document.createElementNS(NS, 'line');
+                    divL.setAttribute('x1', divX); divL.setAttribute('y1', cpy - CNH/2 + 3);
+                    divL.setAttribute('x2', divX); divL.setAttribute('y2', cpy + CNH/2 - 3);
+                    divL.setAttribute('stroke', typeColor); divL.setAttribute('stroke-width', '0.8');
+                    divL.setAttribute('opacity', '0.35'); divL.style.pointerEvents = 'none';
+                    cgrp.appendChild(divL);
+
+                    mkIcon(cgrp, cpx - CNW/2 + 10, cpy, typeName, typeColor);
+
+                    var nameEl = document.createElementNS(NS, 'text');
+                    nameEl.setAttribute('x', cpx - CNW/2 + 20 + (CNW - 20) / 2);
+                    nameEl.setAttribute('y', cpy);
+                    nameEl.setAttribute('text-anchor', 'middle');
+                    nameEl.setAttribute('dominant-baseline', 'middle');
+                    nameEl.setAttribute('font-size', '8');
+                    nameEl.setAttribute('font-family', 'Lato, sans-serif');
+                    nameEl.setAttribute('fill', typeColor);
+                    nameEl.style.pointerEvents = 'none';
+                    nameEl.style.userSelect = 'none';
+                    nameEl.textContent = cname;
+                    cgrp.appendChild(nameEl);
+
+                    nodeG.appendChild(cgrp);
+
+                    /* Creature hover: glow + ancestry edge highlight */
+                    cgrp.addEventListener('mouseenter', (function(cr, tc, te, pe) {
+                        return function() {
+                            cr.setAttribute('filter', 'url(#rtrace-glow)');
+                            cr.setAttribute('fill-opacity', '0.38');
+                            cr.setAttribute('stroke-width', '2');
+                            tc.setAttribute('stroke-width', '2.5'); tc.setAttribute('opacity', '0.9');
+                            te.setAttribute('stroke-width', '2'); te.setAttribute('opacity', '0.75');
+                            pe.setAttribute('stroke-width', '2'); pe.setAttribute('opacity', '0.65');
+                        };
+                    })(crect, tcEdge, ptEdge, cpEdge));
+
+                    cgrp.addEventListener('mouseleave', (function(cr, tc, te, pe) {
+                        return function() {
+                            cr.removeAttribute('filter');
+                            cr.setAttribute('fill-opacity', '0.18');
+                            cr.setAttribute('stroke-width', '1.2');
+                            tc.setAttribute('stroke-width', '1'); tc.setAttribute('opacity', '0.28');
+                            te.setAttribute('stroke-width', '1'); te.setAttribute('opacity', '0.28');
+                            pe.setAttribute('stroke-width', '1'); pe.setAttribute('opacity', '0.28');
+                        };
+                    })(crect, tcEdge, ptEdge, cpEdge));
+
+                    wireTooltip(cgrp, buildCreatureTip.bind(null, cname, typeName));
+                    allNodes.push({ el: cgrp, name: cname, level: 3, typeName: typeName, pathName: path.name });
                 });
-
-                function placeRing(list, radius, ringDelay) {
-                    var L = list.length;
-                    list.forEach(function(cname, i) {
-                        var cAngle = typeStart + (i + 0.5) * (typeEnd - typeStart) / L;
-                        var cp     = rpos(cAngle, radius);
-
-                        var tcEdge = mkEdge(edgeG, tp.x, tp.y, cp.x, cp.y, typeColor);
-                        creatureEdges[cname] = { edge: tcEdge, typeEdge: ptEdge, pathEdge: cpEdge };
-
-                        var cgrp = animGroup(380 + pi * 60 + ti * 40 + ringDelay + i * 12);
-                        cgrp.style.cursor = 'pointer';
-
-                        var crect = document.createElementNS(NS, 'rect');
-                        crect.setAttribute('x', cp.x - CNW/2); crect.setAttribute('y', cp.y - CNH/2);
-                        crect.setAttribute('width', CNW); crect.setAttribute('height', CNH);
-                        crect.setAttribute('rx', 6);
-                        crect.setAttribute('fill', typeColor); crect.setAttribute('fill-opacity', '0.18');
-                        crect.setAttribute('stroke', typeColor); crect.setAttribute('stroke-width', '1.2');
-                        crect.style.transition = 'filter 0.12s, fill-opacity 0.12s, stroke-width 0.12s';
-                        cgrp.appendChild(crect);
-
-                        /* Top shine */
-                        var cshine = document.createElementNS(NS, 'rect');
-                        cshine.setAttribute('x', cp.x - CNW/2 + 4); cshine.setAttribute('y', cp.y - CNH/2 + 2);
-                        cshine.setAttribute('width', CNW - 8); cshine.setAttribute('height', 2); cshine.setAttribute('rx', 1);
-                        cshine.setAttribute('fill', 'rgba(255,255,255,0.10)'); cshine.style.pointerEvents = 'none';
-                        cgrp.appendChild(cshine);
-
-                        /* Vertical divider */
-                        var divX = cp.x - CNW/2 + 22;
-                        var divL = document.createElementNS(NS, 'line');
-                        divL.setAttribute('x1', divX); divL.setAttribute('y1', cp.y - CNH/2 + 3);
-                        divL.setAttribute('x2', divX); divL.setAttribute('y2', cp.y + CNH/2 - 3);
-                        divL.setAttribute('stroke', typeColor); divL.setAttribute('stroke-width', '0.8');
-                        divL.setAttribute('opacity', '0.35'); divL.style.pointerEvents = 'none';
-                        cgrp.appendChild(divL);
-
-                        mkIcon(cgrp, cp.x - CNW/2 + 11, cp.y, typeName, typeColor);
-
-                        var nameEl = document.createElementNS(NS, 'text');
-                        nameEl.setAttribute('x', cp.x - CNW/2 + 22 + (CNW - 22) / 2);
-                        nameEl.setAttribute('y', cp.y);
-                        nameEl.setAttribute('text-anchor', 'middle');
-                        nameEl.setAttribute('dominant-baseline', 'middle');
-                        nameEl.setAttribute('font-size', '8');
-                        nameEl.setAttribute('font-family', 'Lato, sans-serif');
-                        nameEl.setAttribute('fill', typeColor);
-                        nameEl.style.pointerEvents = 'none';
-                        nameEl.style.userSelect = 'none';
-                        nameEl.textContent = cname;
-                        cgrp.appendChild(nameEl);
-
-                        nodeG.appendChild(cgrp);
-
-                        /* Creature hover: glow + full ancestry edge highlight */
-                        cgrp.addEventListener('mouseenter', (function(cr, tc, pc2, te, pe) {
-                            return function() {
-                                cr.setAttribute('filter', 'url(#rtrace-glow)');
-                                cr.setAttribute('fill-opacity', '0.35');
-                                cr.setAttribute('stroke-width', '2');
-                                tc.setAttribute('stroke-width', '2.5'); tc.setAttribute('opacity', '0.9');
-                                te.setAttribute('stroke-width', '2'); te.setAttribute('opacity', '0.75');
-                                pe.setAttribute('stroke-width', '2'); pe.setAttribute('opacity', '0.65');
-                            };
-                        })(crect, tcEdge, cpEdge, ptEdge, cpEdge));
-
-                        cgrp.addEventListener('mouseleave', (function(cr, tc, te, pe) {
-                            return function() {
-                                cr.removeAttribute('filter');
-                                cr.setAttribute('fill-opacity', '0.18');
-                                cr.setAttribute('stroke-width', '1.2');
-                                tc.setAttribute('stroke-width', '1'); tc.setAttribute('opacity', '0.28');
-                                te.setAttribute('stroke-width', '1'); te.setAttribute('opacity', '0.28');
-                                pe.setAttribute('stroke-width', '1'); pe.setAttribute('opacity', '0.28');
-                            };
-                        })(crect, tcEdge, ptEdge, cpEdge));
-
-                        wireTooltip(cgrp, buildCreatureTip.bind(null, cname, typeName));
-                        allNodes.push({ el: cgrp, name: cname, level: 3, typeName: typeName, pathName: path.name });
-                    });
-                }
-
-                placeRing(innerList, R3, 0);
-                placeRing(outerList, R3 + 80, innerList.length * 6);
             });
         });
 
