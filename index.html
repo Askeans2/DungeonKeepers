@@ -1477,11 +1477,12 @@
         var ROLL_RADIUS  = 176; // effective rolling radius in px (≈ D20_SIZE * 0.44)
 
         // ── Utilities ─────────────────────────────────────────────────────────
+        var SAVE_KEY = 'dungeonKeeperSave';
         function hasSave() {
-            try { return !!localStorage.getItem('dungeonKeepersV2'); } catch(e) { return false; }
+            try { return !!localStorage.getItem(SAVE_KEY); } catch(e) { return false; }
         }
         function getSave() {
-            try { return JSON.parse(localStorage.getItem('dungeonKeepersV2') || 'null'); } catch(e) { return null; }
+            try { return JSON.parse(localStorage.getItem(SAVE_KEY) || 'null'); } catch(e) { return null; }
         }
         function fmt(n) { return (Math.floor(n) || 0).toLocaleString(); }
 
@@ -1654,7 +1655,7 @@
             var panel = document.getElementById('splash-chronicle');
             var body  = document.getElementById('splash-chronicle-body');
             var raw;
-            try { raw = localStorage.getItem('dungeonKeepersV2'); } catch(e) {}
+            try { raw = localStorage.getItem(SAVE_KEY); } catch(e) {}
             if (!raw) {
                 body.innerHTML = '<p class="chronicle-empty">No chronicles have been recorded yet.<br><em>Your story has yet to begin.</em></p>';
             } else {
