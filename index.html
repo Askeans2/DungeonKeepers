@@ -18,27 +18,29 @@
     <div class="splash-bg-runes"></div>
     <div class="splash-particles" id="splash-particles"></div>
 
-    <!-- d20 silhouette — correct icosahedron top-vertex projection:
-         outer decagon + upper pentagon (even vertices) + lower pentagon (odd vertices) + 10 spokes -->
+    <!-- d20 silhouette — icosahedron side view (classic d20 icon shape) -->
     <div class="splash-d20" id="splash-d20" aria-hidden="true">
         <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor">
-            <!-- Outer decagon (all 30 icosahedron edges visible from top vertex) -->
-            <polygon points="100,12 152,29 184,73 184,127 152,171 100,188 48,171 16,127 16,73 48,29" stroke-width="1.5"/>
-            <!-- Upper pentagon: connects every-other decagon vertex starting at top -->
-            <polygon points="100,12 184,73 152,171 48,171 16,73" stroke-width="1"/>
-            <!-- Lower pentagon: connects remaining every-other vertices -->
-            <polygon points="152,29 184,127 100,188 16,127 48,29" stroke-width="1"/>
-            <!-- 10 spokes: top vertex + bottom vertex both project to center -->
-            <line x1="100" y1="100" x2="100" y2="12"  stroke-width="0.8"/>
-            <line x1="100" y1="100" x2="152" y2="29"  stroke-width="0.8"/>
-            <line x1="100" y1="100" x2="184" y2="73"  stroke-width="0.8"/>
-            <line x1="100" y1="100" x2="184" y2="127" stroke-width="0.8"/>
-            <line x1="100" y1="100" x2="152" y2="171" stroke-width="0.8"/>
-            <line x1="100" y1="100" x2="100" y2="188" stroke-width="0.8"/>
-            <line x1="100" y1="100" x2="48"  y2="171" stroke-width="0.8"/>
-            <line x1="100" y1="100" x2="16"  y2="127" stroke-width="0.8"/>
-            <line x1="100" y1="100" x2="16"  y2="73"  stroke-width="0.8"/>
-            <line x1="100" y1="100" x2="48"  y2="29"  stroke-width="0.8"/>
+            <!-- Outer boundary: top · upper-right · right · lower-right · bottom · lower-left · left · upper-left -->
+            <polygon points="100,6 154,48 192,116 154,162 100,194 46,162 8,116 46,48" stroke-width="1.5"/>
+            <!-- Upper horizontal (UL to UR) -->
+            <line x1="46"  y1="48"  x2="154" y2="48"  stroke-width="1"/>
+            <!-- Top down to left and right equator vertices -->
+            <line x1="100" y1="6"   x2="8"   y2="116" stroke-width="1"/>
+            <line x1="100" y1="6"   x2="192" y2="116" stroke-width="1"/>
+            <!-- Upper cross: UL to Right, UR to Left -->
+            <line x1="46"  y1="48"  x2="192" y2="116" stroke-width="1"/>
+            <line x1="154" y1="48"  x2="8"   y2="116" stroke-width="1"/>
+            <!-- Equatorial horizontal -->
+            <line x1="8"   y1="116" x2="192" y2="116" stroke-width="1"/>
+            <!-- Lower cross: Left to LR, Right to LL -->
+            <line x1="8"   y1="116" x2="154" y2="162" stroke-width="1"/>
+            <line x1="192" y1="116" x2="46"  y2="162" stroke-width="1"/>
+            <!-- Bottom up to left and right equator vertices -->
+            <line x1="100" y1="194" x2="8"   y2="116" stroke-width="1"/>
+            <line x1="100" y1="194" x2="192" y2="116" stroke-width="1"/>
+            <!-- Lower horizontal (LL to LR) -->
+            <line x1="46"  y1="162" x2="154" y2="162" stroke-width="1"/>
         </svg>
     </div>
 
@@ -56,7 +58,7 @@
 
     <div class="splash-content">
 
-        <div class="splash-eyebrow">Born of stone &nbsp;&middot;&nbsp; Shaped in shadow</div>
+        <div class="splash-eyebrow">A D&D-inspired &nbsp;&middot;&nbsp; idle dungeon sim</div>
         <h1 class="splash-title"><span class="splash-title-line1">Dungeon</span><span class="splash-title-keeper">Keepers</span></h1>
         <div class="splash-rule"></div>
 
