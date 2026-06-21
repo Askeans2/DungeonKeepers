@@ -10,6 +10,60 @@
 
 <body>
 
+<!-- ═══════════════════════════════════════════════════════════════
+     SPLASH SCREEN — shown on first run, accessible via Dev panel
+═══════════════════════════════════════════════════════════════ -->
+<div id="splash-overlay">
+
+    <div class="splash-bg-runes"></div>
+
+    <div class="splash-content">
+
+        <div class="splash-eyebrow">A dungeon management idle game</div>
+        <h1 class="splash-title">Dungeon<br><span class="splash-title-keeper">Keepers</span></h1>
+        <div class="splash-rule"></div>
+
+        <div class="splash-lore">
+            <p>
+                Deep beneath the surface world, where light has never reached and silence is ancient,
+                something stirred. Not a creature. Not a god. Something older — a pocket of raw arcane
+                will woven into the bedrock itself. A <em>Dungeon Mind</em>, newly conscious and hungry
+                to become.
+            </p>
+            <p>
+                You are that mind. You have no body, no voice, no name. Only stone, shadow,
+                and the faint pulse of ley-line magic bleeding through your walls. But life is drawn to
+                you. It always is. Feed the darkness long enough and something will answer — creatures
+                who resonate with your nature, who dig your halls and fill your chambers and make you
+                real.
+            </p>
+            <p>
+                Choose your inhabitants wisely. In time, what lives inside you <em>becomes</em> you.
+            </p>
+        </div>
+
+        <div class="splash-buttons">
+            <button class="splash-btn splash-btn-primary" id="splash-awaken-btn" onclick="splashAwaken()">
+                <span class="splash-btn-icon">&#9670;</span> Awaken
+            </button>
+            <button class="splash-btn splash-btn-secondary" id="splash-continue-btn" onclick="splashContinue()" style="display:none">
+                <span class="splash-btn-icon">&#9654;</span> Continue
+            </button>
+            <a class="splash-btn splash-btn-tertiary" href="wiki.html" target="_blank" rel="noopener">
+                <span class="splash-btn-icon">&#9413;</span> The Archive
+            </a>
+        </div>
+
+        <div class="splash-footer">
+            <span id="splash-version"></span>
+            &nbsp;&middot;&nbsp;
+            Inspired by <em>Dungeon Keeper</em>, <em>Delicious in Dungeon</em>, and <em>Evolve Idle</em>
+        </div>
+
+    </div>
+
+</div>
+
 <div class="statusbar">
     <div class="status-center">
         <div>Day: <span id="day">1</span></div>
@@ -1222,17 +1276,6 @@
                 <div class="info-stat"><span>Stone Produced</span>      <span id="info-stone-total">0</span></div>
             </div>
 
-            <h2 class="section-gap">About</h2>
-            <p class="info-text">
-                Dungeon Keeper v0.26 — You are the keeper of a fledgling dungeon. Gather
-                resources, house creatures, and expand your underground empire. Keep your
-                creatures fed or watch them desert you — or worse.
-            </p>
-            <p class="info-text">
-                Build a <strong>Lair</strong> to unlock housing, stockpile food to attract
-                creatures, then assign them to buildings. Each Farm worker produces 2 food/s
-                but every creature eats 1 food/s. Expand carefully — starvation kills.
-            </p>
 
         </div><!-- /tab-info -->
 
@@ -1320,6 +1363,13 @@
             </div>
 
             <div class="dev-section">
+                <h3>Splash Screen</h3>
+                <div class="dev-grid">
+                    <button class="dev-btn" onclick="splashShow()">Show Splash Screen</button>
+                </div>
+            </div>
+
+            <div class="dev-section">
                 <h3>Prestige &amp; Biome</h3>
                 <div class="dev-grid">
                     <button class="dev-btn danger" onclick="doPrestige()">Simulate Prestige</button>
@@ -1374,6 +1424,66 @@
     ["data/resources.js", "data/rooms.js", "data/research.js", "save.js", "game.js"].forEach(function (src) {
         document.write('<scr' + 'ipt src="' + src + '?v=' + window.GAME_VERSION + '"></scr' + 'ipt>');
     });
+</script>
+
+<script>
+    // ── Splash screen logic ────────────────────────────────────────────────────
+    (function () {
+        var SPLASH_KEY = 'dk_splash_seen';
+
+        function hasSave() {
+            try { return !!localStorage.getItem('dungeonKeepersV2'); } catch(e) { return false; }
+        }
+
+        window.splashShow = function () {
+            var overlay = document.getElementById('splash-overlay');
+            var continueBtn = document.getElementById('splash-continue-btn');
+            var versionEl = document.getElementById('splash-version');
+            if (versionEl) versionEl.textContent = 'v' + (window.GAME_VERSION || '');
+            if (continueBtn) continueBtn.style.display = hasSave() ? '' : 'none';
+            overlay.classList.remove('splash-hidden');
+            overlay.classList.add('splash-visible');
+            document.body.style.overflow = 'hidden';
+        };
+
+        window.splashHide = function () {
+            var overlay = document.getElementById('splash-overlay');
+            overlay.classList.add('splash-hiding');
+            setTimeout(function () {
+                overlay.classList.add('splash-hidden');
+                overlay.classList.remove('splash-visible', 'splash-hiding');
+                document.body.style.overflow = '';
+                try { localStorage.setItem(SPLASH_KEY, '1'); } catch(e) {}
+            }, 600);
+        };
+
+        window.splashAwaken = function () {
+            // If there is an existing save, warn before wiping — for now just hide.
+            // A future Era 1 implementation will hook here to start a fresh run.
+            splashHide();
+        };
+
+        window.splashContinue = function () {
+            splashHide();
+        };
+
+        // Show on first visit (no splash-seen flag in localStorage).
+        document.addEventListener('DOMContentLoaded', function () {
+            var versionEl = document.getElementById('splash-version');
+            if (versionEl) versionEl.textContent = 'v' + (window.GAME_VERSION || '');
+            var continueBtn = document.getElementById('splash-continue-btn');
+            if (continueBtn) continueBtn.style.display = hasSave() ? '' : 'none';
+
+            var seen = false;
+            try { seen = !!localStorage.getItem(SPLASH_KEY); } catch(e) {}
+            if (!seen) {
+                document.getElementById('splash-overlay').classList.add('splash-visible');
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.getElementById('splash-overlay').classList.add('splash-hidden');
+            }
+        });
+    })();
 </script>
 
 </body>

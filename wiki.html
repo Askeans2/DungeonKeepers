@@ -539,7 +539,8 @@
             <p class="info-text">
                 Creatures are the inhabitants of a dungeon. Each is a distinct D&amp;D-inspired race
                 that defines a run's playstyle, bonuses, and flavour. The full bestiary is listed
-                below, grouped by creature type, with each entry's preferred and difficult biomes.
+                below, grouped by creature type. Bonuses shown are creature-specific traits on top of
+                the base type bonuses visible in the Race Lineage Tree.
             </p>
 
             <!-- DRACONIC & REPTILIAN -->
@@ -547,14 +548,9 @@
             <div class="creature-list">
                 <div class="creature-entry">
                     <span class="creature-tag tag-draconic">Draconic</span>
-                    <span class="creature-name">Chromatic Dragon</span>
-                    <span class="creature-desc">Apex predator of the skies — scales, talons, elemental breath, and insatiable greed.</span>
-                    <span class="creature-biome"><span class="biome-best">Volcanic Caldera</span><span class="biome-hard">Arctic Glacier</span></span>
-                </div>
-                <div class="creature-entry">
-                    <span class="creature-tag tag-draconic">Draconic</span>
                     <span class="creature-name">Metallic Dragon</span>
                     <span class="creature-desc">Noble and ancient; gold, silver, or bronze — wisdom tempered by draconic pride.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Noble Hoard — Coin cap +5,000 beyond base Draconic bonus (total +20,000).</span><span class="cmod cmod-pos">▲ Draconic Honor-Code — +1 extra cp/creature/day.</span></div>
                     <span class="creature-biome"><span class="biome-best">Mountain Stronghold</span><span class="biome-hard">Blighted Wastes</span></span>
                 </div>
                 <div class="creature-entry">
@@ -595,108 +591,116 @@
                 <div class="creature-entry">
                     <span class="creature-tag tag-undead">Undead</span>
                     <span class="creature-name">Skeleton</span>
-                    <span class="creature-desc">Mindless bone given purpose; tireless, fearless, and indifferent to pain.</span>
+                    <span class="creature-desc">Simple animated bones — cheap to maintain and perpetually obedient. The backbone of any undead workforce.</span>
                     <span class="creature-biome"><span class="biome-best">Ancient Battlefield</span><span class="biome-hard">Celestial Foothold</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-undead">Undead</span>
                     <span class="creature-name">Zombie</span>
-                    <span class="creature-desc">Shambling brute — slow but relentless, overwhelms through sheer numbers.</span>
+                    <span class="creature-desc">Slow but relentless, zombies toil without complaint. Their surplus flesh occasionally requires supplemental feeding.</span>
+                    <div class="creature-mods"><span class="cmod cmod-neg">▼ Putrid Hunger — Zombies require 20% more food — fresh meat keeps them docile.</span></div>
                     <span class="creature-biome"><span class="biome-best">Haunted Moor</span><span class="biome-hard">Celestial Foothold</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-undead">Undead</span>
                     <span class="creature-name">Vampire</span>
-                    <span class="creature-desc">Aristocratic predator of the night; charm, blood, and centuries of scheming.</span>
+                    <span class="creature-desc">Seductive lords of the night who command loyalty through fear and coin. Their undead nature is masked behind aristocratic glamour.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Lord of the Night — +1 extra cp/creature/day — vampires demand tribute.</span></div>
                     <span class="creature-biome"><span class="biome-best">Shadowfell Crossing</span><span class="biome-hard">Celestial Foothold</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-undead">Undead</span>
-                    <span class="creature-name">Lich</span>
-                    <span class="creature-desc">An archmage who cheated death; trades mortality for phylactery-bound immortality.</span>
-                    <span class="creature-biome"><span class="biome-best">Arcane Nexus</span><span class="biome-hard">Celestial Foothold</span></span>
-                </div>
-                <div class="creature-entry">
-                    <span class="creature-tag tag-undead">Undead</span>
                     <span class="creature-name">Wight</span>
-                    <span class="creature-desc">A fallen warrior cursed with undeath; retains battle cunning, loses all mercy.</span>
+                    <span class="creature-desc">Fallen warriors animated by hate. They dominate lesser undead and push work quotas higher through sheer menace.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Wight's Command — Extra +5% all production.</span></div>
                     <span class="creature-biome"><span class="biome-best">Ancient Battlefield</span><span class="biome-hard">Feywild Glade</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-undead">Undead</span>
                     <span class="creature-name">Ghoul</span>
-                    <span class="creature-desc">Ravenous flesh-hungry predator; paralysing claws and an endless appetite.</span>
+                    <span class="creature-desc">Feral undead that haunt graveyards and charnel houses, stripping bones with terrifying efficiency.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Charnel Efficiency — Hunting Lodges extra +10%; Bone cap +50.</span></div>
                     <span class="creature-biome"><span class="biome-best">Haunted Moor</span><span class="biome-hard">Feywild Glade</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-undead">Undead</span>
                     <span class="creature-name">Revenant</span>
-                    <span class="creature-desc">Driven back from death by one purpose — vengeance. It will not stop. Ever.</span>
+                    <span class="creature-desc">Driven by unyielding purpose, revenants pursue their singular goal with relentless determination.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Singular Purpose — Slightly faster growth than typical Undead (×2.55 instead of ×3).</span></div>
                     <span class="creature-biome"><span class="biome-best">Ancient Battlefield</span><span class="biome-hard">Feywild Glade</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-undead">Undead</span>
                     <span class="creature-name">Banshee</span>
-                    <span class="creature-desc">The wailing spirit of a beautiful soul twisted by narcissism; her scream stops hearts.</span>
+                    <span class="creature-desc">Wailing spirits whose screams curdle blood. Their terror keeps workers productive through sheer dread.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Shriek of Dread — +1 extra cp/creature/day — workers pay extra to escape the wailing.</span></div>
                     <span class="creature-biome"><span class="biome-best">Haunted Moor</span><span class="biome-hard">Celestial Foothold</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-undead">Undead</span>
                     <span class="creature-name">Wraith</span>
-                    <span class="creature-desc">Incorporeal malice given form; drains the life force from the living with a touch.</span>
+                    <span class="creature-desc">Incorporeal undead who phase through walls and haunt the darkest corridors. Their shadow-touch can extract essence from bare stone.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Phase Walker — +1 stone per manual gather; Essence cap +25.</span></div>
                     <span class="creature-biome"><span class="biome-best">Shadowfell Crossing</span><span class="biome-hard">Rolling Grasslands</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-undead">Undead</span>
                     <span class="creature-name">Mummy</span>
-                    <span class="creature-desc">Ancient royalty cursed and preserved; carries a rotting disease and terrible wrath.</span>
+                    <span class="creature-desc">Ancient undead wrapped in cursed linen. Mummies carry immense reserves of preserved essence from ages past.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Preserved Essence — Essence cap +50 beyond base Undead bonus.</span></div>
                     <span class="creature-biome"><span class="biome-best">Desert Wastes</span><span class="biome-hard">Coastal Bluffs</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-undead">Undead</span>
                     <span class="creature-name">Demilich</span>
-                    <span class="creature-desc">A lich that abandoned its body entirely — now just a jewelled skull of transcendent malice.</span>
+                    <span class="creature-desc">A lich reduced to its phylactery core — a floating skull of incomprehensible arcane density. The ultimate arcane amplifier.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Soul Condenser — Arcane Benches and Ritual Circles +15% efficiency.</span></div>
                     <span class="creature-biome"><span class="biome-best">Arcane Nexus</span><span class="biome-hard">Verdant Forest</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-undead">Undead</span>
                     <span class="creature-name">Shadow</span>
-                    <span class="creature-desc">Darkness given hunger; drains strength with every touch, births more shadows from the slain.</span>
+                    <span class="creature-desc">Creatures of pure darkness, shadows need almost no sustenance and multiply faster than their undead kin.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Shade Multiplication — Further halved food consumption; growth timer only ×2.1 (much faster than base Undead ×3).</span></div>
                     <span class="creature-biome"><span class="biome-best">Blighted Wastes</span><span class="biome-hard">Rolling Grasslands</span></span>
                 </div>
             </div>
 
-            <!-- GOBLINOIDS & BEASTKIN -->
-            <h3 class="creature-category">Goblinoids &amp; Beastkin</h3>
+            <!-- GOBLINOIDS -->
+            <h3 class="creature-category">Goblinoids</h3>
             <div class="creature-list">
                 <div class="creature-entry">
                     <span class="creature-tag tag-goblinoid">Goblinoid</span>
                     <span class="creature-name">Goblin</span>
-                    <span class="creature-desc">Chaotic, opportunistic, and infuriatingly clever — strength in numbers.</span>
+                    <span class="creature-desc">The quintessential dungeon fodder — cowardly alone, dangerous in overwhelming numbers. Speed and chaos are their weapons.</span>
                     <span class="creature-biome"><span class="biome-best">Deep Caverns</span><span class="biome-hard">Celestial Foothold</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-goblinoid">Goblinoid</span>
                     <span class="creature-name">Hobgoblin</span>
-                    <span class="creature-desc">Disciplined and militaristic; the goblinoid race that chose order over chaos.</span>
+                    <span class="creature-desc">Disciplined goblinoid soldiers who bring military order to the dungeon. Their regimented labor is more efficient than frenzied mob work.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Military Discipline — Extra +5% all production.</span></div>
                     <span class="creature-biome"><span class="biome-best">Ancient Battlefield</span><span class="biome-hard">Feywild Glade</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-goblinoid">Goblinoid</span>
                     <span class="creature-name">Bugbear</span>
-                    <span class="creature-desc">Brutish ambush predator; enormous, stealthy, and startlingly violent.</span>
+                    <span class="creature-desc">Massive goblinoids who excel at brute labor. Their size makes them less efficient in standard lairs.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Bugbear Brawn — Quarries and Mines extra +10%; lairs house 6 Bugbears.</span></div>
                     <span class="creature-biome"><span class="biome-best">Verdant Forest</span><span class="biome-hard">Arctic Glacier</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-goblinoid">Goblinoid</span>
                     <span class="creature-name">Orc</span>
-                    <span class="creature-desc">Fierce tribal warrior; raw strength, relentless aggression, savage honour.</span>
+                    <span class="creature-desc">Fierce and relentless, orcs raid and conquer to fuel their dungeon's growth. Raw aggression yields more from the land.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Warchief's Drive — Extra +1 to all manual gather yields.</span></div>
                     <span class="creature-biome"><span class="biome-best">Mountain Stronghold</span><span class="biome-hard">Feywild Glade</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-goblinoid">Goblinoid</span>
                     <span class="creature-name">Gnoll</span>
-                    <span class="creature-desc">Hyena-headed marauders blessed (or cursed) by the demon lord Yeenoghu.</span>
+                    <span class="creature-desc">Hyena-folk with an obsessive hunger. Gnolls consume more but their pack hunting brings exceptional bone and food yields.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Gnoll Pack Hunt — Hunting Lodges extra +15%; Bone cap +50.</span><span class="cmod cmod-neg">▼ Ravenous — Eats 20% more (stacks with Goblinoid base).</span></div>
                     <span class="creature-biome"><span class="biome-best">Badlands</span><span class="biome-hard">Arctic Glacier</span></span>
                 </div>
             </div>
@@ -707,32 +711,44 @@
                 <div class="creature-entry">
                     <span class="creature-tag tag-fey">Fey</span>
                     <span class="creature-name">Pixie</span>
-                    <span class="creature-desc">Thumb-sized magical troublemaker; invisible at will, allergic to all responsibility.</span>
+                    <span class="creature-desc">Tiny and mischievous, pixies flit through your dungeon making everything slightly more chaotic — and somehow more productive.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Pixie Dust — Extra +1 to all manual gather yields.</span></div>
                     <span class="creature-biome"><span class="biome-best">Feywild Glade</span><span class="biome-hard">Blighted Wastes</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-fey">Fey</span>
                     <span class="creature-name">Dryad</span>
-                    <span class="creature-desc">Tree-bound nature spirit; her life is tied to her oak, her charm is absolute.</span>
+                    <span class="creature-desc">Tree spirits bonded to ancient wood. Dryads coax lumber from the forest at supernatural rates.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Grove Bond — Lumber Camps extra +10%; +1 wood per manual gather.</span></div>
                     <span class="creature-biome"><span class="biome-best">Verdant Forest</span><span class="biome-hard">Desert Wastes</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-fey">Fey</span>
                     <span class="creature-name">Satyr</span>
-                    <span class="creature-desc">Goat-legged reveler of the Feywild; pipe music, wine, and absolutely no regrets.</span>
+                    <span class="creature-desc">Hedonistic fey who turn labor into revelry. Their joie de vivre boosts morale and subtly increases all output.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Reveler's Touch — Extra +5% all production.</span></div>
                     <span class="creature-biome"><span class="biome-best">Feywild Glade</span><span class="biome-hard">Volcanic Caldera</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-fey">Fey</span>
                     <span class="creature-name">Quickling</span>
-                    <span class="creature-desc">Impossibly fast fey trickster; blinks across a battlefield before you've drawn your sword.</span>
+                    <span class="creature-desc">Blurringly fast fey who zip through your dungeon harvesting resources with supernatural speed.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Fey Speed — +1 food/wood/stone per gather; growth timer even faster than base Fey.</span></div>
                     <span class="creature-biome"><span class="biome-best">Feywild Glade</span><span class="biome-hard">Frozen Tundra</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-fey">Fey</span>
                     <span class="creature-name">Green Hag</span>
-                    <span class="creature-desc">Forest witch who feeds on despair; she makes bargains the desperate always regret.</span>
+                    <span class="creature-desc">Ancient fey crones who use dark herbalism to stretch resources and reduce food needs with bitter curses.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Wicked Herbalism — Further 25% food reduction; Alchemy Labs +15%; Herb cap +50.</span></div>
                     <span class="creature-biome"><span class="biome-best">Fetid Swamp</span><span class="biome-hard">Celestial Foothold</span></span>
+                </div>
+                <div class="creature-entry">
+                    <span class="creature-tag tag-fey">Fey</span>
+                    <span class="creature-name">Homunculus</span>
+                    <span class="creature-desc">A tiny alchemical familiar born from arcane rituals. Though crafted rather than born, homunculi resonate with fey magic and amplify alchemical processes.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Alchemical Familiar — Alchemy Labs extra +15%; Arcane Grinders extra +10%; breeds faster than typical Fey.</span></div>
+                    <span class="creature-biome"><span class="biome-best">Arcane Nexus</span><span class="biome-hard">Blighted Wastes</span></span>
                 </div>
             </div>
 
@@ -742,85 +758,131 @@
                 <div class="creature-entry">
                     <span class="creature-tag tag-aberration">Aberration</span>
                     <span class="creature-name">Mind Flayer</span>
-                    <span class="creature-desc">Illithid psionicists from the Far Realm; enslave lesser minds, harvest intellect.</span>
+                    <span class="creature-desc">Psychic overlords who enslave lesser beings with ease. Their intellect drains create a disturbing productivity boost.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Illithid Efficiency — All production extra +10%; allGatherBonus +1.</span></div>
                     <span class="creature-biome"><span class="biome-best">Underdark Depths</span><span class="biome-hard">Celestial Foothold</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-aberration">Aberration</span>
                     <span class="creature-name">Beholder</span>
-                    <span class="creature-desc">Floating eye tyrant; paranoid, megalomaniacal, and bristling with antimagic.</span>
+                    <span class="creature-desc">Paranoid eye tyrants whose antimagic gaze accidentally amplifies nearby arcane machinery through bizarre resonance.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Antimagic Surge — Crystal Seams and Mage Towers extra +15%.</span></div>
                     <span class="creature-biome"><span class="biome-best">Deep Caverns</span><span class="biome-hard">Feywild Glade</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-aberration">Aberration</span>
                     <span class="creature-name">Aboleth</span>
-                    <span class="creature-desc">Ancient aquatic elder — remembers the world before gods, and resents them for it.</span>
+                    <span class="creature-desc">Ancient aquatic elders whose memories predate the gods. Their eons of knowledge yield remarkable essence reserves.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Elder Memory — Essence cap +75 beyond base Aberration bonus.</span></div>
                     <span class="creature-biome"><span class="biome-best">Sunken Ruins</span><span class="biome-hard">Desert Wastes</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-aberration">Aberration</span>
                     <span class="creature-name">Gibbering Mouther</span>
-                    <span class="creature-desc">A chaotic mass of eyes and mouths; its babble drives listeners to madness.</span>
+                    <span class="creature-desc">A chaotic mass of eyes and mouths whose deranged babble inadvertently optimizes gather routes through sheer noise.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Gibbering Efficiency — Extra +1 to all gather yields.</span></div>
                     <span class="creature-biome"><span class="biome-best">Blighted Wastes</span><span class="biome-hard">Celestial Foothold</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-aberration">Aberration</span>
                     <span class="creature-name">Nothic</span>
-                    <span class="creature-desc">A wizard rotted into a one-eyed wretch by dark knowledge; reads minds, hoards secrets.</span>
+                    <span class="creature-desc">A wizard rotted into a one-eyed wretch by dark knowledge. Their rotting eye reads the secrets of stone and ore.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Rotting Eye — Mines extra +15%; Crystal Seams extra +10%.</span></div>
                     <span class="creature-biome"><span class="biome-best">Ancient Battlefield</span><span class="biome-hard">Celestial Foothold</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-aberration">Aberration</span>
                     <span class="creature-name">Chuul</span>
-                    <span class="creature-desc">Lobster-like aberration with paralytic tentacles; lurks in swamps, waiting for warm flesh.</span>
+                    <span class="creature-desc">Lobster-like aberrations whose paralytic tentacles are surprisingly useful for herb processing and clay extraction.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Paralytic Precision — Clay Pits extra +10%; Herbalist Dens extra +10%.</span></div>
                     <span class="creature-biome"><span class="biome-best">Fetid Swamp</span><span class="biome-hard">Desert Wastes</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-aberration">Aberration</span>
                     <span class="creature-name">Grell</span>
-                    <span class="creature-desc">Brain-like floater with ten barbed tentacles; hunts by scent, drags prey skyward.</span>
+                    <span class="creature-desc">Brain-like floaters with ten barbed tentacles. They drift through dungeon shafts gathering food and stone from unreachable places.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Aerial Drift — Extra +1 food and +1 stone per manual gather.</span></div>
                     <span class="creature-biome"><span class="biome-best">Deep Caverns</span><span class="biome-hard">Rolling Grasslands</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-aberration">Aberration</span>
                     <span class="creature-name">Flumph</span>
-                    <span class="creature-desc">Shy telepathic jellyfish that feeds on psionic energy; one of the rare truly good aberrations.</span>
+                    <span class="creature-desc">Shy telepathic jellyfish that feed on psionic energy. Their benevolent nature paradoxically improves dungeon morale.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Benevolent Aura — All production extra +5%; foodConsumption reduced 20%.</span></div>
                     <span class="creature-biome"><span class="biome-best">Arcane Nexus</span><span class="biome-hard">Blighted Wastes</span></span>
                 </div>
             </div>
 
-            <!-- OOZES & ELEMENTALS -->
-            <h3 class="creature-category">Oozes &amp; Elementals</h3>
+            <!-- OOZES -->
+            <h3 class="creature-category">Oozes</h3>
             <div class="creature-list">
                 <div class="creature-entry">
                     <span class="creature-tag tag-ooze">Ooze</span>
                     <span class="creature-name">Gelatinous Cube</span>
-                    <span class="creature-desc">A perfectly cuboid acidic horror; silent, patient, and invisible until it's too late.</span>
+                    <span class="creature-desc">A perfectly cuboid acidic horror. Its geometric form dissolves everything it engulfs, storing the residue with uncanny efficiency.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Perfect Dissolution — Extra +15 storage per building; Food cap +50.</span></div>
                     <span class="creature-biome"><span class="biome-best">Deep Caverns</span><span class="biome-hard">Desert Wastes</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-ooze">Ooze</span>
                     <span class="creature-name">Black Pudding</span>
-                    <span class="creature-desc">Corrosive amorphous ooze; splitting it only makes more problems.</span>
+                    <span class="creature-desc">A ravenous acidic ooze that corrodes metal — then absorbs it. Exceptional at refining ore, terrible at containment.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Acid Refinement — Smelters extra +15% output.</span></div>
                     <span class="creature-biome"><span class="biome-best">Fetid Swamp</span><span class="biome-hard">Arctic Glacier</span></span>
                 </div>
                 <div class="creature-entry">
+                    <span class="creature-tag tag-ooze">Ooze</span>
+                    <span class="creature-name">Gray Ooze</span>
+                    <span class="creature-desc">A corroding slime that seeps through ore deposits and pre-processes metal with its acidic secretions.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Acid Seep — Mines extra +10%; Smelters extra +10%.</span></div>
+                    <span class="creature-biome"><span class="biome-best">Deep Caverns</span><span class="biome-hard">Feywild Glade</span></span>
+                </div>
+                <div class="creature-entry">
+                    <span class="creature-tag tag-ooze">Ooze</span>
+                    <span class="creature-name">Ochre Jelly</span>
+                    <span class="creature-desc">A splitting ooze that divides when struck. This reproductive efficiency makes Ochre Jellies replenish their numbers far faster than other oozes.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Divide and Conquer — Growth timer 30% shorter — Ochre Jellies split to reproduce.</span></div>
+                    <span class="creature-biome"><span class="biome-best">Fetid Swamp</span><span class="biome-hard">Arctic Glacier</span></span>
+                </div>
+                <div class="creature-entry">
+                    <span class="creature-tag tag-ooze">Ooze</span>
+                    <span class="creature-name">Void Ooze</span>
+                    <span class="creature-desc">A rare ooze infused with planar void energy. Its null-matter body consumes almost nothing and stores resources with supernatural efficiency.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Null Containment — Further 50% food reduction; Storage buildings hold 20 more per building.</span></div>
+                    <span class="creature-biome"><span class="biome-best">Blighted Wastes</span><span class="biome-hard">Celestial Foothold</span></span>
+                </div>
+            </div>
+
+            <!-- ELEMENTALS -->
+            <h3 class="creature-category">Elementals</h3>
+            <div class="creature-list">
+                <div class="creature-entry">
                     <span class="creature-tag tag-elemental">Elemental</span>
                     <span class="creature-name">Fire Elemental</span>
-                    <span class="creature-desc">Living flame given will; consumes everything, illuminates nothing of worth.</span>
+                    <span class="creature-desc">Living flames that burn with purpose. Fire elementals supercharge smelting and forge operations beyond normal limits.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Living Flame — Coal Seams extra +10%; Smelters and Forges extra +15%.</span></div>
                     <span class="creature-biome"><span class="biome-best">Volcanic Caldera</span><span class="biome-hard">Arctic Glacier</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-elemental">Elemental</span>
                     <span class="creature-name">Earth Elemental</span>
-                    <span class="creature-desc">Stone and soil incarnate — slow to move, impossible to stop.</span>
+                    <span class="creature-desc">Living stone that mines with intimate knowledge of rock and ore. Earth elementals tear through solid rock effortlessly.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Earth Sense — Quarries and Mines extra +15%; Stone cap +50.</span></div>
                     <span class="creature-biome"><span class="biome-best">Deep Caverns</span><span class="biome-hard">Coastal Bluffs</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-elemental">Elemental</span>
-                    <span class="creature-name">Shadow Demon</span>
-                    <span class="creature-desc">Void given form; thrives in darkness, withers in light, devours hope.</span>
-                    <span class="creature-biome"><span class="biome-best">Shadowfell Crossing</span><span class="biome-hard">Celestial Foothold</span></span>
+                    <span class="creature-name">Water Elemental</span>
+                    <span class="creature-desc">Fluid and pervasive, water elementals flow into clay pits and herbalist operations, softening earth and accelerating growth.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Flowing Touch — Clay Pits extra +15%; Herbalist Dens extra +10%; Herb cap +50.</span></div>
+                    <span class="creature-biome"><span class="biome-best">Coastal Bluffs</span><span class="biome-hard">Volcanic Caldera</span></span>
+                </div>
+                <div class="creature-entry">
+                    <span class="creature-tag tag-elemental">Elemental</span>
+                    <span class="creature-name">Air Elemental</span>
+                    <span class="creature-desc">Swift and invisible, air elementals carry resources through the dungeon with supernatural speed, boosting all gathering efforts.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Wind Courier — Extra +1 to all manual gather yields; slightly faster growth than base Elemental.</span></div>
+                    <span class="creature-biome"><span class="biome-best">Mountain Stronghold</span><span class="biome-hard">Underdark Depths</span></span>
                 </div>
             </div>
 
@@ -830,79 +892,85 @@
                 <div class="creature-entry">
                     <span class="creature-tag tag-monstrous">Monstrous</span>
                     <span class="creature-name">Harpy</span>
-                    <span class="creature-desc">Winged predators with an irresistible song; they lure sailors to their doom.</span>
+                    <span class="creature-desc">Winged hunters whose shrieking dives scatter prey. Harpies excel at aerial gathering and consume less than most monsters.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Aerial Scavenger — Extra +1 all gather; slight food reduction.</span></div>
                     <span class="creature-biome"><span class="biome-best">Mountain Stronghold</span><span class="biome-hard">Underdark Depths</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-monstrous">Monstrous</span>
                     <span class="creature-name">Medusa</span>
-                    <span class="creature-desc">Snake-haired petrifier; her gaze turns the brave to garden ornaments.</span>
+                    <span class="creature-desc">Stone-gazing terrors who accidentally (and deliberately) produce an endless supply of petrified stone resources.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Petrifying Gaze — Quarries extra +15%; Stone cap +75.</span></div>
                     <span class="creature-biome"><span class="biome-best">Ancient Battlefield</span><span class="biome-hard">Feywild Glade</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-monstrous">Monstrous</span>
                     <span class="creature-name">Minotaur</span>
-                    <span class="creature-desc">Bull-headed labyrinth guardian; strength, rage, and an unerring sense of direction.</span>
+                    <span class="creature-desc">Legendary maze-guardians of immense strength. Minotaurs are brutally efficient in mines and quarries.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Labyrinth Strength — Quarries and Mines extra +20%.</span></div>
                     <span class="creature-biome"><span class="biome-best">Badlands</span><span class="biome-hard">Feywild Glade</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-monstrous">Monstrous</span>
                     <span class="creature-name">Troll</span>
-                    <span class="creature-desc">Regenerating swamp giant; only fire and acid can truly end one.</span>
+                    <span class="creature-desc">Regenerating brutes with an insatiable appetite and indestructible bodies. Trolls eat more but work without fatigue.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Regenerating Workforce — Extra +8% all production.</span><span class="cmod cmod-neg">▼ Insatiable — Eats 20% more (stacks with Monstrous base).</span></div>
                     <span class="creature-biome"><span class="biome-best">Fetid Swamp</span><span class="biome-hard">Desert Wastes</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-monstrous">Monstrous</span>
                     <span class="creature-name">Werewolf</span>
-                    <span class="creature-desc">Lycanthrope torn between beast and man; spreads its curse with every bite.</span>
+                    <span class="creature-desc">Lycanthropic monstrosities who hunt and howl. Werewolves bridge the gap between Monstrous and Lycanthrope instincts.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Full Moon Hunt — Hunting Lodges extra +15%; +1 to all gather yields.</span></div>
                     <span class="creature-biome"><span class="biome-best">Verdant Forest</span><span class="biome-hard">Desert Wastes</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-monstrous">Monstrous</span>
                     <span class="creature-name">Naga</span>
-                    <span class="creature-desc">Serpentine spellcaster; ancient, narcissistic, and nearly impossible to permanently kill.</span>
+                    <span class="creature-desc">Serpentine sages who blend monstrous cunning with arcane insight. Nagas amplify magical conversion processes.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Serpent's Lore — Alchemy Labs and Arcane Grinders extra +20%.</span></div>
                     <span class="creature-biome"><span class="biome-best">Jungle Canopy</span><span class="biome-hard">Arctic Glacier</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-monstrous">Monstrous</span>
                     <span class="creature-name">Basilisk</span>
-                    <span class="creature-desc">Eight-legged stone-gazer; its eyes petrify, its blood un-petrifies — a useful beast.</span>
+                    <span class="creature-desc">Eight-legged stone-gazers whose very presence slowly petrifies the dungeon walls, extracting stone from thin air.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Stone Gaze — Quarries extra +15%; +1 stone per manual gather.</span></div>
                     <span class="creature-biome"><span class="biome-best">Badlands</span><span class="biome-hard">Feywild Glade</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-monstrous">Monstrous</span>
                     <span class="creature-name">Chimera</span>
-                    <span class="creature-desc">Lion, goat, and dragon fused into one furious body; three heads, zero patience.</span>
+                    <span class="creature-desc">A chaotic amalgam of lion, goat, and dragon. Chimeras are unpredictable but their triple nature touches everything they do.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Triple Nature — Extra +8% all production; +1 to all gather yields.</span></div>
                     <span class="creature-biome"><span class="biome-best">Volcanic Caldera</span><span class="biome-hard">Feywild Glade</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-monstrous">Monstrous</span>
                     <span class="creature-name">Manticore</span>
-                    <span class="creature-desc">Man-faced lion with a spike-laundering tail; vain, predatory, and talkative mid-hunt.</span>
+                    <span class="creature-desc">Winged predators with venom-spiked tails. Manticores patrol vast territories, gathering more with each sweep.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Venomous Patrol — Extra +1 all gather; Food and Bone caps +50.</span></div>
                     <span class="creature-biome"><span class="biome-best">Desert Wastes</span><span class="biome-hard">Fetid Swamp</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-monstrous">Monstrous</span>
-                    <span class="creature-name">Sphinx</span>
-                    <span class="creature-desc">Riddle-loving lion-guardian of ancient secrets; annihilates those who answer poorly.</span>
-                    <span class="creature-biome"><span class="biome-best">Ancient Battlefield</span><span class="biome-hard">Blighted Wastes</span></span>
-                </div>
-                <div class="creature-entry">
-                    <span class="creature-tag tag-monstrous">Monstrous</span>
                     <span class="creature-name">Griffon</span>
-                    <span class="creature-desc">Eagle-headed lion of the mountain skies; prized as a mount by those brave enough to tame one.</span>
+                    <span class="creature-desc">Noble winged hunters whose aerial perspective reveals hidden veins of ore and pockets of resources.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Eagle Eye — Mines extra +20%; extra +1 to all gather yields.</span></div>
                     <span class="creature-biome"><span class="biome-best">Mountain Stronghold</span><span class="biome-hard">Underdark Depths</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-monstrous">Monstrous</span>
                     <span class="creature-name">Hydra</span>
-                    <span class="creature-desc">Multi-headed swamp terror; sever one head and two replace it — bring fire.</span>
+                    <span class="creature-desc">Nine-headed terrors that regenerate endlessly. A hydra processes resources in parallel through all its heads simultaneously.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Multi-Headed Efficiency — Extra +12% all production.</span><span class="cmod cmod-neg">▼ Nine Mouths — Eats 20% more (stacks with Monstrous base).</span></div>
                     <span class="creature-biome"><span class="biome-best">Fetid Swamp</span><span class="biome-hard">Desert Wastes</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-monstrous">Monstrous</span>
                     <span class="creature-name">Ettin</span>
-                    <span class="creature-desc">Two-headed giant that argues with itself constantly; both heads are equally stupid and strong.</span>
+                    <span class="creature-desc">Two-headed giants with a constant internal debate. Despite themselves, dual perspectives improve oversight and tax collection.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Divided Mind — Extra +8% all production; +1 cp/creature/day.</span></div>
                     <span class="creature-biome"><span class="biome-best">Rolling Grasslands</span><span class="biome-hard">Arcane Nexus</span></span>
                 </div>
             </div>
@@ -913,56 +981,72 @@
                 <div class="creature-entry">
                     <span class="creature-tag tag-fiend">Fiend</span>
                     <span class="creature-name">Imp</span>
-                    <span class="creature-desc">Tiny devil familiar; insignificant alone, terrifying as a colony.</span>
+                    <span class="creature-desc">Minor devils who delight in sabotage — of enemies. Imps sneak into rival operations and bring back extra resources.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Diabolical Theft — Extra +1 all gather.</span></div>
                     <span class="creature-biome"><span class="biome-best">Abyssal Rift</span><span class="biome-hard">Celestial Foothold</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-fiend">Fiend</span>
                     <span class="creature-name">Cambion</span>
-                    <span class="creature-desc">Half-demon hybrid; all the charm of their fiendish parent, twice the ambition.</span>
+                    <span class="creature-desc">Half-fiend nobles with a foot in both worlds. Their dual nature extracts tribute from living and dead alike.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Dual Heritage — +1 cp/creature/day; extra +5% all production.</span></div>
                     <span class="creature-biome"><span class="biome-best">Blighted Wastes</span><span class="biome-hard">Celestial Foothold</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-fiend">Fiend</span>
                     <span class="creature-name">Barbed Devil</span>
-                    <span class="creature-desc">Thorned infernal enforcer; methodical, cruel, and loyal only to hierarchy.</span>
+                    <span class="creature-desc">Spined enforcers who inspire productivity through pain. Workers under barbed devil supervision consistently exceed output quotas.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Spiked Motivation — Extra +10% all production.</span></div>
                     <span class="creature-biome"><span class="biome-best">Abyssal Rift</span><span class="biome-hard">Feywild Glade</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-fiend">Fiend</span>
                     <span class="creature-name">Night Hag</span>
-                    <span class="creature-desc">Dreamstealing witch who traffics in souls; older than most gods, wiser than most.</span>
+                    <span class="creature-desc">Dream-devouring witches who harvest essence from sleeping creatures. Their nightmare brews are invaluable to dark alchemy.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Nightmare Harvest — Alchemy Labs and Ritual Circles extra +15%; Essence cap +50.</span></div>
                     <span class="creature-biome"><span class="biome-best">Haunted Moor</span><span class="biome-hard">Celestial Foothold</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-fiend">Fiend</span>
                     <span class="creature-name">Succubus/Incubus</span>
-                    <span class="creature-desc">Shape-shifting tempter; corrupts through desire, extracts soul contracts, and never fights fair.</span>
+                    <span class="creature-desc">Shape-shifting seducers who manipulate through charm. Their influence makes taxation feel voluntary — and highly profitable.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Irresistible Charm — +1 extra cp/creature/day; further 15% food reduction.</span></div>
                     <span class="creature-biome"><span class="biome-best">Shadowfell Crossing</span><span class="biome-hard">Celestial Foothold</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-fiend">Fiend</span>
                     <span class="creature-name">Pit Fiend</span>
-                    <span class="creature-desc">Apex devil of the Nine Hells; commands legions, commands respect, commands absolute obedience.</span>
+                    <span class="creature-desc">High-ranking lords of Hell who command absolute obedience. A Pit Fiend's presence dramatically increases all output.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Infernal Authority — Extra +15% all production; +1 cp/creature/day.</span></div>
                     <span class="creature-biome"><span class="biome-best">Volcanic Caldera</span><span class="biome-hard">Feywild Glade</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-fiend">Fiend</span>
                     <span class="creature-name">Balor</span>
-                    <span class="creature-desc">General of the Abyss; wreathed in flame and lightning, explodes spectacularly on death.</span>
+                    <span class="creature-desc">A demon of pure destruction and fire. Balors incinerate waste and inefficiency, leaving only productive essence behind.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Immolation Refinery — Extra +15% all production; Dark Altars extra +15%.</span></div>
                     <span class="creature-biome"><span class="biome-best">Abyssal Rift</span><span class="biome-hard">Celestial Foothold</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-fiend">Fiend</span>
                     <span class="creature-name">Rakshasa</span>
-                    <span class="creature-desc">Tiger-headed noble fiend with backward hands; masters of illusion, immune to low magic.</span>
+                    <span class="creature-desc">Tiger-headed sorcerer-lords who scheme and trade across planes. Their mercantile genius multiplies coin income dramatically.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Planar Merchant — +1 cp/creature/day; Coin cap +5,000.</span></div>
                     <span class="creature-biome"><span class="biome-best">Jungle Canopy</span><span class="biome-hard">Celestial Foothold</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-fiend">Fiend</span>
                     <span class="creature-name">Quasit</span>
-                    <span class="creature-desc">Diminutive chaos demon; a cowardly, shapeshifting familiar to evil spellcasters everywhere.</span>
+                    <span class="creature-desc">A lesser demon and spy. Quasits sneak into rival operations and bring back knowledge, subtly improving gather efficiency.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Spy's Report — Extra +1 to all gather yields.</span></div>
                     <span class="creature-biome"><span class="biome-best">Abyssal Rift</span><span class="biome-hard">Rolling Grasslands</span></span>
+                </div>
+                <div class="creature-entry">
+                    <span class="creature-tag tag-fiend">Fiend</span>
+                    <span class="creature-name">Shadow Demon</span>
+                    <span class="creature-desc">Pure shadow given malevolent will. Shadow Demons feed on no food, slip through solid stone, and warp dark ritual rites to terrifying effect.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Shadow Rite — Further 50% food reduction; Ritual Circles +15%; Essence cap +50.</span></div>
+                    <span class="creature-biome"><span class="biome-best">Shadowfell Crossing</span><span class="biome-hard">Celestial Foothold</span></span>
                 </div>
             </div>
 
@@ -972,37 +1056,42 @@
                 <div class="creature-entry">
                     <span class="creature-tag tag-giant">Giant</span>
                     <span class="creature-name">Hill Giant</span>
-                    <span class="creature-desc">Brutish and perpetually hungry; throws boulders, eats livestock, forgets both immediately.</span>
+                    <span class="creature-desc">The most common and dullest of giants. Hill giants smash things productively, eat everything in sight, and need no praise for it.</span>
                     <span class="creature-biome"><span class="biome-best">Rolling Grasslands</span><span class="biome-hard">Arctic Glacier</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-giant">Giant</span>
                     <span class="creature-name">Stone Giant</span>
-                    <span class="creature-desc">Reclusive mountain carvers who view the surface world as a strange, unstable dream.</span>
+                    <span class="creature-desc">Gifted sculptors and master quarrymen, stone giants work stone with an artistry bordering on the divine.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Stone Artistry — Quarries extra +10%; Stone cap +50.</span></div>
                     <span class="creature-biome"><span class="biome-best">Mountain Stronghold</span><span class="biome-hard">Coastal Bluffs</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-giant">Giant</span>
                     <span class="creature-name">Frost Giant</span>
-                    <span class="creature-desc">Viking-culture giants of the frozen north; might-worshippers who prize combat above all else.</span>
+                    <span class="creature-desc">Cold raiders from icy peaks who preserve resources through natural refrigeration. Food spoilage is simply not a concern.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Frost Preservation — Food cap extra +100; slightly less ravenous than typical Giants.</span></div>
                     <span class="creature-biome"><span class="biome-best">Arctic Glacier</span><span class="biome-hard">Volcanic Caldera</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-giant">Giant</span>
                     <span class="creature-name">Fire Giant</span>
-                    <span class="creature-desc">Forge-masters of volcanic halls; disciplined military society, master smiths of legendary gear.</span>
+                    <span class="creature-desc">Master smiths in fire-hardened armor. Fire giants supercharge all metal production processes with infernal expertise.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Master Smithing — Mines extra +10%; Smelters and Forges extra +15%.</span></div>
                     <span class="creature-biome"><span class="biome-best">Volcanic Caldera</span><span class="biome-hard">Arctic Glacier</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-giant">Giant</span>
                     <span class="creature-name">Cloud Giant</span>
-                    <span class="creature-desc">Aristocrats of the giant world; dwell in sky castles, obsessed with wealth and social rank.</span>
+                    <span class="creature-desc">Aristocratic giants who rule from sky castles and levy aerial tolls. Their elevated perspective brings unusual strategic insight.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Cloud Castle Tribute — +1 cp/creature/day; extra +10% all production.</span></div>
                     <span class="creature-biome"><span class="biome-best">Mountain Stronghold</span><span class="biome-hard">Underdark Depths</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-giant">Giant</span>
                     <span class="creature-name">Storm Giant</span>
-                    <span class="creature-desc">Philosopher-kings of giantkind; prophets who dwell in sea spires and commune with the heavens.</span>
+                    <span class="creature-desc">The mightiest of giants, Storm Giants command weather itself. Their power radiates into all production.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Storm's Command — Extra +15% all production; Coin cap +5,000.</span></div>
                     <span class="creature-biome"><span class="biome-best">Coastal Bluffs</span><span class="biome-hard">Blighted Wastes</span></span>
                 </div>
             </div>
@@ -1013,25 +1102,22 @@
                 <div class="creature-entry">
                     <span class="creature-tag tag-construct">Construct</span>
                     <span class="creature-name">Stone Golem</span>
-                    <span class="creature-desc">Carved granite guardian bound by powerful magic; unstoppable, unthinking, uncompromising.</span>
+                    <span class="creature-desc">The most durable construct, chiseled from solid granite. A stone golem's immense weight makes it ideal for quarry work.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Granite Frame — Quarries extra +20%; Stone cap +50.</span></div>
                     <span class="creature-biome"><span class="biome-best">Deep Caverns</span><span class="biome-hard">Feywild Glade</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-construct">Construct</span>
                     <span class="creature-name">Iron Golem</span>
-                    <span class="creature-desc">The pinnacle of golem craft; immune to nearly all magic, exhales clouds of poison gas.</span>
+                    <span class="creature-desc">The gold standard of construct laborers. An iron golem's immense strength and immunity to fatigue maximizes ore production.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Iron Constitution — Mines extra +20%; Smelters extra +20%.</span></div>
                     <span class="creature-biome"><span class="biome-best">Volcanic Caldera</span><span class="biome-hard">Fetid Swamp</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-construct">Construct</span>
-                    <span class="creature-name">Homunculus</span>
-                    <span class="creature-desc">Tiny flesh-construct built from a wizard's blood; a telepathic extension of its creator's will.</span>
-                    <span class="creature-biome"><span class="biome-best">Arcane Nexus</span><span class="biome-hard">Blighted Wastes</span></span>
-                </div>
-                <div class="creature-entry">
-                    <span class="creature-tag tag-construct">Construct</span>
                     <span class="creature-name">Animated Armor</span>
-                    <span class="creature-desc">Empty plate mail walking on invisible purpose; silent, relentless, and very hard to reason with.</span>
+                    <span class="creature-desc">Hollow suits of enchanted armor that guard and work in equal measure. Their intimidating presence improves tax compliance.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Armored Presence — +1 cp/creature/day; extra +5% all production.</span></div>
                     <span class="creature-biome"><span class="biome-best">Ancient Battlefield</span><span class="biome-hard">Fetid Swamp</span></span>
                 </div>
             </div>
@@ -1042,31 +1128,36 @@
                 <div class="creature-entry">
                     <span class="creature-tag tag-lycanthrope">Lycanthrope</span>
                     <span class="creature-name">Werebear</span>
-                    <span class="creature-desc">Cursed shapeshifter of the deep forest; protective of their territory, gentle when unprovoked.</span>
+                    <span class="creature-desc">Powerful shapeshifters who combine human intelligence with bear strength. Werebears excel at both resource extraction and woodcutting.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Bear Strength — Quarries and Lumber Camps extra +10%.</span></div>
                     <span class="creature-biome"><span class="biome-best">Verdant Forest</span><span class="biome-hard">Blighted Wastes</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-lycanthrope">Lycanthrope</span>
                     <span class="creature-name">Wererat</span>
-                    <span class="creature-desc">Skulking city-dwelling lycanthrope; runs thieves' guilds, spreads disease, hoards information.</span>
+                    <span class="creature-desc">Sly rat-shifters who excel at finding resources in the most unlikely places. Their scavenging network is unmatched.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Scavenger Network — Extra +1 all gather; Food cap +50.</span></div>
                     <span class="creature-biome"><span class="biome-best">Underdark Depths</span><span class="biome-hard">Celestial Foothold</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-lycanthrope">Lycanthrope</span>
                     <span class="creature-name">Wereboar</span>
-                    <span class="creature-desc">Rage-prone lycanthrope who charges without warning; their tempers match their tusks.</span>
+                    <span class="creature-desc">Stubborn and savage, wereboars plow through work with unyielding momentum. Their brute extraction is excellent but appetite steep.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Boar's Rush — Quarries and Mines extra +10%.</span><span class="cmod cmod-neg">▼ Glutton — Slight extra food consumption.</span></div>
                     <span class="creature-biome"><span class="biome-best">Rolling Grasslands</span><span class="biome-hard">Arcane Nexus</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-lycanthrope">Lycanthrope</span>
                     <span class="creature-name">Owlbear</span>
-                    <span class="creature-desc">The result of a wizard's worst experiment; the terror of every forest, day or night.</span>
+                    <span class="creature-desc">Ferocious hybrid predators who combine owl precision with bear power. Exceptional hunters whose bone piles grow quickly.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Feathered Fury — Hunting Lodges extra +15%; Bone cap +50.</span></div>
                     <span class="creature-biome"><span class="biome-best">Verdant Forest</span><span class="biome-hard">Desert Wastes</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-lycanthrope">Lycanthrope</span>
                     <span class="creature-name">Displacer Beast</span>
-                    <span class="creature-desc">Six-legged panther that appears two feet from where it actually is; maddening to fight.</span>
+                    <span class="creature-desc">Six-legged predators who shift phase to avoid predators — and the tax collector. Fearsome hunters, elusive taxpayers.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Phase Predator — Hunting Lodges extra +15%.</span><span class="cmod cmod-neg">▼ Tax Evader — -1 cp/creature/day — they dodge the tax collector.</span></div>
                     <span class="creature-biome"><span class="biome-best">Verdant Forest</span><span class="biome-hard">Elemental Confluence</span></span>
                 </div>
             </div>
@@ -1077,20 +1168,44 @@
                 <div class="creature-entry">
                     <span class="creature-tag tag-flora">Flora</span>
                     <span class="creature-name">Treant</span>
-                    <span class="creature-desc">Ancient walking tree — guardian of old-growth forests; slow to anger, slower to forgive.</span>
+                    <span class="creature-desc">Ancient tree-folk who are living lumber yet fiercely protect their forests. Treants boost wood production through deep symbiosis.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Forest Guardian — Lumber Camps extra +15%; Wood cap +50.</span></div>
                     <span class="creature-biome"><span class="biome-best">Verdant Forest</span><span class="biome-hard">Blighted Wastes</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-flora">Flora</span>
                     <span class="creature-name">Myconid</span>
-                    <span class="creature-desc">Fungal humanoid of the Underdark; communes via spore telepathy, seeks only peaceful meditation.</span>
+                    <span class="creature-desc">Fungal beings who spread their spores through the dungeon, dramatically increasing herb and alchemy yields.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Spore Network — Herbalist Dens extra +15%; Alchemy Labs extra +10%; Herb cap +50.</span></div>
                     <span class="creature-biome"><span class="biome-best">Underdark Depths</span><span class="biome-hard">Desert Wastes</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-flora">Flora</span>
                     <span class="creature-name">Vegepygmy</span>
-                    <span class="creature-desc">Plant-creature born from russet mold; primitive, tribal, and oddly territorial about their bog.</span>
+                    <span class="creature-desc">Small plant-folk who grow rapidly and tend to the dungeon's green corners. Their fast growth partially offsets the Flora growth penalty.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Rapid Growth Cycle — Growth timer ×1.5 (much faster than other Flora at ×2); extra +1 food per gather.</span></div>
                     <span class="creature-biome"><span class="biome-best">Fetid Swamp</span><span class="biome-hard">Arctic Glacier</span></span>
+                </div>
+                <div class="creature-entry">
+                    <span class="creature-tag tag-flora">Flora</span>
+                    <span class="creature-name">Shambling Mound</span>
+                    <span class="creature-desc">A massive heap of animate vegetation that absorbs nutrients from everything around it. Shambling Mounds dramatically boost farming and herb gathering.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Nutrient Absorption — Farms and Herbalist Dens extra +10%; Food cap +75.</span></div>
+                    <span class="creature-biome"><span class="biome-best">Fetid Swamp</span><span class="biome-hard">Desert Wastes</span></span>
+                </div>
+                <div class="creature-entry">
+                    <span class="creature-tag tag-flora">Flora</span>
+                    <span class="creature-name">Vine Blight</span>
+                    <span class="creature-desc">Creeping plant horrors that spread through dungeon corridors and pull in wood resources from every corner.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Creeping Spread — Lumber Camps extra +10%; extra +1 wood per manual gather.</span></div>
+                    <span class="creature-biome"><span class="biome-best">Verdant Forest</span><span class="biome-hard">Desert Wastes</span></span>
+                </div>
+                <div class="creature-entry">
+                    <span class="creature-tag tag-flora">Flora</span>
+                    <span class="creature-name">Wood Woad</span>
+                    <span class="creature-desc">Ancient bark-skinned guardians who emerge from the deep forest. Their stoic resilience lets them work longer before needing rest.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Bark Endurance — Growth timer 20% faster than base Flora; Quarries extra +10%.</span></div>
+                    <span class="creature-biome"><span class="biome-best">Verdant Forest</span><span class="biome-hard">Blighted Wastes</span></span>
                 </div>
             </div>
 
@@ -1100,65 +1215,158 @@
                 <div class="creature-entry">
                     <span class="creature-tag tag-aquatic">Aquatic</span>
                     <span class="creature-name">Merfolk</span>
-                    <span class="creature-desc">Half-human sea-dwellers; curious about surface life, protective of the deep, suspicious of both.</span>
+                    <span class="creature-desc">Civilized aquatic beings who build sophisticated underwater settlements. Their social organization improves tax collection.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Mer-Society — +1 cp/creature/day.</span></div>
                     <span class="creature-biome"><span class="biome-best">Coastal Bluffs</span><span class="biome-hard">Desert Wastes</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-aquatic">Aquatic</span>
                     <span class="creature-name">Sahuagin</span>
-                    <span class="creature-desc">Shark-like sea devils who revere Sekolah; raid coastal settlements with fanatical bloodlust.</span>
+                    <span class="creature-desc">Aggressive sea devils who raid coastal settlements. Their brutality at sea translates to extraordinary hunting and gathering yields.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Sea Raid — Hunting Lodges extra +15%; extra +1 to all gather yields.</span></div>
                     <span class="creature-biome"><span class="biome-best">Coastal Bluffs</span><span class="biome-hard">Mountain Stronghold</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-aquatic">Aquatic</span>
                     <span class="creature-name">Kuo-toa</span>
-                    <span class="creature-desc">Mad fish-people driven insane by the Underdark; they collectively hallucinate their own gods into existence.</span>
+                    <span class="creature-desc">Mad fish-folk who worship inscrutable gods. Their collective religious fervor, though bizarre, produces ritual outputs others cannot match.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Frenzied Worship — Ritual Circles extra +15%; Essence cap +25.</span></div>
                     <span class="creature-biome"><span class="biome-best">Underdark Depths</span><span class="biome-hard">Rolling Grasslands</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-aquatic">Aquatic</span>
                     <span class="creature-name">Triton</span>
-                    <span class="creature-desc">Proud aquatic humanoids who guard the ocean trenches; consider themselves saviors of the surface world.</span>
+                    <span class="creature-desc">Noble sea-folk guardians of the deep. Tritons bring military discipline and aquatic mastery to clay and stone extraction.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Deep Warden — Clay Pits extra +15%; extra +5% all production.</span></div>
                     <span class="creature-biome"><span class="biome-best">Coastal Bluffs</span><span class="biome-hard">Blighted Wastes</span></span>
                 </div>
             </div>
 
-            <!-- HUMANOID OFFSHOOTS -->
-            <h3 class="creature-category">Humanoid Offshoots</h3>
+            <!-- HUMANOIDS -->
+            <h3 class="creature-category">Humanoids</h3>
             <div class="creature-list">
                 <div class="creature-entry">
                     <span class="creature-tag tag-humanoid">Humanoid</span>
                     <span class="creature-name">Kenku</span>
-                    <span class="creature-desc">Raven-folk cursed with voicelessness; communicate through flawless mimicry.</span>
+                    <span class="creature-desc">Flightless crow-folk with an uncanny ability to copy and replicate any process they observe. All production benefits slightly.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Mimicry — Extra +5% all production.</span></div>
                     <span class="creature-biome"><span class="biome-best">Rolling Grasslands</span><span class="biome-hard">Deep Caverns</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-humanoid">Humanoid</span>
                     <span class="creature-name">Tabaxi</span>
-                    <span class="creature-desc">Agile cat-folk driven by insatiable curiosity; fast, graceful, easily distracted.</span>
+                    <span class="creature-desc">Cat-folk of relentless curiosity and speed. Tabaxi gather with exceptional efficiency and their swift reflexes improve overall output.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Curious Cat — Extra +1 all gather; slightly faster growth.</span></div>
                     <span class="creature-biome"><span class="biome-best">Jungle Canopy</span><span class="biome-hard">Arctic Glacier</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-humanoid">Humanoid</span>
                     <span class="creature-name">Aarakocra</span>
-                    <span class="creature-desc">Eagle-winged bird-folk from mountaintop eyries; natural scouts and messengers.</span>
+                    <span class="creature-desc">Bird-folk who soar above the dungeon, spotting resource deposits with sharp avian eyes. Their aerial view enhances all gathering.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Bird's Eye View — Extra +1 to all gather yields and +1 stone per gather.</span></div>
                     <span class="creature-biome"><span class="biome-best">Mountain Stronghold</span><span class="biome-hard">Underdark Depths</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-humanoid">Humanoid</span>
                     <span class="creature-name">Tortle</span>
-                    <span class="creature-desc">Shell-bound wanderers; slow, deeply wise, and extraordinarily hard to kill.</span>
+                    <span class="creature-desc">Patient shell-folk with an innate gift for construction and storage. Tortles carry more, build more efficiently, and store more.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Shell Storage — Storage buildings hold 15 more per building; Stone cap +50.</span></div>
                     <span class="creature-biome"><span class="biome-best">Coastal Bluffs</span><span class="biome-hard">Frozen Tundra</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-humanoid">Humanoid</span>
                     <span class="creature-name">Centaur</span>
-                    <span class="creature-desc">Half-human, half-horse; fierce tribal warriors of the open plains.</span>
+                    <span class="creature-desc">Half-horse warriors who range across the dungeon collecting resources with unmatched speed. Mobility multiplies yield.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Swift Hooves — Extra +1 to all gather yields and +1 food per gather.</span></div>
                     <span class="creature-biome"><span class="biome-best">Rolling Grasslands</span><span class="biome-hard">Underdark Depths</span></span>
+                </div>
+                <div class="creature-entry">
+                    <span class="creature-tag tag-humanoid">Humanoid</span>
+                    <span class="creature-name">Human</span>
+                    <span class="creature-desc">Adaptable generalists who excel at nothing in particular but fall behind in nothing either. Humans bring a modest boost to everything they touch.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Generalist Drive — Extra +5% all production.</span></div>
+                    <span class="creature-biome"><span class="biome-best">Rolling Grasslands</span><span class="biome-hard">Underdark Depths</span></span>
+                </div>
+                <div class="creature-entry">
+                    <span class="creature-tag tag-humanoid">Humanoid</span>
+                    <span class="creature-name">Elf</span>
+                    <span class="creature-desc">Long-lived forest folk with an affinity for wood and arcane crystal. Elves produce more from natural resources and help gather wood by hand.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Forest Attunement — Lumber Camps and Crystal Seams extra +10%; extra +1 wood per gather.</span></div>
+                    <span class="creature-biome"><span class="biome-best">Verdant Forest</span><span class="biome-hard">Underdark Depths</span></span>
+                </div>
+                <div class="creature-entry">
+                    <span class="creature-tag tag-humanoid">Humanoid</span>
+                    <span class="creature-name">Dwarf</span>
+                    <span class="creature-desc">Stout miners and master smelters whose ancestral bond with stone and metal is unmatched among the surface races.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Stonecunning — Mines and Quarries extra +10%; Smelters extra +10%.</span></div>
+                    <span class="creature-biome"><span class="biome-best">Deep Caverns</span><span class="biome-hard">Jungle Canopy</span></span>
+                </div>
+                <div class="creature-entry">
+                    <span class="creature-tag tag-humanoid">Humanoid</span>
+                    <span class="creature-name">Half-Orc</span>
+                    <span class="creature-desc">Born of two worlds, half-orcs carry orcish physical power into a form that can direct it with humanoid focus.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Orcish Vigor — Extra +1 to all gather yields; slightly faster emergence than pure Humanoids.</span></div>
+                    <span class="creature-biome"><span class="biome-best">Badlands</span><span class="biome-hard">Feywild Glade</span></span>
+                </div>
+                <div class="creature-entry">
+                    <span class="creature-tag tag-humanoid">Humanoid</span>
+                    <span class="creature-name">Gnome</span>
+                    <span class="creature-desc">Tinkering inventors with an insatiable curiosity for alchemy and arcane machinery. Gnomes improve all conversion processes.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Tinker's Touch — Alchemy Labs and Arcane Grinders extra +10%; extra +1 to all gather yields.</span></div>
+                    <span class="creature-biome"><span class="biome-best">Arcane Nexus</span><span class="biome-hard">Blighted Wastes</span></span>
                 </div>
             </div>
 
-        
+            <!-- LEGENDARY -->
+            <div class="legendary-section-header">
+                <h3>&#9670; Legendary Creatures</h3>
+                <p>These rare beings are not chosen at the start of a run — they must be earned. Some are said to appear only after a dungeon has proven itself through great feats of prestige or achievement. The exact conditions remain shrouded in mystery.</p>
+            </div>
+            <div class="creature-list">
+                <div class="creature-entry">
+                    <span class="creature-tag tag-legendary">Legendary</span>
+                    <span class="creature-name">Chromatic Dragon</span>
+                    <span class="creature-desc">An ancient chromatic dragon whose very presence warps the dungeon around it. Their dominance over lesser races increases all production dramatically — but only one can reside in a dungeon at a time, and their appetite is catastrophic.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Chromatic Dominance — Extra +15% all production beyond base Draconic bonus.</span><span class="cmod cmod-neg">▼ Dragon's Appetite — Consumes 3× the food of a normal Draconic creature; only 1 fits per lair.</span></div>
+                    <span class="creature-biome"><span class="biome-best">Volcanic Caldera</span><span class="biome-hard">Arctic Glacier</span></span>
+                </div>
+                <div class="creature-entry">
+                    <span class="creature-tag tag-legendary">Legendary</span>
+                    <span class="creature-name">Lich</span>
+                    <span class="creature-desc">A powerful undead archmage who transcended death to pursue magical mastery. Liches push arcane infrastructure to impossible heights, eat nothing, and demand to be alone in their sanctum.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Phylactery Focus — Crystal Seams, Mage Towers, and Arcane Grinders extra +15%.</span><span class="cmod cmod-pos">▲ Undying Hunger — Does not eat — subsists on soul energy alone; only 1 fits per lair.</span></div>
+                    <span class="creature-biome"><span class="biome-best">Arcane Nexus</span><span class="biome-hard">Celestial Foothold</span></span>
+                </div>
+                <div class="creature-entry">
+                    <span class="creature-tag tag-legendary">Legendary</span>
+                    <span class="creature-name">Sphinx</span>
+                    <span class="creature-desc">Ancient and enigmatic, a sphinx's riddling wisdom unlocks insights that improve all arcane processes. It does not submit to ownership — it condescends to coexist.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Riddling Wisdom — Arcane Grinders and Benches extra +15%; Crystal Seams extra +10%.</span></div>
+                    <span class="creature-biome"><span class="biome-best">Ancient Battlefield</span><span class="biome-hard">Blighted Wastes</span></span>
+                </div>
+                <div class="creature-entry">
+                    <span class="creature-tag tag-legendary">Legendary</span>
+                    <span class="creature-name">Dracolich</span>
+                    <span class="creature-desc">A dragon who refused death and bound its soul to a phylactery. The dracolich fuses draconic production might with undead arcane mastery in one terrible form — and it never needs to eat.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Undying Dominance — Extra +10% all production; Arcane Grinders and Ritual Circles +15%.</span><span class="cmod cmod-pos">▲ Phylactery Bound — Requires no food; only 1 fits per lair.</span></div>
+                    <span class="creature-biome"><span class="biome-best">Arcane Nexus</span><span class="biome-hard">Celestial Foothold</span></span>
+                </div>
+                <div class="creature-entry">
+                    <span class="creature-tag tag-legendary">Legendary</span>
+                    <span class="creature-name">Tarrasque</span>
+                    <span class="creature-desc">The most feared creature in existence — an engine of annihilation that cannot be permanently slain. Its very presence drives all lesser creatures to work harder out of pure survival instinct. The cost of feeding it is catastrophic.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Primal Terror — Extra +15% all production and +2 to all gather yields.</span><span class="cmod cmod-neg">▼ World-Eater — Consumes 5× the food of a normal Monstrous creature; only 1 fits per lair.</span></div>
+                    <span class="creature-biome"><span class="biome-best">Badlands</span><span class="biome-hard">Arcane Nexus</span></span>
+                </div>
+                <div class="creature-entry">
+                    <span class="creature-tag tag-legendary">Legendary</span>
+                    <span class="creature-name">Kraken</span>
+                    <span class="creature-desc">The ancient terror of the deep ocean — a being of alien intelligence whose tentacles span entire sea floors. A kraken's dominion over water amplifies all storage and production to impossible scales.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Deep Dominion — Extra +8% all production; Storage buildings hold 30 more; Food cap +200; Coin cap +10,000.</span><span class="cmod cmod-neg">▼ Titanic Appetite — Consumes 2.5× the food of a normal Aquatic creature; only 1 fits per lair.</span></div>
+                    <span class="creature-biome"><span class="biome-best">Sunken Ruins</span><span class="biome-hard">Desert Wastes</span></span>
+                </div>
+            </div>
+
         </section>
 
         <!-- RESEARCH TREE -->
@@ -1218,6 +1426,21 @@
         <!-- CHANGELOG -->
         <section id="wiki-changelog" class="wiki-section wiki-changelog" style="display:none">
             <h2>Changelog</h2>
+
+            <div class="biome-card">
+                <div><span class="cl-ver">v0.40</span><span class="cl-date">2026-06-20</span></div>
+                <p class="biome-desc">Added the intro splash screen — shown on first visit, accessible via Dev panel. Includes title, lore premise ("you are a Dungeon Mind"), and Start/Continue/Archive buttons. Removed stale About blurb from the Info tab.</p>
+            </div>
+
+            <div class="biome-card">
+                <div><span class="cl-ver">v0.39</span><span class="cl-date">2026-06-20</span></div>
+                <p class="biome-desc">Added three new legendary creatures: Dracolich (Draconic — undead dragon, no food cost, arcane amplifier), Tarrasque (Monstrous — ultimate production engine with catastrophic appetite), and Kraken (Aquatic — massive storage and production at a steep food cost). Removed the redundant About blurb from the Info tab.</p>
+            </div>
+
+            <div class="biome-card">
+                <div><span class="cl-ver">v0.38</span><span class="cl-date">2026-06-20</span></div>
+                <p class="biome-desc">Updated the Creatures wiki with all new creatures (Gray Ooze, Ochre Jelly, Void Ooze, Water Elemental, Air Elemental, Shambling Mound, Vine Blight, Wood Woad, Human, Elf, Dwarf, Half-Orc, Gnome). Corrected type placements: Homunculus moved to Fey, Shadow Demon moved to Fiends, Chromatic Dragon/Lich/Sphinx removed from regular sections. Added per-creature bonus tags to every bestiary entry. Added a Legendary Creatures section with mysterious unlock descriptions.</p>
+            </div>
 
             <div class="biome-card">
                 <div><span class="cl-ver">v0.37</span><span class="cl-date">2026-06-20</span></div>

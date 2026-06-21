@@ -1367,9 +1367,10 @@ const CREATURE_ROSTER = {
 // Races hidden from the player — earned through special conditions.
 // Populated into RACE_DATA the same way as CREATURE_ROSTER entries.
 const LEGENDARY_ROSTER = {
-    "Draconic":  ["Chromatic Dragon"],
+    "Draconic":  ["Chromatic Dragon", "Dracolich"],
     "Undead":    ["Lich"],
-    "Monstrous": ["Sphinx"],
+    "Monstrous": ["Sphinx", "Tarrasque"],
+    "Aquatic":   ["Kraken"],
 };
 
 // ── Populate RACE_DATA from type and creature definitions ─────────────────────
@@ -2118,6 +2119,30 @@ const LEGENDARY_ROSTER = {
             desc: "Ancient and enigmatic, a sphinx's riddling wisdom unlocks insights that improve all arcane processes.",
             extraEffects: { converterBonus: { arcaneGrinder: 1.15, arcaneBench: 1.15 }, productionBonus: { crystalSeam: 1.10 } },
             extraMods: [{ name: "Riddling Wisdom", pos: true, desc: "Arcane Grinders and Benches extra +15%; Crystal Seams extra +10%." }],
+        },
+        "Dracolich": { // legendary — earned, not chosen
+            desc: "A dragon who refused death and bound its soul to a phylactery. The dracolich fuses draconic production might with undead arcane mastery in one terrible form.",
+            extraEffects: { allProductionBonus: 0.10, converterBonus: { arcaneGrinder: 1.15, ritualCircle: 1.15 }, foodConsumption: 0, lairHousing: 1 },
+            extraMods: [
+                { name: "Undying Dominance", pos: true,  desc: "Extra +10% all production; Arcane Grinders and Ritual Circles +15%." },
+                { name: "Phylactery Bound",  pos: true,  desc: "Requires no food — the dracolich's phylactery sustains it; only 1 fits per lair." },
+            ],
+        },
+        "Tarrasque": { // legendary — earned, not chosen
+            desc: "The most feared creature in existence — an engine of annihilation that cannot be permanently slain. Its very presence drives all lesser creatures to work harder out of pure survival instinct.",
+            extraEffects: { allProductionBonus: 0.15, allGatherBonus: 2, foodConsumption: 5.0, lairHousing: 1 },
+            extraMods: [
+                { name: "Primal Terror",    pos: true,  desc: "Extra +15% all production and +2 to all gather yields — pure survival instinct." },
+                { name: "World-Eater",      pos: false, desc: "Consumes 5× the food of a normal Monstrous creature; only 1 fits per lair." },
+            ],
+        },
+        "Kraken": { // legendary — earned, not chosen
+            desc: "The ancient terror of the deep ocean. A kraken's immense intelligence and dominion over water amplifies all aquatic and storage operations to impossible scales.",
+            extraEffects: { allProductionBonus: 0.08, storageBonus: 30, capBonus: { food: 200, coins: 10000 }, foodConsumption: 2.5, lairHousing: 1 },
+            extraMods: [
+                { name: "Deep Dominion",    pos: true,  desc: "Extra +8% all production; Storage buildings hold 30 more; Food cap +200; Coin cap +10,000." },
+                { name: "Titanic Appetite", pos: false, desc: "Consumes 2.5× the food of a normal Aquatic creature; only 1 fits per lair." },
+            ],
         },
     };
 
