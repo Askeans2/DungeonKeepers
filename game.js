@@ -1645,10 +1645,10 @@ function renderEra1Tree() {
 
 function updateEraTabVisibility() {
     const era = gameState.run.era || 1;
-    const era1Tabs  = ['awakening'];
-    const era2Tabs  = ['build', 'research', 'workers'];
-    const alwaysTabs = ['info', 'settings', 'dev'];
+    const era1Tabs = ['awakening'];
+    const era2Tabs = ['build', 'research', 'workers'];
 
+    // Show/hide tab buttons
     for (const id of era1Tabs) {
         const btn = document.querySelector(`.tab-btn[data-tab="${id}"]`);
         if (btn) btn.style.display = era === 1 ? '' : 'none';
@@ -1658,15 +1658,21 @@ function updateEraTabVisibility() {
         if (btn) btn.style.display = era === 1 ? 'none' : '';
     }
 
-    // When entering Era 2 make sure we're not still on the awakening tab
+    // Show/hide left-column elements that only belong in Era 2
+    const displayEra2 = era === 1 ? 'none' : '';
+    document.querySelectorAll('.era2-only').forEach(el => {
+        el.style.display = displayEra2;
+    });
+
+    // Active tab switching
     if (era !== 1) {
+        // Entering Era 2 — switch away from awakening tab
         const awakTab = document.getElementById('tab-awakening');
         if (awakTab && awakTab.style.display !== 'none') {
             switchTab('build');
         }
-    }
-    // When in Era 1, auto-switch to awakening if currently on a hidden Era 2 tab
-    if (era === 1) {
+    } else {
+        // In Era 1 — switch away from any Era 2 tab
         const activeTab = document.querySelector('.tab-btn.active');
         if (!activeTab || era2Tabs.includes(activeTab.dataset.tab)) {
             switchTab('awakening');
