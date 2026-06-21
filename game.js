@@ -311,12 +311,14 @@ function doSaveNow() {
 function doResetSave() {
     if (!confirm("Reset all progress? This cannot be undone.")) return;
     localStorage.removeItem(SAVE_KEY);
+    localStorage.removeItem('dk_splash_seen');
     location.reload();
 }
 
 // Dev-tab version: no confirm dialog (bypasses browser dialog suppression)
 function devResetSave() {
     localStorage.removeItem(SAVE_KEY);
+    localStorage.removeItem('dk_splash_seen');
     location.reload();
 }
 

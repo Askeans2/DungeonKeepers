@@ -80,11 +80,31 @@ html, body {
 }
 
 /* ── WIKI PAGE (wiki.html) ──────────────────────────────────────────────── */
+
+/* Dark parchment backdrop — matches splash atmosphere.
+   Override CSS variables so all variable-driven colors in the wiki
+   shift to the gold/parchment palette without touching the game. */
+body.wiki-page {
+    background: #0b0e0e;
+    --bg:         #0b0e0e;
+    --bg-panel:   #121008;         /* warm very-dark amber for cards/panels */
+    --bg-dark:    #080b0b;
+    --bg-hover:   rgba(184,144,42,0.07);
+    --text:       #e8dcc8;         /* parchment white */
+    --text-muted: rgba(200,185,160,0.62);
+    --label:      #c8a030;         /* warm gold instead of neon yellow */
+    --border:     rgba(184,144,42,0.16);
+    /* --accent stays teal so creature/biome/mod tag colors are unchanged */
+}
+
 .wiki-layout {
     display: flex;
     align-items: stretch;
     min-height: 100vh;
+    background: #0b0e0e;
 }
+
+/* Sidebar nav — deep shadow, gold accents */
 .wiki-nav {
     position: sticky;
     top: 0;
@@ -94,11 +114,18 @@ html, body {
     height: 100vh;
     overflow-y: auto;
     padding: 22px 16px;
-    background: var(--bg-panel);
-    border-right: 1px solid var(--border);
+    background: #080b0b;
+    border-right: 1px solid rgba(184,144,42,0.18);
+    /* Decorative corner sigil — top-left, mirrors splash corners */
+    background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cpath d='M6,6 L6,28 M6,6 L28,6 M6,6 L20,20' stroke='%23b8902a' stroke-width='1' fill='none' opacity='0.25'/%3E%3Ccircle cx='6' cy='6' r='2' fill='none' stroke='%23b8902a' stroke-width='0.8' opacity='0.3'/%3E%3C/svg%3E");
+    background-position: bottom left;
+    background-repeat: no-repeat;
+    background-size: 80px 80px;
 }
+
+/* Gold gradient rule under the title */
 .wiki-title {
-    color: var(--accent);
     font-size: 16px;
     font-weight: bold;
     letter-spacing: 1.5px;
@@ -106,58 +133,96 @@ html, body {
     line-height: 1.3;
     margin-bottom: 22px;
     padding: 0 6px 16px;
-    border-bottom: 1px solid var(--border);
+    color: #b8902a;
+    text-shadow: 0 0 20px rgba(184,144,42,0.35);
+    border-bottom: 1px solid rgba(184,144,42,0.22);
 }
+
+/* Nav links — parchment muted, gold on hover/active */
 .wiki-nav-link {
     position: relative;
     display: block;
     padding: 11px 14px;
     margin-bottom: 7px;
-    border: 1px solid var(--border);
-    border-radius: 5px;
-    background: var(--bg-dark);
-    color: var(--text-muted);
+    border: 1px solid rgba(184,144,42,0.10);
+    border-radius: 4px;
+    background: rgba(255,255,255,0.02);
+    color: rgba(200,185,160,0.55);
     font-size: 14px;
     font-weight: bold;
     text-decoration: none;
     cursor: pointer;
     user-select: none;
-    transition: background 0.12s, color 0.12s, border-color 0.12s;
+    transition: background 0.12s, color 0.15s, border-color 0.15s, box-shadow 0.15s;
 }
 .wiki-nav-link:hover {
-    background: var(--bg-hover);
-    border-color: var(--accent);
-    color: var(--text);
+    background: rgba(184,144,42,0.08);
+    border-color: rgba(184,144,42,0.38);
+    color: rgba(232,192,64,0.9);
 }
 .wiki-nav-link.active {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: #fff;
-    box-shadow: 0 0 0 1px var(--accent);
+    background: rgba(184,144,42,0.16);
+    border-color: rgba(184,144,42,0.55);
+    color: #e8c040;
+    box-shadow: 0 0 12px rgba(184,144,42,0.12);
 }
+
+/* Content area */
 .wiki-content {
     flex: 1;
     min-width: 0;
     padding: 30px 40px 90px;
 }
+
+/* Section h2 — gold with a glow rule beneath */
 .wiki-content > .wiki-section > h2:first-child {
     margin: 0 0 18px;
     padding-bottom: 12px;
     font-size: 26px;
     letter-spacing: 0.5px;
-    color: var(--accent);
-    border-bottom: 2px solid var(--border);
+    color: #e8c040;
+    text-shadow: 0 0 28px rgba(184,144,42,0.3);
+    border-bottom: 1px solid transparent;
+    border-image: linear-gradient(to right, rgba(184,144,42,0.55), rgba(184,144,42,0.06)) 1;
 }
+
+/* Body text — warm parchment */
 .wiki-lead {
-    color: var(--text-muted);
+    color: rgba(220,205,180,0.78);
     font-size: 14px;
-    line-height: 1.6;
+    line-height: 1.68;
     max-width: 780px;
 }
-.wiki-changelog .biome-card { max-width: 780px; }
-.wiki-changelog .cl-ver { color: var(--label); font-weight: bold; font-size: 15px; }
-.wiki-changelog .cl-date { color: var(--text-muted); float: right; font-size: 12px; }
 
+/* Inline bold labels in lead text */
+.wiki-lead b {
+    color: rgba(232,200,140,0.92);
+}
+
+/* Changelog */
+.wiki-changelog .biome-card { max-width: 780px; }
+.wiki-changelog .cl-ver  { color: #e8c040; font-weight: bold; font-size: 15px; }
+.wiki-changelog .cl-date { color: rgba(200,185,160,0.5); float: right; font-size: 12px; }
+
+/* Biome cards in wiki context — dark, gold-tinged border */
+.wiki-content .biome-card {
+    background: rgba(255,255,255,0.015);
+    border-color: rgba(184,144,42,0.14);
+    border-left-color: rgba(184,144,42,0.35);
+}
+.wiki-content .biome-card:hover {
+    background: rgba(184,144,42,0.035);
+    border-color: rgba(184,144,42,0.28);
+}
+
+/* Sub-headings (creature-category reused throughout wiki) */
+.wiki-content .creature-category,
+.wiki-content h3.creature-category {
+    color: rgba(184,144,42,0.72);
+    border-bottom-color: rgba(184,144,42,0.16);
+}
+
+/* Tables — gold headers */
 .wiki-table {
     width: 100%;
     max-width: 780px;
@@ -168,18 +233,18 @@ html, body {
 .wiki-table th {
     text-align: left;
     padding: 6px 10px;
-    background: var(--bg-panel);
-    color: var(--accent);
-    border-bottom: 1px solid var(--border);
+    background: rgba(184,144,42,0.07);
+    color: #b8902a;
+    border-bottom: 1px solid rgba(184,144,42,0.22);
     font-weight: bold;
 }
 .wiki-table td {
     padding: 5px 10px;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-    color: var(--text-muted);
+    border-bottom: 1px solid rgba(184,144,42,0.055);
+    color: rgba(200,185,160,0.7);
 }
 .wiki-table td:first-child {
-    color: var(--text);
+    color: rgba(220,205,180,0.92);
     font-weight: bold;
 }
 .wiki-table tr:last-child td {

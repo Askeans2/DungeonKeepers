@@ -1617,9 +1617,12 @@
         // ── Common setup ──────────────────────────────────────────────────────
         function setupSplash() {
             var versionEl   = document.getElementById('splash-version');
+            var awakenBtn   = document.getElementById('splash-awaken-btn');
             var continueBtn = document.getElementById('splash-continue-btn');
             if (versionEl)   versionEl.textContent = 'v' + (window.GAME_VERSION || '');
-            if (continueBtn) continueBtn.style.display = hasSave() ? '' : 'none';
+            var save = hasSave();
+            if (awakenBtn)   awakenBtn.style.display   = save ? 'none' : '';
+            if (continueBtn) continueBtn.style.display = save ? ''     : 'none';
             populateRunSummary();
             checkWhatsNew();
         }
