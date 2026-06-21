@@ -339,8 +339,8 @@ RESEARCH.runicScript = {
 
 RESEARCH.essenceHarvest = {
     name: "Essence Harvesting",
-    desc: "Capture ambient magical resonance in the circle's stone. Ritual Circle essence output +50%.",
-    cost: { essence: 15, arcaneDust: 50, coins: 3000 },
+    desc: "Capture ambient magical resonance in the circle's stone. Ritual Circle Arcane Essence output +50%.",
+    cost: { arcaneEssence: 15, arcaneDust: 50, coins: 3000 },
     requiresResearch: ["arcaneTapping"],
     effects: { converterBonus: { ritualCircle: 1.50 } },
 };
@@ -381,16 +381,16 @@ RESEARCH.mithrilTemper = {
 
 RESEARCH.ritualPrep = {
     name: "Rites of the Ancients",
-    desc: "Recover the old ways from crumbling texts and stubborn elders. Unlocks the Ritual Circle. Essence cap +25.",
+    desc: "Recover the old ways from crumbling texts and stubborn elders. Unlocks the Ritual Circle. Arcane Essence cap +25.",
     cost: { stone: 100, arcaneDust: 60, coins: 3000 },
     requiresResearch: ["arcaneTapping"],
-    effects: { unlockBuildings: ["ritualCircle"], capBonus: { essence: 25 } },
+    effects: { unlockBuildings: ["ritualCircle"], capBonus: { arcaneEssence: 25 } },
 };
 
 RESEARCH.darkTexts = {
     name: "Forbidden Texts",
     desc: "What you read cannot be unread. Unlocks the Dark Altar.",
-    cost: { bones: 80, essence: 20, coins: 4000 },
+    cost: { bones: 80, arcaneEssence: 20, coins: 4000 },
     requiresResearch: ["ritualPrep"],
     effects: { unlockBuildings: ["darkAltar"] },
 };
@@ -414,7 +414,7 @@ RESEARCH.manaConduit = {
 RESEARCH.dungeonBlueprint = {
     name: "Dungeon Blueprint",
     desc: "Maps, schematics, and the first load-bearing column of something far grander than a village. Era 3 awaits.",
-    cost: { manaGold: 20, mithril: 5, essence: 30, ichor: 15, coins: 10000 },
+    cost: { manaGold: 20, mithril: 5, arcaneEssence: 30, ichor: 15, coins: 10000 },
     requiresResearch: ["ritualPrep", "darkTexts", "manaConduit", "mithrilTemper", "forgeMastery", "roadNetwork"],
     effects: { flag: "eraThreeUnlocked" },
 };

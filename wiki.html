@@ -639,15 +639,15 @@
                 <div class="creature-entry">
                     <span class="creature-tag tag-undead">Undead</span>
                     <span class="creature-name">Wraith</span>
-                    <span class="creature-desc">Incorporeal undead who phase through walls and haunt the darkest corridors. Their shadow-touch can extract essence from bare stone.</span>
-                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Phase Walker — +1 stone per manual gather; Essence cap +25.</span></div>
+                    <span class="creature-desc">Incorporeal undead who phase through walls and haunt the darkest corridors. Their shadow-touch can extract arcane essence from bare stone.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Phase Walker — +1 stone per manual gather; Arcane Essence cap +25.</span></div>
                     <span class="creature-biome"><span class="biome-best">Shadowfell Crossing</span><span class="biome-hard">Rolling Grasslands</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-undead">Undead</span>
                     <span class="creature-name">Mummy</span>
-                    <span class="creature-desc">Ancient undead wrapped in cursed linen. Mummies carry immense reserves of preserved essence from ages past.</span>
-                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Preserved Essence — Essence cap +50 beyond base Undead bonus.</span></div>
+                    <span class="creature-desc">Ancient undead wrapped in cursed linen. Mummies carry immense reserves of preserved arcane essence from ages past.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Preserved Essence — Arcane Essence cap +50 beyond base Undead bonus.</span></div>
                     <span class="creature-biome"><span class="biome-best">Desert Wastes</span><span class="biome-hard">Coastal Bluffs</span></span>
                 </div>
                 <div class="creature-entry">
@@ -772,8 +772,8 @@
                 <div class="creature-entry">
                     <span class="creature-tag tag-aberration">Aberration</span>
                     <span class="creature-name">Aboleth</span>
-                    <span class="creature-desc">Ancient aquatic elders whose memories predate the gods. Their eons of knowledge yield remarkable essence reserves.</span>
-                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Elder Memory — Essence cap +75 beyond base Aberration bonus.</span></div>
+                    <span class="creature-desc">Ancient aquatic elders whose memories predate the gods. Their eons of knowledge yield remarkable arcane essence reserves.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Elder Memory — Arcane Essence cap +75 beyond base Aberration bonus.</span></div>
                     <span class="creature-biome"><span class="biome-best">Sunken Ruins</span><span class="biome-hard">Desert Wastes</span></span>
                 </div>
                 <div class="creature-entry">
@@ -1002,8 +1002,8 @@
                 <div class="creature-entry">
                     <span class="creature-tag tag-fiend">Fiend</span>
                     <span class="creature-name">Night Hag</span>
-                    <span class="creature-desc">Dream-devouring witches who harvest essence from sleeping creatures. Their nightmare brews are invaluable to dark alchemy.</span>
-                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Nightmare Harvest — Alchemy Labs and Ritual Circles extra +15%; Essence cap +50.</span></div>
+                    <span class="creature-desc">Dream-devouring witches who harvest arcane essence from sleeping creatures. Their nightmare brews are invaluable to dark alchemy.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Nightmare Harvest — Alchemy Labs and Ritual Circles extra +15%; Arcane Essence cap +50.</span></div>
                     <span class="creature-biome"><span class="biome-best">Haunted Moor</span><span class="biome-hard">Celestial Foothold</span></span>
                 </div>
                 <div class="creature-entry">
@@ -1045,7 +1045,7 @@
                     <span class="creature-tag tag-fiend">Fiend</span>
                     <span class="creature-name">Shadow Demon</span>
                     <span class="creature-desc">Pure shadow given malevolent will. Shadow Demons feed on no food, slip through solid stone, and warp dark ritual rites to terrifying effect.</span>
-                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Shadow Rite — Further 50% food reduction; Ritual Circles +15%; Essence cap +50.</span></div>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Shadow Rite — Further 50% food reduction; Ritual Circles +15%; Arcane Essence cap +50.</span></div>
                     <span class="creature-biome"><span class="biome-best">Shadowfell Crossing</span><span class="biome-hard">Celestial Foothold</span></span>
                 </div>
             </div>
@@ -1230,7 +1230,7 @@
                     <span class="creature-tag tag-aquatic">Aquatic</span>
                     <span class="creature-name">Kuo-toa</span>
                     <span class="creature-desc">Mad fish-folk who worship inscrutable gods. Their collective religious fervor, though bizarre, produces ritual outputs others cannot match.</span>
-                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Frenzied Worship — Ritual Circles extra +15%; Essence cap +25.</span></div>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Frenzied Worship — Ritual Circles extra +15%; Arcane Essence cap +25.</span></div>
                     <span class="creature-biome"><span class="biome-best">Underdark Depths</span><span class="biome-hard">Rolling Grasslands</span></span>
                 </div>
                 <div class="creature-entry">
@@ -1426,6 +1426,11 @@
         <!-- CHANGELOG -->
         <section id="wiki-changelog" class="wiki-section wiki-changelog" style="display:none">
             <h2>Changelog</h2>
+
+            <div class="biome-card">
+                <div><span class="cl-ver">v0.47</span><span class="cl-date">2026-06-21</span></div>
+                <p class="biome-desc">Implemented Era 1 — the Awakening. Fresh runs begin in a new Awakening tab (Build/Research/Workers hidden in Era 1) where the player guides a disembodied dungeon mind through a 5-choice progressive tree. Three new Era 1 resources — Essence, Influence, and Mana — generate passively and are spent to unlock tree nodes. The tree covers all 15 creature types across three domain branches (The Deep, The Wild, The Beyond), ending with a race selection that transitions into Era 2 without any reset.</p>
+            </div>
 
             <div class="biome-card">
                 <div><span class="cl-ver">v0.46</span><span class="cl-date">2026-06-21</span></div>
@@ -2050,8 +2055,8 @@ function showWiki(id) {
         'Ghoul':              { desc: 'Feral undead that haunt graveyards and charnel houses, stripping bones with terrifying efficiency.', mods: [{n:'Charnel Efficiency',p:true,d:'Hunting Lodges produce more; extra Bone cap.'}] },
         'Revenant':           { desc: 'Driven by unyielding purpose, revenants pursue their singular goal with relentless determination — and grow slightly faster than most undead.', mods: [{n:'Singular Purpose',p:true,d:'Faster growth than typical Undead.'}] },
         'Banshee':            { desc: 'Wailing spirits whose screams curdle blood. Their terror keeps workers productive through sheer dread.', mods: [{n:'Shriek of Dread',p:true,d:'Extra coin per creature per day.'}] },
-        'Wraith':             { desc: 'Incorporeal undead who phase through walls. Their shadow-touch can extract essence from bare stone.', mods: [{n:'Phase Walker',p:true,d:'Extra stone on manual gather; extra Essence cap.'}] },
-        'Mummy':              { desc: 'Ancient undead wrapped in cursed linen. Mummies carry immense reserves of preserved essence from ages past.', mods: [{n:'Preserved Essence',p:true,d:'Extra Essence cap.'}] },
+        'Wraith':             { desc: 'Incorporeal undead who phase through walls. Their shadow-touch can extract arcane essence from bare stone.', mods: [{n:'Phase Walker',p:true,d:'Extra stone on manual gather; extra Arcane Essence cap.'}] },
+        'Mummy':              { desc: 'Ancient undead wrapped in cursed linen. Mummies carry immense reserves of preserved arcane essence from ages past.', mods: [{n:'Preserved Essence',p:true,d:'Extra Arcane Essence cap.'}] },
         'Demilich':           { desc: 'A lich reduced to its phylactery core — a floating skull of incomprehensible arcane density. The ultimate arcane amplifier.', mods: [{n:'Soul Condenser',p:true,d:'Arcane Benches and Ritual Circles run more efficiently.'}] },
         'Shadow':             { desc: 'Creatures of pure darkness, shadows need almost no sustenance and multiply faster than their undead kin.', mods: [{n:'Shade Multiplication',p:true,d:'Further halved food consumption; grows much faster than base Undead.'}] },
         'Goblin':             { desc: 'The quintessential dungeon fodder — cowardly alone, dangerous in overwhelming numbers. Speed and chaos are their weapons.' },
@@ -2097,13 +2102,13 @@ function showWiki(id) {
         'Imp':                { desc: 'Minor devils who delight in sabotage — of enemies. Imps sneak into rival operations and bring back extra resources.', mods: [{n:'Diabolical Theft',p:true,d:'Extra yield on all gathers.'}] },
         'Cambion':            { desc: 'Half-fiend nobles with a foot in both worlds. Their dual nature extracts tribute from living and dead alike.', mods: [{n:'Dual Heritage',p:true,d:'Extra coin per creature per day; extra all-production bonus.'}] },
         'Barbed Devil':       { desc: 'Spined enforcers who inspire productivity through pain. Workers under barbed devil supervision consistently exceed output quotas.', mods: [{n:'Spiked Motivation',p:true,d:'Extra all-production bonus.'}] },
-        'Night Hag':          { desc: 'Dream-devouring witches who harvest essence from sleeping creatures. Their nightmare brews are invaluable to dark alchemy.', mods: [{n:'Nightmare Harvest',p:true,d:'Alchemy Labs and Ritual Circles produce more; extra Essence cap.'}] },
+        'Night Hag':          { desc: 'Dream-devouring witches who harvest arcane essence from sleeping creatures. Their nightmare brews are invaluable to dark alchemy.', mods: [{n:'Nightmare Harvest',p:true,d:'Alchemy Labs and Ritual Circles produce more; extra Arcane Essence cap.'}] },
         'Succubus/Incubus':   { desc: 'Shape-shifting seducers who manipulate through charm. Their influence makes taxation feel voluntary — and highly profitable.', mods: [{n:'Irresistible Charm',p:true,d:'Extra coin per creature per day; further food reduction.'}] },
         'Pit Fiend':          { desc: 'High-ranking lords of Hell who command absolute obedience. A Pit Fiend\'s presence dramatically increases all output.', mods: [{n:'Infernal Authority',p:true,d:'Extra all-production bonus; extra coin per creature per day.'}] },
         'Balor':              { desc: 'A demon of pure destruction and fire. Balors incinerate waste and inefficiency, leaving only productive essence behind.', mods: [{n:'Immolation Refinery',p:true,d:'Extra all-production bonus; Dark Altars produce more.'}] },
         'Rakshasa':           { desc: 'Tiger-headed sorcerer-lords who scheme and trade across planes. Their mercantile genius multiplies coin income dramatically.', mods: [{n:'Planar Merchant',p:true,d:'Extra coin per creature per day; extra Coin cap.'}] },
         'Quasit':             { desc: 'A lesser demon and spy. Quasits sneak into rival operations and bring back knowledge, subtly improving gather efficiency.', mods: [{n:'Spy\'s Report',p:true,d:'Extra yield on all gathers.'}] },
-        'Shadow Demon':       { desc: 'Pure shadow given malevolent will. Shadow Demons feed on no food, slip through solid stone, and warp dark ritual rites to terrifying effect.', mods: [{n:'Shadow Rite',p:true,d:'Further food reduction; Ritual Circles produce more; extra Essence cap.'}] },
+        'Shadow Demon':       { desc: 'Pure shadow given malevolent will. Shadow Demons feed on no food, slip through solid stone, and warp dark ritual rites to terrifying effect.', mods: [{n:'Shadow Rite',p:true,d:'Further food reduction; Ritual Circles produce more; extra Arcane Essence cap.'}] },
         'Hill Giant':         { desc: 'The most common and dullest of giants. Hill giants smash things productively, eat everything in sight, and need no praise for it.' },
         'Stone Giant':        { desc: 'Gifted sculptors and master quarrymen, stone giants work stone with an artistry bordering on the divine.', mods: [{n:'Stone Artistry',p:true,d:'Quarries produce more; extra Stone cap.'}] },
         'Frost Giant':        { desc: 'Cold raiders from icy peaks who preserve resources through natural refrigeration. Food spoilage is simply not a concern.', mods: [{n:'Frost Preservation',p:true,d:'Extra Food cap; eats less than typical Giants.'}] },
@@ -2126,7 +2131,7 @@ function showWiki(id) {
         'Wood Woad':          { desc: 'Ancient bark-skinned guardians who emerge from the deep forest. Their stoic resilience lets them work longer before needing rest.', mods: [{n:'Bark Endurance',p:true,d:'Grows faster than base Flora; Quarries produce more.'}] },
         'Merfolk':            { desc: 'Civilized aquatic beings who build sophisticated underwater settlements. Their social organization improves tax collection.', mods: [{n:'Mer-Society',p:true,d:'Extra coin per creature per day.'}] },
         'Sahuagin':           { desc: 'Aggressive sea devils who raid coastal settlements. Their brutality at sea translates to extraordinary hunting and gathering yields.', mods: [{n:'Sea Raid',p:true,d:'Hunting Lodges produce more; extra yield on all gathers.'}] },
-        'Kuo-toa':            { desc: 'Mad fish-folk who worship inscrutable gods. Their collective religious fervor, though bizarre, produces ritual outputs others cannot match.', mods: [{n:'Frenzied Worship',p:true,d:'Ritual Circles produce more; extra Essence cap.'}] },
+        'Kuo-toa':            { desc: 'Mad fish-folk who worship inscrutable gods. Their collective religious fervor, though bizarre, produces ritual outputs others cannot match.', mods: [{n:'Frenzied Worship',p:true,d:'Ritual Circles produce more; extra Arcane Essence cap.'}] },
         'Triton':             { desc: 'Noble sea-folk guardians of the deep. Tritons bring military discipline and aquatic mastery to clay and stone extraction.', mods: [{n:'Deep Warden',p:true,d:'Clay Pits produce more; extra all-production bonus.'}] },
         'Kenku':              { desc: 'Flightless crow-folk with an uncanny ability to copy and replicate any process they observe. All production benefits slightly.', mods: [{n:'Mimicry',p:true,d:'Extra all-production bonus.'}] },
         'Tabaxi':             { desc: 'Cat-folk nomads who sprint through your dungeon collecting resources with fluid, predatory grace.', mods: [{n:'Cat\'s Alacrity',p:true,d:'Extra yield on all gathers; slight food reduction.'}] },

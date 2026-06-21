@@ -2229,3 +2229,184 @@ body.reduce-motion *::after {
     border-color: rgba(160,120,240,0.5);
     color: #c8b0f0;
 }
+
+/* ── ERA 1 AWAKENING TAB ─────────────────────────────────────────────────────── */
+
+.era1-layout {
+    display: flex;
+    gap: 16px;
+    min-height: 320px;
+}
+
+.era1-tree {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 8px 4px;
+}
+
+.era1-panel {
+    flex: 0 0 200px;
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 12px 14px;
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    align-self: flex-start;
+    position: sticky;
+    top: 0;
+}
+
+.era1-panel-name {
+    font-size: 13px;
+    font-weight: bold;
+    color: var(--label);
+    margin-bottom: 6px;
+    letter-spacing: 0.02em;
+}
+
+.era1-panel-flavor {
+    font-style: italic;
+    margin-bottom: 10px;
+    line-height: 1.65;
+}
+
+.era1-panel-cost {
+    font-size: 11px;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border);
+    padding-top: 6px;
+    margin-top: 6px;
+}
+
+.era1-cost-ok  { color: #76c96a; }
+.era1-cost-bad { color: #d46a6a; }
+.era1-cost-free { color: var(--text-muted); font-style: italic; }
+
+.era1-warning {
+    margin-top: 8px;
+    color: #d4952a;
+    font-size: 11px;
+    font-style: italic;
+}
+
+/* Tree layers */
+.era1-layer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+}
+
+.era1-layer-root {
+    justify-content: center;
+}
+
+.era1-connector {
+    width: 2px;
+    height: 12px;
+    background: var(--border);
+    margin: 0 auto;
+    border-radius: 1px;
+}
+
+/* Individual nodes */
+.era1-node {
+    padding: 8px 14px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: var(--bg-panel);
+    cursor: pointer;
+    transition: background 0.12s, border-color 0.12s, opacity 0.15s;
+    text-align: center;
+    min-width: 100px;
+    max-width: 160px;
+}
+
+.era1-node-name {
+    font-size: 12px;
+    font-weight: bold;
+    color: var(--text);
+    letter-spacing: 0.02em;
+}
+
+.era1-node-type {
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-top: 3px;
+    font-style: italic;
+}
+
+/* State: completed / chosen */
+.era1-node-done {
+    border-color: var(--accent);
+    background: rgba(62,120,80,0.18);
+    cursor: default;
+}
+.era1-node-done .era1-node-name { color: var(--label); }
+
+/* State: active (affordable) */
+.era1-node-active {
+    border-color: rgba(100,180,120,0.6);
+    background: var(--bg-dark);
+    box-shadow: 0 0 6px rgba(100,180,120,0.18);
+}
+.era1-node-active:hover {
+    border-color: var(--accent);
+    background: rgba(62,120,80,0.12);
+}
+
+/* State: waiting (can't afford yet) */
+.era1-node-waiting {
+    border-color: var(--border);
+    background: var(--bg-dark);
+    opacity: 0.7;
+}
+.era1-node-waiting:hover {
+    border-color: var(--text-muted);
+}
+
+/* State: locked (sibling was chosen instead) */
+.era1-node-locked {
+    opacity: 0.2;
+    pointer-events: none;
+    cursor: default;
+}
+
+/* Root node */
+.era1-root-node {
+    border-color: rgba(184,144,42,0.5);
+    background: rgba(184,144,42,0.06);
+    cursor: default;
+    min-width: 140px;
+}
+.era1-root-node .era1-node-name { color: rgba(184,144,42,0.9); }
+
+/* Branch color classes */
+.era1-node.era1-deep   { --branch-clr: #8899aa; }
+.era1-node.era1-wild   { --branch-clr: #5a9e60; }
+.era1-node.era1-beyond { --branch-clr: #8866bb; }
+
+.era1-node-done.era1-deep   { border-color: #8899aa; background: rgba(136,153,170,0.12); }
+.era1-node-done.era1-wild   { border-color: #5a9e60; background: rgba(90,158,96,0.14); }
+.era1-node-done.era1-beyond { border-color: #8866bb; background: rgba(136,102,187,0.12); }
+
+.era1-node-active.era1-deep   { border-color: rgba(136,153,170,0.6); box-shadow: 0 0 6px rgba(136,153,170,0.18); }
+.era1-node-active.era1-wild   { border-color: rgba(90,158,96,0.6);   box-shadow: 0 0 6px rgba(90,158,96,0.2); }
+.era1-node-active.era1-beyond { border-color: rgba(136,102,187,0.6); box-shadow: 0 0 6px rgba(136,102,187,0.18); }
+
+.era1-node-active.era1-deep:hover   { border-color: #8899aa; background: rgba(136,153,170,0.1); }
+.era1-node-active.era1-wild:hover   { border-color: #5a9e60; background: rgba(90,158,96,0.12); }
+.era1-node-active.era1-beyond:hover { border-color: #8866bb; background: rgba(136,102,187,0.1); }
+
+/* Deny flash animation */
+@keyframes era1Deny {
+    0%   { border-color: #d46a6a; background: rgba(212,106,106,0.15); }
+    50%  { border-color: #d46a6a; background: rgba(212,106,106,0.25); }
+    100% { border-color: inherit;  background: inherit; }
+}
+.era1-flash-deny { animation: era1Deny 0.6s ease; }

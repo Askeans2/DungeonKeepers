@@ -293,10 +293,18 @@
             </span>
         </div>
 
+        <div class="res-row" id="res-row-arcaneEssence" style="display:none">
+            <span class="res-name">Arcane Essence</span>
+            <span class="res-right">
+                <span id="arcaneEssence">0</span>/<span id="arcaneEssenceCap">50</span>
+                <span id="arcaneEssenceRate" class="rate" style="display:none"></span>
+            </span>
+        </div>
+
         <div class="res-row" id="res-row-essence" style="display:none">
             <span class="res-name">Essence</span>
             <span class="res-right">
-                <span id="essence">0</span>/<span id="essenceCap">50</span>
+                <span id="essence">0</span>/<span id="essenceCap">500</span>
                 <span id="essenceRate" class="rate" style="display:none"></span>
             </span>
         </div>
@@ -333,6 +341,22 @@
             </span>
         </div>
 
+        <div class="res-row" id="res-row-influence" style="display:none">
+            <span class="res-name">Influence</span>
+            <span class="res-right">
+                <span id="influence">0</span>/<span id="influenceCap">500</span>
+                <span id="influenceRate" class="rate" style="display:none"></span>
+            </span>
+        </div>
+
+        <div class="res-row" id="res-row-mana" style="display:none">
+            <span class="res-name">Mana</span>
+            <span class="res-right">
+                <span id="mana">0</span>/<span id="manaCap">500</span>
+                <span id="manaRate" class="rate" style="display:none"></span>
+            </span>
+        </div>
+
     </div><!-- /panel.left -->
 
     </div><!-- /left-col -->
@@ -342,13 +366,25 @@
 
         <!-- Tab bar -->
         <div class="tab-bar">
-            <button class="tab-btn active" data-tab="build"    onclick="switchTab('build')">Build</button>
-            <button class="tab-btn"        data-tab="research" onclick="switchTab('research')">Research</button>
-            <button class="tab-btn"        data-tab="workers"  onclick="switchTab('workers')">Workers</button>
-            <button class="tab-btn"        data-tab="info"     onclick="switchTab('info')">Info</button>
-            <button class="tab-btn"        data-tab="settings" onclick="switchTab('settings')">Settings</button>
-            <button class="tab-btn dev-tab" data-tab="dev"     onclick="switchTab('dev')">Dev</button>
+            <button class="tab-btn active" data-tab="awakening" onclick="switchTab('awakening')">Awakening</button>
+            <button class="tab-btn" data-tab="build"    onclick="switchTab('build')">Build</button>
+            <button class="tab-btn" data-tab="research" onclick="switchTab('research')">Research</button>
+            <button class="tab-btn" data-tab="workers"  onclick="switchTab('workers')">Workers</button>
+            <button class="tab-btn" data-tab="info"     onclick="switchTab('info')">Info</button>
+            <button class="tab-btn" data-tab="settings" onclick="switchTab('settings')">Settings</button>
+            <button class="tab-btn dev-tab" data-tab="dev" onclick="switchTab('dev')">Dev</button>
         </div>
+
+        <!-- AWAKENING TAB (Era 1 only) -->
+        <div class="tab-body tab-content" id="tab-awakening">
+            <div class="era1-layout">
+                <div id="era1-tree" class="era1-tree"></div>
+                <div id="era1-panel" class="era1-panel">
+                    <div class="era1-panel-name">The Mind Stirs</div>
+                    <div class="era1-panel-flavor">Hover over a node to learn more about each path.</div>
+                </div>
+            </div>
+        </div><!-- /tab-awakening -->
 
         <!-- BUILD TAB -->
         <div class="tab-body tab-content" id="tab-build">
@@ -894,8 +930,8 @@
                 <div class="research-card" id="research-essenceHarvest" style="display:none">
                     <div class="research-info">
                         <div class="research-name">Essence Harvesting</div>
-                        <div class="research-desc">Capture ambient magical resonance in the circle's stone. Ritual Circle essence output +50%.</div>
-                        <div class="research-cost">Cost: 15 Essence, 50 Arcane Dust, 3000 cp</div>
+                        <div class="research-desc">Capture ambient magical resonance in the circle's stone. Ritual Circle Arcane Essence output +50%.</div>
+                        <div class="research-cost">Cost: 15 Arcane Essence, 50 Arcane Dust, 3000 cp</div>
                     </div>
                     <button class="research-btn" id="btn-research-essenceHarvest" onclick="doResearch('essenceHarvest')">Research</button>
                 </div>
@@ -936,7 +972,7 @@
                 <div class="research-card" id="research-ritualPrep" style="display:none">
                     <div class="research-info">
                         <div class="research-name">Rites of the Ancients</div>
-                        <div class="research-desc">Recover the old ways from crumbling texts and stubborn elders. Unlocks the Ritual Circle. Essence cap +25.</div>
+                        <div class="research-desc">Recover the old ways from crumbling texts and stubborn elders. Unlocks the Ritual Circle. Arcane Essence cap +25.</div>
                         <div class="research-cost">Cost: 100 Stone, 60 Arcane Dust, 3000 cp</div>
                     </div>
                     <button class="research-btn" id="btn-research-ritualPrep" onclick="doResearch('ritualPrep')">Research</button>
@@ -945,7 +981,7 @@
                     <div class="research-info">
                         <div class="research-name">Forbidden Texts</div>
                         <div class="research-desc">What you read cannot be unread. Unlocks the Dark Altar.</div>
-                        <div class="research-cost">Cost: 80 Bones, 20 Essence, 4000 cp</div>
+                        <div class="research-cost">Cost: 80 Bones, 20 Arcane Essence, 4000 cp</div>
                     </div>
                     <button class="research-btn" id="btn-research-darkTexts" onclick="doResearch('darkTexts')">Research</button>
                 </div>
@@ -969,7 +1005,7 @@
                     <div class="research-info">
                         <div class="research-name">Dungeon Blueprint</div>
                         <div class="research-desc">Maps, schematics, and the first load-bearing column of something far grander than a village. Era 3 awaits.</div>
-                        <div class="research-cost">Cost: 20 Mana Gold, 5 Mithril, 30 Essence, 15 Ichor, 10000 cp</div>
+                        <div class="research-cost">Cost: 20 Mana Gold, 5 Mithril, 30 Arcane Essence, 15 Ichor, 10000 cp</div>
                     </div>
                     <button class="research-btn" id="btn-research-dungeonBlueprint" onclick="doResearch('dungeonBlueprint')">Research</button>
                 </div>
@@ -1513,7 +1549,7 @@
 
 <script>
     // Load local game scripts in dependency order, cache-busted by GAME_VERSION (see version.js).
-    ["data/resources.js", "data/rooms.js", "data/research.js", "save.js", "game.js"].forEach(function (src) {
+    ["data/resources.js", "data/rooms.js", "data/research.js", "data/era1tree.js", "save.js", "game.js"].forEach(function (src) {
         document.write('<scr' + 'ipt src="' + src + '?v=' + window.GAME_VERSION + '"></scr' + 'ipt>');
     });
 </script>

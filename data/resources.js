@@ -23,9 +23,13 @@ const RESOURCES = {
     runes:      { name: "Runes",       tier: 2 },
 
     // ── Tier 3 — Magical & Rare ─────────────────────────────────────────────────
-    essence:    { name: "Essence",     tier: 3 },
+    arcaneEssence: { name: "Arcane Essence", tier: 3 },
     silk:       { name: "Silk",        tier: 3 },
     manaGold:   { name: "Mana Gold",   tier: 3 },
     ichor:      { name: "Ichor",       tier: 3 },
     mithril:    { name: "Mithril",     tier: 3 },
+
+    // ── Era 1 — Awakening Resources ─────────────────────────────────────────────
+    influence:  { name: "Influence",   tier: 1 },
+    mana:       { name: "Mana",        tier: 1 },
 };

@@ -11,7 +11,9 @@ const BASE_CAPS = {
     // Tier 2 — Crafted
     iron: 150, potions: 75, arcaneDust: 75, steel: 100, bricks: 120, cloth: 100, runes: 60,
     // Tier 3 — Magical
-    essence: 50, silk: 40, manaGold: 40, ichor: 30, mithril: 20,
+    arcaneEssence: 50, silk: 40, manaGold: 40, ichor: 30, mithril: 20,
+    // Era 1 resources (cap overridden to 500 while era === 1)
+    influence: 500, mana: 500,
 };
 const COIN_CAP = 100000; // 1000 gp in copper pieces; coins do not use Storage bonuses
 
@@ -195,7 +197,8 @@ const gameState = {
         food: 0, wood: 0, stone: 0,
         ore: 0, herbs: 0, crystals: 0, coal: 0, clay: 0, bones: 0, sulphur: 0,
         iron: 0, potions: 0, arcaneDust: 0, steel: 0, bricks: 0, cloth: 0, runes: 0,
-        essence: 0, silk: 0, manaGold: 0, ichor: 0, mithril: 0,
+        arcaneEssence: 0, silk: 0, manaGold: 0, ichor: 0, mithril: 0,
+        essence: 0, influence: 0, mana: 0,
         coins: 0,
     },
     buildings: {
@@ -212,6 +215,10 @@ const gameState = {
     meta:       { seenBiomes: [], totalPrestiges: 0, racesPlayed: {} },
     time:       { tick: 0, day: 1, year: 1, seasonIndex: 0 },
     pauseBank:  0,   // seconds of Accelerated Time banked from pausing
+    era1: {
+        unlocked: [],   // node ids the player has purchased
+        chosen:   null, // L5 race node id picked (null until Era 2 gate)
+    },
     stats: {
         peakPopulation:       0,
         buildingsConstructed: 0,
@@ -634,6 +641,12 @@ function getCaps() {
     caps.coins = COIN_CAP
         + ((gameState.research && gameState.research.ironLockbox) ? 50000 : 0)
         + getResearchBonus('capBonus', 'coins');
+    // Era 1: override caps for Era 1 resources to 500
+    if ((gameState.run.era || 1) === 1) {
+        caps.essence   = 500;
+        caps.influence = 500;
+        caps.mana      = 500;
+    }
     return caps;
 }
 
@@ -770,6 +783,23 @@ function runOneTick() {
     const caps = getCaps();
     const pop  = gameState.population;
     const st   = gameState.stats;
+
+    // 0. Era 1 passive resource income
+    if ((gameState.run.era || 1) === 1) {
+        const r = gameState.resources;
+        r.essence  = (r.essence  || 0) + 0.5;
+        const essenceAbove10 = Math.max(0, (r.essence || 0) - 10);
+        r.influence = (r.influence || 0) + 0.1 * essenceAbove10;
+        // Mana only after at least one L3 Form node is unlocked
+        const era1 = gameState.era1 || {};
+        const formNodes = ['horde','champion','bloodline','anomaly','root-node','cycle','pack','apex','kept','consumed','pact','vessel'];
+        const hasForm = (era1.unlocked || []).some(id => formNodes.includes(id));
+        if (hasForm) r.mana = (r.mana || 0) + 0.2;
+        // Era 1 caps (500 each)
+        r.essence   = Math.min(r.essence,   500);
+        r.influence = Math.min(r.influence, 500);
+        r.mana      = Math.min(r.mana,      500);
+    }
 
     // 1. Building production (passive buildings only)
     // No cap here — final clamp at end of tick so consumption doesn't prevent filling to cap
@@ -947,6 +977,8 @@ function getNetRates(prod) {
 function updateUI() {
     updatePauseBtn();
     updateBankDisplay();
+    updateEraTabVisibility();
+    renderEra1Tree();
     const caps     = getCaps();
     const prod     = getProduction();
     const pop      = gameState.population;
@@ -1224,7 +1256,7 @@ const ERA_LOADOUTS = {
             food: 200, wood: 200, stone: 200, ore: 200,
             herbs: 150, coal: 150, clay: 150, bones: 150, crystals: 75, sulphur: 80,
             iron: 150, potions: 75, arcaneDust: 75, steel: 100, bricks: 120, cloth: 100, runes: 60,
-            essence: 50, silk: 40, manaGold: 40, ichor: 30, mithril: 20,
+            arcaneEssence: 50, silk: 40, manaGold: 40, ichor: 30, mithril: 20,
             coins: 50000,
         },
         workerAssignments: { farm: 8, lumber: 6, quarry: 6, mine: 6 },
@@ -1250,6 +1282,13 @@ function checkUnlock(id) {
 }
 
 function shouldShowResource(res) {
+    const era = gameState.run.era || 1;
+    // Era 1: only show Era 1 resources; hide all Era 2 resources
+    if (era === 1) {
+        return res === 'essence' || res === 'influence' || res === 'mana';
+    }
+    // Era 2+: hide all Era 1 resources entirely
+    if (res === 'essence' || res === 'influence' || res === 'mana') return false;
     if (res === "food" || res === "wood" || res === "stone") return true;
     if ((gameState.resources[res] || 0) > 0) return true;
     for (const [id, def] of Object.entries(ROOMS)) {
@@ -1433,6 +1472,206 @@ function playRace(raceName) {
     updateIdentityPanel();
 }
 
+// ── Era 1 Awakening Tree ──────────────────────────────────────────────────────
+
+function canAffordEra1(nodeId) {
+    const node = ERA1_TREE[nodeId];
+    if (!node) return false;
+    const r = gameState.resources;
+    for (const [res, amt] of Object.entries(node.cost)) {
+        if ((r[res] || 0) < amt) return false;
+    }
+    return true;
+}
+
+function unlockEra1Node(nodeId) {
+    const node = ERA1_TREE[nodeId];
+    if (!node) return;
+    if (!canAffordEra1(nodeId)) {
+        const el = document.getElementById('era1-node-' + nodeId);
+        if (el) { el.classList.add('era1-flash-deny'); setTimeout(() => el.classList.remove('era1-flash-deny'), 600); }
+        return;
+    }
+    // Deduct costs
+    for (const [res, amt] of Object.entries(node.cost)) {
+        gameState.resources[res] = Math.max(0, (gameState.resources[res] || 0) - amt);
+    }
+    if (!gameState.era1) gameState.era1 = { unlocked: [], chosen: null };
+    gameState.era1.unlocked.push(nodeId);
+
+    // Era transition: L5 race node chosen
+    if (node.layer === 5 && node.race) {
+        gameState.era1.chosen = nodeId;
+        playRace(node.race);
+        gameState.run.era = 2;
+    }
+    updateUI();
+    saveGame();
+}
+
+function era1NodeUnlocked(nodeId) {
+    return gameState.era1 && (gameState.era1.unlocked || []).includes(nodeId);
+}
+
+function era1GetChosenChild(parentId) {
+    const parent = ERA1_TREE[parentId];
+    if (!parent) return null;
+    for (const childId of (parent.children || [])) {
+        if (era1NodeUnlocked(childId)) return childId;
+    }
+    return null;
+}
+
+function era1ShowPanel(nodeId) {
+    const node = ERA1_TREE[nodeId];
+    if (!node) return;
+    const panel = document.getElementById('era1-panel');
+    if (!panel) return;
+    const costEntries = Object.entries(node.cost);
+    let costHtml = '';
+    if (costEntries.length === 0) {
+        costHtml = '<span class="era1-cost-free">Free</span>';
+    } else {
+        costHtml = costEntries.map(([res, amt]) => {
+            const have = Math.floor(gameState.resources[res] || 0);
+            const ok = have >= amt;
+            return `<span class="${ok ? 'era1-cost-ok' : 'era1-cost-bad'}">${amt} ${res.charAt(0).toUpperCase() + res.slice(1)}</span>`;
+        }).join(' · ');
+    }
+    const warning = (node.layer === 5) ? '<p class="era1-warning">This choice cannot be undone.</p>' : '';
+    panel.innerHTML = `
+        <div class="era1-panel-name">${node.name}</div>
+        <div class="era1-panel-flavor">${node.flavor}</div>
+        <div class="era1-panel-cost">Cost: ${costHtml}</div>
+        ${warning}
+    `;
+}
+
+function renderEra1Tree() {
+    const container = document.getElementById('era1-tree');
+    if (!container) return;
+    if ((gameState.run.era || 1) !== 1) { container.innerHTML = ''; return; }
+
+    const era1 = gameState.era1 || { unlocked: [], chosen: null };
+    const unlocked = era1.unlocked || [];
+
+    // Build the visible node sequence: root, then each chosen child down the path,
+    // plus the current frontier (children of the deepest chosen node).
+    // At each layer, show all siblings — chosen one highlighted, unchosen ones ghosted.
+
+    let html = '';
+
+    // Helper: render one layer row
+    function renderLayer(nodeIds, chosenId) {
+        if (!nodeIds || nodeIds.length === 0) return '';
+        // Get domain of the first node for branch coloring
+        const domainId = era1GetDomain(nodeIds[0]);
+        const branchClass = (ERA1_BRANCH_CLASS && ERA1_BRANCH_CLASS[domainId]) || '';
+        let rowHtml = '<div class="era1-layer">';
+        for (const nid of nodeIds) {
+            const node = ERA1_TREE[nid];
+            if (!node) continue;
+            const isChosen = nid === chosenId;
+            const isGhosted = chosenId && !isChosen; // a sibling was chosen instead
+            const isActive  = !chosenId && !isGhosted; // no sibling chosen yet — this is the frontier
+            const affordable = isActive && canAffordEra1(nid);
+            const stateClass = isChosen  ? 'era1-node-done'
+                             : isGhosted ? 'era1-node-locked'
+                             : affordable ? 'era1-node-active'
+                             : 'era1-node-waiting';
+            rowHtml += `<div class="era1-node ${stateClass} ${branchClass}" id="era1-node-${nid}"
+                            onclick="unlockEra1Node('${nid}')"
+                            onmouseenter="era1ShowPanel('${nid}')">
+                <div class="era1-node-name">${node.name}</div>
+                ${node.type ? `<div class="era1-node-type">${node.type}</div>` : ''}
+            </div>`;
+        }
+        rowHtml += '</div>';
+        return rowHtml;
+    }
+
+    // L0: root (always shown as done)
+    const rootNode = ERA1_TREE['root'];
+    html += `<div class="era1-layer era1-layer-root">
+        <div class="era1-node era1-node-done era1-root-node" onmouseenter="era1ShowPanel('root')">
+            <div class="era1-node-name">${rootNode.name}</div>
+        </div>
+    </div>`;
+    html += '<div class="era1-connector"></div>';
+
+    // L1: Domain — show all 3 (deep/wild/beyond), one may be chosen
+    const chosenL1 = era1GetChosenChild('root');
+    html += renderLayer(ERA1_TREE['root'].children, chosenL1);
+
+    if (chosenL1) {
+        html += '<div class="era1-connector"></div>';
+        // L2: Drive — show children of chosen L1
+        const chosenL2 = era1GetChosenChild(chosenL1);
+        html += renderLayer(ERA1_TREE[chosenL1].children, chosenL2);
+
+        if (chosenL2) {
+            html += '<div class="era1-connector"></div>';
+            // L3: Form — show children of chosen L2
+            const chosenL3 = era1GetChosenChild(chosenL2);
+            html += renderLayer(ERA1_TREE[chosenL2].children, chosenL3);
+
+            if (chosenL3) {
+                html += '<div class="era1-connector"></div>';
+                // L4: Type — show children of chosen L3
+                const chosenL4 = era1GetChosenChild(chosenL3);
+                html += renderLayer(ERA1_TREE[chosenL3].children, chosenL4);
+
+                if (chosenL4) {
+                    html += '<div class="era1-connector"></div>';
+                    // L5: Race — show children of chosen L4
+                    const chosenL5 = era1GetChosenChild(chosenL4);
+                    html += renderLayer(ERA1_TREE[chosenL4].children, chosenL5);
+                }
+            }
+        }
+    }
+
+    container.innerHTML = html;
+
+    // Restore lore panel for the deepest chosen node or root
+    const deepestChosen = [era1GetChosenChild(era1GetChosenChild(era1GetChosenChild(era1GetChosenChild(era1GetChosenChild('root')))))].filter(Boolean);
+    const panelTarget = deepestChosen[0] || era1GetChosenChild('root') || 'root';
+    era1ShowPanel(panelTarget);
+}
+
+// ── Tab visibility gating (Era 1 vs Era 2) ───────────────────────────────────
+
+function updateEraTabVisibility() {
+    const era = gameState.run.era || 1;
+    const era1Tabs  = ['awakening'];
+    const era2Tabs  = ['build', 'research', 'workers'];
+    const alwaysTabs = ['info', 'settings', 'dev'];
+
+    for (const id of era1Tabs) {
+        const btn = document.querySelector(`.tab-btn[data-tab="${id}"]`);
+        if (btn) btn.style.display = era === 1 ? '' : 'none';
+    }
+    for (const id of era2Tabs) {
+        const btn = document.querySelector(`.tab-btn[data-tab="${id}"]`);
+        if (btn) btn.style.display = era === 1 ? 'none' : '';
+    }
+
+    // When entering Era 2 make sure we're not still on the awakening tab
+    if (era !== 1) {
+        const awakTab = document.getElementById('tab-awakening');
+        if (awakTab && awakTab.style.display !== 'none') {
+            switchTab('build');
+        }
+    }
+    // When in Era 1, auto-switch to awakening if currently on a hidden Era 2 tab
+    if (era === 1) {
+        const activeTab = document.querySelector('.tab-btn.active');
+        if (!activeTab || era2Tabs.includes(activeTab.dataset.tab)) {
+            switchTab('awakening');
+        }
+    }
+}
+
 // Creature roster, grouped by type. Used as the source for the Dev tab race
 // dropdown. The full bestiary now lives in the standalone wiki (wiki.html);
 // this constant keeps the Dev tools self-contained inside the game page.
@@ -1507,7 +1746,7 @@ const LEGENDARY_ROSTER = {
         },
         "Undead": {
             tag: "tag-undead",
-            effects: { foodConsumption: 0.15, growthBonus: 3.0, productionBonus: { huntingLodge: 1.15 }, capBonus: { bones: 150, essence: 50 } },
+            effects: { foodConsumption: 0.15, growthBonus: 3.0, productionBonus: { huntingLodge: 1.15 }, capBonus: { bones: 150, arcaneEssence: 50 } },
             mods: [
                 { name: "Deathless Hunger", pos: true,  desc: "Population eats only 15% of normal food — undead barely need sustenance." },
                 { name: "Bone Collectors",  pos: true,  desc: "Hunting Lodges produce 15% more. Bone (+150) and Essence (+50) caps increased." },
@@ -1726,14 +1965,14 @@ const LEGENDARY_ROSTER = {
             extraMods: [{ name: "Shriek of Dread", pos: true, desc: "+1 extra cp/creature/day — workers pay extra to escape the wailing." }],
         },
         "Wraith": {
-            desc: "Incorporeal undead who phase through walls and haunt the darkest corridors. Their shadow-touch can extract essence from bare stone.",
-            extraEffects: { gatherBonus: { stone: 1 }, capBonus: { essence: 25 } },
-            extraMods: [{ name: "Phase Walker", pos: true, desc: "+1 stone per manual gather; Essence cap +25." }],
+            desc: "Incorporeal undead who phase through walls and haunt the darkest corridors. Their shadow-touch can extract arcane essence from bare stone.",
+            extraEffects: { gatherBonus: { stone: 1 }, capBonus: { arcaneEssence: 25 } },
+            extraMods: [{ name: "Phase Walker", pos: true, desc: "+1 stone per manual gather; Arcane Essence cap +25." }],
         },
         "Mummy": {
-            desc: "Ancient undead wrapped in cursed linen. Mummies carry immense reserves of preserved essence from ages past.",
-            extraEffects: { capBonus: { essence: 50 } },
-            extraMods: [{ name: "Preserved Essence", pos: true, desc: "Essence cap +50 beyond base Undead bonus." }],
+            desc: "Ancient undead wrapped in cursed linen. Mummies carry immense reserves of preserved arcane essence from ages past.",
+            extraEffects: { capBonus: { arcaneEssence: 50 } },
+            extraMods: [{ name: "Preserved Essence", pos: true, desc: "Arcane Essence cap +50 beyond base Undead bonus." }],
         },
         "Demilich": {
             desc: "A lich reduced to its phylactery core — a floating skull of incomprehensible arcane density. The ultimate arcane amplifier.",
@@ -1973,9 +2212,9 @@ const LEGENDARY_ROSTER = {
             extraMods: [{ name: "Spiked Motivation", pos: true, desc: "Extra +10% all production — no one slacks with a barbed whip nearby." }],
         },
         "Night Hag": {
-            desc: "Dream-devouring witches who harvest essence from sleeping creatures. Their nightmare brews are invaluable to dark alchemy.",
-            extraEffects: { converterBonus: { alchemyLab: 1.15, ritualCircle: 1.15 }, capBonus: { essence: 50 } },
-            extraMods: [{ name: "Nightmare Harvest", pos: true, desc: "Alchemy Labs and Ritual Circles extra +15%; Essence cap +50." }],
+            desc: "Dream-devouring witches who harvest arcane essence from sleeping creatures. Their nightmare brews are invaluable to dark alchemy.",
+            extraEffects: { converterBonus: { alchemyLab: 1.15, ritualCircle: 1.15 }, capBonus: { arcaneEssence: 50 } },
+            extraMods: [{ name: "Nightmare Harvest", pos: true, desc: "Alchemy Labs and Ritual Circles extra +15%; Arcane Essence cap +50." }],
         },
         "Succubus/Incubus": {
             desc: "Shape-shifting seducers who manipulate through charm. Their influence makes taxation feel voluntary — and highly profitable.",
@@ -2004,8 +2243,8 @@ const LEGENDARY_ROSTER = {
         },
         "Shadow Demon": {
             desc: "Pure shadow given malevolent will. Shadow Demons feed on no food, slip through solid stone, and warp dark ritual rites to terrifying effect.",
-            extraEffects: { foodConsumption: 0.5, converterBonus: { ritualCircle: 1.15 }, capBonus: { essence: 50 } },
-            extraMods: [{ name: "Shadow Rite", pos: true, desc: "Further 50% food reduction; Ritual Circles +15%; Essence cap +50." }],
+            extraEffects: { foodConsumption: 0.5, converterBonus: { ritualCircle: 1.15 }, capBonus: { arcaneEssence: 50 } },
+            extraMods: [{ name: "Shadow Rite", pos: true, desc: "Further 50% food reduction; Ritual Circles +15%; Arcane Essence cap +50." }],
         },
 
         // ── Giant ─────────────────────────────────────────────────────────────
@@ -2127,8 +2366,8 @@ const LEGENDARY_ROSTER = {
         },
         "Kuo-toa": {
             desc: "Mad fish-folk who worship inscrutable gods. Their collective religious fervor, though bizarre, produces ritual outputs others cannot match.",
-            extraEffects: { converterBonus: { ritualCircle: 1.15 }, capBonus: { essence: 25 } },
-            extraMods: [{ name: "Frenzied Worship", pos: true, desc: "Ritual Circles extra +15%; Essence cap +25." }],
+            extraEffects: { converterBonus: { ritualCircle: 1.15 }, capBonus: { arcaneEssence: 25 } },
+            extraMods: [{ name: "Frenzied Worship", pos: true, desc: "Ritual Circles extra +15%; Arcane Essence cap +25." }],
         },
         "Triton": {
             desc: "Noble sea-folk guardians of the deep. Tritons bring military discipline and aquatic mastery to clay and stone extraction.",
@@ -2505,6 +2744,11 @@ if (!gameState.workerAssignments)            gameState.workerAssignments = {};
 if (!gameState.research)                     gameState.research = {};
 if (!gameState.run.era)                      gameState.run.era = 1;
 if (gameState.pauseBank == null || isNaN(gameState.pauseBank)) gameState.pauseBank = 0;
+if (!gameState.era1) gameState.era1 = { unlocked: [], chosen: null };
+if (!Array.isArray(gameState.era1.unlocked)) gameState.era1.unlocked = [];
+if (gameState.resources.influence == null) gameState.resources.influence = 0;
+if (gameState.resources.mana == null) gameState.resources.mana = 0;
+if (gameState.resources.arcaneEssence == null) gameState.resources.arcaneEssence = 0;
 // Assign biome on first load (fresh game or old save with no mods yet)
 if (!gameState.run || !gameState.run.mods || gameState.run.mods.length === 0) {
     if (!gameState.run) gameState.run = { biome: null, race: null, mods: [] };
