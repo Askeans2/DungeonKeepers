@@ -318,6 +318,7 @@ function doSaveNow() {
 
 function doResetSave() {
     if (!confirm("Reset all progress? This cannot be undone.")) return;
+    _pendingReset = true;
     localStorage.removeItem(SAVE_KEY);
     localStorage.removeItem('dk_splash_seen');
     location.reload();
@@ -325,6 +326,7 @@ function doResetSave() {
 
 // Dev-tab version: no confirm dialog (bypasses browser dialog suppression)
 function devResetSave() {
+    _pendingReset = true;
     localStorage.removeItem(SAVE_KEY);
     localStorage.removeItem('dk_splash_seen');
     location.reload();
@@ -2760,8 +2762,11 @@ devPopulateRaceSelect();
 initResTooltips();
 setInterval(tick, 1000);
 
-// Stamp lastSeen when the player closes or navigates away
+// Stamp lastSeen when the player closes or navigates away.
+// Skipped when a save reset is in progress so the wipe isn't undone.
+var _pendingReset = false;
 window.addEventListener('beforeunload', function () {
+    if (_pendingReset) return;
     gameState.lastSeen = Date.now();
     saveGame();
 });
