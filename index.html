@@ -17,6 +17,39 @@
 
     <div class="splash-bg-runes"></div>
 
+    <!-- Faded d20 silhouette -->
+    <div class="splash-d20" aria-hidden="true">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor">
+            <!-- Outer pentagon (pointed top) -->
+            <polygon points="100,8 188,72 154,174 46,174 13,72" stroke-width="1.4"/>
+            <!-- Inner pentagon (inverted) -->
+            <polygon points="126,64 143,114 100,145 57,114 74,64" stroke-width="1"/>
+            <!-- Spokes: each outer vertex to its two nearest inner vertices -->
+            <line x1="100" y1="8"   x2="126" y2="64"/>
+            <line x1="100" y1="8"   x2="74"  y2="64"/>
+            <line x1="188" y1="72"  x2="126" y2="64"/>
+            <line x1="188" y1="72"  x2="143" y2="114"/>
+            <line x1="154" y1="174" x2="143" y2="114"/>
+            <line x1="154" y1="174" x2="100" y2="145"/>
+            <line x1="46"  y1="174" x2="100" y2="145"/>
+            <line x1="46"  y1="174" x2="57"  y2="114"/>
+            <line x1="13"  y1="72"  x2="57"  y2="114"/>
+            <line x1="13"  y1="72"  x2="74"  y2="64"/>
+        </svg>
+    </div>
+
+    <!-- Chronicle panel (shown when button clicked) -->
+    <div id="splash-chronicle" class="splash-chronicle">
+        <div class="splash-chronicle-inner">
+            <div class="splash-chronicle-header">
+                <div class="splash-chronicle-title">The Dungeon Chronicle</div>
+                <div class="splash-chronicle-subtitle">Annals of Your Domain</div>
+            </div>
+            <div id="splash-chronicle-body" class="splash-chronicle-body"></div>
+            <button class="splash-chronicle-close" onclick="splashChronicleClose()">&#10005;&ensp;Close</button>
+        </div>
+    </div>
+
     <div class="splash-content">
 
         <div class="splash-eyebrow">A dungeon management idle game</div>
@@ -25,20 +58,22 @@
 
         <div class="splash-lore">
             <p>
-                Deep beneath the surface world, where light has never reached and silence is ancient,
-                something stirred. Not a creature. Not a god. Something older — a pocket of raw arcane
-                will woven into the bedrock itself. A <em>Dungeon Mind</em>, newly conscious and hungry
-                to become.
+                Deep beneath the Material Plane, where light has never reached and silence is eternal,
+                something stirred. Not a creature or a god, but older — a pocket of raw arcane
+                will woven into the world itself. A <em>Dungeon Mind</em>, newly conscious and hungry
+                to become something more.
             </p>
             <p>
-                You are that mind. You have no body, no voice, no name. Only stone, shadow,
-                and the faint pulse of ley-line magic bleeding through your walls. But life is drawn to
-                you. It always is. Feed the darkness long enough and something will answer — creatures
-                who resonate with your nature, who dig your halls and fill your chambers and make you
-                real.
+                You are that mind. You have no body, no voice, no name — only stone, shadow,
+                and the faint pulse of eldritch magic humming from the Underdark below. Attract creatures
+                that resonate with your nature: goblins, dragons, undead, fey, or something stranger still.
+                Build your chambers, research the arcane arts, and grow in power before adventurers find you.
             </p>
             <p>
                 Choose your inhabitants wisely. In time, what lives inside you <em>becomes</em> you.
+                Grow strong enough, and you will venture beyond your stone walls to challenge other Dungeons
+                across the planes. Evolve, conquer, or fall into obscurity — forgotten by the ages like
+                so many dungeons before you.
             </p>
         </div>
 
@@ -49,6 +84,9 @@
             <button class="splash-btn splash-btn-secondary" id="splash-continue-btn" onclick="splashContinue()" style="display:none">
                 <span class="splash-btn-icon">&#9654;</span> Continue
             </button>
+            <button class="splash-btn splash-btn-chronicle" onclick="splashChronicle()">
+                <span class="splash-btn-icon">&#9096;</span> The Chronicle
+            </button>
             <a class="splash-btn splash-btn-tertiary" href="wiki.html" target="_blank" rel="noopener">
                 <span class="splash-btn-icon">&#9413;</span> The Archive
             </a>
@@ -57,7 +95,7 @@
         <div class="splash-footer">
             <span id="splash-version"></span>
             &nbsp;&middot;&nbsp;
-            Inspired by <em>Dungeon Keeper</em>, <em>Delicious in Dungeon</em>, and <em>Evolve Idle</em>
+            Inspired by <em>Dungeons &amp; Dragons</em>, <em>Delicious in Dungeon</em>, and <em>Evolve Idle</em>
         </div>
 
     </div>
@@ -1465,6 +1503,54 @@
 
         window.splashContinue = function () {
             splashHide();
+        };
+
+        window.splashChronicle = function () {
+            var panel = document.getElementById('splash-chronicle');
+            var body  = document.getElementById('splash-chronicle-body');
+            var saveRaw;
+            try { saveRaw = localStorage.getItem('dungeonKeepersV2'); } catch(e) {}
+
+            if (!saveRaw) {
+                body.innerHTML = '<p class="chronicle-empty">No chronicles have been recorded yet.<br><em>Your story has yet to begin.</em></p>';
+            } else {
+                try {
+                    var s     = JSON.parse(saveRaw);
+                    var stats = s.stats  || {};
+                    var meta  = s.meta   || {};
+                    var time  = s.time   || {};
+                    var run   = s.run    || {};
+                    var fmt   = function (n) { return (n || 0).toLocaleString(); };
+                    var races = Object.keys(meta.racesPlayed || {});
+
+                    body.innerHTML =
+                        '<div class="chronicle-section">Meta</div>' +
+                        '<div class="chronicle-row"><span class="chronicle-label">Times Awakened</span><span class="chronicle-val">' + fmt(meta.totalPrestiges) + '</span></div>' +
+                        '<div class="chronicle-row"><span class="chronicle-label">Realms Explored</span><span class="chronicle-val">' + (meta.seenBiomes || []).length + '</span></div>' +
+                        '<div class="chronicle-row"><span class="chronicle-label">Bloodlines Known</span><span class="chronicle-val">' + (races.length ? races.join(', ') : '—') + '</span></div>' +
+                        '<div class="chronicle-section">Current Run</div>' +
+                        '<div class="chronicle-row"><span class="chronicle-label">Age of the Dungeon</span><span class="chronicle-val">Year ' + fmt(time.year) + ', Day ' + fmt(time.day) + '</span></div>' +
+                        '<div class="chronicle-row"><span class="chronicle-label">Domain Biome</span><span class="chronicle-val">' + (run.biome || '—') + '</span></div>' +
+                        '<div class="chronicle-row"><span class="chronicle-label">Dominant Race</span><span class="chronicle-val">' + (run.race  || '—') + '</span></div>' +
+                        '<div class="chronicle-section">Statistics</div>' +
+                        '<div class="chronicle-row"><span class="chronicle-label">Greatest Horde</span><span class="chronicle-val">' + fmt(stats.peakPopulation) + ' souls</span></div>' +
+                        '<div class="chronicle-row"><span class="chronicle-label">Chambers Raised</span><span class="chronicle-val">' + fmt(stats.buildingsConstructed) + '</span></div>' +
+                        '<div class="chronicle-row"><span class="chronicle-label">Forager\'s Toil</span><span class="chronicle-val">' + fmt(stats.manualGathers) + ' actions</span></div>' +
+                        '<div class="chronicle-row"><span class="chronicle-label">Fallen to Hunger</span><span class="chronicle-val">' + fmt(stats.starvationDeaths) + ' souls</span></div>' +
+                        '<div class="chronicle-section">Resources</div>' +
+                        '<div class="chronicle-row"><span class="chronicle-label">Food Gathered</span><span class="chronicle-val">' + fmt(Math.floor(stats.foodProduced  || 0)) + '</span></div>' +
+                        '<div class="chronicle-row"><span class="chronicle-label">Wood Felled</span><span class="chronicle-val">' + fmt(Math.floor(stats.woodProduced  || 0)) + '</span></div>' +
+                        '<div class="chronicle-row"><span class="chronicle-label">Stone Quarried</span><span class="chronicle-val">' + fmt(Math.floor(stats.stoneProduced || 0)) + '</span></div>';
+                } catch(e) {
+                    body.innerHTML = '<p class="chronicle-empty">The chronicles are damaged and cannot be deciphered.</p>';
+                }
+            }
+
+            panel.classList.add('splash-chronicle-open');
+        };
+
+        window.splashChronicleClose = function () {
+            document.getElementById('splash-chronicle').classList.remove('splash-chronicle-open');
         };
 
         // Show on first visit (no splash-seen flag in localStorage).

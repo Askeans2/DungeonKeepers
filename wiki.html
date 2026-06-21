@@ -73,9 +73,9 @@
                     <tr><td>Food</td><td>100</td><td>Manual: Scavenge Food · Farm (passive)</td></tr>
                     <tr><td>Wood</td><td>100</td><td>Manual: Fell a Tree · Lumber Camp (passive)</td></tr>
                     <tr><td>Stone</td><td>100</td><td>Manual: Break Stones · Quarry (passive)</td></tr>
-                    <tr><td>Ore</td><td>150</td><td>Manual: Chip Ore · Mine (passive, req. 3 Quarry)</td></tr>
-                    <tr><td>Herbs</td><td>100</td><td>Manual: Forage Herbs · Herbalist's Den (req. 3 Farm)</td></tr>
-                    <tr><td>Crystals</td><td>75</td><td>Manual: Pry Crystals · Crystal Seam (req. 3 Mine)</td></tr>
+                    <tr><td>Ore</td><td>150</td><td>Mine (passive, req. 3 Quarry)</td></tr>
+                    <tr><td>Herbs</td><td>100</td><td>Herbalist's Den (passive, req. 3 Farm)</td></tr>
+                    <tr><td>Crystals</td><td>75</td><td>Crystal Seam (passive, req. 3 Mine)</td></tr>
                     <tr><td>Coal</td><td>150</td><td>Coal Seam (req. 2 Mine)</td></tr>
                     <tr><td>Clay</td><td>120</td><td>Clay Pit (req. 2 Quarry)</td></tr>
                     <tr><td>Bones</td><td>100</td><td>Hunting Lodge (req. 3 Lair)</td></tr>
@@ -114,13 +114,12 @@
             <p class="wiki-lead">
                 Coins are a parallel currency stored in copper pieces (cp). They are displayed as gold,
                 silver, and copper (100 cp = 1 sp, 10 sp = 1 gp) and cap at 1,000 gp. Unlike material
-                resources, coins are unaffected by Storage buildings. Mid-to-late buildings require coins
-                in addition to material costs.
+                resources, coins are unaffected by Storage buildings and have no passive income until
+                <b>Taxation</b> is researched. Mid-to-late buildings require coins in addition to material costs.
             </p>
             <table class="wiki-table">
                 <thead><tr><th>Method</th><th>Amount</th><th>Availability</th></tr></thead>
                 <tbody>
-                    <tr><td>Scrounge for Coin</td><td>+15 cp per click</td><td>Always — manual action in Build tab</td></tr>
                     <tr><td>Taxation</td><td>Population × 1 cp per in-game day</td><td>After researching <b>Taxation</b></td></tr>
                 </tbody>
             </table>
@@ -136,10 +135,11 @@
 
             <h3 class="creature-category">Build</h3>
             <p class="wiki-lead">
-                The <b>Build</b> tab holds your manual gather actions and your buildings. Lairs provide
-                housing, Storage raises all material resource caps by 50 per building, and production
-                buildings create job slots that turn worker creatures into steady resource income.
-                New building types unlock automatically once their prerequisite building counts are met.
+                The <b>Build</b> tab holds three manual gather actions — <b>Scavenge Food</b>, <b>Fell a Tree</b>,
+                and <b>Break Stones</b> — plus all your buildings. Lairs provide housing, Storage raises all
+                material resource caps by 50 per building, and production buildings create job slots that
+                turn worker creatures into steady resource income. New building types unlock automatically
+                once their prerequisite building counts are met.
             </p>
 
             <h3 class="creature-category">Research</h3>
@@ -1426,6 +1426,16 @@
         <!-- CHANGELOG -->
         <section id="wiki-changelog" class="wiki-section wiki-changelog" style="display:none">
             <h2>Changelog</h2>
+
+            <div class="biome-card">
+                <div><span class="cl-ver">v0.42</span><span class="cl-date">2026-06-21</span></div>
+                <p class="biome-desc">Splash screen upgraded: added a faded d20 silhouette background, a new "The Chronicle" button that displays aggregate run statistics (prestiges, biomes explored, races known, population peaks, resources gathered), and more D&amp;D flavor in the lore text (Material Plane, Underdark, eldritch magic, adventurers).</p>
+            </div>
+
+            <div class="biome-card">
+                <div><span class="cl-ver">v0.41</span><span class="cl-date">2026-06-20</span></div>
+                <p class="biome-desc">Wiki Gameplay tab audited and corrected: removed stale references to manual gather actions that no longer exist (Chip Ore, Forage Herbs, Pry Crystals, Scrounge for Coin). Clarified that coins have no passive income until Taxation is researched. Build section now explicitly names the three gather actions that do exist.</p>
+            </div>
 
             <div class="biome-card">
                 <div><span class="cl-ver">v0.40</span><span class="cl-date">2026-06-20</span></div>
