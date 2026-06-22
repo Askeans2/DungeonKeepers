@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&display=swap');
+
 /* Evolve-inspired dark theme */
 
 :root {
@@ -2782,11 +2784,21 @@ body.reduce-motion *::after {
 
 /* ── Era 1 → Era 2 Comic Panel Transition ───────────────────────────────────── */
 
+/* ── Era transition D&D palette ─────────────────────────────────────────── */
+:root {
+    --era-gold:        #c8a028;
+    --era-gold-dim:    rgba(200,160,40,0.35);
+    --era-gold-glow:   rgba(200,160,40,0.18);
+    --era-crimson:     #c0392b;
+    --era-parchment:   rgba(220,190,130,0.82);
+    --era-ink:         rgba(10,7,4,0.92);
+}
+
 #era-transition-overlay {
     position: fixed;
     inset: 0;
     z-index: 10000;
-    background: rgba(10, 16, 16, 0.88);
+    background: rgba(6, 4, 2, 0.90);
     backdrop-filter: blur(3px);
     display: flex;
     flex-direction: column;
@@ -2817,9 +2829,12 @@ body.reduce-motion *::after {
 }
 
 .era-panel {
-    background: var(--bg-panel);
-    border: 1.5px solid var(--border);
-    border-radius: 4px;
+    background: rgba(14,10,6,0.92);
+    border: 1.5px solid rgba(140,110,50,0.35);
+    border-radius: 3px;
+    /* Aged parchment corner notches via box-shadow inset */
+    box-shadow: inset 0 0 0 1px rgba(200,160,40,0.07),
+                0 2px 12px rgba(0,0,0,0.5);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -2831,31 +2846,37 @@ body.reduce-motion *::after {
     transform: translateY(14px) scale(0.97);
     transition: opacity 0.42s cubic-bezier(0.22,0.61,0.36,1),
                 transform 0.42s cubic-bezier(0.22,0.61,0.36,1),
-                border-color 0.35s ease;
+                border-color 0.35s ease,
+                box-shadow 0.35s ease;
 }
 .era-panel.era-panel-in {
     opacity: 1;
     transform: translateY(0) scale(1);
 }
-.era-panel:hover { border-color: var(--accent); }
+.era-panel:hover {
+    border-color: var(--era-gold);
+    box-shadow: inset 0 0 0 1px rgba(200,160,40,0.1),
+                0 2px 18px rgba(200,140,20,0.18);
+}
 
-/* Straight stagger — each panel drops by a uniform step so the four
-   upper panels form a clean diagonal line, signalling read order */
+/* Straight stagger — doubled from previous (was 0/22/44/66 → now 0/44/88/132) */
 #era-panel-1 { margin-top: 0; }
-#era-panel-2 { margin-top: 22px; }
-#era-panel-3 { margin-top: 44px; }
-#era-panel-4 { margin-top: 66px; }
+#era-panel-2 { margin-top: 44px; }
+#era-panel-3 { margin-top: 88px; }
+#era-panel-4 { margin-top: 132px; }
 #era-panel-5 { margin-top: 0; }
 
 /* Panel V spans full width and is the climax */
 .era-panel-final {
     grid-column: 1 / -1;
     justify-content: center;
-    border-color: rgba(26,188,156,0.25);
-    background: var(--bg-dark);
+    border-color: rgba(200,160,40,0.3);
+    background: rgba(10,7,4,0.96);
+    box-shadow: inset 0 0 0 1px rgba(200,160,40,0.1),
+                0 2px 24px rgba(200,130,20,0.2);
 }
 .era-panel-final.era-panel-in {
-    border-color: var(--accent);
+    border-color: var(--era-gold);
 }
 
 .era-panel-canvas {
@@ -2881,63 +2902,76 @@ body.reduce-motion *::after {
 }
 
 .era-panel-lore {
-    font-size: 11px;
-    color: var(--text-muted);
+    font-family: 'Cinzel', 'Georgia', serif;
+    font-size: 10px;
+    color: rgba(220,190,130,0.75);
     text-align: center;
     margin: 6px 0 0;
+    font-style: normal;
+    line-height: 1.5;
+    letter-spacing: 0.04em;
+}
+.era-panel-lore em {
+    color: var(--era-gold);
     font-style: italic;
-    line-height: 1.4;
-    letter-spacing: 0.02em;
 }
 .era-panel-lore-race {
-    color: var(--accent);
+    color: rgba(220,190,130,0.85);
+}
+.era-panel-lore-race em {
+    color: var(--era-gold);
 }
 
 .era-panel-tagline {
-    font-size: 12px;
-    color: var(--text-muted);
+    font-family: 'Cinzel', 'Georgia', serif;
+    font-size: 11.5px;
+    color: rgba(220,190,130,0.8);
     text-align: center;
     max-width: 520px;
-    line-height: 1.6;
-    font-style: italic;
-    letter-spacing: 0.03em;
+    line-height: 1.7;
+    font-style: normal;
+    letter-spacing: 0.06em;
     margin: 8px 0 0;
 }
 
-/* Panel number badge — top-left corner, makes read order explicit */
+/* Panel number badge — top-left corner */
 .era-panel-num {
     position: absolute;
     top: 6px;
     left: 8px;
+    font-family: 'Cinzel', 'Georgia', serif;
     font-size: 9px;
-    color: var(--accent);
-    opacity: 0.5;
-    letter-spacing: 0.05em;
+    color: var(--era-gold);
+    opacity: 0.45;
+    letter-spacing: 0.08em;
     pointer-events: none;
     user-select: none;
 }
 
-/* Spark float animation on SVG dots */
+/* Flame flicker animation on SVG torch flames */
 @keyframes eraSpark {
-    0%, 100% { opacity: 0.35; transform: translateY(0); }
-    50%       { opacity: 0.9;  transform: translateY(-4px); }
+    0%, 100% { opacity: 0.55; transform: translateY(0) scaleX(1); }
+    33%       { opacity: 0.9;  transform: translateY(-3px) scaleX(0.85); }
+    66%       { opacity: 0.7;  transform: translateY(-2px) scaleX(1.1); }
 }
 .era-spark {
-    animation: eraSpark 2.2s ease-in-out infinite;
+    animation: eraSpark 1.6s ease-in-out infinite;
+    transform-origin: center bottom;
 }
-.era-spark:nth-child(2) { animation-delay: 0.55s; }
-.era-spark:nth-child(3) { animation-delay: 1.1s; }
-.era-spark:nth-child(4) { animation-delay: 1.65s; }
+.era-spark:nth-child(2) { animation-delay: 0.4s; animation-duration: 1.9s; }
+.era-spark:nth-child(3) { animation-delay: 0.8s; animation-duration: 1.4s; }
+.era-spark:nth-child(4) { animation-delay: 1.2s; animation-duration: 2.0s; }
 
 #era-transition-continue {
     margin-top: 18px;
     padding: 8px 24px 8px 16px;
     background: transparent;
-    border: 1px solid rgba(26,188,156,0.35);
-    border-radius: 3px;
-    color: var(--text-muted);
-    font-size: 13px;
-    letter-spacing: 0.12em;
+    border: 1px solid rgba(200,160,40,0.35);
+    border-radius: 2px;
+    color: rgba(220,190,130,0.65);
+    font-family: 'Cinzel', 'Georgia', serif;
+    font-size: 12px;
+    letter-spacing: 0.18em;
     cursor: pointer;
     opacity: 0;
     display: flex;
@@ -2951,10 +2985,10 @@ body.reduce-motion *::after {
 }
 #era-transition-continue:hover,
 #era-transition-continue.era-btn-pulse {
-    background: rgba(26,188,156,0.08);
-    border-color: var(--accent);
-    color: var(--accent);
-    box-shadow: 0 0 10px rgba(26,188,156,0.25);
+    background: rgba(200,160,40,0.07);
+    border-color: var(--era-gold);
+    color: var(--era-gold);
+    box-shadow: 0 0 12px rgba(200,140,20,0.3);
 }
 #era-timer-ring {
     width: 22px;
@@ -2964,8 +2998,8 @@ body.reduce-motion *::after {
     transition: opacity 0.8s ease;
 }
 @keyframes eraTimerGlow {
-    0%, 100% { filter: drop-shadow(0 0 2px rgba(26,188,156,0.4)); }
-    50%       { filter: drop-shadow(0 0 6px rgba(26,188,156,0.8)); }
+    0%, 100% { filter: drop-shadow(0 0 2px rgba(200,160,40,0.4)); }
+    50%       { filter: drop-shadow(0 0 6px rgba(200,160,40,0.8)); }
 }
 #era-transition-continue.era-btn-in #era-timer-ring {
     animation: eraTimerGlow 1.5s ease-in-out infinite;
