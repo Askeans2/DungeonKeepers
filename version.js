@@ -10,4 +10,4 @@
 // reload any file that changed in the new release instead of serving a stale
 // cached copy.
 // ─────────────────────────────────────────────────────────────────────────────
-window.GAME_VERSION = "0.47.0";
+window.GAME_VERSION = "0.48.0";

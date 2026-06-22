@@ -2786,7 +2786,8 @@ body.reduce-motion *::after {
     position: fixed;
     inset: 0;
     z-index: 10000;
-    background: #080f0a;
+    background: rgba(10, 16, 16, 0.88);
+    backdrop-filter: blur(3px);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -2804,21 +2805,21 @@ body.reduce-motion *::after {
     pointer-events: none;
 }
 
+/* 2-column grid; panels stagger downward to signal read order */
 #era-comic-panels {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    gap: 6px;
-    padding: 16px;
-    width: min(780px, 94vw);
-    height: min(600px, 80vh);
+    gap: 10px 8px;
+    padding: 12px;
+    width: min(740px, 92vw);
     box-sizing: border-box;
+    align-items: start;
 }
 
 .era-panel {
-    background: #0d1a12;
-    border: 2px solid #2a4a32;
-    border-radius: 3px;
+    background: var(--bg-panel);
+    border: 1.5px solid var(--border);
+    border-radius: 4px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -2827,41 +2828,45 @@ body.reduce-motion *::after {
     position: relative;
     overflow: hidden;
     opacity: 0;
-    transform: translateY(18px) scale(0.97);
-    transition: opacity 0.45s cubic-bezier(0.22,0.61,0.36,1),
-                transform 0.45s cubic-bezier(0.22,0.61,0.36,1),
-                border-color 0.4s ease;
+    transform: translateY(14px) scale(0.97);
+    transition: opacity 0.42s cubic-bezier(0.22,0.61,0.36,1),
+                transform 0.42s cubic-bezier(0.22,0.61,0.36,1),
+                border-color 0.35s ease;
 }
 .era-panel.era-panel-in {
     opacity: 1;
     transform: translateY(0) scale(1);
 }
-.era-panel:hover {
-    border-color: #4a8a60;
-}
+.era-panel:hover { border-color: var(--accent); }
 
-/* Panel 4 spans full bottom row */
+/* Staggered vertical offset — each panel sits lower than the previous,
+   making the read order (1 → 2 → 3 → 4) visually obvious */
+#era-panel-1 { margin-top: 0; }
+#era-panel-2 { margin-top: 24px; }
+#era-panel-3 { margin-top: 48px; }
+#era-panel-4 { margin-top: 72px; }
+
+/* Panel 4 spans full width and is the climax */
 .era-panel-final {
     grid-column: 1 / -1;
     justify-content: center;
-    border-color: #3a6a4a;
-    background: #0a1610;
+    border-color: rgba(26,188,156,0.25);
+    background: var(--bg-dark);
 }
 .era-panel-final.era-panel-in {
-    border-color: #6dbe8a;
+    border-color: var(--accent);
 }
 
 .era-panel-svg {
     flex: 1;
     width: 100%;
-    max-height: 130px;
+    max-height: 120px;
     overflow: visible;
 }
 
 .era-panel-lore {
-    font-family: 'Lato', sans-serif;
     font-size: 11px;
-    color: #7aaa8a;
+    color: var(--text-muted);
     text-align: center;
     margin: 6px 0 0;
     font-style: italic;
@@ -2869,14 +2874,13 @@ body.reduce-motion *::after {
     letter-spacing: 0.02em;
 }
 .era-panel-lore-race {
-    color: #9ddbb0;
+    color: var(--accent);
 }
 
 .era-panel-title {
-    font-family: 'Lato', sans-serif;
     font-size: 26px;
     font-weight: bold;
-    color: #9ddbb0;
+    color: var(--accent);
     letter-spacing: 0.28em;
     margin: 6px 0 0;
     text-transform: uppercase;
@@ -2885,9 +2889,8 @@ body.reduce-motion *::after {
     transition: opacity 0.5s ease 0.1s, transform 0.5s cubic-bezier(0.22,0.61,0.36,1) 0.1s;
 }
 .era-panel-subtitle {
-    font-family: 'Lato', sans-serif;
     font-size: 12px;
-    color: #4a8a60;
+    color: var(--text-muted);
     letter-spacing: 0.55em;
     margin: 2px 0 0;
     text-transform: uppercase;
@@ -2902,28 +2905,23 @@ body.reduce-motion *::after {
     opacity: 1;
 }
 
-/* Ink-bleed corner accent on each panel */
-.era-panel::before {
-    content: '';
+/* Panel number badge — top-left corner, makes read order explicit */
+.era-panel-num {
     position: absolute;
-    top: 0; left: 0;
-    width: 18px; height: 18px;
-    background: radial-gradient(circle at top left, #1a3a22 0%, transparent 80%);
+    top: 6px;
+    left: 8px;
+    font-size: 9px;
+    color: var(--accent);
+    opacity: 0.5;
+    letter-spacing: 0.05em;
     pointer-events: none;
-}
-.era-panel::after {
-    content: '';
-    position: absolute;
-    bottom: 0; right: 0;
-    width: 18px; height: 18px;
-    background: radial-gradient(circle at bottom right, #1a3a22 0%, transparent 80%);
-    pointer-events: none;
+    user-select: none;
 }
 
 /* Spark float animation on SVG dots */
 @keyframes eraSpark {
-    0%, 100% { opacity: 0.4; transform: translateY(0); }
-    50%       { opacity: 1;   transform: translateY(-4px); }
+    0%, 100% { opacity: 0.35; transform: translateY(0); }
+    50%       { opacity: 0.9;  transform: translateY(-4px); }
 }
 .era-spark {
     animation: eraSpark 2.2s ease-in-out infinite;
@@ -2933,13 +2931,12 @@ body.reduce-motion *::after {
 .era-spark:nth-child(4) { animation-delay: 1.65s; }
 
 #era-transition-continue {
-    margin-top: 14px;
+    margin-top: 18px;
     padding: 9px 32px;
     background: transparent;
-    border: 1px solid #4a8a60;
+    border: 1px solid rgba(26,188,156,0.4);
     border-radius: 3px;
-    color: #7aaa8a;
-    font-family: 'Lato', sans-serif;
+    color: var(--text-muted);
     font-size: 13px;
     letter-spacing: 0.12em;
     cursor: pointer;
@@ -2950,7 +2947,7 @@ body.reduce-motion *::after {
     opacity: 1;
 }
 #era-transition-continue:hover {
-    background: rgba(74,138,96,0.14);
-    border-color: #6dbe8a;
-    color: #9ddbb0;
+    background: rgba(26,188,156,0.1);
+    border-color: var(--accent);
+    color: var(--accent);
 }
