@@ -1587,6 +1587,17 @@ function devAddResource(res, amount) {
     saveGame();
 }
 
+function devFillPercent(pct) {
+    const caps = getCaps();
+    const allRes = [...Object.keys(BASE_CAPS), 'coins'];
+    for (const res of allRes) {
+        const cap = caps[res] ?? 0;
+        gameState.resources[res] = Math.min((gameState.resources[res] || 0) + Math.floor(cap * pct), cap);
+    }
+    updateUI();
+    saveGame();
+}
+
 function devFillAllCaps() {
     const caps = getCaps();
     for (const res of Object.keys(BASE_CAPS)) gameState.resources[res] = caps[res];

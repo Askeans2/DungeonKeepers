@@ -1536,9 +1536,9 @@
             <div class="dev-section">
                 <h3>Resources</h3>
                 <div class="dev-grid">
-                    <button class="dev-btn" onclick="devAddResource('food', 100)">+100 Food</button>
-                    <button class="dev-btn" onclick="devAddResource('wood', 100)">+100 Wood</button>
-                    <button class="dev-btn" onclick="devAddResource('stone', 100)">+100 Stone</button>
+                    <button class="dev-btn" onclick="devFillPercent(0.10)">+10% All</button>
+                    <button class="dev-btn" onclick="devFillPercent(0.25)">+25% All</button>
+                    <button class="dev-btn" onclick="devFillPercent(0.50)">+50% All</button>
                     <button class="dev-btn" onclick="devFillAllCaps()">Fill All Caps</button>
                 </div>
             </div>
@@ -1547,6 +1547,7 @@
                 <h3>Population</h3>
                 <div class="dev-grid">
                     <button class="dev-btn" onclick="devAddCreature(1)">+1 Creature</button>
+                    <button class="dev-btn" onclick="devAddCreature(10)">+10 Creatures</button>
                     <button class="dev-btn" onclick="devFillPopulation()">Fill Population</button>
                     <button class="dev-btn danger" onclick="devAddCreature(-10)">Kill 10</button>
                     <button class="dev-btn danger" onclick="devKillAll()">Kill All</button>
