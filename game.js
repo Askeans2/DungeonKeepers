@@ -1927,13 +1927,16 @@ function unlockEra1Node(nodeId) {
 let _eraTransitionCallback = null;
 let _eraTimerRAF = null;
 let _eraTimerTimeout = null;
+let _eraMouseMoveHandler = null;
+let _eraCanvasRAF = null;
 
 function showEraTransition(raceName, onComplete) {
     _eraTransitionCallback = onComplete;
 
-    // Inject race name into panel III lore
+    // Inject pluralised race name into panel III lore
+    const racePlural = raceName.endsWith('s') ? raceName : raceName + 's';
     const loreRace = document.querySelector('.era-panel-lore-race');
-    if (loreRace) loreRace.innerHTML = '<em>' + raceName + '</em> stepped forward from the dark, eyes open, hunger awake.';
+    if (loreRace) loreRace.innerHTML = '<em>' + racePlural + '</em> stepped forward from the dark, eyes open, hunger awake.';
 
     const overlay = document.getElementById('era-transition-overlay');
     const panels  = document.querySelectorAll('.era-panel');
@@ -1957,24 +1960,318 @@ function showEraTransition(raceName, onComplete) {
         setTimeout(() => p.classList.add('era-panel-in'), delays[i]);
     });
 
-    // Show button then start 10s countdown
-    const BTN_DELAY    = 1760;
-    const COUNTDOWN_MS = 10000;
-    const CIRCUMFERENCE = 94.2; // 2π × r=15
+    // ── Per-panel canvas particle animations, staggered 3s apart ──────────────
+    // Each canvas is sized to its panel and activated after its stagger delay.
+    // One shared RAF loop drives all active canvases.
+    const TEAL = 'rgba(26,188,156,';
+    const canvasStaggerMs = 3000;
+
+    function initEraCanvases() {
+        if (_eraCanvasRAF) { cancelAnimationFrame(_eraCanvasRAF); _eraCanvasRAF = null; }
+        const panelEls = [
+            document.getElementById('era-panel-1'),
+            document.getElementById('era-panel-2'),
+            document.getElementById('era-panel-3'),
+            document.getElementById('era-panel-4'),
+            document.getElementById('era-panel-5'),
+        ];
+        const canvases = panelEls.map((p, i) => {
+            const c = document.getElementById('era-canvas-' + (i + 1));
+            if (!c || !p) return null;
+            c.width  = p.offsetWidth  || 300;
+            c.height = p.offsetHeight || 220;
+            return { el: c, ctx: c.getContext('2d'), w: c.width, h: c.height, active: false, t: 0 };
+        });
+
+        // Particle pools per panel
+        // Panel 1 — rising embers from rune core at ~(cx=110/220*w, cy=128/160*h)
+        const p1 = [];
+        function spawnEmber(cv) {
+            const ox = cv.w * (110/220), oy = cv.h * (128/160);
+            p1.push({ x: ox + (Math.random()-0.5)*14, y: oy, vx: (Math.random()-0.5)*0.4,
+                      vy: -(0.5 + Math.random()*1.2), life: 1, size: 0.8 + Math.random()*1.4 });
+        }
+
+        // Panel 2 — crack burst motes from gate seam (cx=110/220*w, along y)
+        const p2 = [];
+        function spawnCrackMote(cv) {
+            const ox = cv.w * (110/220), oy = cv.h * (0.3 + Math.random()*0.55);
+            const angle = (Math.random()-0.5) * Math.PI * 0.5;
+            const spd = 0.3 + Math.random() * 0.8;
+            p2.push({ x: ox, y: oy, vx: Math.cos(angle)*spd * (Math.random()<0.5?-1:1),
+                      vy: Math.sin(angle)*spd - 0.2, life: 1, size: 0.7 + Math.random() });
+        }
+
+        // Panel 3 — orbiting sparks around creature + drifting motes
+        const p3 = [];
+        let p3angle = 0;
+        function spawnOrbitMote(cv) {
+            p3.push({ x: cv.w/2, y: cv.h*0.55, orbitR: 28 + Math.random()*22,
+                      orbitSpeed: 0.012 + Math.random()*0.01,
+                      orbitAngle: Math.random()*Math.PI*2, life: 1,
+                      size: 1 + Math.random()*1.2, drift: (Math.random()-0.5)*0.3 });
+        }
+
+        // Panel 4 — corridor travellers from center outward
+        const DIRS4 = [[0,-1],[0,1],[-1,0],[1,0],[-0.7,-0.7],[0.7,-0.7],[-0.7,0.7],[0.7,0.7]];
+        const p4 = [];
+        function spawnTraveller(cv) {
+            const dir = DIRS4[Math.floor(Math.random()*DIRS4.length)];
+            const spd = 0.6 + Math.random()*0.5;
+            p4.push({ x: cv.w/2, y: cv.h*0.54, vx: dir[0]*spd, vy: dir[1]*spd,
+                      life: 1, size: 1.5 + Math.random(), trail: [] });
+        }
+
+        // Panel 5 — radial pulse waves + scattered motes
+        const p5waves = [];
+        const p5motes = [];
+        function spawnWave(cv) {
+            p5waves.push({ r: 5, maxR: Math.min(cv.w, cv.h)*0.48, life: 1 });
+        }
+        function spawnFinalMote(cv) {
+            const angle = Math.random()*Math.PI*2, dist = 20 + Math.random()*cv.w*0.36;
+            p5motes.push({ x: cv.w/2 + Math.cos(angle)*dist, y: cv.h/2 + Math.sin(angle)*dist,
+                           vx: (Math.random()-0.5)*0.25, vy: (Math.random()-0.5)*0.25,
+                           life: 1, size: 0.8 + Math.random() });
+        }
+
+        let lastT = performance.now();
+        let spawnTick = 0;
+
+        // Activate canvases with 3s stagger
+        canvases.forEach((cv, i) => {
+            if (!cv) return;
+            setTimeout(() => {
+                cv.active = true;
+                cv.el.classList.add('era-canvas-active');
+                // Pre-seed some particles so panel isn't empty on appear
+                if (i === 0) for (let k=0; k<8;  k++) spawnEmber(cv);
+                if (i === 1) for (let k=0; k<6;  k++) spawnCrackMote(cv);
+                if (i === 2) for (let k=0; k<5;  k++) spawnOrbitMote(cv);
+                if (i === 3) for (let k=0; k<4;  k++) spawnTraveller(cv);
+                if (i === 4) { spawnWave(cv); for (let k=0; k<8; k++) spawnFinalMote(cv); }
+            }, i * canvasStaggerMs);
+        });
+
+        function loopEraCanvas(now) {
+            _eraCanvasRAF = requestAnimationFrame(loopEraCanvas);
+            const dt = Math.min(now - lastT, 50); // cap at 50ms to avoid jumps
+            lastT = now;
+            spawnTick += dt;
+
+            canvases.forEach((cv, idx) => {
+                if (!cv || !cv.active) return;
+                cv.t += dt;
+                const ctx = cv.ctx;
+                ctx.clearRect(0, 0, cv.w, cv.h);
+
+                // ── Panel 1: rising embers ──────────────────────────────────
+                if (idx === 0) {
+                    if (spawnTick > 80 && p1.length < 28) { spawnEmber(cv); }
+                    for (let i = p1.length-1; i >= 0; i--) {
+                        const e = p1[i];
+                        e.x  += e.vx; e.y += e.vy; e.vx += (Math.random()-0.5)*0.06;
+                        e.life -= 0.008;
+                        if (e.life <= 0 || e.y < -4) { p1.splice(i,1); continue; }
+                        const a = e.life * 0.75;
+                        ctx.beginPath();
+                        ctx.arc(e.x, e.y, e.size, 0, Math.PI*2);
+                        ctx.fillStyle = TEAL + a + ')';
+                        ctx.shadowBlur = 6; ctx.shadowColor = '#1abc9c';
+                        ctx.fill();
+                        ctx.shadowBlur = 0;
+                    }
+                    // Pulse glow on the rune core
+                    const pulse = 0.12 + 0.08 * Math.sin(cv.t * 0.003);
+                    const gx = cv.w*(110/220), gy = cv.h*(128/160);
+                    const grad = ctx.createRadialGradient(gx, gy, 0, gx, gy, 30);
+                    grad.addColorStop(0, TEAL + pulse + ')');
+                    grad.addColorStop(1, TEAL + '0)');
+                    ctx.beginPath(); ctx.arc(gx, gy, 30, 0, Math.PI*2);
+                    ctx.fillStyle = grad; ctx.fill();
+                }
+
+                // ── Panel 2: crack light motes ──────────────────────────────
+                if (idx === 1) {
+                    if (spawnTick > 120 && p2.length < 20) spawnCrackMote(cv);
+                    // Animated light bloom on the seam
+                    const seam = 0.05 + 0.04 * Math.sin(cv.t * 0.0025);
+                    const sx = cv.w*(110/220);
+                    const lg = ctx.createLinearGradient(sx-18, 0, sx+18, 0);
+                    lg.addColorStop(0, TEAL+'0)');
+                    lg.addColorStop(0.5, TEAL+seam+')');
+                    lg.addColorStop(1, TEAL+'0)');
+                    ctx.fillStyle = lg;
+                    ctx.fillRect(sx-18, cv.h*0.27, 36, cv.h*0.6);
+                    for (let i = p2.length-1; i >= 0; i--) {
+                        const m = p2[i];
+                        m.x += m.vx; m.y += m.vy; m.vy -= 0.01;
+                        m.life -= 0.014;
+                        if (m.life <= 0) { p2.splice(i,1); continue; }
+                        ctx.beginPath(); ctx.arc(m.x, m.y, m.size, 0, Math.PI*2);
+                        ctx.fillStyle = TEAL + (m.life*0.8) + ')';
+                        ctx.shadowBlur = 4; ctx.shadowColor = '#1abc9c';
+                        ctx.fill(); ctx.shadowBlur = 0;
+                    }
+                    // Pulse the seal rings
+                    [32, 22].forEach((r, ri) => {
+                        const rScale = cv.w / 220;
+                        const a = 0.12 + 0.10 * Math.sin(cv.t*0.002 + ri*1.2);
+                        ctx.beginPath();
+                        ctx.arc(cv.w/2, cv.h*(80/160), r*rScale, 0, Math.PI*2);
+                        ctx.strokeStyle = TEAL+a+')'; ctx.lineWidth = 1;
+                        ctx.setLineDash([3,6]); ctx.stroke(); ctx.setLineDash([]);
+                    });
+                }
+
+                // ── Panel 3: orbiting eye sparks ────────────────────────────
+                if (idx === 2) {
+                    if (spawnTick > 200 && p3.length < 10) spawnOrbitMote(cv);
+                    p3angle += 0.008;
+                    for (let i = p3.length-1; i >= 0; i--) {
+                        const o = p3[i];
+                        o.orbitAngle += o.orbitSpeed;
+                        o.x = cv.w/2 + Math.cos(o.orbitAngle) * o.orbitR + o.drift;
+                        o.y = cv.h*0.62 + Math.sin(o.orbitAngle) * o.orbitR * 0.35;
+                        o.life -= 0.003;
+                        if (o.life <= 0) { p3.splice(i,1); continue; }
+                        ctx.beginPath(); ctx.arc(o.x, o.y, o.size, 0, Math.PI*2);
+                        ctx.fillStyle = TEAL + (o.life*0.6) + ')';
+                        ctx.shadowBlur = 8; ctx.shadowColor = '#1abc9c';
+                        ctx.fill(); ctx.shadowBlur = 0;
+                    }
+                    // Eye glow pulse
+                    const eyePulse = 0.18 + 0.14 * Math.sin(cv.t * 0.004);
+                    const rScale = cv.w/220;
+                    [[104,56],[116,56]].forEach(([ex,ey]) => {
+                        const px = ex*rScale, py = ey*(cv.h/160);
+                        const eg = ctx.createRadialGradient(px,py,0,px,py,12*rScale);
+                        eg.addColorStop(0, TEAL+eyePulse+')');
+                        eg.addColorStop(1, TEAL+'0)');
+                        ctx.beginPath(); ctx.arc(px, py, 12*rScale, 0, Math.PI*2);
+                        ctx.fillStyle = eg; ctx.fill();
+                    });
+                }
+
+                // ── Panel 4: corridor travellers ────────────────────────────
+                if (idx === 3) {
+                    if (spawnTick > 300 && p4.length < 16) spawnTraveller(cv);
+                    for (let i = p4.length-1; i >= 0; i--) {
+                        const t4 = p4[i];
+                        t4.trail.push({x: t4.x, y: t4.y});
+                        if (t4.trail.length > 8) t4.trail.shift();
+                        t4.x += t4.vx; t4.y += t4.vy;
+                        t4.life -= 0.008;
+                        const oob = t4.x < -4 || t4.x > cv.w+4 || t4.y < -4 || t4.y > cv.h+4;
+                        if (t4.life <= 0 || oob) { p4.splice(i,1); continue; }
+                        // Draw trail
+                        t4.trail.forEach((pt, ti) => {
+                            const ta = (ti/t4.trail.length) * t4.life * 0.5;
+                            ctx.beginPath(); ctx.arc(pt.x, pt.y, t4.size*0.6, 0, Math.PI*2);
+                            ctx.fillStyle = TEAL+ta+')'; ctx.fill();
+                        });
+                        ctx.beginPath(); ctx.arc(t4.x, t4.y, t4.size, 0, Math.PI*2);
+                        ctx.fillStyle = TEAL+(t4.life*0.9)+')';
+                        ctx.shadowBlur = 6; ctx.shadowColor = '#1abc9c';
+                        ctx.fill(); ctx.shadowBlur = 0;
+                    }
+                    // Chamber center glow pulse
+                    const cp = 0.08 + 0.06 * Math.sin(cv.t*0.003);
+                    const cg = ctx.createRadialGradient(cv.w/2, cv.h*0.54, 0, cv.w/2, cv.h*0.54, 28);
+                    cg.addColorStop(0, TEAL+cp+')'); cg.addColorStop(1, TEAL+'0)');
+                    ctx.beginPath(); ctx.arc(cv.w/2, cv.h*0.54, 28, 0, Math.PI*2);
+                    ctx.fillStyle = cg; ctx.fill();
+                }
+
+                // ── Panel 5: pulse waves + scattered motes ──────────────────
+                if (idx === 4) {
+                    if (spawnTick > 1800 && p5waves.length < 3) spawnWave(cv);
+                    if (spawnTick > 400  && p5motes.length < 20) spawnFinalMote(cv);
+                    // Waves
+                    for (let i = p5waves.length-1; i >= 0; i--) {
+                        const w = p5waves[i];
+                        w.r += (w.maxR - w.r) * 0.012 + 0.4;
+                        w.life -= 0.004;
+                        if (w.life <= 0) { p5waves.splice(i,1); continue; }
+                        ctx.beginPath(); ctx.arc(cv.w/2, cv.h/2, w.r, 0, Math.PI*2);
+                        ctx.strokeStyle = TEAL+(w.life*0.22)+')';
+                        ctx.lineWidth = 1.5; ctx.stroke();
+                    }
+                    // Motes
+                    for (let i = p5motes.length-1; i >= 0; i--) {
+                        const m = p5motes[i];
+                        m.x += m.vx; m.y += m.vy; m.life -= 0.004;
+                        if (m.life <= 0) { p5motes.splice(i,1); continue; }
+                        ctx.beginPath(); ctx.arc(m.x, m.y, m.size, 0, Math.PI*2);
+                        ctx.fillStyle = TEAL+(m.life*0.55)+')';
+                        ctx.shadowBlur = 5; ctx.shadowColor = '#1abc9c';
+                        ctx.fill(); ctx.shadowBlur = 0;
+                    }
+                    // Jewel core pulse
+                    const jp = 0.2 + 0.15 * Math.sin(cv.t * 0.003);
+                    const jg = ctx.createRadialGradient(cv.w/2, cv.h/2, 0, cv.w/2, cv.h/2, 22);
+                    jg.addColorStop(0, TEAL+jp+')'); jg.addColorStop(1, TEAL+'0)');
+                    ctx.beginPath(); ctx.arc(cv.w/2, cv.h/2, 22, 0, Math.PI*2);
+                    ctx.fillStyle = jg; ctx.fill();
+                    // Slow rotating outer ring highlight
+                    const rot = cv.t * 0.0004;
+                    const rx = cv.w/2, ry = cv.h/2, rr = cv.w * 0.26;
+                    ctx.beginPath();
+                    ctx.arc(rx + Math.cos(rot)*2, ry + Math.sin(rot)*2, rr, rot, rot + Math.PI*0.3);
+                    ctx.strokeStyle = TEAL+'0.18)'; ctx.lineWidth = 2; ctx.stroke();
+                }
+            });
+
+            // Reset spawn tick every 1s so spawn rates are consistent
+            if (spawnTick > 1000) spawnTick = spawnTick % 1000;
+        }
+        _eraCanvasRAF = requestAnimationFrame(loopEraCanvas);
+    }
+
+    // Kick off canvases after overlay is visible
+    setTimeout(initEraCanvases, 200);
+
+    // Show button then start 15s idle countdown
+    const BTN_DELAY     = 1760;
+    const COUNTDOWN_MS  = 15000;
+    const IDLE_GRACE_MS = 1500;  // ms of no movement before timer resumes
+    const CIRCUMFERENCE = 94.2;  // 2π × r=15
 
     setTimeout(() => {
         btn.classList.add('era-btn-in');
 
-        // Animate the arc draining from full to empty over 10s
-        const start = performance.now();
+        let accumulated = 0;   // ms of idle time counted so far
+        let lastNow     = performance.now();
+        let lastMove    = performance.now(); // treat start as a mouse-move so ring fades in first
+        let ringVisible = false;
+
+        _eraMouseMoveHandler = function() { lastMove = performance.now(); };
+        overlay.addEventListener('mousemove', _eraMouseMoveHandler);
+
         function tick(now) {
-            const elapsed = now - start;
-            const progress = Math.min(elapsed / COUNTDOWN_MS, 1);
+            const delta    = now - lastNow;
+            lastNow        = now;
+            const idle     = (now - lastMove) > IDLE_GRACE_MS;
+
+            // Fade ring in/out based on idle state
+            if (idle && !ringVisible) {
+                ringVisible = true;
+                if (arc) arc.parentElement.style.opacity = '1';
+            } else if (!idle && ringVisible) {
+                ringVisible = false;
+                if (arc) arc.parentElement.style.opacity = '0';
+            }
+
+            // Only count down while idle
+            if (idle) accumulated += delta;
+
+            const progress = Math.min(accumulated / COUNTDOWN_MS, 1);
             if (arc) arc.style.strokeDashoffset = String(CIRCUMFERENCE * progress);
+
             if (progress < 1) {
                 _eraTimerRAF = requestAnimationFrame(tick);
             } else {
-                // Pulse the button just before firing
+                overlay.removeEventListener('mousemove', _eraMouseMoveHandler);
                 btn.classList.add('era-btn-pulse');
                 _eraTimerTimeout = setTimeout(() => eraTransitionContinue(), 400);
             }
@@ -1984,9 +2281,15 @@ function showEraTransition(raceName, onComplete) {
 }
 
 function eraTransitionContinue() {
-    // Cancel any running timer
+    // Cancel any running timer, canvas loop, and listener
     if (_eraTimerRAF)     { cancelAnimationFrame(_eraTimerRAF); _eraTimerRAF = null; }
     if (_eraTimerTimeout) { clearTimeout(_eraTimerTimeout); _eraTimerTimeout = null; }
+    if (_eraCanvasRAF) { cancelAnimationFrame(_eraCanvasRAF); _eraCanvasRAF = null; }
+    if (_eraMouseMoveHandler) {
+        const overlay = document.getElementById('era-transition-overlay');
+        if (overlay) overlay.removeEventListener('mousemove', _eraMouseMoveHandler);
+        _eraMouseMoveHandler = null;
+    }
 
     const overlay = document.getElementById('era-transition-overlay');
     overlay.classList.add('era-hiding');
