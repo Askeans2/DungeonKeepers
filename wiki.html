@@ -1516,6 +1516,11 @@
             <h2>Changelog</h2>
 
             <div class="biome-card">
+                <div><span class="cl-ver">v0.46.1</span><span class="cl-date">2026-06-22</span></div>
+                <p class="biome-desc">Fixed overlapping nodes in the wiki Race Lineage Tree. Creature grids now use tighter column spacing, a larger gap from the type node, and a higher threshold before switching to 3-column layout, preventing clusters from bleeding into adjacent type regions.</p>
+            </div>
+
+            <div class="biome-card">
                 <div><span class="cl-ver">v0.46.0</span><span class="cl-date">2026-06-22</span></div>
                 <p class="biome-desc">Era 1 race selection now draws 2 random choices from the full creature roster for the chosen type, instead of always presenting the same hardcoded 2. All non-legendary races are now reachable. The random picks are stored in the save so they remain stable across reloads.</p>
             </div>
@@ -2125,7 +2130,7 @@ function showWiki(id) {
 
     var NS = 'http://www.w3.org/2000/svg';
     var CX = 1100, CY = 1100;
-    var R1 = 220, R2 = 560, R3 = 960;
+    var R1 = 220, R2 = 600, R3 = 960;
 
     var RACE_PATHS = [
         { name: 'Primal',    color: '#58b878', angle: 0,   types: ['Monstrous','Lycanthrope','Flora','Aquatic'] },
@@ -2572,10 +2577,10 @@ function showWiki(id) {
                    Creatures are placed in a 2- or 3-column grid extending radially
                    outward from the type node, avoiding arc-based overlap entirely. */
                 var CNW = 88, CNH = 20;
-                var COLS = creatures.length > 8 ? 3 : 2;
-                var CROW = CNH + 10;   // row spacing (radial direction)
-                var CCOL = CNW + 14;   // col spacing (perpendicular direction)
-                var CSTART = TH / 2 + CNH / 2 + 18; // gap from type node center to first row center
+                var COLS = creatures.length > 10 ? 3 : 2;
+                var CROW = CNH + 12;   // row spacing (radial direction)
+                var CCOL = CNW + 6;    // col spacing (perpendicular direction)
+                var CSTART = TH / 2 + CNH / 2 + 28; // gap from type node center to first row center
 
                 /* Radial unit vector from SVG center toward this type node */
                 var rad_ang = (typeAngle - 90) * Math.PI / 180;
