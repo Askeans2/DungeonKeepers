@@ -19,5 +19,17 @@ Entry format:
 
 Also update the Research section of `wiki.html` (`wiki-gameplay` → Research paragraph) if research systems change significantly.
 
-### Version bumping
-Version lives in `version.js` as `window.GAME_VERSION`. Bump it on any session that ships visible player-facing changes. Minor bug fixes within a session can share a version. The bump goes in `version.js` only — asset cache-busting is automatic.
+### Version bumping (mandatory on every commit)
+Version lives in `version.js` as `window.GAME_VERSION`. **Every commit must include a version bump.** No exceptions.
+
+Use a three-segment format: `MAJOR.MINOR.PATCH` (e.g. `0.55.1`). When the current version only has two segments (e.g. `0.55`), treat it as `0.55.0` before incrementing.
+
+| Change type | Increment | Examples |
+|---|---|---|
+| New feature, new content, new system | `+0.01.0` (minor) | new wiki page, new creature, new mechanic |
+| Bug fix, style change, copy edit, refactor | `+0.00.1` (patch) | tooltip fix, CSS tweak, text correction |
+
+Rules:
+- A single commit that mixes features and fixes uses the **higher** increment (minor).
+- The bump goes in `version.js` only — asset cache-busting is automatic.
+- The changelog entry in `wiki.html` is **also required** on every bump (see Changelog standing order above).
