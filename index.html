@@ -125,7 +125,6 @@
 
         <!-- Row 3: panel V — full width climax -->
         <div class="era-panel era-panel-final" id="era-panel-5">
-            <span class="era-panel-num">V</span>
             <svg class="era-panel-svg" viewBox="0 0 440 120" xmlns="http://www.w3.org/2000/svg">
                 <!-- Wide radial burst -->
                 <line x1="220" y1="60" x2="20"  y2="8"   stroke="rgba(26,188,156,0.14)" stroke-width="0.8"/>
@@ -148,18 +147,23 @@
                 <path d="M220,8 L226,24 L240,16 L234,30 L250,28 L238,38 L252,44 L236,46 L240,58
                          L220,52 L200,58 L204,46 L188,44 L202,38 L190,28 L206,30 L200,16 L214,24 Z"
                       fill="none" stroke="#1abc9c" stroke-width="1.3" opacity="0.7"/>
-                <!-- Roman II -->
-                <rect x="208" y="64" width="7"  height="30" rx="1" fill="#1abc9c" opacity="0.9"/>
-                <rect x="225" y="64" width="7"  height="30" rx="1" fill="#1abc9c" opacity="0.9"/>
-                <rect x="204" y="64" width="32" height="3.5" rx="1" fill="#1abc9c" opacity="0.55"/>
-                <rect x="204" y="90" width="32" height="3.5" rx="1" fill="#1abc9c" opacity="0.55"/>
+                <!-- Crown jewel center -->
+                <circle cx="220" cy="60" r="5"  fill="#1abc9c" opacity="0.9"/>
+                <circle cx="220" cy="60" r="10" fill="#1abc9c" opacity="0.1"/>
             </svg>
-            <p class="era-panel-title">ERA II</p>
-            <p class="era-panel-subtitle">DOMINION</p>
+            <p class="era-panel-lore era-panel-tagline">Evolve, conquer, or fall into obscurity — forgotten by the ages like so many dungeons before you.</p>
         </div>
 
     </div>
-    <button id="era-transition-continue" onclick="eraTransitionContinue()">Begin Era II</button>
+    <button id="era-transition-continue" onclick="eraTransitionContinue()">
+        <span id="era-continue-label">Continue</span>
+        <svg id="era-timer-ring" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="18" cy="18" r="15" fill="none" stroke="rgba(26,188,156,0.18)" stroke-width="2"/>
+            <circle id="era-timer-arc" cx="18" cy="18" r="15" fill="none" stroke="#1abc9c" stroke-width="2"
+                    stroke-dasharray="94.2 94.2" stroke-dashoffset="0"
+                    stroke-linecap="round" transform="rotate(-90 18 18)"/>
+        </svg>
+    </button>
 </div>
 
 <!-- ═══════════════════════════════════════════════════════════════

@@ -2839,13 +2839,13 @@ body.reduce-motion *::after {
 }
 .era-panel:hover { border-color: var(--accent); }
 
-/* Staggered vertical offset — each panel sits lower than the previous,
-   making the read order (I → II → III → IV → V) visually obvious */
+/* Straight stagger — each panel drops by a uniform step so the four
+   upper panels form a clean diagonal line, signalling read order */
 #era-panel-1 { margin-top: 0; }
-#era-panel-2 { margin-top: 20px; }
-#era-panel-3 { margin-top: 40px; }
-#era-panel-4 { margin-top: 60px; }
-#era-panel-5 { margin-top: 0; }  /* full-width climax row resets */
+#era-panel-2 { margin-top: 22px; }
+#era-panel-3 { margin-top: 44px; }
+#era-panel-4 { margin-top: 66px; }
+#era-panel-5 { margin-top: 0; }
 
 /* Panel V spans full width and is the climax */
 .era-panel-final {
@@ -2878,32 +2878,15 @@ body.reduce-motion *::after {
     color: var(--accent);
 }
 
-.era-panel-title {
-    font-size: 26px;
-    font-weight: bold;
-    color: var(--accent);
-    letter-spacing: 0.28em;
-    margin: 6px 0 0;
-    text-transform: uppercase;
-    opacity: 0;
-    transform: scale(0.88);
-    transition: opacity 0.5s ease 0.1s, transform 0.5s cubic-bezier(0.22,0.61,0.36,1) 0.1s;
-}
-.era-panel-subtitle {
+.era-panel-tagline {
     font-size: 12px;
     color: var(--text-muted);
-    letter-spacing: 0.55em;
-    margin: 2px 0 0;
-    text-transform: uppercase;
-    opacity: 0;
-    transition: opacity 0.5s ease 0.3s;
-}
-.era-panel-final.era-panel-in .era-panel-title {
-    opacity: 1;
-    transform: scale(1);
-}
-.era-panel-final.era-panel-in .era-panel-subtitle {
-    opacity: 1;
+    text-align: center;
+    max-width: 520px;
+    line-height: 1.6;
+    font-style: italic;
+    letter-spacing: 0.03em;
+    margin: 8px 0 0;
 }
 
 /* Panel number badge — top-left corner, makes read order explicit */
@@ -2933,22 +2916,40 @@ body.reduce-motion *::after {
 
 #era-transition-continue {
     margin-top: 18px;
-    padding: 9px 32px;
+    padding: 8px 24px 8px 16px;
     background: transparent;
-    border: 1px solid rgba(26,188,156,0.4);
+    border: 1px solid rgba(26,188,156,0.35);
     border-radius: 3px;
     color: var(--text-muted);
     font-size: 13px;
     letter-spacing: 0.12em;
     cursor: pointer;
     opacity: 0;
-    transition: opacity 0.4s ease, background 0.15s, color 0.15s, border-color 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: opacity 0.4s ease, background 0.15s, color 0.15s,
+                border-color 0.15s, box-shadow 0.15s;
 }
 #era-transition-continue.era-btn-in {
     opacity: 1;
 }
-#era-transition-continue:hover {
-    background: rgba(26,188,156,0.1);
+#era-transition-continue:hover,
+#era-transition-continue.era-btn-pulse {
+    background: rgba(26,188,156,0.08);
     border-color: var(--accent);
     color: var(--accent);
+    box-shadow: 0 0 10px rgba(26,188,156,0.25);
+}
+#era-timer-ring {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+}
+@keyframes eraTimerGlow {
+    0%, 100% { filter: drop-shadow(0 0 2px rgba(26,188,156,0.4)); }
+    50%       { filter: drop-shadow(0 0 6px rgba(26,188,156,0.8)); }
+}
+#era-transition-continue.era-btn-in #era-timer-ring {
+    animation: eraTimerGlow 1.5s ease-in-out infinite;
 }

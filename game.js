@@ -1925,21 +1925,29 @@ function unlockEra1Node(nodeId) {
 // ── Era 1 → Era 2 Comic Transition ───────────────────────────────────────────
 
 let _eraTransitionCallback = null;
+let _eraTimerRAF = null;
+let _eraTimerTimeout = null;
 
 function showEraTransition(raceName, onComplete) {
     _eraTransitionCallback = onComplete;
 
-    // Inject race name into panel 3 lore line
+    // Inject race name into panel III lore
     const loreRace = document.querySelector('.era-panel-lore-race');
     if (loreRace) loreRace.innerHTML = '<em>' + raceName + '</em> stepped forward from the dark, eyes open, hunger awake.';
 
     const overlay = document.getElementById('era-transition-overlay');
     const panels  = document.querySelectorAll('.era-panel');
     const btn     = document.getElementById('era-transition-continue');
+    const arc     = document.getElementById('era-timer-arc');
+
+    // Clear any previous timer
+    if (_eraTimerRAF)     { cancelAnimationFrame(_eraTimerRAF); _eraTimerRAF = null; }
+    if (_eraTimerTimeout) { clearTimeout(_eraTimerTimeout); _eraTimerTimeout = null; }
 
     // Reset state
     panels.forEach(p => p.classList.remove('era-panel-in'));
-    btn.classList.remove('era-btn-in');
+    btn.classList.remove('era-btn-in', 'era-btn-pulse');
+    if (arc) { arc.style.strokeDashoffset = '0'; arc.style.stroke = '#1abc9c'; }
     overlay.classList.remove('era-hiding');
     overlay.classList.add('era-active');
 
@@ -1949,11 +1957,37 @@ function showEraTransition(raceName, onComplete) {
         setTimeout(() => p.classList.add('era-panel-in'), delays[i]);
     });
 
-    // Show button after final panel settles
-    setTimeout(() => btn.classList.add('era-btn-in'), 1760);
+    // Show button then start 10s countdown
+    const BTN_DELAY    = 1760;
+    const COUNTDOWN_MS = 10000;
+    const CIRCUMFERENCE = 94.2; // 2π × r=15
+
+    setTimeout(() => {
+        btn.classList.add('era-btn-in');
+
+        // Animate the arc draining from full to empty over 10s
+        const start = performance.now();
+        function tick(now) {
+            const elapsed = now - start;
+            const progress = Math.min(elapsed / COUNTDOWN_MS, 1);
+            if (arc) arc.style.strokeDashoffset = String(CIRCUMFERENCE * progress);
+            if (progress < 1) {
+                _eraTimerRAF = requestAnimationFrame(tick);
+            } else {
+                // Pulse the button just before firing
+                btn.classList.add('era-btn-pulse');
+                _eraTimerTimeout = setTimeout(() => eraTransitionContinue(), 400);
+            }
+        }
+        _eraTimerRAF = requestAnimationFrame(tick);
+    }, BTN_DELAY);
 }
 
 function eraTransitionContinue() {
+    // Cancel any running timer
+    if (_eraTimerRAF)     { cancelAnimationFrame(_eraTimerRAF); _eraTimerRAF = null; }
+    if (_eraTimerTimeout) { clearTimeout(_eraTimerTimeout); _eraTimerTimeout = null; }
+
     const overlay = document.getElementById('era-transition-overlay');
     overlay.classList.add('era-hiding');
     overlay.classList.remove('era-active');
