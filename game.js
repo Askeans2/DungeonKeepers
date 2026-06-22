@@ -626,24 +626,25 @@ function initBldTooltips() {
         const id = el.id.replace('btn-', '');
         const def = ROOMS[id];
         if (!def || (!def.desc && !def.flavor)) return;
-        el.addEventListener('mouseenter', e => _showBldTooltip(e.currentTarget, id));
+        el.addEventListener('mouseenter', () => {
+            if (!_bldTooltipEl) return;
+            let html = `<div class="bld-tt-name">${def.name}</div>`;
+            if (def.desc)   html += `<div class="bld-tt-desc">${def.desc}</div>`;
+            if (def.flavor) html += `<div class="bld-tt-flavor">${def.flavor}</div>`;
+            _bldTooltipEl.innerHTML = html;
+            _bldTooltipEl.style.display = 'block';
+        });
+        el.addEventListener('mousemove', e => {
+            if (!_bldTooltipEl) return;
+            const tipW = 220;
+            const tipH = _bldTooltipEl.offsetHeight;
+            const left = e.clientX + 14 + tipW > window.innerWidth ? e.clientX - tipW - 14 : e.clientX + 14;
+            const top  = e.clientY + 14 + tipH > window.innerHeight ? e.clientY - tipH - 8 : e.clientY + 14;
+            _bldTooltipEl.style.left = left + 'px';
+            _bldTooltipEl.style.top  = top  + 'px';
+        });
         el.addEventListener('mouseleave', () => { if (_bldTooltipEl) _bldTooltipEl.style.display = 'none'; });
     });
-}
-
-function _showBldTooltip(btnEl, id) {
-    const def = ROOMS[id];
-    if (!_bldTooltipEl || !def) return;
-    let html = `<div class="bld-tt-name">${def.name}</div>`;
-    if (def.desc)   html += `<div class="bld-tt-desc">${def.desc}</div>`;
-    if (def.flavor) html += `<div class="bld-tt-flavor">${def.flavor}</div>`;
-    _bldTooltipEl.innerHTML = html;
-    const rect = btnEl.getBoundingClientRect();
-    const tipW = 220;
-    const left = rect.right + 8 + tipW > window.innerWidth ? rect.left - tipW - 8 : rect.right + 8;
-    _bldTooltipEl.style.top  = rect.top + 'px';
-    _bldTooltipEl.style.left = left + 'px';
-    _bldTooltipEl.style.display = 'block';
 }
 
 function _refreshResTooltip() {
