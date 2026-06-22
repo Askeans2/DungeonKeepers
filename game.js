@@ -1090,13 +1090,14 @@ function updateUI() {
         const netRate = netRates[res] || 0;
         const rateEl  = document.getElementById(res + "Rate");
         if (rateEl) {
-            if (netRate === 0) {
+            const alwaysShow = (res === 'essence' || res === 'influence' || res === 'mana')
+                             && shouldShowResource(res);
+            if (netRate === 0 && !alwaysShow) {
                 rateEl.style.display = "none";
             } else {
-                rateEl.textContent   = fmtRate(netRate);
+                rateEl.textContent   = netRate === 0 ? '+0' : fmtRate(netRate);
                 rateEl.style.display = "";
-                rateEl.style.color   = netRate < 0 ? "var(--disabled)"
-                                     : "var(--enabled)";
+                rateEl.style.color   = netRate < 0 ? "var(--disabled)" : "var(--enabled)";
             }
         }
     }
@@ -1129,6 +1130,23 @@ function updateUI() {
             if (def.coinCost) costStr += (costStr ? ", " : "") + formatCoins(def.coinCost);
             costEl.textContent = costStr;
         }
+    }
+
+    // Expanded Awareness upgrade button
+    {
+        const hasReservoir = (gameState.buildings.essenceReservoir || 0)
+                           + (gameState.buildings.influenceShrine  || 0)
+                           + (gameState.buildings.manaFont         || 0) > 0;
+        const btn = document.getElementById('btn-expandedAwareness');
+        if (btn) {
+            btn.style.display = hasReservoir ? '' : 'none';
+            const upgCost = getReservoirUpgradeCost();
+            btn.classList.toggle('disabled', (gameState.resources.essence || 0) < upgCost);
+        }
+        const countEl = document.getElementById('expandedAwarenessCount');
+        if (countEl) countEl.textContent = (gameState.era1Upgrades && gameState.era1Upgrades.reservoirExpansion) || 0;
+        const costEl = document.getElementById('expandedAwarenessCost');
+        if (costEl) costEl.textContent = `${getReservoirUpgradeCost()} Essence`;
     }
 
     // Research tab
@@ -1601,11 +1619,11 @@ function era1GetChosenChild(parentId) {
     return null;
 }
 
-function era1ShowPanel(nodeId) {
+let _era1TooltipEl = null;
+
+function _era1TooltipHTML(nodeId) {
     const node = ERA1_TREE[nodeId];
-    if (!node) return;
-    const panel = document.getElementById('era1-panel');
-    if (!panel) return;
+    if (!node) return '';
     const costEntries = Object.entries(node.cost);
     let costHtml = '';
     if (costEntries.length === 0) {
@@ -1617,13 +1635,36 @@ function era1ShowPanel(nodeId) {
             return `<span class="${ok ? 'era1-cost-ok' : 'era1-cost-bad'}">${amt} ${res.charAt(0).toUpperCase() + res.slice(1)}</span>`;
         }).join(' · ');
     }
-    const warning = (node.layer === 5) ? '<p class="era1-warning">This choice cannot be undone.</p>' : '';
-    panel.innerHTML = `
-        <div class="era1-panel-name">${node.name}</div>
-        <div class="era1-panel-flavor">${node.flavor}</div>
+    const warning = (node.layer === 5) ? '<div class="era1-warning">This choice cannot be undone.</div>' : '';
+    return `
+        <div class="bld-tt-name">${node.name}</div>
+        <div class="bld-tt-desc">${node.flavor}</div>
         <div class="era1-panel-cost">Cost: ${costHtml}</div>
         ${warning}
     `;
+}
+
+function era1ShowPanel(nodeId, e) {
+    if (!_era1TooltipEl) _era1TooltipEl = document.getElementById('era1-node-tooltip');
+    if (!_era1TooltipEl) return;
+    _era1TooltipEl.innerHTML = _era1TooltipHTML(nodeId);
+    _era1TooltipEl.style.display = 'block';
+    if (e) _era1MoveTooltip(e);
+}
+
+function _era1MoveTooltip(e) {
+    if (!_era1TooltipEl) return;
+    const tipW = 220;
+    const tipH = _era1TooltipEl.offsetHeight;
+    const left = e.clientX + 14 + tipW > window.innerWidth  ? e.clientX - tipW - 14 : e.clientX + 14;
+    const top  = e.clientY + 14 + tipH > window.innerHeight ? e.clientY - tipH - 8  : e.clientY + 14;
+    _era1TooltipEl.style.left = left + 'px';
+    _era1TooltipEl.style.top  = top  + 'px';
+}
+
+function era1HidePanel() {
+    if (!_era1TooltipEl) _era1TooltipEl = document.getElementById('era1-node-tooltip');
+    if (_era1TooltipEl) _era1TooltipEl.style.display = 'none';
 }
 
 const ERA1_RESERVOIR_UPGRADE_BASE_COST = 60;
@@ -1704,23 +1745,6 @@ function renderEra1Actions() {
 
     html += '</div>';
 
-    const hasReservoir = (gameState.buildings.essenceReservoir || 0)
-                       + (gameState.buildings.influenceShrine  || 0)
-                       + (gameState.buildings.manaFont         || 0) > 0;
-    if (hasReservoir) {
-        const upgCost    = getReservoirUpgradeCost();
-        const upgCount   = (gameState.era1Upgrades && gameState.era1Upgrades.reservoirExpansion) || 0;
-        const bonus      = getReservoirBonus();
-        const canAffordUpg = (gameState.resources.essence || 0) >= upgCost;
-        const cls        = canAffordUpg ? '' : ' disabled';
-        html += `<div class="era1-upgrade-row">
-            <button class="action-btn${cls}" onclick="buyReservoirUpgrade()">
-                <span class="action-title">Expanded Awareness ${upgCount > 0 ? `(${upgCount})` : ''}</span>
-                <span class="action-yield">Reservoirs +${bonus}/building · Cost: ${upgCost} Essence</span>
-            </button>
-        </div>`;
-    }
-
     container.innerHTML = html;
 }
 
@@ -1758,7 +1782,9 @@ function renderEra1Tree() {
                              : 'era1-node-waiting';
             rowHtml += `<div class="era1-node ${stateClass} ${branchClass}" id="era1-node-${nid}"
                             onclick="unlockEra1Node('${nid}')"
-                            onmouseenter="era1ShowPanel('${nid}')">
+                            onmouseenter="era1ShowPanel('${nid}', event)"
+                            onmousemove="_era1MoveTooltip(event)"
+                            onmouseleave="era1HidePanel()">
                 <div class="era1-node-name">${node.name}</div>
                 ${node.type ? `<div class="era1-node-type">${node.type}</div>` : ''}
             </div>`;
@@ -1770,7 +1796,7 @@ function renderEra1Tree() {
     // L0: root (always shown as done)
     const rootNode = ERA1_TREE['root'];
     html += `<div class="era1-layer era1-layer-root">
-        <div class="era1-node era1-node-done era1-root-node" onmouseenter="era1ShowPanel('root')">
+        <div class="era1-node era1-node-done era1-root-node" onmouseenter="era1ShowPanel('root', event)" onmousemove="_era1MoveTooltip(event)" onmouseleave="era1HidePanel()">
             <div class="era1-node-name">${rootNode.name}</div>
         </div>
     </div>`;
@@ -1809,11 +1835,6 @@ function renderEra1Tree() {
     }
 
     container.innerHTML = html;
-
-    // Restore lore panel for the deepest chosen node or root
-    const deepestChosen = [era1GetChosenChild(era1GetChosenChild(era1GetChosenChild(era1GetChosenChild(era1GetChosenChild('root')))))].filter(Boolean);
-    const panelTarget = deepestChosen[0] || era1GetChosenChild('root') || 'root';
-    era1ShowPanel(panelTarget);
 }
 
 // ── Tab visibility gating (Era 1 vs Era 2) ───────────────────────────────────

@@ -514,12 +514,13 @@ h3 {
 
 /* RESOURCE ROW */
 .res-row {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr auto auto;
     align-items: center;
     padding: 4px 0;
     border-bottom: 1px solid rgba(255,255,255,0.04);
     line-height: 1.6;
+    gap: 0 6px;
 }
 
 [id^="res-row-"] { cursor: default; }
@@ -600,12 +601,18 @@ h3 {
 .res-right {
     color: var(--text);
     font-size: 14px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
 }
 
 .rate {
     color: var(--enabled);
     font-size: 12px;
-    margin-left: 4px;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+    white-space: nowrap;
+    width: 4em;
 }
 
 .res-label-sm {
@@ -2329,56 +2336,19 @@ body.reduce-motion *::after {
     flex-shrink: 0;
 }
 
-.era1-upgrade-row {
-    margin-top: 6px;
-}
 
 .era1-actions {
     margin-bottom: 12px;
 }
 
-.era1-layout {
-    display: flex;
-    gap: 16px;
-    min-height: 320px;
-}
-
 .era1-tree {
-    flex: 1 1 0;
-    min-width: 0;
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 6px;
     padding: 8px 4px;
 }
 
-.era1-panel {
-    flex: 0 0 200px;
-    background: var(--bg-panel);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 12px 14px;
-    font-size: 12px;
-    color: var(--text-muted);
-    line-height: 1.6;
-    align-self: flex-start;
-    position: sticky;
-    top: 0;
-}
-
-.era1-panel-name {
-    font-size: 13px;
-    font-weight: bold;
-    color: var(--label);
-    margin-bottom: 6px;
-    letter-spacing: 0.02em;
-}
-
-.era1-panel-flavor {
-    font-style: italic;
-    margin-bottom: 10px;
-    line-height: 1.65;
-}
 
 .era1-panel-cost {
     font-size: 11px;
