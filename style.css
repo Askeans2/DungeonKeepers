@@ -2248,6 +2248,34 @@ body.reduce-motion *::after {
 
 /* ── ERA 1 AWAKENING TAB ─────────────────────────────────────────────────────── */
 
+.era1-divider {
+    display: flex;
+    align-items: center;
+    margin: 18px 0;
+    gap: 0;
+}
+
+.era1-divider::before,
+.era1-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to var(--dir, right), transparent, var(--accent));
+}
+
+.era1-divider::before { --dir: right; opacity: 0.35; }
+.era1-divider::after  { --dir: left;  opacity: 0.35; }
+
+.era1-divider-gem {
+    width: 6px;
+    height: 6px;
+    background: var(--accent);
+    transform: rotate(45deg);
+    margin: 0 10px;
+    opacity: 0.7;
+    flex-shrink: 0;
+}
+
 .era1-actions {
     margin-bottom: 12px;
 }

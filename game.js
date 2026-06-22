@@ -831,14 +831,22 @@ function runOneTick() {
             const needed = rate * w;
             if (needed > 0) ratio = Math.min(ratio, (gameState.resources[res] || 0) / needed);
         }
+        // Also clamp by output headroom — don't consume inputs if output cap is full
+        const convMult = getResearchBonus('converterBonus', id);
+        const maxOut = conv.outputRate * convMult * w;
+        const outRes = conv.output;
+        const outCurrent = gameState.resources[outRes] || 0;
+        const outCap = caps[outRes];
+        if (outCap !== undefined && outCurrent >= outCap) continue;
+        if (outCap !== undefined && maxOut > 0) {
+            ratio = Math.min(ratio, (outCap - outCurrent) / maxOut);
+        }
         ratio = Math.max(0, Math.min(1, ratio));
         if (ratio === 0) continue;
         for (const [res, rate] of Object.entries(conv.inputs)) {
             gameState.resources[res] = Math.max(0, (gameState.resources[res] || 0) - rate * w * ratio);
         }
-        const convMult = getResearchBonus('converterBonus', id);
-        const outAmt = conv.outputRate * convMult * w * ratio;
-        const outRes = conv.output;
+        const outAmt = maxOut * ratio;
         gameState.resources[outRes] = (gameState.resources[outRes] || 0) + outAmt;
     }
 
@@ -958,7 +966,7 @@ function getNetRates(prod) {
     // Start from passive production (already computed by caller)
     const rates = Object.assign({}, prod);
 
-    // Subtract converter input consumption (max rate; ratio assumed 1 for display)
+    // Add converter output and subtract input consumption (max rate; ratio assumed 1 for display)
     const w2 = getWorkersPerBuilding();
     for (const [id, def] of Object.entries(ROOMS)) {
         if (!def.converts) continue;
@@ -969,6 +977,9 @@ function getNetRates(prod) {
         for (const [res, rate] of Object.entries(def.converts.inputs)) {
             rates[res] = (rates[res] || 0) - rate * w;
         }
+        const convMult = getResearchBonus('converterBonus', id);
+        const outRes = def.converts.output;
+        rates[outRes] = (rates[outRes] || 0) + def.converts.outputRate * convMult * w;
     }
 
     // Subtract food consumed by population each tick
