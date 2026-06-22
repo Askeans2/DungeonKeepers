@@ -10,6 +10,11 @@
 
 const SAVE_KEY = "dungeonKeeperSave";
 
+// Restore-point backup: a snapshot of the save taken at the last era transition
+// or prestige (whichever was most recent). Lets the player roll back to the
+// start of their current era / run. Stored compressed like the main save.
+const BACKUP_KEY = "dungeonKeeperBackup";
+
 // Maximum offline time that can be banked (8 hours in seconds)
 const OFFLINE_BANK_CAP = 8 * 60 * 60;
 
@@ -152,6 +157,51 @@ function importSave(data) {
     // freshly-imported save with the old in-memory gameState on the way out.
     if (typeof window !== "undefined") window._pendingReset = true;
     localStorage.setItem(SAVE_KEY, _serializeSave(state));
+    location.reload();
+    return true;
+}
+
+// ── Restore-point backup ────────────────────────────────────────────────────
+
+// Snapshot the current gameState as the restore point. Called right after an era
+// transition or a prestige completes, capturing the start of the new era/run.
+// `label` describes the checkpoint (e.g. "Era 2", "Prestige 3") for the UI.
+function snapshotBackup(label) {
+    try {
+        const snap = JSON.parse(JSON.stringify(gameState));
+        snap._backupLabel = label || "checkpoint";
+        snap._backupAt = Date.now();
+        localStorage.setItem(BACKUP_KEY, _serializeSave(snap));
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
+
+// Returns { label, at } describing the stored backup, or null if none exists.
+function getBackupInfo() {
+    const raw = localStorage.getItem(BACKUP_KEY);
+    if (!raw) return null;
+    const snap = _deserializeSave(raw);
+    if (!snap) return null;
+    return { label: snap._backupLabel || "checkpoint", at: snap._backupAt || null };
+}
+
+// Restores the backup as the active save and reloads. Returns false if there is
+// no valid backup to restore.
+function restoreBackup() {
+    const raw = localStorage.getItem(BACKUP_KEY);
+    if (!raw) return false;
+    const snap = _deserializeSave(raw);
+    if (!snap || typeof snap !== "object" || !snap.resources || !snap.run) return false;
+
+    // Strip backup-only bookkeeping before it becomes the live save.
+    delete snap._backupLabel;
+    delete snap._backupAt;
+    migrateSave(snap);
+
+    if (typeof window !== "undefined") window._pendingReset = true;
+    localStorage.setItem(SAVE_KEY, _serializeSave(snap));
     location.reload();
     return true;
 }

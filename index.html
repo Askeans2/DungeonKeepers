@@ -1509,17 +1509,21 @@
                 <button class="setting-action-btn danger" onclick="doResetSave()">Reset Save</button>
             </div>
 
-            <div class="setting-action-row">
-                <button class="setting-action-btn" id="set-export" onclick="doExportSave()">Export to Clipboard</button>
-                <button class="setting-action-btn" id="set-download" onclick="doDownloadSave()">Export to File</button>
-                <button class="setting-action-btn" id="set-paste" onclick="doPasteSave()">Paste from Clipboard</button>
+            <h3 class="save-io-heading">Import/Export Save</h3>
+            <textarea id="save-io-box" class="save-io-box" placeholder="Your exported save string appears here. Paste a save string and click Import Game to load it." spellcheck="false"></textarea>
+            <div class="save-io-bar">
+                <div class="save-io-bar-left">
+                    <button class="setting-action-btn" id="set-import" onclick="doImportSave()">Import Game</button>
+                    <button class="setting-action-btn" id="set-export" onclick="doExportSave()">Export Game</button>
+                    <button class="setting-action-btn" id="set-download" onclick="doDownloadSave()">Save as File</button>
+                    <button class="setting-action-btn" id="set-upload" onclick="document.getElementById('save-file-input').click()">Load File</button>
+                    <button class="setting-action-btn" id="set-paste" onclick="doPasteSave()">Paste</button>
+                    <input type="file" id="save-file-input" accept=".txt" style="display:none" onchange="doUploadSave(event)">
+                </div>
+                <div class="save-io-bar-right">
+                    <button class="setting-action-btn" id="set-restore" onclick="doRestoreBackup()">Restore Backup</button>
+                </div>
             </div>
-            <div class="setting-action-row">
-                <button class="setting-action-btn" id="set-import" onclick="doImportSave()">Import from Textbox</button>
-                <button class="setting-action-btn" id="set-upload" onclick="document.getElementById('save-file-input').click()">Import from File</button>
-                <input type="file" id="save-file-input" accept=".txt" style="display:none" onchange="doUploadSave(event)">
-            </div>
-            <textarea id="save-io-box" class="save-io-box" placeholder="Your exported save string appears here. Paste a save string and click Import Save to load it." spellcheck="false"></textarea>
             <div id="save-io-msg" class="save-io-msg"></div>
 
         </div><!-- /tab-settings -->

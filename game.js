@@ -284,6 +284,15 @@ function updateSettingsUI() {
         rBtn.textContent = gameSettings.reducedAnimations ? "ON" : "OFF";
         rBtn.className   = "setting-toggle" + (gameSettings.reducedAnimations ? " is-on" : "");
     }
+    // Restore Backup button — reflects whether a checkpoint exists, with a tooltip.
+    const bkBtn = document.getElementById("set-restore");
+    if (bkBtn) {
+        const info = (typeof getBackupInfo === "function") ? getBackupInfo() : null;
+        bkBtn.disabled = !info;
+        bkBtn.title = info
+            ? "Restore checkpoint: " + info.label
+            : "No checkpoint yet — created at each era transition or prestige.";
+    }
 }
 
 // Called from HTML onclick
@@ -375,8 +384,25 @@ function doImportSave() {
     if (!ok) _saveIoMsg("Import failed — that doesn't look like a valid save string.", "error");
 }
 
+// Restores the last era-transition / prestige checkpoint, after confirming.
+function doRestoreBackup() {
+    const info = getBackupInfo();
+    if (!info) {
+        _saveIoMsg("No restore point yet — one is created at each era transition or prestige.", "error");
+        return;
+    }
+    let when = "";
+    if (info.at) {
+        const d = new Date(info.at);
+        when = " (saved " + d.toLocaleDateString() + " " + d.toLocaleTimeString() + ")";
+    }
+    if (!confirm("Restore your last checkpoint: " + info.label + when + "?\n\nThis replaces your current save and cannot be undone.")) return;
+    const ok = restoreBackup(); // reloads on success
+    if (!ok) _saveIoMsg("Restore failed — the backup couldn't be read.", "error");
+}
+
 // Reads the clipboard into the textarea (does not import — the player reviews,
-// then clicks "Import from Textbox"). Clipboard read requires a user gesture and
+// then clicks "Import Game"). Clipboard read requires a user gesture and
 // permission; falls back to a manual-paste prompt if it's unavailable.
 function doPasteSave() {
     const box = document.getElementById("save-io-box");
@@ -1701,6 +1727,8 @@ function unlockEra1Node(nodeId) {
         gameState.era1.chosen = nodeId;
         playRace(node.race);
         gameState.run.era = 2;
+        saveGame();
+        snapshotBackup("Era 2 (" + (node.race || "transition") + ")"); // restore point at era start
     }
     updateUI();
     saveGame();
@@ -2940,6 +2968,7 @@ function doPrestige() {
 
     selectStartBiome(false);
     saveGame();
+    snapshotBackup("Prestige " + savedMeta.totalPrestiges); // restore point at run start
     updateUI();
     updateIdentityPanel();
 }
@@ -3045,6 +3074,7 @@ function switchTab(tabId) {
     if (content) content.style.display = "block";
     const btn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
     if (btn) btn.classList.add("active");
+    if (tabId === "settings") updateSettingsUI(); // refresh Restore Backup state
 }
 
 // ── Bootstrap ─────────────────────────────────────────────────────────────────
