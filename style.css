@@ -2779,3 +2779,178 @@ body.reduce-motion *::after {
     0%   { opacity: 1; transform: translate(0, 0) scale(1) rotate(0deg); }
     100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0.4) rotate(var(--dr)); }
 }
+
+/* ── Era 1 → Era 2 Comic Panel Transition ───────────────────────────────────── */
+
+#era-transition-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    background: #080f0a;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+}
+#era-transition-overlay.era-active {
+    opacity: 1;
+    pointer-events: all;
+}
+#era-transition-overlay.era-hiding {
+    opacity: 0;
+    pointer-events: none;
+}
+
+#era-comic-panels {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 6px;
+    padding: 16px;
+    width: min(780px, 94vw);
+    height: min(600px, 80vh);
+    box-sizing: border-box;
+}
+
+.era-panel {
+    background: #0d1a12;
+    border: 2px solid #2a4a32;
+    border-radius: 3px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 10px 12px 12px;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(18px) scale(0.97);
+    transition: opacity 0.45s cubic-bezier(0.22,0.61,0.36,1),
+                transform 0.45s cubic-bezier(0.22,0.61,0.36,1),
+                border-color 0.4s ease;
+}
+.era-panel.era-panel-in {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+.era-panel:hover {
+    border-color: #4a8a60;
+}
+
+/* Panel 4 spans full bottom row */
+.era-panel-final {
+    grid-column: 1 / -1;
+    justify-content: center;
+    border-color: #3a6a4a;
+    background: #0a1610;
+}
+.era-panel-final.era-panel-in {
+    border-color: #6dbe8a;
+}
+
+.era-panel-svg {
+    flex: 1;
+    width: 100%;
+    max-height: 130px;
+    overflow: visible;
+}
+
+.era-panel-lore {
+    font-family: 'Lato', sans-serif;
+    font-size: 11px;
+    color: #7aaa8a;
+    text-align: center;
+    margin: 6px 0 0;
+    font-style: italic;
+    line-height: 1.4;
+    letter-spacing: 0.02em;
+}
+.era-panel-lore-race {
+    color: #9ddbb0;
+}
+
+.era-panel-title {
+    font-family: 'Lato', sans-serif;
+    font-size: 26px;
+    font-weight: bold;
+    color: #9ddbb0;
+    letter-spacing: 0.28em;
+    margin: 6px 0 0;
+    text-transform: uppercase;
+    opacity: 0;
+    transform: scale(0.88);
+    transition: opacity 0.5s ease 0.1s, transform 0.5s cubic-bezier(0.22,0.61,0.36,1) 0.1s;
+}
+.era-panel-subtitle {
+    font-family: 'Lato', sans-serif;
+    font-size: 12px;
+    color: #4a8a60;
+    letter-spacing: 0.55em;
+    margin: 2px 0 0;
+    text-transform: uppercase;
+    opacity: 0;
+    transition: opacity 0.5s ease 0.3s;
+}
+.era-panel-final.era-panel-in .era-panel-title {
+    opacity: 1;
+    transform: scale(1);
+}
+.era-panel-final.era-panel-in .era-panel-subtitle {
+    opacity: 1;
+}
+
+/* Ink-bleed corner accent on each panel */
+.era-panel::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 18px; height: 18px;
+    background: radial-gradient(circle at top left, #1a3a22 0%, transparent 80%);
+    pointer-events: none;
+}
+.era-panel::after {
+    content: '';
+    position: absolute;
+    bottom: 0; right: 0;
+    width: 18px; height: 18px;
+    background: radial-gradient(circle at bottom right, #1a3a22 0%, transparent 80%);
+    pointer-events: none;
+}
+
+/* Spark float animation on SVG dots */
+@keyframes eraSpark {
+    0%, 100% { opacity: 0.4; transform: translateY(0); }
+    50%       { opacity: 1;   transform: translateY(-4px); }
+}
+.era-spark {
+    animation: eraSpark 2.2s ease-in-out infinite;
+}
+.era-spark:nth-child(2) { animation-delay: 0.55s; }
+.era-spark:nth-child(3) { animation-delay: 1.1s; }
+.era-spark:nth-child(4) { animation-delay: 1.65s; }
+
+#era-transition-continue {
+    margin-top: 14px;
+    padding: 9px 32px;
+    background: transparent;
+    border: 1px solid #4a8a60;
+    border-radius: 3px;
+    color: #7aaa8a;
+    font-family: 'Lato', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.4s ease, background 0.15s, color 0.15s, border-color 0.15s;
+}
+#era-transition-continue.era-btn-in {
+    opacity: 1;
+}
+#era-transition-continue:hover {
+    background: rgba(74,138,96,0.14);
+    border-color: #6dbe8a;
+    color: #9ddbb0;
+}

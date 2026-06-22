@@ -992,6 +992,10 @@ function runOneTick() {
     const pop  = gameState.population;
     const st   = gameState.stats;
 
+    // Snapshot resources before this tick so we can record true per-tick deltas
+    const _preSnap = {};
+    for (const k of Object.keys(gameState.resources)) _preSnap[k] = gameState.resources[k] || 0;
+
     // 0. Era 1 passive resource income
     if ((gameState.run.era || 1) === 1) {
         const r = gameState.resources;
@@ -1125,6 +1129,14 @@ function runOneTick() {
         }
     }
 
+    // Record true per-tick deltas for the rate display
+    const deltas = {};
+    for (const k of Object.keys(gameState.resources)) {
+        const d = (gameState.resources[k] || 0) - (_preSnap[k] || 0);
+        if (d !== 0) deltas[k] = d;
+    }
+    gameState.lastTickDeltas = deltas;
+
     updateUI();
 
     // Autosave
@@ -1228,7 +1240,10 @@ function updateUI() {
     setText("coinsCap",     formatCoins(caps.coins));
 
     // Resources
-    const netRates = getNetRates(prod, caps);
+    // Use actual deltas from the last tick when available; fall back to static estimate
+    // on first load (before any tick has run) so the display isn't blank.
+    const lastDeltas = gameState.lastTickDeltas;
+    const netRates   = lastDeltas || getNetRates(prod, caps);
     for (const res of Object.keys(RESOURCES)) {
         const rowEl = document.getElementById("res-row-" + res);
         if (rowEl) {
@@ -1892,17 +1907,63 @@ function unlockEra1Node(nodeId) {
         era1HidePanel();
         era1FlashTree(domainId);
         setTimeout(() => {
-            playRace(node.race);
-            gameState.run.era = 2;
-            saveGame();
-            snapshotBackup("Era 2 (" + (node.race || "transition") + ")"); // restore point at era start
-            updateUI();
-            saveGame();
+            showEraTransition(node.race, () => {
+                playRace(node.race);
+                gameState.run.era = 2;
+                saveGame();
+                snapshotBackup("Era 2 (" + (node.race || "transition") + ")");
+                updateUI();
+                saveGame();
+            });
         }, 900);
         return;
     }
     updateUI();
     saveGame();
+}
+
+// ── Era 1 → Era 2 Comic Transition ───────────────────────────────────────────
+
+let _eraTransitionCallback = null;
+
+function showEraTransition(raceName, onComplete) {
+    _eraTransitionCallback = onComplete;
+
+    // Inject race name into panel 3 lore line
+    const loreRace = document.querySelector('.era-panel-lore-race');
+    if (loreRace) loreRace.textContent = '“' + raceName + '” answered the call.';
+
+    const overlay = document.getElementById('era-transition-overlay');
+    const panels  = document.querySelectorAll('.era-panel');
+    const btn     = document.getElementById('era-transition-continue');
+
+    // Reset state
+    panels.forEach(p => p.classList.remove('era-panel-in'));
+    btn.classList.remove('era-btn-in');
+    overlay.classList.remove('era-hiding');
+    overlay.classList.add('era-active');
+
+    // Stagger panels in
+    const delays = [120, 360, 600, 920];
+    panels.forEach((p, i) => {
+        setTimeout(() => p.classList.add('era-panel-in'), delays[i]);
+    });
+
+    // Show button after final panel settles
+    setTimeout(() => btn.classList.add('era-btn-in'), 1480);
+}
+
+function eraTransitionContinue() {
+    const overlay = document.getElementById('era-transition-overlay');
+    overlay.classList.add('era-hiding');
+    overlay.classList.remove('era-active');
+    setTimeout(() => {
+        overlay.classList.remove('era-hiding');
+        if (_eraTransitionCallback) {
+            _eraTransitionCallback();
+            _eraTransitionCallback = null;
+        }
+    }, 520);
 }
 
 function era1NodeUnlocked(nodeId) {
