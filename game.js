@@ -1844,6 +1844,7 @@ function unlockEra1Node(nodeId) {
     // Era transition: L5 race node chosen
     if (node.layer === 5 && node.race) {
         gameState.era1.chosen = nodeId;
+        era1HidePanel();
         era1FlashTree(domainId);
         setTimeout(() => {
             playRace(node.race);
