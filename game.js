@@ -1682,6 +1682,7 @@ function devClearBank() {
 
 function devAddOneEach() {
     for (const id of Object.keys(ROOMS)) {
+        if (!checkUnlock(id)) continue;
         gameState.buildings[id] = (gameState.buildings[id] || 0) + 1;
     }
     updateUI();
@@ -1690,6 +1691,7 @@ function devAddOneEach() {
 
 function devMaxAll() {
     for (const id of Object.keys(ROOMS)) {
+        if (!checkUnlock(id)) continue;
         gameState.buildings[id] = (gameState.buildings[id] || 0) + 10;
     }
     updateUI();
@@ -2038,7 +2040,8 @@ function renderEra1Lore(frontierLayer) {
     const lore = ERA1_LORE[frontierLayer - 1];
     el.innerHTML =
         `<div class="era1-lore">` +
-        `<div class="era1-lore-heading">${lore.heading}</div>` +
+        `<div class="era1-lore-heading">◈ ${lore.heading}?</div>` +
+        `<hr class="era1-lore-rule">` +
         `<div class="era1-lore-body">${lore.body}</div>` +
         `</div>`;
 }
@@ -3179,65 +3182,65 @@ function updateIdentityPanel() {
         raceEl.classList.add("di-unset");
     }
 
-    // Tooltip content
-    const tip = document.getElementById("di-tooltip");
-    if (!tip) return;
-
-    let html = "";
-
-    if (biome) {
-        // Use the run's actual assigned mods, not the biome's static defaults
-        const runMods = gameState.run.mods;
-        let modsHtml;
-        if (runMods.length > 0) {
-            modsHtml = `<div class="di-tt-mod-list">` +
-                runMods.map(m => {
-                    const fx  = MOD_DESCRIPTIONS[m.name] || "Effect not yet documented.";
-                    const cls = m.pos ? "di-tt-mod-pos" : "di-tt-mod-neg";
-                    return `<div class="di-tt-mod-row"><span class="di-tt-mod-name ${cls}">${m.name}</span><span class="di-tt-mod-fx">${fx}</span></div>`;
-                }).join("") +
-                `</div>`;
+    // ── Biome tooltip ────────────────────────────────────────────────────────
+    const biomeTip = document.getElementById("di-biome-tooltip");
+    if (biomeTip) {
+        let biomeHtml = "";
+        if (biome) {
+            const runMods = gameState.run.mods;
+            let modsHtml;
+            if (runMods.length > 0) {
+                modsHtml = `<div class="di-tt-mod-list">` +
+                    runMods.map(m => {
+                        const fx  = MOD_DESCRIPTIONS[m.name] || "Effect not yet documented.";
+                        const cls = m.pos ? "di-tt-mod-pos" : "di-tt-mod-neg";
+                        return `<div class="di-tt-mod-row"><span class="di-tt-mod-name ${cls}">${m.name}</span><span class="di-tt-mod-fx">${fx}</span></div>`;
+                    }).join("") +
+                    `</div>`;
+            } else {
+                modsHtml = `<span style="color:var(--text-muted);font-size:11px">None assigned</span>`;
+            }
+            biomeHtml = `
+                <div class="di-tt-name">${biomeName}<span class="di-badge ${biome.badge}">${biome.type}</span></div>
+                <p class="di-tt-desc">${biome.desc}</p>
+                <div class="di-tt-start">Start: ${biome.start}</div>
+                <div class="di-tt-section">Active Run Modifiers</div>
+                ${modsHtml}
+                <div class="di-tt-section">Creature Affinity</div>
+                <div class="di-tt-affinity">
+                    <span class="di-tt-affinity-best">▲ Best: ${biome.best.join(", ")}</span>
+                    <span class="di-tt-affinity-hard">▼ Hard: ${biome.hard.join(", ")}</span>
+                </div>`;
         } else {
-            modsHtml = `<span style="color:var(--text-muted);font-size:11px">None assigned</span>`;
+            biomeHtml = `<p class="di-tt-desc">No biome selected.</p>`;
         }
-
-        html += `
-            <div class="di-tt-name">${biomeName}<span class="di-badge ${biome.badge}">${biome.type}</span></div>
-            <p class="di-tt-desc">${biome.desc}</p>
-            <div class="di-tt-start">Start: ${biome.start}</div>
-            <div class="di-tt-section">Active Run Modifiers</div>
-            ${modsHtml}
-            <div class="di-tt-section">Creature Affinity</div>
-            <div class="di-tt-affinity">
-                <span class="di-tt-affinity-best">▲ Best: ${biome.best.join(", ")}</span>
-                <span class="di-tt-affinity-hard">▼ Hard: ${biome.hard.join(", ")}</span>
-            </div>`;
-    } else {
-        html += `<p class="di-tt-desc">No biome selected.</p>`;
+        biomeTip.innerHTML = biomeHtml;
     }
 
-    html += `<hr class="di-tt-divider"><div class="di-tt-section">Race</div>`;
-
-    const raceData = RACE_DATA[raceName];
-    if (raceName && raceData) {
-        html += `<div class="di-tt-name">${raceName}${raceData.tag ? `<span class="creature-tag ${raceData.tag}">${raceData.tagLabel || ""}</span>` : ""}</div>
-                 <p class="di-tt-race-desc">${raceData.desc}</p>`;
-        if (raceData.mods && raceData.mods.length > 0) {
-            html += `<div class="di-tt-section">Race Traits</div><div class="di-tt-mod-list">` +
-                raceData.mods.map(m => {
-                    const fx  = m.desc || MOD_DESCRIPTIONS[m.name] || "Effect not yet documented.";
-                    const cls = m.pos ? "di-tt-mod-pos" : "di-tt-mod-neg";
-                    return `<div class="di-tt-mod-row"><span class="di-tt-mod-name ${cls}">${m.name}</span><span class="di-tt-mod-fx">${fx}</span></div>`;
-                }).join("") +
-                `</div>`;
+    // ── Race tooltip ─────────────────────────────────────────────────────────
+    const raceTip = document.getElementById("di-race-tooltip");
+    if (raceTip) {
+        let raceHtml = "";
+        const raceData = RACE_DATA[raceName];
+        if (raceName && raceData) {
+            raceHtml = `<div class="di-tt-name">${raceName}${raceData.tag ? `<span class="creature-tag ${raceData.tag}">${raceData.tagLabel || ""}</span>` : ""}</div>
+                        <p class="di-tt-race-desc">${raceData.desc}</p>`;
+            if (raceData.mods && raceData.mods.length > 0) {
+                raceHtml += `<div class="di-tt-section">Race Traits</div><div class="di-tt-mod-list">` +
+                    raceData.mods.map(m => {
+                        const fx  = m.desc || MOD_DESCRIPTIONS[m.name] || "Effect not yet documented.";
+                        const cls = m.pos ? "di-tt-mod-pos" : "di-tt-mod-neg";
+                        return `<div class="di-tt-mod-row"><span class="di-tt-mod-name ${cls}">${m.name}</span><span class="di-tt-mod-fx">${fx}</span></div>`;
+                    }).join("") +
+                    `</div>`;
+            }
+        } else if (raceName) {
+            raceHtml = `<div class="di-tt-race">${raceName}</div>`;
+        } else {
+            raceHtml = `<div class="di-tt-race di-unset">Not yet selected — choose your race in Era 1.</div>`;
         }
-    } else if (raceName) {
-        html += `<div class="di-tt-race">${raceName}</div>`;
-    } else {
-        html += `<div class="di-tt-race di-unset">Not yet selected — choose your race in Era 1.</div>`;
+        raceTip.innerHTML = raceHtml;
     }
-
-    tip.innerHTML = html;
 }
 
 // ── Tabs ──────────────────────────────────────────────────────────────────────

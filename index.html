@@ -123,16 +123,17 @@
     <div class="left-col">
 
     <div class="dungeon-identity">
-        <div class="di-row">
+        <div class="di-row di-biome-row">
             <span class="di-label">Biome</span>
             <span id="di-biome-name" class="di-value">—</span>
             <span id="di-biome-badge" class="di-badge badge-none"></span>
+            <div class="di-tooltip di-biome-tooltip" id="di-biome-tooltip"></div>
         </div>
-        <div class="di-row">
+        <div class="di-row di-race-row">
             <span class="di-label">Race</span>
             <span id="di-race-name" class="di-value di-unset">Unselected</span>
+            <div class="di-tooltip di-race-tooltip" id="di-race-tooltip"></div>
         </div>
-        <div class="di-tooltip" id="di-tooltip"></div>
     </div>
     <div id="res-tooltip" class="res-tooltip"></div>
     <div id="bld-tooltip" class="bld-tooltip"></div>
@@ -1802,9 +1803,15 @@
             var awakenBtn   = document.getElementById('splash-awaken-btn');
             var continueBtn = document.getElementById('splash-continue-btn');
             if (versionEl)   versionEl.textContent = 'v' + (window.GAME_VERSION || '');
-            var save = hasSave();
-            if (awakenBtn)   awakenBtn.style.display   = save ? 'none' : '';
-            if (continueBtn) continueBtn.style.display = save ? ''     : 'none';
+            var save = getSave();
+            var meaningful = save && (
+                (save.time && (save.time.year > 1 || save.time.day > 1)) ||
+                (save.meta && save.meta.totalPrestiges > 0) ||
+                (save.era1 && save.era1.unlocked && save.era1.unlocked.length > 0) ||
+                (save.run  && save.run.era > 1)
+            );
+            if (awakenBtn)   awakenBtn.style.display   = meaningful ? 'none' : '';
+            if (continueBtn) continueBtn.style.display = meaningful ? ''     : 'none';
             populateRunSummary();
             checkWhatsNew();
         }
