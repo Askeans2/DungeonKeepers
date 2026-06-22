@@ -1818,6 +1818,29 @@ function era1FlashTree(domainId) {
     flash.addEventListener('animationend', () => flash.remove(), { once: true });
 }
 
+// Injects dynamic race nodes into ERA1_TREE from gameState.era1.raceOptions.
+// Called on L4 unlock and on load so the tree always has the saved options.
+function era1EnsureDynRaceNodes() {
+    const opts = gameState.era1 && gameState.era1.raceOptions;
+    if (!opts || !opts.names || opts.names.length < 2) return;
+    const ids = ['dyn-race-0', 'dyn-race-1'];
+    ids.forEach((id, i) => {
+        const raceName = opts.names[i];
+        // Reuse flavor from existing L5 node if one exists for this race, else generic
+        const existing = Object.values(ERA1_TREE).find(n => n.layer === 5 && n.race === raceName);
+        const flavor = existing ? existing.flavor : `${raceName} — a creature of the ${opts.type} type. Their strengths will shape your dungeon's future.`;
+        ERA1_TREE[id] = {
+            id, name: raceName, layer: 5, parent: opts.parentId,
+            flavor, cost: { influence: 200, mana: 150 }, children: [],
+            type: opts.type, race: raceName,
+        };
+    });
+    // Patch the L4 parent's children to point to the dynamic nodes
+    if (ERA1_TREE[opts.parentId]) {
+        ERA1_TREE[opts.parentId].children = ids;
+    }
+}
+
 function unlockEra1Node(nodeId) {
     const node = ERA1_TREE[nodeId];
     if (!node) return;
@@ -1842,6 +1865,21 @@ function unlockEra1Node(nodeId) {
     }
     if (!gameState.era1) gameState.era1 = { unlocked: [], chosen: null };
     gameState.era1.unlocked.push(nodeId);
+
+    // L4 chosen — pick 2 random races from the full roster for this type
+    if (node.layer === 4 && node.type) {
+        const legendaryNames = new Set(
+            Object.values(LEGENDARY_ROSTER).flat()
+        );
+        const pool = (CREATURE_ROSTER[node.type] || []).filter(n => !legendaryNames.has(n));
+        // Fisher-Yates shuffle, then take first 2
+        for (let i = pool.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [pool[i], pool[j]] = [pool[j], pool[i]];
+        }
+        gameState.era1.raceOptions = { type: node.type, parentId: nodeId, names: pool.slice(0, 2) };
+        era1EnsureDynRaceNodes();
+    }
 
     // Era transition: L5 race node chosen
     if (node.layer === 5 && node.race) {
@@ -2143,7 +2181,8 @@ function renderEra1Tree() {
 
                 if (chosenL4) {
                     html += renderConnector(frontierLayer === 5);
-                    // L5: Race
+                    // L5: Race — ensure dynamic nodes are injected before rendering
+                    era1EnsureDynRaceNodes();
                     const chosenL5 = era1GetChosenChild(chosenL4);
                     html += renderLayer(ERA1_TREE[chosenL4].children, chosenL5, frontierLayer === 5);
                 }
@@ -3297,6 +3336,7 @@ if (!gameState.run.era)                      gameState.run.era = 1;
 if (gameState.pauseBank == null || isNaN(gameState.pauseBank)) gameState.pauseBank = 0;
 if (!gameState.era1) gameState.era1 = { unlocked: [], chosen: null };
 if (!Array.isArray(gameState.era1.unlocked)) gameState.era1.unlocked = [];
+era1EnsureDynRaceNodes(); // restore dynamic race nodes from saved raceOptions
 if (gameState.resources.influence == null) gameState.resources.influence = 0;
 if (gameState.resources.mana == null) gameState.resources.mana = 0;
 if (gameState.resources.arcaneEssence == null) gameState.resources.arcaneEssence = 0;
