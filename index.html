@@ -112,7 +112,7 @@
             <span class="splash-ext-toast-icon">&#9670;</span>
             <div class="splash-ext-toast-text">
                 <strong>Companion Extension Available</strong>
-                <span>Sync your saves across devices with the <a href="https://github.com/Cristokos/Idle-Save-Manager" target="_blank" rel="noopener" class="splash-ext-link">Idle Save Manager</a> Chrome extension.</span>
+                <span>Sync your saves across devices with the custom <a href="https://github.com/Cristokos/Idle-Save-Manager" target="_blank" rel="noopener" class="splash-ext-link">Idle Save Manager</a> Chrome extension. Made by me, just for this game.</span>
             </div>
             <button class="splash-ext-toast-close" onclick="splashExtToastDismiss()" title="Dismiss">&#10005;</button>
         </div>
@@ -1688,13 +1688,7 @@
             var el = document.getElementById('splash-run-summary');
             if (!el) return;
             var s = getSave();
-            var meaningful = s && (
-                (s.time && (s.time.year > 1 || s.time.day > 1)) ||
-                (s.meta && s.meta.totalPrestiges > 0) ||
-                (s.era1 && s.era1.unlocked && s.era1.unlocked.length > 0) ||
-                (s.run  && s.run.era > 1)
-            );
-            if (!meaningful) { el.style.display = 'none'; return; }
+            if (!s) { el.style.display = 'none'; return; }
             var run = s.run || {}, t = s.time || {}, parts = [];
             if (t.year || t.day)  parts.push('Year ' + (t.year || 1) + ', Day ' + (t.day || 1));
             if (run.race)         parts.push(run.race);
