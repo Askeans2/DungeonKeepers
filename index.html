@@ -1509,6 +1509,19 @@
                 <button class="setting-action-btn danger" onclick="doResetSave()">Reset Save</button>
             </div>
 
+            <div class="setting-action-row">
+                <button class="setting-action-btn" id="set-export" onclick="doExportSave()">Export to Clipboard</button>
+                <button class="setting-action-btn" id="set-download" onclick="doDownloadSave()">Export to File</button>
+                <button class="setting-action-btn" id="set-paste" onclick="doPasteSave()">Paste from Clipboard</button>
+            </div>
+            <div class="setting-action-row">
+                <button class="setting-action-btn" id="set-import" onclick="doImportSave()">Import from Textbox</button>
+                <button class="setting-action-btn" id="set-upload" onclick="document.getElementById('save-file-input').click()">Import from File</button>
+                <input type="file" id="save-file-input" accept=".txt" style="display:none" onchange="doUploadSave(event)">
+            </div>
+            <textarea id="save-io-box" class="save-io-box" placeholder="Your exported save string appears here. Paste a save string and click Import Save to load it." spellcheck="false"></textarea>
+            <div id="save-io-msg" class="save-io-msg"></div>
+
         </div><!-- /tab-settings -->
 
         <!-- DEV TAB -->
@@ -1613,7 +1626,8 @@
 
 <script>
     // Load local game scripts in dependency order, cache-busted by GAME_VERSION (see version.js).
-    ["data/resources.js", "data/rooms.js", "data/research.js", "data/era1tree.js", "save.js", "game.js"].forEach(function (src) {
+    // lz-string must precede save.js (save/load uses LZString for (de)compression).
+    ["lib/lz-string.min.js", "data/resources.js", "data/rooms.js", "data/research.js", "data/era1tree.js", "save.js", "game.js"].forEach(function (src) {
         document.write('<scr' + 'ipt src="' + src + '?v=' + window.GAME_VERSION + '"></scr' + 'ipt>');
     });
 </script>
@@ -1631,9 +1645,18 @@
         function hasSave() {
             try { return !!localStorage.getItem(SAVE_KEY); } catch(e) { return false; }
         }
-        function getSave() {
-            try { return JSON.parse(localStorage.getItem(SAVE_KEY) || 'null'); } catch(e) { return null; }
+        // Reads a save that may be LZString-UTF16 compressed (current format) or
+        // plain JSON (legacy). Mirrors _deserializeSave in save.js.
+        function readSaveRaw() {
+            var raw;
+            try { raw = localStorage.getItem(SAVE_KEY); } catch(e) { return null; }
+            if (!raw) return null;
+            if (typeof LZString !== 'undefined' && LZString.decompressFromUTF16) {
+                try { var out = LZString.decompressFromUTF16(raw); if (out) return JSON.parse(out); } catch(e) {}
+            }
+            try { return JSON.parse(raw); } catch(e) { return null; }
         }
+        function getSave() { return readSaveRaw(); }
         function fmt(n) { return (Math.floor(n) || 0).toLocaleString(); }
 
         // ── Run summary ───────────────────────────────────────────────────────
@@ -1833,14 +1856,13 @@
         window.splashChronicle = function () {
             var panel = document.getElementById('splash-chronicle');
             var body  = document.getElementById('splash-chronicle-body');
-            var raw;
-            try { raw = localStorage.getItem(SAVE_KEY); } catch(e) {}
+            var s = readSaveRaw();
             var histHtml;
-            if (!raw) {
+            if (!s) {
                 histHtml = '<p class="chronicle-empty">No chronicles have been recorded yet.<br><em>Your story has yet to begin.</em></p>';
             } else {
                 try {
-                    var s = JSON.parse(raw), st = s.stats||{}, me = s.meta||{}, ti = s.time||{}, ru = s.run||{};
+                    var st = s.stats||{}, me = s.meta||{}, ti = s.time||{}, ru = s.run||{};
                     var races = Object.keys(me.racesPlayed || {});
                     histHtml =
                         '<div class="chronicle-section">Meta</div>' +
@@ -1854,7 +1876,7 @@
                         '<div class="chronicle-section">Statistics</div>' +
                         '<div class="chronicle-row"><span class="chronicle-label">Greatest Horde</span><span class="chronicle-val">' + fmt(st.peakPopulation) + ' souls</span></div>' +
                         '<div class="chronicle-row"><span class="chronicle-label">Chambers Raised</span><span class="chronicle-val">' + fmt(st.buildingsConstructed) + '</span></div>' +
-                        '<div class="chronicle-row"><span class="chronicle-label">Forager's Toil</span><span class="chronicle-val">' + fmt(st.manualGathers) + ' actions</span></div>' +
+                        '<div class="chronicle-row"><span class="chronicle-label">Forager\'s Toil</span><span class="chronicle-val">' + fmt(st.manualGathers) + ' actions</span></div>' +
                         '<div class="chronicle-row"><span class="chronicle-label">Fallen to Hunger</span><span class="chronicle-val">' + fmt(st.starvationDeaths) + ' souls</span></div>' +
                         '<div class="chronicle-section">Resources</div>' +
                         '<div class="chronicle-row"><span class="chronicle-label">Food Gathered</span><span class="chronicle-val">' + fmt(st.foodProduced) + '</span></div>' +
@@ -1867,8 +1889,8 @@
 
             body.innerHTML =
                 '<div class="chronicle-tabs">' +
-                    '<button class="chronicle-tab-btn active" data-tab="history" onclick="switchChronicleTab('history')">History</button>' +
-                    '<button class="chronicle-tab-btn" data-tab="achievements" onclick="switchChronicleTab('achievements')">Achievements</button>' +
+                    '<button class="chronicle-tab-btn active" data-tab="history" onclick="switchChronicleTab(\'history\')">History</button>' +
+                    '<button class="chronicle-tab-btn" data-tab="achievements" onclick="switchChronicleTab(\'achievements\')">Achievements</button>' +
                 '</div>' +
                 '<div id="chronicle-panel-history">' + histHtml + '</div>' +
                 '<div id="chronicle-panel-achievements" style="display:none">' + _chronicleAchHtml + '</div>';

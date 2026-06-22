@@ -332,6 +332,106 @@ function devResetSave() {
     location.reload();
 }
 
+// ── Export / Import UI handlers ─────────────────────────────────────────────
+
+function _saveIoMsg(text, kind) {
+    const el = document.getElementById("save-io-msg");
+    if (!el) return;
+    el.textContent = text || "";
+    el.className = "save-io-msg" + (kind ? " " + kind : "");
+}
+
+function doExportSave() {
+    const str = exportSave();
+    const box = document.getElementById("save-io-box");
+    if (box) {
+        box.value = str;
+        box.focus();
+        box.select();
+    }
+    // Best-effort copy to clipboard.
+    try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(str);
+            _saveIoMsg("Save exported and copied to clipboard.", "ok");
+        } else {
+            document.execCommand("copy");
+            _saveIoMsg("Save exported and copied to clipboard.", "ok");
+        }
+    } catch (e) {
+        _saveIoMsg("Save exported — copy the text above.", "ok");
+    }
+}
+
+function doImportSave() {
+    const box = document.getElementById("save-io-box");
+    const str = box ? box.value : "";
+    if (!str || !str.trim()) {
+        _saveIoMsg("Paste a save string into the box first.", "error");
+        return;
+    }
+    if (!confirm("Import this save? Your current progress will be overwritten.")) return;
+    const ok = importSave(str); // reloads on success
+    if (!ok) _saveIoMsg("Import failed — that doesn't look like a valid save string.", "error");
+}
+
+// Reads the clipboard into the textarea (does not import — the player reviews,
+// then clicks "Import from Textbox"). Clipboard read requires a user gesture and
+// permission; falls back to a manual-paste prompt if it's unavailable.
+function doPasteSave() {
+    const box = document.getElementById("save-io-box");
+    if (!box) return;
+    if (navigator.clipboard && navigator.clipboard.readText) {
+        navigator.clipboard.readText().then(function (text) {
+            if (text && text.trim()) {
+                box.value = text.trim();
+                box.focus();
+                _saveIoMsg("Pasted from clipboard. Review, then click “Import from Textbox”.", "ok");
+            } else {
+                _saveIoMsg("Clipboard is empty.", "error");
+            }
+        }).catch(function () {
+            box.focus();
+            _saveIoMsg("Couldn't read the clipboard — paste into the box manually (Ctrl+V).", "error");
+        });
+    } else {
+        box.focus();
+        _saveIoMsg("Clipboard access unavailable — paste into the box manually (Ctrl+V).", "error");
+    }
+}
+
+function doDownloadSave() {
+    const str = exportSave();
+    const stamp = new Date().toISOString().slice(0, 10);
+    const blob = new Blob([str], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "dungeon-keepers-save-" + stamp + ".txt";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    _saveIoMsg("Save downloaded.", "ok");
+}
+
+function doUploadSave(event) {
+    const file = event.target.files && event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        const str = String(e.target.result || "").trim();
+        const box = document.getElementById("save-io-box");
+        if (box) box.value = str;
+        if (!str) { _saveIoMsg("That file was empty.", "error"); return; }
+        if (!confirm("Import the save from this file? Your current progress will be overwritten.")) return;
+        const ok = importSave(str); // reloads on success
+        if (!ok) _saveIoMsg("Import failed — that file doesn't contain a valid save.", "error");
+    };
+    reader.readAsText(file);
+    event.target.value = ""; // allow re-selecting the same file
+}
+
 // ── Derived values ────────────────────────────────────────────────────────────
 
 // Accumulates research + race bonus for a given effect type.

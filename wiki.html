@@ -1428,6 +1428,16 @@
             <h2>Changelog</h2>
 
             <div class="biome-card">
+                <div><span class="cl-ver">v0.53</span><span class="cl-date">2026-06-22</span></div>
+                <p class="biome-desc">Fixed two script errors that could prevent the game from loading, and reorganized the save tools in Settings &rarr; Data into Export (to clipboard, to file) and Import (from textbox, from file) rows. Added a Paste from Clipboard button that loads a save string into the textbox for review before importing. The save system was verified end-to-end with an automated browser test.</p>
+            </div>
+
+            <div class="biome-card">
+                <div><span class="cl-ver">v0.52</span><span class="cl-date">2026-06-22</span></div>
+                <p class="biome-desc">Save system overhaul modeled on Evolve. Saves are now LZString-compressed in storage, carry a version stamp, and pass through a migration step on load so old saves keep working. Added Export/Import via copy-paste save strings (Base64) plus Download/Upload to a file, in Settings &rarr; Data. Importing writes the save and reloads, matching Evolve's flow.</p>
+            </div>
+
+            <div class="biome-card">
                 <div><span class="cl-ver">v0.51</span><span class="cl-date">2026-06-22</span></div>
                 <p class="biome-desc">D&amp;D flavor pass on Era 1 manual actions: "Channel Influence" is now "Exert Will" and "Channel Mana" is now "Tap the Weave." The Mana Current's flavor text was rewritten to reference the Weave, the endless fabric all arcane magic is drawn from.</p>
             </div>
