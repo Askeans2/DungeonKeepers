@@ -1599,6 +1599,11 @@ function applyEraLoadout(era) {
 
 function devSetEra(n) {
     gameState.run.era = n;
+    if (n === 1) {
+        gameState.era1 = { unlocked: [], chosen: null, raceOptions: null };
+        gameState.run.race = null;
+        _era1TreeState = '';
+    }
     applyEraLoadout(n);
     updateUI();
     updateIdentityPanel();
