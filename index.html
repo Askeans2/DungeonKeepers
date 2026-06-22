@@ -15,98 +15,149 @@
 ═══════════════════════════════════════════════════════════════ -->
 <div id="era-transition-overlay">
     <div id="era-comic-panels">
+
+        <!-- Row 1: panels I and II -->
         <div class="era-panel" id="era-panel-1">
             <span class="era-panel-num">I</span>
             <svg class="era-panel-svg" viewBox="0 0 220 160" xmlns="http://www.w3.org/2000/svg">
-                <!-- Rune circles -->
-                <circle cx="110" cy="80" r="52" fill="none" stroke="rgba(26,188,156,0.2)" stroke-width="1.5" stroke-dasharray="6 4"/>
-                <circle cx="110" cy="80" r="36" fill="none" stroke="rgba(26,188,156,0.15)" stroke-width="1"/>
-                <!-- Rune star glyph -->
-                <path d="M110,44 L118,72 L144,72 L122,90 L130,116 L110,100 L90,116 L98,90 L76,72 L102,72 Z"
-                      fill="none" stroke="#1abc9c" stroke-width="1.8" opacity="0.85"/>
-                <!-- Inner glow -->
-                <circle cx="110" cy="80" r="6"  fill="#1abc9c" opacity="0.9"/>
-                <circle cx="110" cy="80" r="13" fill="#1abc9c" opacity="0.1"/>
-                <!-- Floating sparks -->
-                <circle cx="87"  cy="52"  r="1.5" fill="#1abc9c" opacity="0.7" class="era-spark"/>
-                <circle cx="140" cy="58"  r="1"   fill="#1abc9c" opacity="0.5" class="era-spark"/>
-                <circle cx="76"  cy="98"  r="1.5" fill="#1abc9c" opacity="0.6" class="era-spark"/>
-                <circle cx="148" cy="102" r="1"   fill="#1abc9c" opacity="0.5" class="era-spark"/>
+                <!-- Deep dungeon cross-section: layered earth strata -->
+                <rect x="0"   y="0"   width="220" height="40"  fill="rgba(20,28,28,0.6)"/>
+                <rect x="0"   y="40"  width="220" height="30"  fill="rgba(16,24,24,0.7)"/>
+                <rect x="0"   y="70"  width="220" height="30"  fill="rgba(12,20,20,0.8)"/>
+                <rect x="0"   y="100" width="220" height="60"  fill="rgba(8,16,16,0.9)"/>
+                <!-- Strata dividing lines -->
+                <line x1="0" y1="40"  x2="220" y2="40"  stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+                <line x1="0" y1="70"  x2="220" y2="70"  stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+                <line x1="0" y1="100" x2="220" y2="100" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+                <!-- Rune pulse at depth -->
+                <circle cx="110" cy="128" r="28" fill="none" stroke="rgba(26,188,156,0.15)" stroke-width="1.5" stroke-dasharray="5 4"/>
+                <circle cx="110" cy="128" r="16" fill="none" stroke="rgba(26,188,156,0.22)" stroke-width="1"/>
+                <circle cx="110" cy="128" r="6"  fill="#1abc9c" opacity="0.8"/>
+                <circle cx="110" cy="128" r="11" fill="#1abc9c" opacity="0.08"/>
+                <!-- Sparks drifting upward through strata -->
+                <circle cx="94"  cy="108" r="1.2" fill="#1abc9c" opacity="0.6" class="era-spark"/>
+                <circle cx="118" cy="88"  r="1"   fill="#1abc9c" opacity="0.5" class="era-spark"/>
+                <circle cx="82"  cy="62"  r="1.4" fill="#1abc9c" opacity="0.4" class="era-spark"/>
+                <circle cx="134" cy="48"  r="0.9" fill="#1abc9c" opacity="0.3" class="era-spark"/>
             </svg>
-            <p class="era-panel-lore">The deep places stirred with new purpose.</p>
+            <p class="era-panel-lore">For an age, the dungeon dreamed — its bones older than the kingdoms above.</p>
         </div>
 
         <div class="era-panel" id="era-panel-2">
             <span class="era-panel-num">II</span>
             <svg class="era-panel-svg" viewBox="0 0 220 160" xmlns="http://www.w3.org/2000/svg">
-                <!-- Stone arch -->
-                <rect x="70" y="40" width="80" height="100" rx="2" fill="none" stroke="rgba(170,170,170,0.25)" stroke-width="2"/>
-                <path d="M70,40 Q110,8 150,40" fill="none" stroke="rgba(170,170,170,0.25)" stroke-width="2"/>
-                <!-- Gate crack / teal light -->
-                <line x1="110" y1="42" x2="110" y2="140" stroke="#1abc9c" stroke-width="2" opacity="0.6"/>
-                <!-- Light bloom -->
-                <ellipse cx="110" cy="90" rx="16" ry="38" fill="#1abc9c" opacity="0.05"/>
-                <ellipse cx="110" cy="90" rx="6"  ry="18" fill="#1abc9c" opacity="0.08"/>
-                <!-- Stone blocks -->
-                <rect x="52" y="60" width="18" height="12" rx="1" fill="#282f2f" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-                <rect x="52" y="76" width="18" height="12" rx="1" fill="#282f2f" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-                <rect x="52" y="92" width="18" height="12" rx="1" fill="#282f2f" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-                <rect x="150" y="60" width="18" height="12" rx="1" fill="#282f2f" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-                <rect x="150" y="76" width="18" height="12" rx="1" fill="#282f2f" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-                <rect x="150" y="92" width="18" height="12" rx="1" fill="#282f2f" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-                <line x1="30" y1="140" x2="190" y2="140" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                <!-- Stone arch gate -->
+                <rect x="72" y="42" width="76" height="98" rx="2" fill="none" stroke="rgba(170,170,170,0.22)" stroke-width="2"/>
+                <path d="M72,42 Q110,10 148,42" fill="none" stroke="rgba(170,170,170,0.22)" stroke-width="2"/>
+                <!-- Seal rings cracking -->
+                <circle cx="110" cy="80" r="32" fill="none" stroke="rgba(26,188,156,0.18)" stroke-width="1" stroke-dasharray="3 6"/>
+                <circle cx="110" cy="80" r="22" fill="none" stroke="rgba(26,188,156,0.12)" stroke-width="1" stroke-dasharray="2 8"/>
+                <!-- Gate crack / teal light seam -->
+                <line x1="110" y1="44" x2="110" y2="140" stroke="#1abc9c" stroke-width="2.5" opacity="0.55"/>
+                <!-- Light bloom through crack -->
+                <ellipse cx="110" cy="91" rx="14" ry="36" fill="#1abc9c" opacity="0.04"/>
+                <ellipse cx="110" cy="91" rx="5"  ry="16" fill="#1abc9c" opacity="0.07"/>
+                <!-- Stone wall blocks -->
+                <rect x="50" y="58" width="20" height="13" rx="1" fill="#1a2222" stroke="rgba(255,255,255,0.09)" stroke-width="1"/>
+                <rect x="50" y="75" width="20" height="13" rx="1" fill="#1a2222" stroke="rgba(255,255,255,0.09)" stroke-width="1"/>
+                <rect x="50" y="92" width="20" height="13" rx="1" fill="#1a2222" stroke="rgba(255,255,255,0.09)" stroke-width="1"/>
+                <rect x="150" y="58" width="20" height="13" rx="1" fill="#1a2222" stroke="rgba(255,255,255,0.09)" stroke-width="1"/>
+                <rect x="150" y="75" width="20" height="13" rx="1" fill="#1a2222" stroke="rgba(255,255,255,0.09)" stroke-width="1"/>
+                <rect x="150" y="92" width="20" height="13" rx="1" fill="#1a2222" stroke="rgba(255,255,255,0.09)" stroke-width="1"/>
+                <line x1="28" y1="140" x2="192" y2="140" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
             </svg>
-            <p class="era-panel-lore">A gate long sealed was opened from within.</p>
+            <p class="era-panel-lore">The seals did not break. They were <em>released</em>.</p>
         </div>
 
+        <!-- Row 2: panels III and IV -->
         <div class="era-panel" id="era-panel-3">
             <span class="era-panel-num">III</span>
             <svg class="era-panel-svg" viewBox="0 0 220 160" xmlns="http://www.w3.org/2000/svg">
-                <!-- Creature silhouette -->
-                <path d="M110,130 L98,100 L88,95 L92,80 L104,75 L106,58 L110,50 L114,58 L116,75 L128,80 L132,95 L122,100 Z"
-                      fill="#0f1414" stroke="rgba(26,188,156,0.6)" stroke-width="1.5"/>
+                <!-- Creature silhouette — taller, more imposing -->
+                <path d="M110,136 L96,102 L84,96 L88,76 L102,70 L104,52 L110,42 L116,52 L118,70 L132,76 L136,96 L124,102 Z"
+                      fill="#0a1212" stroke="rgba(26,188,156,0.65)" stroke-width="1.6"/>
                 <!-- Glowing eyes -->
-                <circle cx="105" cy="62" r="2.5" fill="#1abc9c" opacity="0.9"/>
-                <circle cx="115" cy="62" r="2.5" fill="#1abc9c" opacity="0.9"/>
-                <!-- Aura rings -->
-                <ellipse cx="110" cy="95" rx="28" ry="8"  fill="none" stroke="rgba(26,188,156,0.2)" stroke-width="1"/>
-                <ellipse cx="110" cy="95" rx="44" ry="13" fill="none" stroke="rgba(26,188,156,0.1)" stroke-width="1"/>
-                <!-- Ground -->
-                <ellipse cx="110" cy="134" rx="22" ry="4" fill="rgba(26,188,156,0.06)"/>
-                <line x1="30"  y1="140" x2="190" y2="140" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-                <line x1="30"  y1="130" x2="190" y2="130" stroke="rgba(255,255,255,0.04)" stroke-width="0.5"/>
+                <circle cx="104" cy="56" r="2.8" fill="#1abc9c" opacity="0.95"/>
+                <circle cx="116" cy="56" r="2.8" fill="#1abc9c" opacity="0.95"/>
+                <!-- Inner eye glint -->
+                <circle cx="104" cy="56" r="1"   fill="#fff" opacity="0.4"/>
+                <circle cx="116" cy="56" r="1"   fill="#fff" opacity="0.4"/>
+                <!-- Aura / dominance rings expanding outward -->
+                <ellipse cx="110" cy="100" rx="30" ry="9"  fill="none" stroke="rgba(26,188,156,0.22)" stroke-width="1"/>
+                <ellipse cx="110" cy="100" rx="50" ry="15" fill="none" stroke="rgba(26,188,156,0.1)"  stroke-width="1"/>
+                <ellipse cx="110" cy="100" rx="70" ry="20" fill="none" stroke="rgba(26,188,156,0.05)" stroke-width="1"/>
+                <!-- Ground glow pool -->
+                <ellipse cx="110" cy="138" rx="26" ry="5" fill="rgba(26,188,156,0.08)"/>
+                <line x1="28" y1="142" x2="192" y2="142" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
             </svg>
-            <p class="era-panel-lore era-panel-lore-race">— answered the call.</p>
+            <p class="era-panel-lore era-panel-lore-race">stepped forward from the dark, eyes open, hunger awake.</p>
         </div>
 
-        <div class="era-panel era-panel-final" id="era-panel-4">
+        <div class="era-panel" id="era-panel-4">
             <span class="era-panel-num">IV</span>
             <svg class="era-panel-svg" viewBox="0 0 220 160" xmlns="http://www.w3.org/2000/svg">
-                <!-- Radial burst lines -->
-                <line x1="110" y1="80" x2="10"  y2="10"  stroke="rgba(26,188,156,0.18)" stroke-width="0.8"/>
-                <line x1="110" y1="80" x2="110" y2="0"   stroke="rgba(26,188,156,0.18)" stroke-width="0.8"/>
-                <line x1="110" y1="80" x2="210" y2="10"  stroke="rgba(26,188,156,0.18)" stroke-width="0.8"/>
-                <line x1="110" y1="80" x2="220" y2="80"  stroke="rgba(26,188,156,0.18)" stroke-width="0.8"/>
-                <line x1="110" y1="80" x2="210" y2="150" stroke="rgba(26,188,156,0.18)" stroke-width="0.8"/>
-                <line x1="110" y1="80" x2="110" y2="160" stroke="rgba(26,188,156,0.18)" stroke-width="0.8"/>
-                <line x1="110" y1="80" x2="10"  y2="150" stroke="rgba(26,188,156,0.18)" stroke-width="0.8"/>
-                <line x1="110" y1="80" x2="0"   y2="80"  stroke="rgba(26,188,156,0.18)" stroke-width="0.8"/>
+                <!-- Dungeon corridor branching — top-down map view -->
+                <!-- Central chamber -->
+                <rect x="88" y="68" width="44" height="36" rx="2" fill="rgba(26,188,156,0.06)" stroke="rgba(26,188,156,0.3)" stroke-width="1.2"/>
+                <!-- Corridors branching outward -->
+                <rect x="108" y="20" width="4" height="48"  fill="rgba(26,188,156,0.12)"/>
+                <rect x="108" y="104" width="4" height="46" fill="rgba(26,188,156,0.12)"/>
+                <rect x="24"  y="82"  width="64" height="4" fill="rgba(26,188,156,0.12)"/>
+                <rect x="132" y="82"  width="64" height="4" fill="rgba(26,188,156,0.12)"/>
+                <!-- Diagonal branch corridors -->
+                <line x1="88"  y1="68"  x2="50"  y2="30"  stroke="rgba(26,188,156,0.1)" stroke-width="3"/>
+                <line x1="132" y1="68"  x2="170" y2="30"  stroke="rgba(26,188,156,0.1)" stroke-width="3"/>
+                <line x1="88"  y1="104" x2="50"  y2="142" stroke="rgba(26,188,156,0.1)" stroke-width="3"/>
+                <line x1="132" y1="104" x2="170" y2="142" stroke="rgba(26,188,156,0.1)" stroke-width="3"/>
+                <!-- Torch glows at corridor ends -->
+                <circle cx="110" cy="16" r="4" fill="#1abc9c" opacity="0.5" class="era-spark"/>
+                <circle cx="110" cy="152" r="4" fill="#1abc9c" opacity="0.4" class="era-spark"/>
+                <circle cx="22"  cy="84"  r="4" fill="#1abc9c" opacity="0.45" class="era-spark"/>
+                <circle cx="198" cy="84"  r="4" fill="#1abc9c" opacity="0.4" class="era-spark"/>
+                <circle cx="46"  cy="26"  r="3" fill="#1abc9c" opacity="0.3" class="era-spark"/>
+                <circle cx="174" cy="26"  r="3" fill="#1abc9c" opacity="0.3" class="era-spark"/>
+                <!-- Central rune dot -->
+                <circle cx="110" cy="86" r="3.5" fill="#1abc9c" opacity="0.85"/>
+                <circle cx="110" cy="86" r="7"   fill="#1abc9c" opacity="0.08"/>
+            </svg>
+            <p class="era-panel-lore">And the halls that had whispered began to <em>roar</em>.</p>
+        </div>
+
+        <!-- Row 3: panel V — full width climax -->
+        <div class="era-panel era-panel-final" id="era-panel-5">
+            <span class="era-panel-num">V</span>
+            <svg class="era-panel-svg" viewBox="0 0 440 120" xmlns="http://www.w3.org/2000/svg">
+                <!-- Wide radial burst -->
+                <line x1="220" y1="60" x2="20"  y2="8"   stroke="rgba(26,188,156,0.14)" stroke-width="0.8"/>
+                <line x1="220" y1="60" x2="220" y2="0"   stroke="rgba(26,188,156,0.14)" stroke-width="0.8"/>
+                <line x1="220" y1="60" x2="420" y2="8"   stroke="rgba(26,188,156,0.14)" stroke-width="0.8"/>
+                <line x1="220" y1="60" x2="440" y2="60"  stroke="rgba(26,188,156,0.14)" stroke-width="0.8"/>
+                <line x1="220" y1="60" x2="420" y2="112" stroke="rgba(26,188,156,0.14)" stroke-width="0.8"/>
+                <line x1="220" y1="60" x2="220" y2="120" stroke="rgba(26,188,156,0.14)" stroke-width="0.8"/>
+                <line x1="220" y1="60" x2="20"  y2="112" stroke="rgba(26,188,156,0.14)" stroke-width="0.8"/>
+                <line x1="220" y1="60" x2="0"   y2="60"  stroke="rgba(26,188,156,0.14)" stroke-width="0.8"/>
+                <!-- Diagonal rays -->
+                <line x1="220" y1="60" x2="120" y2="4"   stroke="rgba(26,188,156,0.08)" stroke-width="0.6"/>
+                <line x1="220" y1="60" x2="320" y2="4"   stroke="rgba(26,188,156,0.08)" stroke-width="0.6"/>
+                <line x1="220" y1="60" x2="120" y2="116" stroke="rgba(26,188,156,0.08)" stroke-width="0.6"/>
+                <line x1="220" y1="60" x2="320" y2="116" stroke="rgba(26,188,156,0.08)" stroke-width="0.6"/>
                 <!-- Crest rings -->
-                <circle cx="110" cy="80" r="60" fill="none" stroke="rgba(26,188,156,0.3)"  stroke-width="1.5"/>
-                <circle cx="110" cy="80" r="55" fill="none" stroke="rgba(26,188,156,0.12)" stroke-width="0.5"/>
+                <circle cx="220" cy="60" r="56" fill="none" stroke="rgba(26,188,156,0.28)" stroke-width="1.5"/>
+                <circle cx="220" cy="60" r="50" fill="none" stroke="rgba(26,188,156,0.1)"  stroke-width="0.5"/>
                 <!-- Crown glyph -->
-                <path d="M110,22 L115,36 L128,28 L122,42 L138,40 L126,52 L140,58 L124,60 L128,75
-                         L110,68 L92,75 L96,60 L80,58 L94,52 L82,40 L98,42 L92,28 L105,36 Z"
-                      fill="none" stroke="#1abc9c" stroke-width="1.4" opacity="0.75"/>
-                <!-- Roman II numeral -->
-                <rect x="100" y="82" width="6"  height="28" rx="1" fill="#1abc9c" opacity="0.9"/>
-                <rect x="114" y="82" width="6"  height="28" rx="1" fill="#1abc9c" opacity="0.9"/>
-                <rect x="96"  y="82" width="28" height="3"  rx="1" fill="#1abc9c" opacity="0.6"/>
-                <rect x="96"  y="107" width="28" height="3" rx="1" fill="#1abc9c" opacity="0.6"/>
+                <path d="M220,8 L226,24 L240,16 L234,30 L250,28 L238,38 L252,44 L236,46 L240,58
+                         L220,52 L200,58 L204,46 L188,44 L202,38 L190,28 L206,30 L200,16 L214,24 Z"
+                      fill="none" stroke="#1abc9c" stroke-width="1.3" opacity="0.7"/>
+                <!-- Roman II -->
+                <rect x="208" y="64" width="7"  height="30" rx="1" fill="#1abc9c" opacity="0.9"/>
+                <rect x="225" y="64" width="7"  height="30" rx="1" fill="#1abc9c" opacity="0.9"/>
+                <rect x="204" y="64" width="32" height="3.5" rx="1" fill="#1abc9c" opacity="0.55"/>
+                <rect x="204" y="90" width="32" height="3.5" rx="1" fill="#1abc9c" opacity="0.55"/>
             </svg>
             <p class="era-panel-title">ERA II</p>
             <p class="era-panel-subtitle">DOMINION</p>
         </div>
+
     </div>
     <button id="era-transition-continue" onclick="eraTransitionContinue()">Begin Era II</button>
 </div>

@@ -2840,13 +2840,14 @@ body.reduce-motion *::after {
 .era-panel:hover { border-color: var(--accent); }
 
 /* Staggered vertical offset — each panel sits lower than the previous,
-   making the read order (1 → 2 → 3 → 4) visually obvious */
+   making the read order (I → II → III → IV → V) visually obvious */
 #era-panel-1 { margin-top: 0; }
-#era-panel-2 { margin-top: 24px; }
-#era-panel-3 { margin-top: 48px; }
-#era-panel-4 { margin-top: 72px; }
+#era-panel-2 { margin-top: 20px; }
+#era-panel-3 { margin-top: 40px; }
+#era-panel-4 { margin-top: 60px; }
+#era-panel-5 { margin-top: 0; }  /* full-width climax row resets */
 
-/* Panel 4 spans full width and is the climax */
+/* Panel V spans full width and is the climax */
 .era-panel-final {
     grid-column: 1 / -1;
     justify-content: center;

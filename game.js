@@ -1931,7 +1931,7 @@ function showEraTransition(raceName, onComplete) {
 
     // Inject race name into panel 3 lore line
     const loreRace = document.querySelector('.era-panel-lore-race');
-    if (loreRace) loreRace.textContent = '“' + raceName + '” answered the call.';
+    if (loreRace) loreRace.innerHTML = '<em>' + raceName + '</em> stepped forward from the dark, eyes open, hunger awake.';
 
     const overlay = document.getElementById('era-transition-overlay');
     const panels  = document.querySelectorAll('.era-panel');
@@ -1944,13 +1944,13 @@ function showEraTransition(raceName, onComplete) {
     overlay.classList.add('era-active');
 
     // Stagger panels in
-    const delays = [120, 360, 600, 920];
+    const delays = [120, 360, 600, 860, 1180];
     panels.forEach((p, i) => {
         setTimeout(() => p.classList.add('era-panel-in'), delays[i]);
     });
 
     // Show button after final panel settles
-    setTimeout(() => btn.classList.add('era-btn-in'), 1480);
+    setTimeout(() => btn.classList.add('era-btn-in'), 1760);
 }
 
 function eraTransitionContinue() {
