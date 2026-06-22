@@ -792,6 +792,31 @@ function initBldTooltips() {
         });
         el.addEventListener('mouseleave', () => { if (_bldTooltipEl) _bldTooltipEl.style.display = 'none'; });
     });
+
+    // Expanded Awareness — not in ROOMS, wired up manually
+    const eaBtn = document.getElementById('btn-expandedAwareness');
+    if (eaBtn) {
+        eaBtn.addEventListener('mouseenter', () => {
+            if (!_bldTooltipEl) return;
+            const bonus = getReservoirBonus();
+            _bldTooltipEl.innerHTML =
+                `<div class="bld-tt-name">Expanded Awareness</div>` +
+                `<div class="bld-tt-desc">Deepen your mental capacity, increasing the storage cap of all Essence, Influence, and Mana reservoirs by +10 each.</div>` +
+                `<div class="bld-tt-effect">Each reservoir building currently grants +${bonus} capacity. Next purchase raises this to +${bonus + 10}.</div>` +
+                `<div class="bld-tt-flavor">The mind is not a vessel with fixed walls. It is a space you learn to widen.</div>`;
+            _bldTooltipEl.style.display = 'block';
+        });
+        eaBtn.addEventListener('mousemove', e => {
+            if (!_bldTooltipEl) return;
+            const tipW = 220;
+            const tipH = _bldTooltipEl.offsetHeight;
+            const left = e.clientX + 14 + tipW > window.innerWidth ? e.clientX - tipW - 14 : e.clientX + 14;
+            const top  = e.clientY + 14 + tipH > window.innerHeight ? e.clientY - tipH - 8 : e.clientY + 14;
+            _bldTooltipEl.style.left = left + 'px';
+            _bldTooltipEl.style.top  = top  + 'px';
+        });
+        eaBtn.addEventListener('mouseleave', () => { if (_bldTooltipEl) _bldTooltipEl.style.display = 'none'; });
+    }
 }
 
 function _refreshResTooltip() {
@@ -1591,6 +1616,7 @@ function devFillPercent(pct) {
     const caps = getCaps();
     const allRes = [...Object.keys(BASE_CAPS), 'coins'];
     for (const res of allRes) {
+        if (!shouldShowResource(res) && res !== 'coins') continue;
         const cap = caps[res] ?? 0;
         gameState.resources[res] = Math.min((gameState.resources[res] || 0) + Math.floor(cap * pct), cap);
     }
@@ -1736,6 +1762,60 @@ function canAffordEra1(nodeId) {
     return true;
 }
 
+// Branch particle colors keyed by domain
+const ERA1_BRANCH_COLORS = {
+    deep:   'rgba(136,153,170,VAL)',
+    wild:   'rgba(90,158,96,VAL)',
+    beyond: 'rgba(136,102,187,VAL)',
+};
+const ERA1_BRANCH_FLASH = {
+    deep:   'rgba(136,153,170,0.12)',
+    wild:   'rgba(90,158,96,0.14)',
+    beyond: 'rgba(136,102,187,0.12)',
+};
+const ERA1_PARTICLE_GLYPHS = ['ᚠ','ᚢ','ᚦ','ᚱ','ᚲ','ᛁ','ᛏ','ᛇ','✦','◈','△','◇'];
+
+function era1BurstParticles(el, domainId, count) {
+    if (document.body.classList.contains('reduce-motion')) return;
+    const rect = el.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top  + rect.height / 2;
+    const colorTemplate = ERA1_BRANCH_COLORS[domainId] || ERA1_BRANCH_COLORS.deep;
+    for (let i = 0; i < count; i++) {
+        const p = document.createElement('span');
+        p.className = 'era1-particle';
+        p.textContent = ERA1_PARTICLE_GLYPHS[Math.floor(Math.random() * ERA1_PARTICLE_GLYPHS.length)];
+        const angle = (Math.PI * 2 * i / count) + (Math.random() - 0.5) * 0.6;
+        const dist  = 40 + Math.random() * 50;
+        const dx = Math.cos(angle) * dist;
+        const dy = Math.sin(angle) * dist - 20; // bias upward
+        const dr = (Math.random() - 0.5) * 120;
+        const opacity = 0.55 + Math.random() * 0.3;
+        p.style.cssText = [
+            `left:${cx}px`, `top:${cy}px`,
+            `color:${colorTemplate.replace('VAL', opacity.toFixed(2))}`,
+            `font-size:${11 + Math.floor(Math.random() * 8)}px`,
+            `--dx:${dx.toFixed(1)}px`, `--dy:${dy.toFixed(1)}px`,
+            `--dr:${dr.toFixed(0)}deg`,
+            `animation-duration:${0.7 + Math.random() * 0.4}s`,
+            `animation-delay:${(Math.random() * 0.08).toFixed(2)}s`,
+        ].join(';');
+        document.body.appendChild(p);
+        p.addEventListener('animationend', () => p.remove(), { once: true });
+    }
+}
+
+function era1FlashTree(domainId) {
+    if (document.body.classList.contains('reduce-motion')) return;
+    const tree = document.getElementById('era1-tree');
+    if (!tree) return;
+    const flash = document.createElement('div');
+    flash.className = 'era1-race-flash';
+    flash.style.background = ERA1_BRANCH_FLASH[domainId] || ERA1_BRANCH_FLASH.deep;
+    tree.appendChild(flash);
+    flash.addEventListener('animationend', () => flash.remove(), { once: true });
+}
+
 function unlockEra1Node(nodeId) {
     const node = ERA1_TREE[nodeId];
     if (!node) return;
@@ -1744,6 +1824,16 @@ function unlockEra1Node(nodeId) {
         if (el) { el.classList.add('era1-flash-deny'); setTimeout(() => el.classList.remove('era1-flash-deny'), 600); }
         return;
     }
+
+    // Pulse the clicked node before deducting
+    const clickedEl = document.getElementById('era1-node-' + nodeId);
+    const domainId  = era1GetDomain(nodeId);
+    if (clickedEl) {
+        clickedEl.classList.add('era1-node-chosen-pulse');
+        clickedEl.addEventListener('animationend', () => clickedEl.classList.remove('era1-node-chosen-pulse'), { once: true });
+        era1BurstParticles(clickedEl, domainId, node.layer === 5 ? 16 : 10);
+    }
+
     // Deduct costs
     for (const [res, amt] of Object.entries(node.cost)) {
         gameState.resources[res] = Math.max(0, (gameState.resources[res] || 0) - amt);
@@ -1754,10 +1844,16 @@ function unlockEra1Node(nodeId) {
     // Era transition: L5 race node chosen
     if (node.layer === 5 && node.race) {
         gameState.era1.chosen = nodeId;
-        playRace(node.race);
-        gameState.run.era = 2;
-        saveGame();
-        snapshotBackup("Era 2 (" + (node.race || "transition") + ")"); // restore point at era start
+        era1FlashTree(domainId);
+        setTimeout(() => {
+            playRace(node.race);
+            gameState.run.era = 2;
+            saveGame();
+            snapshotBackup("Era 2 (" + (node.race || "transition") + ")"); // restore point at era start
+            updateUI();
+            saveGame();
+        }, 900);
+        return;
     }
     updateUI();
     saveGame();
@@ -1911,12 +2007,47 @@ function renderEra1Actions() {
     container.innerHTML = html;
 }
 
+const ERA1_LORE = [
+    {
+        heading: 'The First Question',
+        body: 'Before you can know what you want, you must know where you belong. The deep dark, the wild surface, the spaces beyond the mortal world — each pulls at something in you that predates memory. This is not a choice of strategy. It is a recognition.',
+    },
+    {
+        heading: 'What Moves You',
+        body: 'A dungeon without purpose is just a hole in the ground. What you hunger for shapes everything that follows — your servants, your patience or your fury, the texture of the dark you cultivate. Choose what drives you, and it will drive everything else.',
+    },
+    {
+        heading: 'The Shape of Your Will',
+        body: 'Will is not enough on its own. Power must take a form before it can act in the world. The horde, the champion, the patient root — these are not tactics. They are philosophies. What you choose here becomes the language your dungeon speaks.',
+    },
+    {
+        heading: 'Blood and Bone',
+        body: 'The idea narrows into flesh. From all the creatures that might serve, one kind calls to the particular nature of what you are becoming. Their strengths will be your strengths. Their limitations, yours as well. You are not choosing servants. You are choosing kin.',
+    },
+    {
+        heading: 'The First Face',
+        body: 'This is the choice that ends the question. When your first creature opens its eyes in your halls, it will look like this. Everything you have decided — domain, drive, form, type — culminates here. Choose the face of your dungeon.',
+    },
+];
+
+function renderEra1Lore(frontierLayer) {
+    const el = document.getElementById('era1-lore');
+    if (!el) return;
+    if (frontierLayer < 1 || frontierLayer > 5) { el.innerHTML = ''; return; }
+    const lore = ERA1_LORE[frontierLayer - 1];
+    el.innerHTML =
+        `<div class="era1-lore">` +
+        `<div class="era1-lore-heading">${lore.heading}</div>` +
+        `<div class="era1-lore-body">${lore.body}</div>` +
+        `</div>`;
+}
+
 let _era1TreeState = '';
 
 function renderEra1Tree() {
     const container = document.getElementById('era1-tree');
     if (!container) return;
-    if ((gameState.run.era || 1) !== 1) { container.innerHTML = ''; return; }
+    if ((gameState.run.era || 1) !== 1) { container.innerHTML = ''; renderEra1Lore(0); return; }
 
     const era1 = gameState.era1 || { unlocked: [], chosen: null };
     const unlocked = era1.unlocked || [];
@@ -1932,13 +2063,15 @@ function renderEra1Tree() {
     let html = '';
 
     // Helper: render one layer row
-    function renderLayer(nodeIds, chosenId) {
+    // animate=true adds entrance animation classes (only for the frontier layer)
+    function renderLayer(nodeIds, chosenId, animate) {
         if (!nodeIds || nodeIds.length === 0) return '';
         // Get domain of the first node for branch coloring
         const domainId = era1GetDomain(nodeIds[0]);
         const branchClass = (ERA1_BRANCH_CLASS && ERA1_BRANCH_CLASS[domainId]) || '';
         let rowHtml = '<div class="era1-layer">';
-        for (const nid of nodeIds) {
+        for (let i = 0; i < nodeIds.length; i++) {
+            const nid  = nodeIds[i];
             const node = ERA1_TREE[nid];
             if (!node) continue;
             const isChosen = nid === chosenId;
@@ -1949,7 +2082,10 @@ function renderEra1Tree() {
                              : isGhosted ? 'era1-node-locked'
                              : affordable ? 'era1-node-active'
                              : 'era1-node-waiting';
-            rowHtml += `<div class="era1-node ${stateClass} ${branchClass}" id="era1-node-${nid}"
+            const enterClass = animate ? 'era1-node-enter' : '';
+            const enterDelay = animate ? `animation-delay:${i * 60}ms;` : '';
+            rowHtml += `<div class="era1-node ${stateClass} ${branchClass} ${enterClass}" id="era1-node-${nid}"
+                            style="${enterDelay}"
                             onclick="unlockEra1Node('${nid}')"
                             onmouseenter="era1ShowPanel('${nid}', event)"
                             onmousemove="_era1MoveTooltip(event)"
@@ -1962,6 +2098,18 @@ function renderEra1Tree() {
         return rowHtml;
     }
 
+    // Helper: connector — animated only when it's newly appearing
+    function renderConnector(animate) {
+        return `<div class="era1-connector${animate ? ' era1-connector-new' : ''}"></div>`;
+    }
+
+    // Determine how deep the chosen path goes so we know which layer is the frontier
+    const chosenL1 = era1GetChosenChild('root');
+    const chosenL2 = chosenL1 ? era1GetChosenChild(chosenL1) : null;
+    const chosenL3 = chosenL2 ? era1GetChosenChild(chosenL2) : null;
+    const chosenL4 = chosenL3 ? era1GetChosenChild(chosenL3) : null;
+    const frontierLayer = !chosenL1 ? 1 : !chosenL2 ? 2 : !chosenL3 ? 3 : !chosenL4 ? 4 : 5;
+
     // L0: root (always shown as done)
     const rootNode = ERA1_TREE['root'];
     html += `<div class="era1-layer era1-layer-root">
@@ -1969,40 +2117,37 @@ function renderEra1Tree() {
             <div class="era1-node-name">${rootNode.name}</div>
         </div>
     </div>`;
-    html += '<div class="era1-connector"></div>';
+    html += renderConnector(false);
 
-    // L1: Domain — show all 3 (deep/wild/beyond), one may be chosen
-    const chosenL1 = era1GetChosenChild('root');
-    html += renderLayer(ERA1_TREE['root'].children, chosenL1);
+    // L1: Domain
+    html += renderLayer(ERA1_TREE['root'].children, chosenL1, frontierLayer === 1);
 
     if (chosenL1) {
-        html += '<div class="era1-connector"></div>';
-        // L2: Drive — show children of chosen L1
-        const chosenL2 = era1GetChosenChild(chosenL1);
-        html += renderLayer(ERA1_TREE[chosenL1].children, chosenL2);
+        html += renderConnector(frontierLayer === 2);
+        // L2: Drive
+        html += renderLayer(ERA1_TREE[chosenL1].children, chosenL2, frontierLayer === 2);
 
         if (chosenL2) {
-            html += '<div class="era1-connector"></div>';
-            // L3: Form — show children of chosen L2
-            const chosenL3 = era1GetChosenChild(chosenL2);
-            html += renderLayer(ERA1_TREE[chosenL2].children, chosenL3);
+            html += renderConnector(frontierLayer === 3);
+            // L3: Form
+            html += renderLayer(ERA1_TREE[chosenL2].children, chosenL3, frontierLayer === 3);
 
             if (chosenL3) {
-                html += '<div class="era1-connector"></div>';
-                // L4: Type — show children of chosen L3
-                const chosenL4 = era1GetChosenChild(chosenL3);
-                html += renderLayer(ERA1_TREE[chosenL3].children, chosenL4);
+                html += renderConnector(frontierLayer === 4);
+                // L4: Type
+                html += renderLayer(ERA1_TREE[chosenL3].children, chosenL4, frontierLayer === 4);
 
                 if (chosenL4) {
-                    html += '<div class="era1-connector"></div>';
-                    // L5: Race — show children of chosen L4
+                    html += renderConnector(frontierLayer === 5);
+                    // L5: Race
                     const chosenL5 = era1GetChosenChild(chosenL4);
-                    html += renderLayer(ERA1_TREE[chosenL4].children, chosenL5);
+                    html += renderLayer(ERA1_TREE[chosenL4].children, chosenL5, frontierLayer === 5);
                 }
             }
         }
     }
 
+    renderEra1Lore(frontierLayer);
     container.innerHTML = html;
 }
 

@@ -2599,6 +2599,32 @@ body.reduce-motion *::after {
 .era1-node-active.era1-wild:hover   { border-color: #5a9e60; background: rgba(90,158,96,0.12); }
 .era1-node-active.era1-beyond:hover { border-color: #8866bb; background: rgba(136,102,187,0.1); }
 
+/* Awakening lore header */
+.era1-lore {
+    margin: 12px 0 16px;
+    padding: 10px 14px;
+    border-left: 2px solid rgba(184,144,42,0.35);
+    background: rgba(184,144,42,0.04);
+    animation: era1LoreFade 0.5s ease;
+}
+@keyframes era1LoreFade {
+    from { opacity: 0; transform: translateY(-4px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.era1-lore-heading {
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(184,144,42,0.7);
+    margin-bottom: 5px;
+}
+.era1-lore-body {
+    font-size: 12px;
+    font-style: italic;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
 /* Deny flash animation */
 @keyframes era1Deny {
     0%   { border-color: #d46a6a; background: rgba(212,106,106,0.15); }
@@ -2606,3 +2632,60 @@ body.reduce-motion *::after {
     100% { border-color: inherit;  background: inherit; }
 }
 .era1-flash-deny { animation: era1Deny 0.6s ease; }
+
+/* Node entrance — staggered slide-up fade */
+@keyframes era1NodeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.era1-node-enter {
+    animation: era1NodeIn 0.35s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+/* Chosen node confirmation pulse */
+@keyframes era1NodeChosen {
+    0%   { transform: scale(1);    box-shadow: 0 0 0px rgba(184,144,42,0); }
+    40%  { transform: scale(1.07); box-shadow: 0 0 18px rgba(184,144,42,0.55); }
+    100% { transform: scale(1);    box-shadow: 0 0 0px rgba(184,144,42,0); }
+}
+.era1-node-chosen-pulse { animation: era1NodeChosen 0.5s ease-out; }
+
+/* Connector draw animation */
+@keyframes era1ConnectorDraw {
+    from { height: 0; opacity: 0; }
+    to   { height: 12px; opacity: 1; }
+}
+.era1-connector-new { animation: era1ConnectorDraw 0.25s ease-out both; }
+
+/* Tree-level flash on race selection (L5) */
+@keyframes era1RaceFlash {
+    0%   { opacity: 0; }
+    20%  { opacity: 1; }
+    100% { opacity: 0; }
+}
+.era1-race-flash {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: 4px;
+    animation: era1RaceFlash 1.2s ease-out forwards;
+    z-index: 10;
+}
+
+/* Tree container needs position:relative for the flash overlay */
+.era1-tree { position: relative; }
+
+/* Branch-colored burst particles */
+.era1-particle {
+    position: fixed;
+    pointer-events: none;
+    font-size: 13px;
+    user-select: none;
+    line-height: 1;
+    z-index: 9999;
+    animation: era1ParticleBurst 0.9s ease-out forwards;
+}
+@keyframes era1ParticleBurst {
+    0%   { opacity: 1; transform: translate(0, 0) scale(1) rotate(0deg); }
+    100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0.4) rotate(var(--dr)); }
+}
