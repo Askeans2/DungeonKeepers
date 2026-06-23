@@ -763,10 +763,10 @@ function _hideResTooltip() {
 function _buildEchoTooltipHTML() {
     const echoes   = gameState.meta.echoes || 0;
     const bonusPct = (echoes * 0.5).toFixed(1);
-    return `<div class="res-tt-header">Echoes</div>
-<div class="res-tt-lore">Remnants of awareness that persist between awakenings — the dungeon does not forget what it has learned.</div>
+    return `<div class="res-tt-header">Quintessence</div>
+<div class="res-tt-lore">The solidified will of a dungeon-mind that has lived and died before — carried forward through every binding and every deal. The devil did not give you this. It only ensured you kept it.</div>
 <div class="res-tt-divider"></div>
-<div class="res-tt-row"><span class="res-tt-label">Each Echo<span class="res-tt-sub"> resonance</span></span><span class="res-tt-val pos">+0.5% all production</span></div>
+<div class="res-tt-row"><span class="res-tt-label">Each Quintessence<span class="res-tt-sub"> resonance</span></span><span class="res-tt-val pos">+0.5% all production</span></div>
 <div class="res-tt-row res-tt-total-row"><span class="res-tt-label">Total bonus<span class="res-tt-sub"> ${echoes} × 0.5%</span></span><span class="res-tt-val pos">+${bonusPct}%</span></div>`;
 }
 
@@ -955,7 +955,7 @@ function initBldTooltips() {
             const bonus = getReservoirBonus();
             _bldTooltipEl.innerHTML =
                 `<div class="bld-tt-name">Expanded Awareness</div>` +
-                `<div class="bld-tt-desc">Deepen your mental capacity, increasing the storage cap of all Essence, Influence, and Mana reservoirs by +10 each.</div>` +
+                `<div class="bld-tt-desc">Deepen your mental capacity, increasing the storage cap of all Anima, Influence, and Mana reservoirs by +10 each.</div>` +
                 `<div class="bld-tt-effect">Each reservoir building currently grants +${bonus} capacity. Next purchase raises this to +${bonus + 10}.</div>` +
                 `<div class="bld-tt-flavor">The mind is not a vessel with fixed walls. It is a space you learn to widen.</div>`;
             _bldTooltipEl.style.display = 'block';
@@ -1477,7 +1477,7 @@ function updateUI() {
         const countEl = document.getElementById('expandedAwarenessCount');
         if (countEl) countEl.textContent = (gameState.era1Upgrades && gameState.era1Upgrades.reservoirExpansion) || 0;
         const costEl = document.getElementById('expandedAwarenessCost');
-        if (costEl) costEl.textContent = `${getReservoirUpgradeCost()} Essence`;
+        if (costEl) costEl.textContent = `${getReservoirUpgradeCost()} Anima`;
     }
 
     // Era 1 section labels
@@ -3155,14 +3155,14 @@ function renderEra1Actions() {
 
     html += `<button class="action-btn" onclick="gatherEra1('essence')">
         <span class="action-title">Concentrate</span>
-        <span class="action-yield">+1 Essence</span>
+        <span class="action-yield">+1 Anima</span>
     </button>`;
 
     {
         const cls = canInfluence ? '' : ' disabled';
         html += `<button class="action-btn${cls}" onclick="gatherEra1('toInfluence')">
             <span class="action-title">Exert Will</span>
-            <span class="action-yield">-2 Essence → +1 Influence</span>
+            <span class="action-yield">-2 Anima → +1 Influence</span>
         </button>`;
     }
 
@@ -3170,7 +3170,7 @@ function renderEra1Actions() {
         const cls = canMana ? '' : ' disabled';
         html += `<button class="action-btn${cls}" onclick="gatherEra1('toMana')">
             <span class="action-title">Tap the Weave</span>
-            <span class="action-yield">-5 Essence → +1 Mana</span>
+            <span class="action-yield">-5 Anima → +1 Mana</span>
         </button>`;
     }
 
@@ -4340,7 +4340,7 @@ function calcEchoesEarned() {
 // Called when player prestiges — resets run state, keeps meta progression
 function doPrestige() {
     const echoPreview = calcEchoesEarned();
-    if (!confirm(`Simulate a Prestige reset?\n\nAll run progress (resources, buildings, population) will be wiped and a new biome assigned. Meta-stats (prestiges, seen biomes, Echoes) are preserved.\n\nYou will earn ${echoPreview} Echo${echoPreview !== 1 ? 'es' : ''} from this run.`)) return;
+    if (!confirm(`Simulate a Prestige reset?\n\nAll run progress (resources, buildings, population) will be wiped and a new biome assigned. Meta-stats (prestiges, seen biomes, Quintessence) are preserved.\n\nYou will earn ${echoPreview} Quintessence from this run.`)) return;
 
     const savedMeta = JSON.parse(JSON.stringify(gameState.meta));
     savedMeta.totalPrestiges = (savedMeta.totalPrestiges || 0) + 1;

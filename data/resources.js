@@ -30,7 +30,7 @@ const RESOURCES = {
     mithril:    { name: "Mithril",     tier: 3 },
 
     // ── Era 1 — Awakening Resources ─────────────────────────────────────────────
-    essence:    { name: "Essence",     tier: 1 },
+    essence:    { name: "Anima",        tier: 1 },
     influence:  { name: "Influence",   tier: 1 },
     mana:       { name: "Mana",        tier: 1 },
 
