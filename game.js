@@ -2027,8 +2027,407 @@ let _eraTimerTimeout = null;
 let _eraMouseMoveHandler = null;
 let _eraCanvasRAF = null;
 
+// ── Era panel 3 — race silhouette SVG inner content ───────────────────────────
+// Each entry is the SVG markup (no outer <svg> tag) injected into #era-p3-art.
+// Creatures with their own entry take priority; types serve as fallback.
+// Common constants reused across entries:
+//   gold stroke = rgba(200,160,40,0.7)   dim gold = rgba(200,160,40,0.25)
+//   crimson eye = #c0392b                aura ring = rgba(200,160,40,0.18)
+const ERA_RACE_SVG = (() => {
+    const G  = 'rgba(200,160,40,0.7)';   // gold outline
+    const Gd = 'rgba(200,160,40,0.25)';  // dim gold
+    const Gf = 'rgba(200,160,40,0.08)';  // faint gold
+    const E  = '#c0392b';                // crimson eye fill
+    const Ei = '#ff6b5b';               // eye inner glow
+    const BG = '#0e0a06';               // silhouette fill
+    const BGd= '#0a0704';              // dim silhouette fill
+    const aura = (cx,cy,r1,r2) =>
+        `<ellipse cx="${cx}" cy="${cy}" rx="${r1}" ry="${r2*0.32}" fill="none" stroke="rgba(200,160,40,0.18)" stroke-width="1"/>
+         <ellipse cx="${cx}" cy="${cy}" rx="${r1*1.7}" ry="${r2*0.55}" fill="none" stroke="${Gf}" stroke-width="1"/>`;
+    const eye = (cx,cy,r=3.2) =>
+        `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${E}" opacity="0.95"/>
+         <circle cx="${cx}" cy="${cy}" r="${r*0.44}" fill="${Ei}" opacity="0.7"/>`;
+    const shadow = (cx,cy,rx=30) =>
+        `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="6" fill="rgba(180,100,20,0.1)"/>`;
+
+    const art = {};
+
+    // ── Goblinoid / Goblin — hunched swarming horde, wide low silhouettes ──────
+    const goblinoidSVG =
+        // three goblins abreast, low and hunched
+        `<path d="M110,140 L100,118 L92,114 L94,98 L102,93 L103,82 L110,74 L117,82 L118,93 L126,98 L128,114 L120,118 Z" fill="${BG}" stroke="${G}" stroke-width="1.8"/>
+         ${eye(106,85,2.8)}${eye(114,85,2.8)}
+         <path d="M64,140 L56,122 L50,118 L52,104 L59,100 L60,90 L66,83 L72,90 L73,100 L80,104 L82,118 L74,122 Z" fill="${BGd}" stroke="${Gd}" stroke-width="1"/>
+         ${eye(62,92,1.8)}${eye(70,92,1.8)}
+         <path d="M156,140 L148,122 L142,118 L144,104 L151,100 L152,90 L158,83 L164,90 L165,100 L172,104 L174,118 L166,122 Z" fill="${BGd}" stroke="${Gd}" stroke-width="1"/>
+         ${eye(154,92,1.8)}${eye(162,92,1.8)}
+         ${aura(110,120,38,12)}${shadow(110,143,36)}`;
+    art['Goblinoid'] = goblinoidSVG;
+    art['Goblin']    = goblinoidSVG;
+    art['Orc'] =
+        // broad muscular orc — wider shoulders, tusks
+        `<path d="M110,140 L92,108 L76,100 L80,76 L96,66 L98,46 L110,34 L122,46 L124,66 L140,76 L144,108 L128,140 Z" fill="${BG}" stroke="${G}" stroke-width="1.8"/>
+         ${eye(103,52,3.2)}${eye(117,52,3.2)}
+         <path d="M102,72 L100,82" stroke="${G}" stroke-width="1.4" opacity="0.5"/>
+         <path d="M118,72 L120,82" stroke="${G}" stroke-width="1.4" opacity="0.5"/>
+         ${aura(110,112,40,13)}${shadow(110,143,40)}`;
+    art['Bugbear'] =
+        `<path d="M110,140 L90,104 L72,96 L77,70 L94,60 L97,44 L110,30 L123,44 L126,60 L143,70 L148,104 L130,140 Z" fill="${BG}" stroke="${G}" stroke-width="1.8"/>
+         <path d="M94,42 Q90,30 84,26 Q96,28 97,44" fill="${BG}" stroke="${G}" stroke-width="1.2"/>
+         <path d="M126,42 Q130,30 136,26 Q124,28 123,44" fill="${BG}" stroke="${G}" stroke-width="1.2"/>
+         ${eye(103,50,3)}${eye(117,50,3)}
+         ${aura(110,114,42,14)}${shadow(110,143,42)}`;
+    art['Hobgoblin'] =
+        `<path d="M110,140 L94,106 L80,98 L84,74 L98,64 L100,44 L110,32 L120,44 L122,64 L136,74 L140,106 L126,140 Z" fill="${BG}" stroke="${G}" stroke-width="1.8"/>
+         <path d="M88,78 L80,74 M132,78 L140,74" stroke="${G}" stroke-width="1.5" opacity="0.5"/>
+         ${eye(104,50,3)}${eye(116,50,3)}
+         ${aura(110,112,38,12)}${shadow(110,143,38)}`;
+    art['Gnoll'] =
+        `<path d="M110,140 L96,108 L82,102 L86,78 L100,70 L102,52 L110,40 L118,52 L120,70 L134,78 L138,108 L124,140 Z" fill="${BG}" stroke="${G}" stroke-width="1.8"/>
+         <path d="M98,44 Q96,32 110,24 Q124,32 122,44" fill="${BG}" stroke="${G}" stroke-width="1.4"/>
+         ${eye(104,56,3)}${eye(116,56,3)}
+         ${aura(110,112,36,12)}${shadow(110,143)}`;
+
+    // ── Undead — skeleton, decayed, wraithlike ────────────────────────────────
+    const undeadSVG =
+        // skeleton — ribcage, bony silhouette
+        `<path d="M110,140 L100,115 L88,108 L92,88 L104,82 L106,64 L110,52 L114,64 L116,82 L128,88 L132,108 L120,115 Z" fill="${BG}" stroke="${G}" stroke-width="1.6"/>
+         <line x1="100" y1="88" x2="120" y2="88" stroke="${G}" stroke-width="0.9" opacity="0.5"/>
+         <line x1="98"  y1="96" x2="122" y2="96" stroke="${G}" stroke-width="0.9" opacity="0.5"/>
+         <line x1="100" y1="104" x2="120" y2="104" stroke="${G}" stroke-width="0.9" opacity="0.5"/>
+         ${eye(105,60,2.8)}${eye(115,60,2.8)}
+         ${aura(110,118,32,10)}${shadow(110,143,28)}`;
+    art['Undead']   = undeadSVG;
+    art['Skeleton'] = undeadSVG;
+    art['Zombie'] =
+        `<path d="M110,140 L96,110 L80,102 L84,80 L98,72 L100,52 L110,40 L120,52 L122,72 L136,80 L140,110 L124,140 Z" fill="${BG}" stroke="${G}" stroke-width="1.6"/>
+         <path d="M100,104 L88,110 M120,104 L132,110" stroke="${G}" stroke-width="1.4" opacity="0.4"/>
+         ${eye(104,55,3)}${eye(116,55,3)}
+         ${aura(110,114,36,12)}${shadow(110,143)}`;
+    art['Vampire'] =
+        `<path d="M110,140 L96,108 L82,100 L86,76 L100,66 L102,46 L110,34 L118,46 L120,66 L134,76 L138,108 L124,140 Z" fill="${BG}" stroke="${G}" stroke-width="1.8"/>
+         <path d="M100,42 Q97,32 92,28 Q104,34 102,46" fill="${BG}" stroke="${G}" stroke-width="1.2"/>
+         <path d="M120,42 Q123,32 128,28 Q116,34 118,46" fill="${BG}" stroke="${G}" stroke-width="1.2"/>
+         ${eye(104,50,3)}${eye(116,50,3)}
+         ${aura(110,112,36,12)}${shadow(110,143)}`;
+    art['Wraith'] =
+        `<path d="M110,20 Q128,40 130,70 Q140,90 136,120 Q120,135 110,140 Q100,135 84,120 Q80,90 90,70 Q92,40 110,20 Z" fill="${BG}" stroke="${G}" stroke-width="1.6" opacity="0.85"/>
+         <path d="M88,110 Q80,130 76,145 M132,110 Q140,130 144,145" fill="none" stroke="${G}" stroke-width="1.2" opacity="0.3"/>
+         ${eye(104,52,2.8)}${eye(116,52,2.8)}
+         ${aura(110,118,34,11)}${shadow(110,143,28)}`;
+    art['Wight']   = undeadSVG;
+    art['Ghoul']   = art['Zombie'];
+    art['Mummy'] =
+        `<path d="M110,140 L94,108 L78,100 L82,76 L96,66 L98,46 L110,34 L122,46 L124,66 L138,76 L142,108 L126,140 Z" fill="${BG}" stroke="${G}" stroke-width="1.8"/>
+         <line x1="94" y1="80" x2="126" y2="80" stroke="${G}" stroke-width="0.8" opacity="0.4"/>
+         <line x1="90" y1="92" x2="130" y2="92" stroke="${G}" stroke-width="0.8" opacity="0.4"/>
+         <line x1="92" y1="104" x2="128" y2="104" stroke="${G}" stroke-width="0.8" opacity="0.4"/>
+         ${eye(104,50,3)}${eye(116,50,3)}
+         ${aura(110,112,38,12)}${shadow(110,143)}`;
+    art['Shadow'] =
+        `<path d="M110,30 Q130,50 128,85 Q140,100 130,130 Q120,142 110,145 Q100,142 90,130 Q80,100 92,85 Q90,50 110,30 Z" fill="${BG}" stroke="${G}" stroke-width="1.4" opacity="0.7"/>
+         <path d="M92,85 Q76,95 70,115 M128,85 Q144,95 150,115" fill="none" stroke="${Gd}" stroke-width="1.2"/>
+         ${eye(105,55,2.4)}${eye(115,55,2.4)}
+         ${aura(110,120,30,10)}${shadow(110,143,26)}`;
+    art['Banshee'] = art['Wraith'];
+    art['Revenant'] = undeadSVG;
+    art['Demilich'] =
+        // floating skull
+        `<ellipse cx="110" cy="72" rx="28" ry="26" fill="${BG}" stroke="${G}" stroke-width="1.8"/>
+         <ellipse cx="110" cy="90" rx="18" ry="10" fill="${BG}" stroke="${G}" stroke-width="1.4"/>
+         ${eye(101,68,3.5)}${eye(119,68,3.5)}
+         <path d="M100,95 L105,88 L110,95 L115,88 L120,95" fill="none" stroke="${G}" stroke-width="1.2" opacity="0.6"/>
+         <ellipse cx="110" cy="72" rx="6" ry="6" fill="none" stroke="${E}" stroke-width="1.2" opacity="0.5"/>
+         ${aura(110,115,32,10)}${shadow(110,143,26)}
+         <path d="M110,98 L104,118 M110,98 L116,118" stroke="${Gd}" stroke-width="1.2"/>`;
+
+    // ── Draconic — serpentine body, wings, tail ───────────────────────────────
+    const dragonSVG =
+        `<path d="M110,145 Q80,130 68,108 Q58,84 68,62 Q80,38 110,28 Q140,38 152,62 Q162,84 152,108 Q140,130 110,145 Z" fill="${BG}" stroke="${G}" stroke-width="1.8"/>
+         <path d="M68,62 Q48,52 38,40 Q60,48 80,60" fill="${BG}" stroke="${G}" stroke-width="1.4"/>
+         <path d="M152,62 Q172,52 182,40 Q160,48 140,60" fill="${BG}" stroke="${G}" stroke-width="1.4"/>
+         <path d="M80,60 Q60,80 56,108" fill="none" stroke="${G}" stroke-width="1" opacity="0.4"/>
+         <path d="M140,60 Q160,80 164,108" fill="none" stroke="${G}" stroke-width="1" opacity="0.4"/>
+         ${eye(100,52,4)}${eye(120,52,4)}
+         <path d="M96,80 L88,86 M124,80 L132,86" stroke="${G}" stroke-width="1.2" opacity="0.5"/>
+         <path d="M100,90 L106,84 L110,92 L114,84 L120,90" fill="none" stroke="${G}" stroke-width="1.2" opacity="0.6"/>
+         ${aura(110,118,44,14)}${shadow(110,146,44)}`;
+    art['Draconic']       = dragonSVG;
+    art['Chromatic Dragon']= dragonSVG;
+    art['Metallic Dragon'] = dragonSVG;
+    art['Kobold'] =
+        `<path d="M110,140 L100,116 L90,110 L93,94 L103,88 L104,74 L110,64 L116,74 L117,88 L127,94 L130,116 L120,140 Z" fill="${BG}" stroke="${G}" stroke-width="1.6"/>
+         <path d="M103,66 Q100,56 110,50 Q120,56 117,66" fill="${BG}" stroke="${G}" stroke-width="1.2"/>
+         ${eye(105,72,2.5)}${eye(115,72,2.5)}
+         ${aura(110,120,30,10)}${shadow(110,143,28)}`;
+    art['Lizardfolk'] =
+        `<path d="M110,140 L95,108 L80,100 L84,76 L98,68 L100,50 L110,38 L120,50 L122,68 L136,76 L140,108 L125,140 Z" fill="${BG}" stroke="${G}" stroke-width="1.8"/>
+         <path d="M110,140 L106,155 L110,158 L114,155 Z" fill="${BG}" stroke="${G}" stroke-width="1.2"/>
+         ${eye(104,54,3)}${eye(116,54,3)}
+         ${aura(110,112,36,12)}${shadow(110,143)}`;
+    art['Yuan-ti'] =
+        `<path d="M110,30 Q126,46 124,72 Q130,90 124,116 Q118,136 110,144 Q102,136 96,116 Q90,90 96,72 Q94,46 110,30 Z" fill="${BG}" stroke="${G}" stroke-width="1.8"/>
+         <path d="M96,72 Q80,80 72,100 Q88,96 96,116" fill="${BG}" stroke="${G}" stroke-width="1.2" opacity="0.6"/>
+         <path d="M124,72 Q140,80 148,100 Q132,96 124,116" fill="${BG}" stroke="${G}" stroke-width="1.2" opacity="0.6"/>
+         ${eye(104,48,3)}${eye(116,48,3)}
+         ${aura(110,118,36,12)}${shadow(110,145,34)}`;
+    art['Dragonborn'] =
+        `<path d="M110,140 L92,106 L76,98 L80,74 L96,64 L98,44 L110,32 L122,44 L124,64 L140,74 L144,106 L128,140 Z" fill="${BG}" stroke="${G}" stroke-width="1.8"/>
+         <path d="M80,74 Q66,62 60,50 Q76,64 96,64" fill="${BG}" stroke="${G}" stroke-width="1.2" opacity="0.5"/>
+         <path d="M140,74 Q154,62 160,50 Q144,64 124,64" fill="${BG}" stroke="${G}" stroke-width="1.2" opacity="0.5"/>
+         ${eye(103,50,3.2)}${eye(117,50,3.2)}
+         ${aura(110,114,40,13)}${shadow(110,143,40)}`;
+    art['Wyvern'] =
+        `<path d="M110,145 Q88,130 78,108 Q70,86 80,66 Q90,46 110,38 Q130,46 140,66 Q150,86 142,108 Q132,130 110,145 Z" fill="${BG}" stroke="${G}" stroke-width="1.8"/>
+         <path d="M80,66 Q56,52 46,36 Q70,52 90,70" fill="${BG}" stroke="${G}" stroke-width="1.4"/>
+         <path d="M140,66 Q164,52 174,36 Q150,52 130,70" fill="${BG}" stroke="${G}" stroke-width="1.4"/>
+         ${eye(102,58,3.2)}${eye(118,58,3.2)}
+         ${aura(110,118,40,13)}${shadow(110,146,40)}`;
+
+    // ── Fey — lithe, wispy, pointed ears ─────────────────────────────────────
+    const feySVG =
+        `<path d="M110,140 L98,112 L86,106 L90,84 L102,76 L104,58 L110,46 L116,58 L118,76 L130,84 L134,106 L122,112 Z" fill="${BG}" stroke="${G}" stroke-width="1.6"/>
+         <path d="M104,56 Q98,40 88,32" fill="none" stroke="${G}" stroke-width="1.2" opacity="0.6"/>
+         <path d="M116,56 Q122,40 132,32" fill="none" stroke="${G}" stroke-width="1.2" opacity="0.6"/>
+         ${eye(105,62,2.5)}${eye(115,62,2.5)}
+         ${aura(110,114,34,11)}${shadow(110,143,30)}`;
+    art['Fey']       = feySVG;
+    art['Pixie'] =
+        `<path d="M110,140 L104,120 L96,116 L98,104 L105,100 L106,90 L110,82 L114,90 L115,100 L122,104 L124,116 L116,120 Z" fill="${BG}" stroke="${G}" stroke-width="1.4"/>
+         <path d="M106,88 Q96,72 82,64 M114,88 Q124,72 138,64" fill="none" stroke="${G}" stroke-width="1.4" opacity="0.55"/>
+         ${eye(106,88,2)}${eye(114,88,2)}
+         ${aura(110,122,24,8)}${shadow(110,143,22)}`;
+    art['Dryad']     = feySVG;
+    art['Satyr'] =
+        `<path d="M110,140 L98,112 L86,106 L90,84 L102,76 L104,56 L110,44 L116,56 L118,76 L130,84 L134,106 L122,112 Z" fill="${BG}" stroke="${G}" stroke-width="1.6"/>
+         <path d="M104,52 Q100,38 96,28 M116,52 Q120,38 124,28" fill="none" stroke="${G}" stroke-width="1.4" opacity="0.6"/>
+         <path d="M96,118 Q90,130 88,140 M124,118 Q130,130 132,140" fill="${BG}" stroke="${G}" stroke-width="1.3" opacity="0.5"/>
+         ${eye(104,62,2.5)}${eye(116,62,2.5)}
+         ${aura(110,114,34,11)}${shadow(110,143)}`;
+    art['Quickling'] = feySVG;
+    art['Green Hag'] =
+        `<path d="M110,140 L96,110 L80,102 L84,78 L98,68 L100,48 L110,36 L120,48 L122,68 L136,78 L140,110 L124,140 Z" fill="${BG}" stroke="${G}" stroke-width="1.6"/>
+         <path d="M96,44 Q90,28 84,24 Q92,32 100,48" fill="${BG}" stroke="${G}" stroke-width="1"/>
+         <path d="M110,36 Q110,24 110,18" stroke="${G}" stroke-width="1.4" opacity="0.5"/>
+         ${eye(104,54,3)}${eye(116,54,3)}
+         ${aura(110,113,36,12)}${shadow(110,143)}`;
+    art['Homunculus'] = feySVG;
+
+    // ── Aberration — asymmetric, alien, tentacles or eyes ────────────────────
+    const aberrationSVG =
+        // mind flayer — elongated head, tentacles
+        `<ellipse cx="110" cy="56" rx="24" ry="26" fill="${BG}" stroke="${G}" stroke-width="1.8"/>
+         <path d="M110,80 L100,110 L88,140 M110,80 L106,112 L100,140 M110,80 L114,112 L120,140 M110,80 L120,110 L132,140" fill="none" stroke="${G}" stroke-width="1.6" opacity="0.7"/>
+         <path d="M94,72 Q88,82 84,92 M126,72 Q132,82 136,92 M102,76 Q100,88 98,98 M118,76 Q120,88 122,98" fill="none" stroke="${G}" stroke-width="1.2" opacity="0.5"/>
+         ${eye(103,50,3.5)}${eye(117,50,3.5)}
+         ${aura(110,110,36,12)}${shadow(110,143)}`;
+    art['Aberration'] = aberrationSVG;
+    art['Mind Flayer'] = aberrationSVG;
+    art['Beholder'] =
+        // central sphere with radiating eyestalks
+        `<circle cx="110" cy="80" r="38" fill="${BG}" stroke="${G}" stroke-width="1.8"/>
+         ${eye(110,80,7)}
+         <line x1="110" y1="42" x2="110" y2="30"/><circle cx="110" cy="28" r="3.5" fill="${E}" opacity="0.8" stroke="${G}" stroke-width="0.8"/>
+         <line x1="136" y1="54" x2="148" y2="46"/><circle cx="150" cy="44" r="3.5" fill="${E}" opacity="0.8" stroke="${G}" stroke-width="0.8"/>
+         <line x1="148" y1="80" x2="162" y2="80"/><circle cx="164" cy="80" r="3.5" fill="${E}" opacity="0.8" stroke="${G}" stroke-width="0.8"/>
+         <line x1="136" y1="106" x2="148" y2="114"/><circle cx="150" cy="116" r="3.5" fill="${E}" opacity="0.8" stroke="${G}" stroke-width="0.8"/>
+         <line x1="84" y1="54" x2="72" y2="46"/><circle cx="70" cy="44" r="3.5" fill="${E}" opacity="0.8" stroke="${G}" stroke-width="0.8"/>
+         <line x1="72" y1="80" x2="58" y2="80"/><circle cx="56" cy="80" r="3.5" fill="${E}" opacity="0.8" stroke="${G}" stroke-width="0.8"/>
+         <line x1="84" y1="106" x2="72" y2="114"/><circle cx="70" cy="116" r="3.5" fill="${E}" opacity="0.8" stroke="${G}" stroke-width="0.8"/>
+         `.replace(/<line /g, `<line stroke="${G}" stroke-width="1.2" `) +
+         `${aura(110,124,40,13)}${shadow(110,145,40)}`;
+    art['Aboleth'] =
+        `<path d="M40,80 Q60,60 90,56 Q110,52 130,56 Q160,60 180,80 Q160,100 130,104 Q110,108 90,104 Q60,100 40,80 Z" fill="${BG}" stroke="${G}" stroke-width="1.8"/>
+         <path d="M90,56 Q80,36 72,24 M110,52 Q110,30 110,18 M130,56 Q140,36 148,24" fill="none" stroke="${G}" stroke-width="1.4" opacity="0.5"/>
+         <path d="M90,104 Q78,120 72,136 M130,104 Q142,120 148,136" fill="none" stroke="${G}" stroke-width="1.4" opacity="0.5"/>
+         ${eye(88,78,3.5)}${eye(110,76,3.5)}${eye(132,78,3.5)}
+         ${aura(110,112,44,14)}${shadow(110,143,44)}`;
+    art['Nothic'] = aberrationSVG;
+    art['Gibbering Mouther'] =
+        `<circle cx="110" cy="88" r="42" fill="${BG}" stroke="${G}" stroke-width="1.6"/>
+         ${eye(94,76,3)}${eye(110,70,3.5)}${eye(126,76,3)}${eye(86,92,2.5)}${eye(134,92,2.5)}${eye(100,102,2.5)}${eye(120,102,2.5)}
+         <path d="M90,96 Q96,108 104,112 Q110,116 116,112 Q124,108 130,96" fill="none" stroke="${G}" stroke-width="1.2" opacity="0.6"/>
+         ${aura(110,132,38,12)}${shadow(110,143)}`;
+
+    // ── Ooze — amorphous blob ─────────────────────────────────────────────────
+    art['Ooze'] =
+        `<path d="M60,100 Q54,78 62,60 Q74,38 94,32 Q110,26 126,32 Q146,38 158,60 Q166,78 160,100 Q154,120 138,130 Q124,140 110,142 Q96,140 82,130 Q66,120 60,100 Z" fill="${BG}" stroke="${G}" stroke-width="1.6" opacity="0.85"/>
+         <path d="M66,106 Q58,120 62,136 M154,106 Q162,120 158,136" fill="${BGd}" stroke="${Gd}" stroke-width="1.2"/>
+         ${eye(96,75,3)}${eye(124,75,3)}
+         <path d="M98,98 Q104,106 110,108 Q116,106 122,98" fill="none" stroke="${G}" stroke-width="1.2" opacity="0.5"/>
+         ${aura(110,122,40,13)}${shadow(110,144,42)}`;
+
+    // ── Elemental — crystalline/rocky/angular ─────────────────────────────────
+    art['Elemental'] =
+        `<path d="M110,140 L86,114 L70,90 L78,64 L96,48 L110,22 L124,48 L142,64 L150,90 L134,114 Z" fill="${BG}" stroke="${G}" stroke-width="1.8"/>
+         <path d="M96,48 L78,64 M124,48 L142,64 M86,114 L70,90 M134,114 L150,90" fill="none" stroke="${G}" stroke-width="0.9" opacity="0.3"/>
+         ${eye(103,66,3)}${eye(117,66,3)}
+         <path d="M100,86 L106,80 L110,86 L114,80 L120,86" fill="none" stroke="${G}" stroke-width="1.2" opacity="0.55"/>
+         ${aura(110,118,38,12)}${shadow(110,143,38)}`;
+
+    // ── Monstrous — large, brutish, varied ───────────────────────────────────
+    art['Monstrous'] =
+        `<path d="M110,140 L88,104 L70,94 L76,66 L94,54 L96,32 L110,18 L124,32 L126,54 L144,66 L150,94 L132,104 Z" fill="${BG}" stroke="${G}" stroke-width="1.8"/>
+         <path d="M94,30 Q90,18 82,12 Q96,20 96,32 M126,30 Q130,18 138,12 Q124,20 124,32" fill="${BG}" stroke="${G}" stroke-width="1.2"/>
+         ${eye(102,46,3.5)}${eye(118,46,3.5)}
+         ${aura(110,115,44,14)}${shadow(110,143,44)}`;
+    art['Tarrasque'] =
+        `<path d="M110,145 L82,108 L60,96 L66,64 L86,50 L88,26 L110,10 L132,26 L134,50 L154,64 L160,96 L138,108 Z" fill="${BG}" stroke="${G}" stroke-width="2"/>
+         <path d="M88,24 Q82,10 74,4 Q90,14 88,26 M132,24 Q138,10 146,4 Q130,14 132,26" fill="${BG}" stroke="${G}" stroke-width="1.4"/>
+         <path d="M60,96 Q44,100 36,112 M160,96 Q176,100 184,112" fill="${BGd}" stroke="${Gd}" stroke-width="1.3"/>
+         ${eye(100,42,4)}${eye(120,42,4)}
+         ${aura(110,118,48,15)}${shadow(110,146,50)}`;
+    art['Sphinx'] =
+        `<path d="M40,100 Q60,80 88,76 L96,52 Q104,34 110,28 Q116,34 124,52 L132,76 Q160,80 180,100 Q160,114 140,116 L140,140 L80,140 L80,116 Q60,114 40,100 Z" fill="${BG}" stroke="${G}" stroke-width="1.8"/>
+         ${eye(104,50,3)}${eye(116,50,3)}
+         <path d="M96,52 Q90,60 88,76 M124,52 Q130,60 132,76" fill="none" stroke="${G}" stroke-width="1" opacity="0.4"/>
+         ${aura(110,120,44,14)}${shadow(110,143,44)}`;
+
+    // ── Fiend — horned, winged, imposing ────────────────────────────────────
+    art['Fiend'] =
+        `<path d="M110,140 L92,106 L76,98 L80,74 L96,64 L98,44 L110,30 L122,44 L124,64 L140,74 L144,106 L128,140 Z" fill="${BG}" stroke="${G}" stroke-width="1.8"/>
+         <path d="M98,42 Q90,28 76,20 Q92,32 96,44 M122,42 Q130,28 144,20 Q128,32 124,44" fill="${BG}" stroke="${G}" stroke-width="1.4"/>
+         <path d="M80,74 Q60,72 48,60 Q68,78 80,82 M140,74 Q160,72 172,60 Q152,78 140,82" fill="${BG}" stroke="${G}" stroke-width="1.2" opacity="0.6"/>
+         ${eye(103,50,3.2)}${eye(117,50,3.2)}
+         ${aura(110,112,40,13)}${shadow(110,143,40)}`;
+
+    // ── Giant — massive, simple, towering ────────────────────────────────────
+    art['Giant'] =
+        `<path d="M110,145 L86,100 L66,90 L72,58 L94,44 L96,18 L110,4 L124,18 L126,44 L148,58 L154,90 L134,100 Z" fill="${BG}" stroke="${G}" stroke-width="2"/>
+         ${eye(101,34,4)}${eye(119,34,4)}
+         <path d="M72,58 L54,52 M148,58 L166,52" stroke="${G}" stroke-width="1.8" opacity="0.4"/>
+         ${aura(110,116,48,15)}${shadow(110,146,50)}`;
+
+    // ── Construct — angular, mechanical, symmetric ────────────────────────────
+    art['Construct'] =
+        `<path d="M96,140 L96,108 L80,100 L80,72 L96,64 L96,44 L110,36 L124,44 L124,64 L140,72 L140,100 L124,108 L124,140 Z" fill="${BG}" stroke="${G}" stroke-width="1.8"/>
+         <rect x="98" y="44" width="24" height="20" fill="${BG}" stroke="${G}" stroke-width="1.2" opacity="0.5"/>
+         <line x1="80" y1="80" x2="96" y2="80" stroke="${G}" stroke-width="1.2" opacity="0.4"/>
+         <line x1="124" y1="80" x2="140" y2="80" stroke="${G}" stroke-width="1.2" opacity="0.4"/>
+         <line x1="96" y1="116" x2="80" y2="130" stroke="${G}" stroke-width="1.4" opacity="0.5"/>
+         <line x1="124" y1="116" x2="140" y2="130" stroke="${G}" stroke-width="1.4" opacity="0.5"/>
+         ${eye(104,52,3)}${eye(116,52,3)}
+         ${aura(110,114,36,12)}${shadow(110,143,36)}`;
+
+    // ── Lycanthrope — wolf-human hybrid, hunched, claws ──────────────────────
+    art['Lycanthrope'] =
+        `<path d="M110,140 L94,106 L78,96 L82,72 L98,60 L100,42 L110,28 L120,42 L122,60 L138,72 L142,106 L126,140 Z" fill="${BG}" stroke="${G}" stroke-width="1.8"/>
+         <path d="M100,40 Q94,26 84,16 Q98,28 100,42 M120,40 Q126,26 136,16 Q122,28 120,42" fill="${BG}" stroke="${G}" stroke-width="1.4"/>
+         <path d="M94,106 L86,118 L80,130 M126,106 L134,118 L140,130" fill="none" stroke="${G}" stroke-width="1.2" opacity="0.5"/>
+         ${eye(103,48,3)}${eye(117,48,3)}
+         ${aura(110,114,38,12)}${shadow(110,143,38)}`;
+
+    // ── Flora — plant-creature, organic curves, tendrils ─────────────────────
+    art['Flora'] =
+        `<path d="M110,145 Q88,132 78,110 Q68,86 78,64 Q90,40 110,32 Q130,40 142,64 Q152,86 142,110 Q132,132 110,145 Z" fill="${BG}" stroke="${G}" stroke-width="1.6"/>
+         <path d="M78,64 Q60,48 56,32 Q72,48 80,64 M142,64 Q160,48 164,32 Q148,48 140,64" fill="${BGd}" stroke="${Gd}" stroke-width="1.3"/>
+         <path d="M78,110 Q64,124 60,140 M142,110 Q156,124 160,140" fill="${BGd}" stroke="${Gd}" stroke-width="1.3"/>
+         <path d="M96,36 Q90,18 94,6 M124,36 Q130,18 126,6" fill="none" stroke="${G}" stroke-width="1.2" opacity="0.5"/>
+         ${eye(103,60,3)}${eye(117,60,3)}
+         ${aura(110,120,36,12)}${shadow(110,146,36)}`;
+
+    // ── Aquatic — sinuous, fins, fluid form ──────────────────────────────────
+    art['Aquatic'] =
+        `<path d="M110,145 Q82,130 70,106 Q58,80 68,56 Q80,30 110,22 Q140,30 152,56 Q162,80 150,106 Q138,130 110,145 Z" fill="${BG}" stroke="${G}" stroke-width="1.8"/>
+         <path d="M70,56 Q52,48 40,38 Q62,50 78,62 M150,56 Q168,48 180,38 Q158,50 142,62" fill="${BG}" stroke="${G}" stroke-width="1.4"/>
+         <path d="M68,100 Q50,108 42,120 M152,100 Q170,108 178,120" fill="${BGd}" stroke="${Gd}" stroke-width="1.3"/>
+         ${eye(101,56,3.5)}${eye(119,56,3.5)}
+         <path d="M98,78 Q104,70 110,74 Q116,70 122,78" fill="none" stroke="${G}" stroke-width="1.2" opacity="0.5"/>
+         ${aura(110,120,42,14)}${shadow(110,146,42)}`;
+    art['Kraken'] =
+        `<circle cx="110" cy="82" r="36" fill="${BG}" stroke="${G}" stroke-width="1.8"/>
+         ${eye(98,76,4)}${eye(122,76,4)}
+         <path d="M80,94 Q68,110 58,130 M86,104 Q78,122 74,140 M140,94 Q152,110 162,130 M134,104 Q142,122 146,140" fill="none" stroke="${G}" stroke-width="1.5" opacity="0.6"/>
+         <path d="M80,70 Q68,50 60,34 M140,70 Q152,50 160,34" fill="none" stroke="${G}" stroke-width="1.3" opacity="0.45"/>
+         ${aura(110,124,42,14)}${shadow(110,143,42)}`;
+
+    // ── Humanoid — general upright form ──────────────────────────────────────
+    art['Humanoid'] =
+        `<path d="M110,140 L94,106 L80,100 L84,78 L98,70 L100,50 L110,38 L120,50 L122,70 L136,78 L140,100 L126,106 Z" fill="${BG}" stroke="${G}" stroke-width="1.8"/>
+         ${eye(104,54,3)}${eye(116,54,3)}
+         ${aura(110,108,36,12)}${shadow(110,143)}`;
+
+    return art;
+})();
+
+// Eye positions per race/type in SVG viewBox coordinates [x, y, radius].
+// Used by the canvas particle system to place crimson eye-glow effects.
+const ERA_RACE_EYES = {
+    'Goblinoid':        [[106,85,2.8],[114,85,2.8]], 'Goblin': [[106,85,2.8],[114,85,2.8]],
+    'Orc':              [[103,52,3.2],[117,52,3.2]],
+    'Bugbear':          [[103,50,3],[117,50,3]],
+    'Hobgoblin':        [[104,50,3],[116,50,3]],
+    'Gnoll':            [[104,56,3],[116,56,3]],
+    'Undead':           [[105,60,2.8],[115,60,2.8]], 'Skeleton': [[105,60,2.8],[115,60,2.8]],
+    'Zombie':           [[104,55,3],[116,55,3]],   'Ghoul': [[104,55,3],[116,55,3]],
+    'Vampire':          [[104,50,3],[116,50,3]],
+    'Wraith':           [[104,52,2.8],[116,52,2.8]], 'Banshee': [[104,52,2.8],[116,52,2.8]],
+    'Wight':            [[105,60,2.8],[115,60,2.8]], 'Revenant': [[105,60,2.8],[115,60,2.8]],
+    'Mummy':            [[104,50,3],[116,50,3]],
+    'Shadow':           [[105,55,2.4],[115,55,2.4]],
+    'Demilich':         [[101,68,3.5],[119,68,3.5]],
+    'Draconic':         [[100,52,4],[120,52,4]],   'Chromatic Dragon': [[100,52,4],[120,52,4]],
+    'Metallic Dragon':  [[100,52,4],[120,52,4]],
+    'Kobold':           [[105,72,2.5],[115,72,2.5]],
+    'Lizardfolk':       [[104,54,3],[116,54,3]],
+    'Yuan-ti':          [[104,48,3],[116,48,3]],
+    'Dragonborn':       [[103,50,3.2],[117,50,3.2]],
+    'Wyvern':           [[102,58,3.2],[118,58,3.2]],
+    'Fey':              [[105,62,2.5],[115,62,2.5]],
+    'Pixie':            [[106,88,2],[114,88,2]],
+    'Dryad':            [[105,62,2.5],[115,62,2.5]],
+    'Satyr':            [[104,62,2.5],[116,62,2.5]],
+    'Quickling':        [[105,62,2.5],[115,62,2.5]],
+    'Green Hag':        [[104,54,3],[116,54,3]],
+    'Homunculus':       [[105,62,2.5],[115,62,2.5]],
+    'Aberration':       [[103,50,3.5],[117,50,3.5]], 'Mind Flayer': [[103,50,3.5],[117,50,3.5]],
+    'Beholder':         [[110,80,7]],
+    'Aboleth':          [[88,78,3.5],[110,76,3.5],[132,78,3.5]],
+    'Nothic':           [[103,50,3.5],[117,50,3.5]],
+    'Gibbering Mouther':[[94,76,3],[110,70,3.5],[126,76,3],[86,92,2.5],[134,92,2.5]],
+    'Ooze':             [[96,75,3],[124,75,3]],
+    'Elemental':        [[103,66,3],[117,66,3]],
+    'Monstrous':        [[102,46,3.5],[118,46,3.5]],
+    'Tarrasque':        [[100,42,4],[120,42,4]],
+    'Sphinx':           [[104,50,3],[116,50,3]],
+    'Fiend':            [[103,50,3.2],[117,50,3.2]],
+    'Giant':            [[101,34,4],[119,34,4]],
+    'Construct':        [[104,52,3],[116,52,3]],
+    'Lycanthrope':      [[103,48,3],[117,48,3]],
+    'Flora':            [[103,60,3],[117,60,3]],
+    'Aquatic':          [[101,56,3.5],[119,56,3.5]],
+    'Kraken':           [[98,76,4],[122,76,4]],
+    'Humanoid':         [[104,54,3],[116,54,3]],
+};
+
+function _setEraP3Art(raceName) {
+    const art = document.getElementById('era-p3-art');
+    const svg = document.getElementById('era-p3-svg');
+    if (!art) return;
+    const typeMap = {
+        'tag-goblinoid': 'Goblinoid', 'tag-undead': 'Undead', 'tag-draconic': 'Draconic',
+        'tag-fey': 'Fey', 'tag-aberration': 'Aberration', 'tag-ooze': 'Ooze',
+        'tag-elemental': 'Elemental', 'tag-monstrous': 'Monstrous', 'tag-fiend': 'Fiend',
+        'tag-giant': 'Giant', 'tag-construct': 'Construct', 'tag-lycanthrope': 'Lycanthrope',
+        'tag-flora': 'Flora', 'tag-aquatic': 'Aquatic', 'tag-humanoid': 'Humanoid',
+    };
+    let key = raceName;
+    let artSvg = ERA_RACE_SVG[key];
+    if (!artSvg && window.RACE_DATA && RACE_DATA[raceName]) {
+        const typeName = typeMap[RACE_DATA[raceName].tag || ''];
+        if (typeName) { key = typeName; artSvg = ERA_RACE_SVG[typeName]; }
+    }
+    art.innerHTML = artSvg || ERA_RACE_SVG['Humanoid'];
+    // Store resolved eye positions for canvas particle system
+    const eyes = ERA_RACE_EYES[raceName] || ERA_RACE_EYES[key] || ERA_RACE_EYES['Humanoid'];
+    if (svg) svg.dataset.eyes = JSON.stringify(eyes);
+}
+
 function showEraTransition(raceName, onComplete) {
     _eraTransitionCallback = onComplete;
+
+    // Inject race-specific artwork into panel III
+    _setEraP3Art(raceName);
 
     // Inject pluralised race name into panel III lore
     const racePlural = raceName.endsWith('s') ? raceName : raceName + 's';
@@ -2130,11 +2529,16 @@ function showEraTransition(raceName, onComplete) {
                       life: 1, size: 0.5 + Math.random()*0.8 });
         }
 
-        // Panel 3 — shadow motes rising from creature silhouette (center of SVG)
+        // Panel 3 — shadow motes rising from creature silhouette
         const p3 = [];
         function spawnOrbitMote(cv) {
-            const ox = cv.sx + cv.sw * (0.36 + Math.random()*0.28);
-            const oy = cv.sy + cv.sh * (0.50 + Math.random()*0.35);
+            // Use creature center (average of eye positions) as mote origin
+            const p3svg = document.getElementById('era-p3-svg');
+            const eyeData = p3svg && p3svg.dataset.eyes ? JSON.parse(p3svg.dataset.eyes) : [[104,54,3],[116,54,3]];
+            const avgEyeX = eyeData.reduce((s,e)=>s+e[0],0)/eyeData.length;
+            const avgEyeY = eyeData.reduce((s,e)=>s+e[1],0)/eyeData.length;
+            const ox = cv.sx + cv.sw * ((avgEyeX/220) + (Math.random()-0.5)*0.22);
+            const oy = cv.sy + cv.sh * ((avgEyeY/160) + 0.12 + Math.random()*0.30);
             p3.push({ x: ox, y: oy, vx: (Math.random()-0.5)*0.2, vy: -(0.2 + Math.random()*0.5),
                       life: 1, size: 0.8 + Math.random()*1.0, crimson: Math.random() > 0.7 });
         }
@@ -2272,22 +2676,16 @@ function showEraTransition(raceName, onComplete) {
                     // Map SVG eye coordinates into canvas space via SVG offset
                     const xS = cv.sw / 220, yS = cv.sh / 160;
                     const eyePulse = 0.22 + 0.18 * Math.sin(cv.t * 0.003);
-                    [[104,54],[116,54]].forEach(([ex,ey]) => {
+                    const p3svg = document.getElementById('era-p3-svg');
+                    const eyeData = p3svg && p3svg.dataset.eyes ? JSON.parse(p3svg.dataset.eyes) : [[104,54,3],[116,54,3]];
+                    eyeData.forEach(([ex,ey,er=3]) => {
                         const px = cv.sx + ex*xS, py = cv.sy + ey*yS;
-                        const eg = ctx.createRadialGradient(px,py,0,px,py,14*xS);
+                        const glowR = (er * 4) * xS;
+                        const eg = ctx.createRadialGradient(px,py,0,px,py,glowR);
                         eg.addColorStop(0, CRIM + eyePulse + ')');
                         eg.addColorStop(1, CRIM + '0)');
-                        ctx.beginPath(); ctx.arc(px, py, 14*xS, 0, Math.PI*2);
+                        ctx.beginPath(); ctx.arc(px, py, glowR, 0, Math.PI*2);
                         ctx.fillStyle = eg; ctx.fill();
-                    });
-                    const eyeDim = eyePulse * 0.5;
-                    [[59,70],[69,70],[151,70],[161,70]].forEach(([ex,ey]) => {
-                        const px = cv.sx + ex*xS, py = cv.sy + ey*yS;
-                        const eg2 = ctx.createRadialGradient(px,py,0,px,py,8*xS);
-                        eg2.addColorStop(0, CRIM + eyeDim + ')');
-                        eg2.addColorStop(1, CRIM + '0)');
-                        ctx.beginPath(); ctx.arc(px, py, 8*xS, 0, Math.PI*2);
-                        ctx.fillStyle = eg2; ctx.fill();
                     });
                 }
 
