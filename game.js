@@ -1060,6 +1060,42 @@ function initBldTooltips() {
     }
 }
 
+let _settingsTipEl = null;
+let _settingsTipTimer = null;
+
+function initSettingsTooltips() {
+    _settingsTipEl = document.getElementById('settings-tooltip');
+    document.querySelectorAll('[data-stip]').forEach(el => {
+        el.addEventListener('mouseenter', e => {
+            clearTimeout(_settingsTipTimer);
+            _settingsTipTimer = setTimeout(() => {
+                if (!_settingsTipEl) return;
+                _settingsTipEl.textContent = el.dataset.stip;
+                _settingsTipEl.style.display = 'block';
+                _positionSettingsTip(e);
+            }, 3000);
+        });
+        el.addEventListener('mousemove', e => {
+            if (_settingsTipEl && _settingsTipEl.style.display === 'block') {
+                _positionSettingsTip(e);
+            }
+        });
+        el.addEventListener('mouseleave', () => {
+            clearTimeout(_settingsTipTimer);
+            if (_settingsTipEl) _settingsTipEl.style.display = 'none';
+        });
+    });
+}
+
+function _positionSettingsTip(e) {
+    const tipW = _settingsTipEl.offsetWidth || 240;
+    const tipH = _settingsTipEl.offsetHeight || 60;
+    const left = e.clientX + 14 + tipW > window.innerWidth ? e.clientX - tipW - 14 : e.clientX + 14;
+    const top  = e.clientY + 14 + tipH > window.innerHeight ? e.clientY - tipH - 8 : e.clientY + 14;
+    _settingsTipEl.style.left = Math.max(4, left) + 'px';
+    _settingsTipEl.style.top  = Math.max(4, top)  + 'px';
+}
+
 function _refreshResTooltip() {
     if (!_resTooltipRes || !_resTooltipEl || _resTooltipEl.style.display === 'none') return;
     const html = _buildResTooltipHTML(_resTooltipRes);
@@ -4814,6 +4850,7 @@ initResTooltips();
 initGatherTooltips();
 initBldTooltips();
 initIdentityTooltips();
+initSettingsTooltips();
 setInterval(tick, 1000);
 
 // Stamp lastSeen when the player closes or navigates away.

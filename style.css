@@ -824,6 +824,25 @@ h3 {
     50%       { opacity: 0.5; }
 }
 
+/* SETTINGS TOOLTIP */
+.settings-tooltip {
+    display: none;
+    position: fixed;
+    width: 240px;
+    background: linear-gradient(155deg, #1e2230 0%, #131620 100%);
+    border: 1px solid rgba(114,137,186,0.25);
+    border-left: 3px solid #7289ba;
+    border-radius: 6px;
+    padding: 10px 12px 12px;
+    z-index: 600;
+    box-shadow: 0 6px 28px rgba(0,0,0,0.75), inset 0 0 0 1px rgba(255,255,255,0.04);
+    pointer-events: none;
+    font-size: 12px;
+    color: #a0aec8;
+    line-height: 1.6;
+    animation: tipFadeIn 0.15s ease;
+}
+
 /* SECTION SPACING */
 .section-gap {
     margin-top: 16px;

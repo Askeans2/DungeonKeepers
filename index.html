@@ -337,6 +337,7 @@
     <div id="bld-tooltip" class="bld-tooltip"></div>
     <div id="gather-tooltip" class="gather-tooltip"></div>
     <div id="era1-node-tooltip" class="bld-tooltip"></div>
+    <div id="settings-tooltip" class="settings-tooltip"></div>
 
     <div class="panel left">
 
@@ -2324,7 +2325,7 @@
                     <span class="setting-label">Autosave</span>
                     <div class="setting-desc">How often the game saves automatically.</div>
                 </div>
-                <button class="setting-toggle is-on" id="set-autosave" onclick="cycleAutosave()">Every Tick</button>
+                <button class="setting-toggle is-on" id="set-autosave" onclick="cycleAutosave()" data-stip="Cycles the auto-save interval between: Every Tick, Every 30s, Every Minute, Every 5 Minutes, and Off.">Every Tick</button>
             </div>
 
             <div class="setting-row">
@@ -2332,7 +2333,7 @@
                     <span class="setting-label">Number Format</span>
                     <div class="setting-desc">Abbreviated (10k) or full (10,000) numbers.</div>
                 </div>
-                <button class="setting-toggle is-on" id="set-numfmt" onclick="cycleNumberFormat()">Abbreviated</button>
+                <button class="setting-toggle is-on" id="set-numfmt" onclick="cycleNumberFormat()" data-stip="Toggles number display between abbreviated shorthand (10k, 1.2M) and full comma-separated values (10,000).">Abbreviated</button>
             </div>
 
             <h2 class="section-gap">Controls</h2>
@@ -2357,29 +2358,29 @@
                     <span class="setting-label">Reduced Animations</span>
                     <div class="setting-desc">Disables all CSS transitions and animations.</div>
                 </div>
-                <button class="setting-toggle" id="set-anim" onclick="toggleAnimations()">OFF</button>
+                <button class="setting-toggle" id="set-anim" onclick="toggleAnimations()" data-stip="Disables or re-enables CSS transitions and animations throughout the UI. Helpful if you prefer a static interface or notice performance issues.">OFF</button>
             </div>
 
             <h2 class="section-gap">Data</h2>
 
             <div class="setting-action-row">
-                <button class="setting-action-btn" id="set-savenow" onclick="doSaveNow()">Save Now</button>
-                <button class="setting-action-btn danger" onclick="doResetSave()">Reset Save</button>
+                <button class="setting-action-btn" id="set-savenow" onclick="doSaveNow()" data-stip="Saves your current game state immediately, independent of the auto-save cycle.">Save Now</button>
+                <button class="setting-action-btn danger" onclick="doResetSave()" data-stip="Permanently deletes all save data and resets the game to its initial state. This cannot be undone.">Reset Save</button>
             </div>
 
             <h3 class="save-io-heading">Import/Export Save</h3>
             <textarea id="save-io-box" class="save-io-box" placeholder="Your exported save string appears here. Paste a save string and click Import Game to load it." spellcheck="false"></textarea>
             <div class="save-io-bar">
                 <div class="save-io-bar-left">
-                    <button class="setting-action-btn" id="set-import" onclick="doImportSave()">Import Game</button>
-                    <button class="setting-action-btn" id="set-export" onclick="doExportSave()">Export Game</button>
-                    <button class="setting-action-btn" id="set-download" onclick="doDownloadSave()">Save as File</button>
-                    <button class="setting-action-btn" id="set-upload" onclick="document.getElementById('save-file-input').click()">Load File</button>
-                    <button class="setting-action-btn" id="set-paste" onclick="doPasteSave()">Paste</button>
+                    <button class="setting-action-btn" id="set-import" onclick="doImportSave()" data-stip="Loads the save string currently in the text box above, restoring that game state.">Import Game</button>
+                    <button class="setting-action-btn" id="set-export" onclick="doExportSave()" data-stip="Encodes your current save into a compact string and places it in the text box for you to copy.">Export Game</button>
+                    <button class="setting-action-btn" id="set-download" onclick="doDownloadSave()" data-stip="Downloads your current save as a .txt file to your device for safekeeping.">Save as File</button>
+                    <button class="setting-action-btn" id="set-upload" onclick="document.getElementById('save-file-input').click()" data-stip="Opens a file picker to load a previously downloaded .txt save file from your device.">Load File</button>
+                    <button class="setting-action-btn" id="set-paste" onclick="doPasteSave()" data-stip="Pastes the contents of your clipboard directly into the save string text box.">Paste</button>
                     <input type="file" id="save-file-input" accept=".txt" style="display:none" onchange="doUploadSave(event)">
                 </div>
                 <div class="save-io-bar-right">
-                    <button class="setting-action-btn" id="set-restore" onclick="doRestoreBackup()">Restore Backup</button>
+                    <button class="setting-action-btn" id="set-restore" onclick="doRestoreBackup()" data-stip="Loads the most recent automatic backup if one exists, useful if your latest save was corrupted or lost.">Restore Backup</button>
                 </div>
             </div>
             <div id="save-io-msg" class="save-io-msg"></div>
