@@ -590,6 +590,7 @@
             <button class="tab-btn" data-tab="build"    onclick="switchTab('build')">Build</button>
             <button class="tab-btn" data-tab="research" onclick="switchTab('research')">Research</button>
             <button class="tab-btn" data-tab="workers"  onclick="switchTab('workers')">Workers</button>
+            <button class="tab-btn" data-tab="trade"    onclick="switchTab('trade')" style="display:none">Trade</button>
             <button class="tab-btn" data-tab="info"     onclick="switchTab('info')">Info</button>
             <button class="tab-btn" data-tab="settings" onclick="switchTab('settings')">Settings</button>
             <button class="tab-btn dev-tab" data-tab="dev" onclick="switchTab('dev')">Dev</button>
@@ -725,6 +726,18 @@
 
                 <!-- Stage 2 — Early Unlocks -->
 
+                <button class="build-btn disabled" onclick="build('marketStall')" id="btn-marketStall" style="display:none">
+                    <div class="btn-title">Market Stall</div>
+                    <div class="btn-count" id="marketStallCount">0</div>
+                    <div class="btn-cost" id="marketStallCost"></div>
+                </button>
+
+                <button class="build-btn disabled" onclick="build('tradeCart')" id="btn-tradeCart" style="display:none">
+                    <div class="btn-title">Trade Cart</div>
+                    <div class="btn-count" id="tradeCartCount">0</div>
+                    <div class="btn-cost" id="tradeCartCost"></div>
+                </button>
+
                 <button class="build-btn disabled" onclick="build('mine')" id="btn-mine" style="display:none">
                     <div class="btn-title">Mine</div>
                     <div class="btn-count" id="mineCount">0</div>
@@ -759,6 +772,18 @@
                     <div class="btn-title">Crystal Seam</div>
                     <div class="btn-count" id="crystalSeamCount">0</div>
                     <div class="btn-cost" id="crystalSeamCost"></div>
+                </button>
+
+                <button class="build-btn disabled" onclick="build('house')" id="btn-house" style="display:none">
+                    <div class="btn-title">House</div>
+                    <div class="btn-count" id="houseCount">0</div>
+                    <div class="btn-cost" id="houseCost"></div>
+                </button>
+
+                <button class="build-btn disabled" onclick="build('apartment')" id="btn-apartment" style="display:none">
+                    <div class="btn-title">Apartment</div>
+                    <div class="btn-count" id="apartmentCount">0</div>
+                    <div class="btn-cost" id="apartmentCost"></div>
                 </button>
 
                 <!-- Stage 3 — Industry -->
@@ -1365,6 +1390,424 @@
                     <button class="research-btn" id="btn-research-amnizuSummons" onclick="doResearch('amnizuSummons')">Research</button>
                 </div>
 
+                <!-- ── New Tier 2.1 ── -->
+                <div class="research-card" id="research-wildHarvest" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Wildcraft Harvest</div>
+                        <div class="research-desc">Map the seasonal patterns of your terrain and plan farm and herb cycles around them. Farms and Herbalist's Dens produce 10% more.</div>
+                        <div class="research-cost">Cost: 40 Food, 25 Wood</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-wildHarvest" onclick="doResearch('wildHarvest')">Research</button>
+                </div>
+                <div class="research-card" id="research-simplerTinctures" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Simple Tinctures</div>
+                        <div class="research-desc">Distill herbs directly — no exotic reagents, no ritual. Your Alchemy Lab produces 15% more potions.</div>
+                        <div class="research-cost">Cost: 30 Herbs, 20 Food</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-simplerTinctures" onclick="doResearch('simplerTinctures')">Research</button>
+                </div>
+
+                <!-- ── New Tier 2.2 ── -->
+                <div class="research-card" id="research-shadowMarket" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Shadow Market</div>
+                        <div class="research-desc">Formalize the unofficial trade happening in back alleys and after dark. Taxation yields +1 cp per creature per day.</div>
+                        <div class="research-cost">Cost: 40 Stone, 200 cp</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-shadowMarket" onclick="doResearch('shadowMarket')">Research</button>
+                </div>
+                <div class="research-card" id="research-prototypeTools" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Prototype Tools</div>
+                        <div class="research-desc">Your settlement's tinkerers design purpose-built jigs and clamps for each construction task. All building wood and stone costs −10%.</div>
+                        <div class="research-cost">Cost: 60 Wood, 30 Iron</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-prototypeTools" onclick="doResearch('prototypeTools')">Research</button>
+                </div>
+                <div class="research-card" id="research-favoredTerrain" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Favored Terrain</div>
+                        <div class="research-desc">Learn every shortcut, game trail, and shelter the surrounding land offers. All manual gathering yields +1.</div>
+                        <div class="research-cost">Cost: 40 Food, 30 Wood</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-favoredTerrain" onclick="doResearch('favoredTerrain')">Research</button>
+                </div>
+                <div class="research-card" id="research-stoneSplitting" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Split-Face Quarrying</div>
+                        <div class="research-desc">Strike the natural fault lines and the stone breaks true. Quarries produce 10% more and manual stone gathering yields +1.</div>
+                        <div class="research-cost">Cost: 50 Stone, 15 Iron</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-stoneSplitting" onclick="doResearch('stoneSplitting')">Research</button>
+                </div>
+                <div class="research-card" id="research-logDrying" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Seasoned Timber</div>
+                        <div class="research-desc">Let cut logs cure in the yard before use — the wood is stronger and cuts to size with far less waste. Lumber Camps produce 15% more.</div>
+                        <div class="research-cost">Cost: 60 Wood, 20 Stone</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-logDrying" onclick="doResearch('logDrying')">Research</button>
+                </div>
+
+                <!-- ── New Tier 2.3 ── -->
+                <div class="research-card" id="research-warFormations" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Combat Formations</div>
+                        <div class="research-desc">Tactical formations and bunk rotation increase how many fighters an Armory supports. Each Armory houses +5 additional creatures.</div>
+                        <div class="research-cost">Cost: 50 Iron, 40 Wood</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-warFormations" onclick="doResearch('warFormations')">Research</button>
+                </div>
+                <div class="research-card" id="research-refinedAlchemy" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Refined Alchemy</div>
+                        <div class="research-desc">Precise temperature control and staged distillation push your lab's output further. Alchemy Lab potion output +15% more.</div>
+                        <div class="research-cost">Cost: 60 Herbs, 20 Potions</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-refinedAlchemy" onclick="doResearch('refinedAlchemy')">Research</button>
+                </div>
+                <div class="research-card" id="research-quenchingTechniques" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Tempering &amp; Quench</div>
+                        <div class="research-desc">Oil-quench and draw the iron at the right temperature. Your Smelters produce 15% more iron.</div>
+                        <div class="research-cost">Cost: 50 Iron, 40 Coal</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-quenchingTechniques" onclick="doResearch('quenchingTechniques')">Research</button>
+                </div>
+                <div class="research-card" id="research-dwarvenShoring" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Dwarven Shoring</div>
+                        <div class="research-desc">Dwarven-style timber frames and stone wedges brace the mine shafts, letting workers dig deeper and faster. Mines produce 15% more ore.</div>
+                        <div class="research-cost">Cost: 80 Wood, 60 Stone, 20 Iron</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-dwarvenShoring" onclick="doResearch('dwarvenShoring')">Research</button>
+                </div>
+                <div class="research-card" id="research-communalArchitecture" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Communal Architecture</div>
+                        <div class="research-desc">Standardized floor plans and shared load-bearing walls make every Lair cheaper to build the more you construct. Lair construction cost growth reduced.</div>
+                        <div class="research-cost">Cost: 80 Wood, 60 Stone</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-communalArchitecture" onclick="doResearch('communalArchitecture')">Research</button>
+                </div>
+                <div class="research-card" id="research-ironFittings" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Iron Fittings</div>
+                        <div class="research-desc">Iron brackets, corner plates, and raised floor channels reinforce every Storage building's shelving. Each Storage building grants +15 additional cap to all resources.</div>
+                        <div class="research-cost">Cost: 40 Iron, 50 Wood</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-ironFittings" onclick="doResearch('ironFittings')">Research</button>
+                </div>
+                <div class="research-card" id="research-oilRendering" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Rendered Oil</div>
+                        <div class="research-desc">Render animal fat into lamp oil and distribute it throughout the settlement. Brighter worksites mean longer shifts — all buildings produce 5% more.</div>
+                        <div class="research-cost">Cost: 50 Bones, 40 Food</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-oilRendering" onclick="doResearch('oilRendering')">Research</button>
+                </div>
+                <div class="research-card" id="research-prefabTimber" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Pre-Cut Timber</div>
+                        <div class="research-desc">Dimension lumber in the yard before the job site needs it. All building wood costs reduced by 15%.</div>
+                        <div class="research-cost">Cost: 70 Wood, 25 Iron</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-prefabTimber" onclick="doResearch('prefabTimber')">Research</button>
+                </div>
+                <div class="research-card" id="research-stockpiledStone" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Stockpiled Dressed Stone</div>
+                        <div class="research-desc">Cut and stack stone at the quarry face so it's ready when construction starts. All building stone costs reduced by 15%.</div>
+                        <div class="research-cost">Cost: 70 Stone, 20 Iron</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-stockpiledStone" onclick="doResearch('stockpiledStone')">Research</button>
+                </div>
+                <div class="research-card" id="research-hearthStones" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Hearthstones</div>
+                        <div class="research-desc">Dense kiln-fired hearthstones hold heat through the night, keeping the soil warm for longer growing seasons. Farms produce 10% more food.</div>
+                        <div class="research-cost">Cost: 50 Stone, 30 Coal</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-hearthStones" onclick="doResearch('hearthStones')">Research</button>
+                </div>
+                <div class="research-card" id="research-boneTools" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Bone-Handled Tools</div>
+                        <div class="research-desc">Light, grippy bone handles improve control on every hand tool in the settlement. All manual gathering yields +1.</div>
+                        <div class="research-cost">Cost: 60 Bones, 20 Iron</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-boneTools" onclick="doResearch('boneTools')">Research</button>
+                </div>
+
+                <!-- ── New Tier 2.4 ── -->
+                <div class="research-card" id="research-greenwardenLore" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Greenwarden's Almanac</div>
+                        <div class="research-desc">Compile the Greenwardens' field almanac of seasonal yields, soil health, and herb cycles. Farms and Herbalist's Dens produce 15% more.</div>
+                        <div class="research-cost">Cost: 80 Food, 60 Herbs, 15 Lore</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-greenwardenLore" onclick="doResearch('greenwardenLore')">Research</button>
+                </div>
+                <div class="research-card" id="research-trackerSign" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Tracker's Signs</div>
+                        <div class="research-desc">Read tracks, territorial markings, and migration patterns to predict where the herds will be. Hunting Lodges produce 15% more.</div>
+                        <div class="research-cost">Cost: 50 Bones, 40 Food, 10 Lore</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-trackerSign" onclick="doResearch('trackerSign')">Research</button>
+                </div>
+                <div class="research-card" id="research-annotatedTexts" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Annotated Compendium</div>
+                        <div class="research-desc">Scribes annotate recovered texts with cross-references and corrections, speeding future extraction. Scriptoriums produce 15% more lore.</div>
+                        <div class="research-cost">Cost: 60 Stone, 50 Wood, 12 Lore</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-annotatedTexts" onclick="doResearch('annotatedTexts')">Research</button>
+                </div>
+                <div class="research-card" id="research-crystalPolishing" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Crystal Polishing</div>
+                        <div class="research-desc">Polish raw crystal faces to optical clarity, improving resonance transmission. Crystal Seams produce 15% more and Arcane Dust cap +50.</div>
+                        <div class="research-cost">Cost: 40 Crystals, 20 Arcane Dust, 10 Lore</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-crystalPolishing" onclick="doResearch('crystalPolishing')">Research</button>
+                </div>
+                <div class="research-card" id="research-phosphorLamps" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Sulphur-Lamp Shifts</div>
+                        <div class="research-desc">Sulphur-burning lanterns extend the effective work shift into the evening. All buildings produce 3% more.</div>
+                        <div class="research-cost">Cost: 30 Sulphur, 40 Iron, 8 Lore</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-phosphorLamps" onclick="doResearch('phosphorLamps')">Research</button>
+                </div>
+                <div class="research-card" id="research-alchemicalFertilizer" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Alchemical Fertilizer</div>
+                        <div class="research-desc">Alchemical byproducts mixed into compost accelerate crop growth. Farms produce 15% more food.</div>
+                        <div class="research-cost">Cost: 60 Herbs, 20 Potions, 10 Lore</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-alchemicalFertilizer" onclick="doResearch('alchemicalFertilizer')">Research</button>
+                </div>
+                <div class="research-card" id="research-dedicatedTanners" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Dedicated Tanners</div>
+                        <div class="research-desc">Full-time tanners process every kill for bones, hide, and sinew instead of leaving it to the hunters. Hunting Lodges produce 15% more.</div>
+                        <div class="research-cost">Cost: 60 Bones, 20 Cloth, 8 Lore</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-dedicatedTanners" onclick="doResearch('dedicatedTanners')">Research</button>
+                </div>
+
+                <!-- ── New Tier 2.5 ── -->
+                <div class="research-card" id="research-fencedGoods" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">The Fence's Cut</div>
+                        <div class="research-desc">Establish a fence operation that resells goods at a premium to distant merchants. Trade-good income +50%. (Requires trade route system.)</div>
+                        <div class="research-cost">Cost: 15 Silk, 25 Potions, 25 Lore</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-fencedGoods" onclick="doResearch('fencedGoods')">Research</button>
+                </div>
+                <div class="research-card" id="research-blueprintLibrary" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Blueprint Archive</div>
+                        <div class="research-desc">A systematized archive of construction blueprints reduces planning time and material waste on every new build. All building costs −10% further.</div>
+                        <div class="research-cost">Cost: 30 Runes, 60 Stone, 20 Lore</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-blueprintLibrary" onclick="doResearch('blueprintLibrary')">Research</button>
+                </div>
+                <div class="research-card" id="research-steelGrade" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Graded Steelwork</div>
+                        <div class="research-desc">Classify steel batches by carbon content and route each grade to the right application. Forges produce 15% more steel.</div>
+                        <div class="research-cost">Cost: 40 Steel, 50 Coal, 25 Lore</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-steelGrade" onclick="doResearch('steelGrade')">Research</button>
+                </div>
+                <div class="research-card" id="research-houseDesign" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">House Design</div>
+                        <div class="research-desc">A proper multi-room house with a shared hearth and sleeping loft. Unlocks the House building, which houses 10 creatures.</div>
+                        <div class="research-cost">Cost: 80 Wood, 50 Stone, 30 Iron, 15 Lore</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-houseDesign" onclick="doResearch('houseDesign')">Research</button>
+                </div>
+                <div class="research-card" id="research-coalGasification" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Coal Gasification</div>
+                        <div class="research-desc">Combust coal into a combustible gas piped directly into the kiln chamber, achieving more consistent temperatures. Kilns produce 15% more bricks.</div>
+                        <div class="research-cost">Cost: 80 Coal, 50 Stone, 20 Lore</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-coalGasification" onclick="doResearch('coalGasification')">Research</button>
+                </div>
+                <div class="research-card" id="research-pressurizedBellows" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Pressurized Bellows</div>
+                        <div class="research-desc">A water-wheel drives the bellows continuously, keeping a constant high-pressure blast on the smelter. Smelters produce 15% more iron and iron cap +100.</div>
+                        <div class="research-cost">Cost: 60 Stone, 60 Iron, 20 Lore</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-pressurizedBellows" onclick="doResearch('pressurizedBellows')">Research</button>
+                </div>
+                <div class="research-card" id="research-ventilatedShafts" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Ventilated Shafts</div>
+                        <div class="research-desc">Air shafts and draft doors keep coal seam air clean, letting workers dig deeper veins. Coal Seams produce 15% more and coal cap +50.</div>
+                        <div class="research-cost">Cost: 70 Stone, 50 Wood, 15 Lore</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-ventilatedShafts" onclick="doResearch('ventilatedShafts')">Research</button>
+                </div>
+                <div class="research-card" id="research-silkRope" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Braided Silk Rope</div>
+                        <div class="research-desc">Braid surplus silk into high-tensile rope for rigging and scaffolding, reducing the coin spent on construction hardware. Silk cap +50 and all building coin costs −10%.</div>
+                        <div class="research-cost">Cost: 30 Silk, 20 Lore</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-silkRope" onclick="doResearch('silkRope')">Research</button>
+                </div>
+
+                <!-- ── New Tier 2.6 ── -->
+                <div class="research-card" id="research-shieldGuard" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Shield Guard Doctrine</div>
+                        <div class="research-desc">Trained guards rotate through worksites, keeping workers safe and morale high. All buildings produce 5% more.</div>
+                        <div class="research-cost">Cost: 60 Steel, 50 Iron, 50 Lore</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-shieldGuard" onclick="doResearch('shieldGuard')">Research</button>
+                </div>
+                <div class="research-card" id="research-masterworkPotions" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Masterwork Formulae</div>
+                        <div class="research-desc">Grand Magister-level formulae push your lab to its theoretical maximum. Alchemy Lab potion output +25% more and potion cap +50.</div>
+                        <div class="research-cost">Cost: 25 Arcane Essence, 40 Potions, 60 Lore</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-masterworkPotions" onclick="doResearch('masterworkPotions')">Research</button>
+                </div>
+                <div class="research-card" id="research-runesOfTheDeep" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Runes of the Deep</div>
+                        <div class="research-desc">Ancient dwarven runes carved into shaft walls and crystal chambers attune the stone to yield more readily. Mines +15% and Crystal Seams +15%.</div>
+                        <div class="research-cost">Cost: 50 Runes, 40 Arcane Dust, 55 Lore</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-runesOfTheDeep" onclick="doResearch('runesOfTheDeep')">Research</button>
+                </div>
+                <div class="research-card" id="research-oreConcentrate" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Ore Beneficiation</div>
+                        <div class="research-desc">Crush and separate ore before feeding the Smelter — the building consumes ore more efficiently and produces 15% more iron.</div>
+                        <div class="research-cost">Cost: 60 Iron, 50 Stone, 45 Lore</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-oreConcentrate" onclick="doResearch('oreConcentrate')">Research</button>
+                </div>
+                <div class="research-card" id="research-crystalChandeliers" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Crystal Chandeliers</div>
+                        <div class="research-desc">Suspended crystal arrays in the Mage Tower focus ambient light into pure arcane energy. Mage Towers produce 15% more crystals.</div>
+                        <div class="research-cost">Cost: 60 Crystals, 40 Arcane Dust, 50 Lore</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-crystalChandeliers" onclick="doResearch('crystalChandeliers')">Research</button>
+                </div>
+
+                <!-- ── New Tier 2.7 ── -->
+                <div class="research-card" id="research-circleOfTheWilds" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Circle of the Wild</div>
+                        <div class="research-desc">Formally induct nature wardens into the settlement's leadership — their deep knowledge transforms your harvests. Farms and Herbalist's Dens produce 20% more and food cap +200.</div>
+                        <div class="research-cost">Cost: 30 Arcane Essence, 20 Silk, 80 Lore</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-circleOfTheWilds" onclick="doResearch('circleOfTheWilds')">Research</button>
+                </div>
+                <div class="research-card" id="research-rangersConclave" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Ranger's Conclave</div>
+                        <div class="research-desc">A formal conclave of scouts and guides shares knowledge across the region, transforming your hunters into experts. Hunting Lodges produce 25% more and bones cap +200.</div>
+                        <div class="research-cost">Cost: 20 Ichor, 80 Bones, 80 Lore</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-rangersConclave" onclick="doResearch('rangersConclave')">Research</button>
+                </div>
+                <div class="research-card" id="research-crossReferenced" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Cross-Referenced Index</div>
+                        <div class="research-desc">A master index cards links every recovered text to every other — scribes spend less time searching and more time transcribing. Scriptoriums produce 25% more lore and lore cap +100.</div>
+                        <div class="research-cost">Cost: 20 Silk, 50 Runes, 90 Lore</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-crossReferenced" onclick="doResearch('crossReferenced')">Research</button>
+                </div>
+                <div class="research-card" id="research-coalReduction" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Efficient Burn</div>
+                        <div class="research-desc">Improved combustion chambers and preheated air reduce the coal demanded by each smelting cycle. Forges produce 10% more steel.</div>
+                        <div class="research-cost">Cost: 60 Steel, 80 Coal, 70 Lore</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-coalReduction" onclick="doResearch('coalReduction')">Research</button>
+                </div>
+
+                <!-- ── New Tier 2.8 ── -->
+                <div class="research-card" id="research-thievesGuild" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Thieves' Guild Charter</div>
+                        <div class="research-desc">Grant the guild a formal charter — they pay their dues in information, coin, and silence. Taxation yields +2 cp per creature per day and coin cap +25,000.</div>
+                        <div class="research-cost">Cost: 80 Iron, 3,000 cp, 100 Lore</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-thievesGuild" onclick="doResearch('thievesGuild')">Research</button>
+                </div>
+                <div class="research-card" id="research-masterCraft" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Mastercrafted Works</div>
+                        <div class="research-desc">Artificer-grade precision in every component eliminates all material waste. All building costs −15% further and coin costs −20%.</div>
+                        <div class="research-cost">Cost: 80 Steel, 4 Mithril, 100 Lore</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-masterCraft" onclick="doResearch('masterCraft')">Research</button>
+                </div>
+                <div class="research-card" id="research-dwarvenAnvil" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Dwarven Anvil</div>
+                        <div class="research-desc">A true dwarven-grade anvil of the right mass and temper makes every hammer blow count. Smelters +20%, Forges +20%, and mithril cap +10.</div>
+                        <div class="research-cost">Cost: 6 Mithril, 70 Steel, 90 Lore</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-dwarvenAnvil" onclick="doResearch('dwarvenAnvil')">Research</button>
+                </div>
+                <div class="research-card" id="research-apartmentDesign" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Apartment Design</div>
+                        <div class="research-desc">Stack multiple family quarters vertically with shared stairwells and common areas. Unlocks the Apartment building, which houses 15 creatures.</div>
+                        <div class="research-cost">Cost: 120 Stone, 80 Bricks, 50 Iron, 90 Lore</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-apartmentDesign" onclick="doResearch('apartmentDesign')">Research</button>
+                </div>
+                <div class="research-card" id="research-runicCalibration" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Runic Calibration</div>
+                        <div class="research-desc">Calibrate each rune engraving to the precise arcane resonance band that maximizes stability. Arcane Benches produce 25% more runes and rune cap +100.</div>
+                        <div class="research-cost">Cost: 70 Runes, 3 Mithril, 100 Lore</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-runicCalibration" onclick="doResearch('runicCalibration')">Research</button>
+                </div>
+
+                <!-- ── New Tier 2.9 ── -->
+                <div class="research-card" id="research-eliteCompany" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Elite Company</div>
+                        <div class="research-desc">A veteran elite company in mithril-reinforced gear. Each Armory houses +8 more creatures and the settlement's overall production rises 5%.</div>
+                        <div class="research-cost">Cost: 8 Mithril, 80 Steel, 120 Lore</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-eliteCompany" onclick="doResearch('eliteCompany')">Research</button>
+                </div>
+                <div class="research-card" id="research-stonecuttersGuild" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Stonecutters' Guild</div>
+                        <div class="research-desc">A formal guild of dwarven-trained stone workers optimizes every dig and cut. Quarries +25%, Mines +25%, and stone cap +500.</div>
+                        <div class="research-cost">Cost: 6 Mithril, 25 Ichor, 150 Stone, 120 Lore</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-stonecuttersGuild" onclick="doResearch('stonecuttersGuild')">Research</button>
+                </div>
+                <div class="research-card" id="research-grandLibrary" style="display:none">
+                    <div class="research-info">
+                        <div class="research-name">Grand Library</div>
+                        <div class="research-desc">A grand repository of all knowledge accumulated by the settlement. Scriptoriums produce 25% more lore and the lore cap expands by 300.</div>
+                        <div class="research-cost">Cost: 5 Mithril, 40 Arcane Essence, 150 Stone, 130 Lore</div>
+                    </div>
+                    <button class="research-btn" id="btn-research-grandLibrary" onclick="doResearch('grandLibrary')">Research</button>
+                </div>
+
             </div>
 
         </div><!-- /tab-research -->
@@ -1738,7 +2181,80 @@
                 </div>
             </div>
 
+            <div class="worker-row" id="wrow-marketStall"  style="display:none">
+                <div class="worker-left">
+                    <span class="worker-name">Market Stall</span>
+                    <span class="worker-sub">Merchant — 5 cp/day each</span>
+                    <span class="worker-slots" id="wslots-marketStall">0 / 0</span>
+                </div>
+                <div class="worker-controls">
+                    <button class="wbtn wbtn-mm" onclick="setWorkersMin(this)" title="Unassign all">&#9664;&#9664;</button>
+                    <button class="wbtn" onclick="adjustWorkers('marketStall', -1)">&#9664;</button>
+                    <input  class="winput" type="number" id="winput-marketStall" value="0" min="0" oninput="setWorkers('marketStall', this.value)">
+                    <button class="wbtn" onclick="adjustWorkers('marketStall', 1)">&#9654;</button>
+                    <button class="wbtn wbtn-mm" onclick="setWorkersMax(this)" title="Assign max">&#9654;&#9654;</button>
+                </div>
+            </div>
+
+            <div class="worker-row" id="wrow-tradeCart"  style="display:none">
+                <div class="worker-left">
+                    <span class="worker-name">Trade Cart</span>
+                    <span class="worker-sub">Hauler — manages deliveries</span>
+                    <span class="worker-slots" id="wslots-tradeCart">0 / 0</span>
+                </div>
+                <div class="worker-controls">
+                    <button class="wbtn wbtn-mm" onclick="setWorkersMin(this)" title="Unassign all">&#9664;&#9664;</button>
+                    <button class="wbtn" onclick="adjustWorkers('tradeCart', -1)">&#9664;</button>
+                    <input  class="winput" type="number" id="winput-tradeCart" value="0" min="0" oninput="setWorkers('tradeCart', this.value)">
+                    <button class="wbtn" onclick="adjustWorkers('tradeCart', 1)">&#9654;</button>
+                    <button class="wbtn wbtn-mm" onclick="setWorkersMax(this)" title="Assign max">&#9654;&#9654;</button>
+                </div>
+            </div>
+
         </div><!-- /tab-workers -->
+
+        <!-- TRADE TAB -->
+        <div class="tab-body tab-content" id="tab-trade" style="display:none">
+
+            <div class="trade-header">
+                <div class="trade-header-row">
+                    <span class="trade-header-label">Trade Routes</span>
+                    <span id="trade-capacity-display" class="trade-header-cap">0 / 0 routes active</span>
+                </div>
+                <div id="trade-cart-display" class="trade-header-sub"></div>
+            </div>
+
+            <div id="trade-routes"></div>
+
+            <div class="trade-rates-panel">
+                <div class="trade-rates-title">Exchange Rates <span class="trade-rates-note">(per 10 units/day)</span></div>
+                <div class="trade-rates-grid">
+                    <div class="trade-rate-row"><span class="trade-rate-res">Food</span><span class="trade-rate-sell">sell 20 cp</span><span class="trade-rate-buy">buy 40 cp</span></div>
+                    <div class="trade-rate-row"><span class="trade-rate-res">Wood</span><span class="trade-rate-sell">sell 30 cp</span><span class="trade-rate-buy">buy 60 cp</span></div>
+                    <div class="trade-rate-row"><span class="trade-rate-res">Stone</span><span class="trade-rate-sell">sell 20 cp</span><span class="trade-rate-buy">buy 40 cp</span></div>
+                    <div class="trade-rate-row"><span class="trade-rate-res">Ore</span><span class="trade-rate-sell">sell 50 cp</span><span class="trade-rate-buy">buy 100 cp</span></div>
+                    <div class="trade-rate-row"><span class="trade-rate-res">Herbs</span><span class="trade-rate-sell">sell 40 cp</span><span class="trade-rate-buy">buy 80 cp</span></div>
+                    <div class="trade-rate-row"><span class="trade-rate-res">Coal</span><span class="trade-rate-sell">sell 40 cp</span><span class="trade-rate-buy">buy 80 cp</span></div>
+                    <div class="trade-rate-row"><span class="trade-rate-res">Clay</span><span class="trade-rate-sell">sell 30 cp</span><span class="trade-rate-buy">buy 60 cp</span></div>
+                    <div class="trade-rate-row"><span class="trade-rate-res">Bones</span><span class="trade-rate-sell">sell 20 cp</span><span class="trade-rate-buy">buy 40 cp</span></div>
+                    <div class="trade-rate-row"><span class="trade-rate-res">Sulphur</span><span class="trade-rate-sell">sell 80 cp</span><span class="trade-rate-buy">buy 160 cp</span></div>
+                    <div class="trade-rate-row"><span class="trade-rate-res">Crystals</span><span class="trade-rate-sell">sell 1 sp 20 cp</span><span class="trade-rate-buy">buy 2 sp 40 cp</span></div>
+                    <div class="trade-rate-row"><span class="trade-rate-res">Iron</span><span class="trade-rate-sell">sell 80 cp</span><span class="trade-rate-buy">buy 160 cp</span></div>
+                    <div class="trade-rate-row"><span class="trade-rate-res">Potions</span><span class="trade-rate-sell">sell 1 sp 50 cp</span><span class="trade-rate-buy">buy 3 sp</span></div>
+                    <div class="trade-rate-row"><span class="trade-rate-res">Arcane Dust</span><span class="trade-rate-sell">sell 2 sp</span><span class="trade-rate-buy">buy 4 sp</span></div>
+                    <div class="trade-rate-row"><span class="trade-rate-res">Steel</span><span class="trade-rate-sell">sell 2 sp 50 cp</span><span class="trade-rate-buy">buy 5 sp</span></div>
+                    <div class="trade-rate-row"><span class="trade-rate-res">Bricks</span><span class="trade-rate-sell">sell 60 cp</span><span class="trade-rate-buy">buy 1 sp 20 cp</span></div>
+                    <div class="trade-rate-row"><span class="trade-rate-res">Cloth</span><span class="trade-rate-sell">sell 1 sp 20 cp</span><span class="trade-rate-buy">buy 2 sp 40 cp</span></div>
+                    <div class="trade-rate-row"><span class="trade-rate-res">Runes</span><span class="trade-rate-sell">sell 4 sp</span><span class="trade-rate-buy">buy 8 sp</span></div>
+                    <div class="trade-rate-row"><span class="trade-rate-res">Arcane Essence</span><span class="trade-rate-sell">sell 8 sp</span><span class="trade-rate-buy">buy 16 sp</span></div>
+                    <div class="trade-rate-row"><span class="trade-rate-res">Silk</span><span class="trade-rate-sell">sell 5 sp</span><span class="trade-rate-buy">buy 10 sp</span></div>
+                    <div class="trade-rate-row"><span class="trade-rate-res">Mana Gold</span><span class="trade-rate-sell">sell 7 sp</span><span class="trade-rate-buy">buy 14 sp</span></div>
+                    <div class="trade-rate-row"><span class="trade-rate-res">Ichor</span><span class="trade-rate-sell">sell 3 sp 50 cp</span><span class="trade-rate-buy">buy 7 sp</span></div>
+                    <div class="trade-rate-row"><span class="trade-rate-res">Mithril</span><span class="trade-rate-sell">sell 15 sp</span><span class="trade-rate-buy">buy 30 sp</span></div>
+                </div>
+            </div>
+
+        </div><!-- /tab-trade -->
 
         <!-- INFO TAB -->
         <div class="tab-body tab-content" id="tab-info" style="display:none">

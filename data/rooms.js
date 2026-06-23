@@ -84,6 +84,39 @@ const ROOMS = {
         // Unlocked via the "Deep Mining Techniques" research, not a building count
         requiresResearch: ["deepMining"],
     },
+    marketStall: {
+        name: "Market Stall",
+        desc: "A covered stall where merchants hawk goods and settle accounts. Each assigned Merchant generates 5 cp per game day from general commerce. The first Market Stall opens the settlement's trade network (5 base trade route slots).",
+        cost: { wood: 30, stone: 20 },
+        coinCost: 100,
+        costScale: 1.10,
+        jobs: 1,
+        unlock: { farm: 2 },
+        requiresResearch: ["taxes"],
+    },
+    tradeCart: {
+        name: "Trade Cart",
+        desc: "A sturdy two-wheeled cart and its driver handle long-haul deliveries between settlements. Each Trade Cart building adds 2 trade route slots to your market network.",
+        cost: { wood: 40, iron: 20 },
+        coinCost: 200,
+        costScale: 1.10,
+        jobs: 1,
+        requiresResearch: ["tradeGoods"],
+    },
+    house: {
+        name: "House",
+        housingBonus: 10,
+        cost: { wood: 40, stone: 20, iron: 10 },
+        costScale: 1.06,
+        requiresResearch: ["houseDesign"],
+    },
+    apartment: {
+        name: "Apartment",
+        housingBonus: 15,
+        cost: { stone: 80, wood: 50, bricks: 40 },
+        costScale: 1.08,
+        requiresResearch: ["apartmentDesign"],
+    },
 
     // ── Stage 3 — Industry (small coin costs 100–500 cp) ────────────────────────
 

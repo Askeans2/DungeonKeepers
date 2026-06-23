@@ -17,6 +17,18 @@ const BASE_CAPS = {
     // Era 1 resources (cap overridden dynamically while era === 1)
     essence: 100, influence: 100, mana: 100,
 };
+// Trade system: base sell price in cp per unit; buy price is 2× sell price
+const TRADE_RATES = {
+    food: 2, wood: 3, stone: 2, ore: 5, herbs: 4,
+    coal: 4, clay: 3, bones: 2, sulphur: 8,
+    crystals: 12, iron: 8, potions: 15,
+    arcaneDust: 20, steel: 25, bricks: 6,
+    cloth: 12, runes: 40,
+    arcaneEssence: 80, silk: 50, manaGold: 70,
+    ichor: 35, mithril: 150,
+};
+const TRADE_AMOUNT = 10; // units traded per active route per game day
+
 // Base coin cap scales with currency tier: 1000 cp → 1000 sp (100,000 cp) → 1000 gp (1,000,000 cp)
 const COIN_CAP_CP = 1000;
 const COIN_CAP_SP = 100000;   // 1000 sp in cp
@@ -210,11 +222,13 @@ const gameState = {
     buildings: {
         lair: 0, farm: 0, lumber: 0, quarry: 0, storage: 0,
         mine: 0, coalSeam: 0, herbalistDen: 0, huntingLodge: 0, clayPit: 0, crystalSeam: 0,
+        marketStall: 0, tradeCart: 0, house: 0, apartment: 0,
         smelter: 0, alchemyLab: 0, kiln: 0, loom: 0,
         arcaneGrinder: 0, forge: 0, arcaneBench: 0, mageTower: 0, armory: 0, sulphurVent: 0,
         scriptorium: 0,
         ritualCircle: 0, spiderNest: 0, arcaneCrucible: 0, darkAltar: 0, mithrilForge: 0,
     },
+    tradeRoutes: [],
     research:          {},
     workerAssignments: {},
     population: { count: 0, growthTimer: 0, starveTick: 0 },
@@ -988,10 +1002,11 @@ function getCaps() {
         if (bonus > 0) caps[res] += bonus;
     }
     // Storage buildings; reinforcedShelving upgrades per-storage bonus from 50→75;
-    // race storageBonus further adds to the per-building amount
+    // ironFittings adds +15 on top; race storageBonus further adds to the per-building amount
+    const r2 = gameState.research || {};
     const raceData2    = RACE_DATA[gameState.run && gameState.run.race];
     const raceStorage  = (raceData2 && raceData2.effects && raceData2.effects.storageBonus) || 0;
-    const storageBonus = ((gameState.research && gameState.research.reinforcedShelving) ? 75 : 50) + raceStorage;
+    const storageBonus = (r2.reinforcedShelving ? 75 : 50) + (r2.ironFittings ? 15 : 0) + raceStorage;
     const n = gameState.buildings.storage || 0;
     if (n > 0) {
         for (const res of Object.keys(BASE_CAPS)) {
@@ -1002,14 +1017,14 @@ function getCaps() {
     // Lore cap: 25 per Scriptorium, plus any capBonus from research
     caps.lore = (gameState.buildings.scriptorium || 0) * 25
               + getResearchBonus('capBonus', 'lore');
-    // Coin cap scales with currency tier; ironLockbox adds 50,000 cp; racial coinCapBonus applies
-    const r2 = gameState.research || {};
+    // Coin cap scales with currency tier; ironLockbox adds 50,000 cp; thievesGuild adds 25,000 cp; racial coinCapBonus applies
     const baseCoinCap = r2.goldStandard ? COIN_CAP_GP : r2.silverCurrency ? COIN_CAP_SP : COIN_CAP_CP;
     const raceEffects = (RACE_DATA[gameState.run && gameState.run.race] || {}).effects || {};
     const raceCCB = raceEffects.coinCapBonus || {};
     const raceCoinBonus = (raceCCB.flat || 0) + Math.floor(baseCoinCap * (raceCCB.pct || 0));
     caps.coins = baseCoinCap
-        + (r2.ironLockbox ? 50000 : 0)
+        + (r2.ironLockbox   ? 50000 : 0)
+        + (r2.thievesGuild  ? 25000 : 0)
         + raceCoinBonus;
     // Era 1: base caps of 100 for Era 1 resources, raised by storage buildings
     if ((gameState.run.era || 1) === 1) {
@@ -1026,14 +1041,35 @@ const GUILD_DISCOUNT_BUILDINGS = new Set(["smelter", "forge", "loom", "kiln"]);
 function getBuildCost(id) {
     const def = ROOMS[id];
     const n   = gameState.buildings[id] || 0;
+    const r   = gameState.research || {};
     const out = {};
-    const guildDiscount = gameState.research && gameState.research.guildCharter && GUILD_DISCOUNT_BUILDINGS.has(id);
+    let scale = def.costScale || 1.2;
+    if (r.communalArchitecture && id === 'lair') scale = Math.max(1.01, scale - 0.02);
+    const guildDiscount = r.guildCharter && GUILD_DISCOUNT_BUILDINGS.has(id);
+    let matReduction = 0;
+    if (r.prototypeTools)   matReduction += 0.10;
+    if (r.blueprintLibrary) matReduction += 0.10;
+    if (r.masterCraft)      matReduction += 0.15;
     for (const [res, base] of Object.entries(def.cost)) {
-        let cost = Math.floor(base * Math.pow(def.costScale || 1.2, n));
+        let cost = Math.floor(base * Math.pow(scale, n));
         if (guildDiscount) cost = Math.floor(cost * 0.80);
+        let resReduction = matReduction;
+        if (res === 'wood'  && r.prefabTimber)    resReduction += 0.15;
+        if (res === 'stone' && r.stockpiledStone) resReduction += 0.15;
+        if (resReduction > 0) cost = Math.floor(cost * Math.max(0.05, 1 - resReduction));
         out[res] = cost;
     }
     return out;
+}
+
+function getEffectiveBuildingCoinCost(coinBase) {
+    if (!coinBase) return 0;
+    const r = gameState.research || {};
+    let reduction = 0;
+    if (r.masterCraft) reduction += 0.20;
+    if (r.silkRope)    reduction += 0.10;
+    const reduced = reduction > 0 ? Math.floor(coinBase * Math.max(0.05, 1 - reduction)) : coinBase;
+    return effectiveCoinCost(reduced);
 }
 
 function canAfford(id) {
@@ -1041,7 +1077,7 @@ function canAfford(id) {
         if ((gameState.resources[res] || 0) < amount) return false;
     }
     const def = ROOMS[id];
-    if (def.coinCost && (gameState.resources.coins || 0) < effectiveCoinCost(def.coinCost)) return false;
+    if (def.coinCost && (gameState.resources.coins || 0) < getEffectiveBuildingCoinCost(def.coinCost)) return false;
     return true;
 }
 
@@ -1067,7 +1103,7 @@ function build(id) {
         }
         const def = ROOMS[id];
         if (def.coinCost) {
-            gameState.resources.coins = Math.max(0, (gameState.resources.coins || 0) - effectiveCoinCost(def.coinCost));
+            gameState.resources.coins = Math.max(0, (gameState.resources.coins || 0) - getEffectiveBuildingCoinCost(def.coinCost));
         }
         gameState.buildings[id] = (gameState.buildings[id] || 0) + 1;
         bought++;
@@ -1076,6 +1112,105 @@ function build(id) {
     gameState.stats.buildingsConstructed = (gameState.stats.buildingsConstructed || 0) + bought;
     updateUI();
     saveGame();
+}
+
+// ── Trade system ──────────────────────────────────────────────────────────────
+
+function getTradeCapacity() {
+    if (!(gameState.buildings.marketStall > 0)) return 0;
+    return 5 + (gameState.buildings.tradeCart || 0) * 2;
+}
+
+function applyTradeRoute(slot, mode) {
+    const sel = document.getElementById('trade-sel-' + slot);
+    const resource = sel ? sel.value : '';
+    if (!resource || !TRADE_RATES[resource]) return;
+    if (!gameState.tradeRoutes) gameState.tradeRoutes = [];
+    while (gameState.tradeRoutes.length <= slot) gameState.tradeRoutes.push(null);
+    gameState.tradeRoutes[slot] = { resource, mode };
+    renderTradeTab();
+    saveGame();
+}
+
+function clearTradeRoute(slot) {
+    if (gameState.tradeRoutes) gameState.tradeRoutes[slot] = null;
+    renderTradeTab();
+    saveGame();
+}
+
+function renderTradeTab() {
+    const container = document.getElementById('trade-routes');
+    if (!container) return;
+    const capacity = getTradeCapacity();
+    if (!gameState.tradeRoutes) gameState.tradeRoutes = [];
+    // Grow route array to match capacity; never shrink (preserves routes if capacity temporarily differs)
+    while (gameState.tradeRoutes.length < capacity) gameState.tradeRoutes.push(null);
+    const routes = gameState.tradeRoutes;
+    const fencedBonus = (gameState.research && gameState.research.fencedGoods) ? 1.5 : 1;
+    const activeCount = routes.slice(0, capacity).filter(r => r != null).length;
+
+    const hdr = document.getElementById('trade-capacity-display');
+    if (hdr) hdr.textContent = `${activeCount} / ${capacity} routes active`;
+
+    const cartCount = gameState.buildings.tradeCart || 0;
+    const cartHdr = document.getElementById('trade-cart-display');
+    if (cartHdr) cartHdr.textContent = cartCount > 0
+        ? `${gameState.buildings.marketStall} Market Stall${gameState.buildings.marketStall !== 1 ? 's' : ''} · ${cartCount} Trade Cart${cartCount !== 1 ? 's' : ''} (+${cartCount * 2} slots)`
+        : `${gameState.buildings.marketStall} Market Stall${gameState.buildings.marketStall !== 1 ? 's' : ''} · 5 base slots`;
+
+    if (capacity === 0) {
+        container.innerHTML = '<div class="trade-empty">Build a Market Stall (requires Taxation research + 2 Farms) to unlock trade routes.</div>';
+        return;
+    }
+
+    const resOpts = Object.entries(TRADE_RATES)
+        .map(([key, rate]) => {
+            const name = (RESOURCES[key] && RESOURCES[key].name) || key;
+            return `<option value="${key}">${name} (${rate} cp/unit)</option>`;
+        }).join('');
+
+    let html = '';
+    for (let i = 0; i < capacity; i++) {
+        const route = (i < routes.length) ? routes[i] : null;
+        if (route) {
+            const rate = TRADE_RATES[route.resource] || 0;
+            const resName = (RESOURCES[route.resource] && RESOURCES[route.resource].name) || route.resource;
+            if (route.mode === 'sell') {
+                const income = Math.floor(TRADE_AMOUNT * rate * fencedBonus);
+                html += `<div class="trade-slot trade-slot-active">
+                    <span class="trade-slot-num">#${i + 1}</span>
+                    <div class="trade-slot-info">
+                        <span class="trade-dir trade-sell">SELL</span>
+                        <span class="trade-slot-res">${resName}</span>
+                        <span class="trade-slot-rate">${TRADE_AMOUNT}/day &rarr; +${formatCoins(income)}/day</span>
+                    </div>
+                    <button class="trade-clear-btn" onclick="clearTradeRoute(${i})">&#x2715;</button>
+                </div>`;
+            } else {
+                const spend = TRADE_AMOUNT * rate * 2;
+                html += `<div class="trade-slot trade-slot-active">
+                    <span class="trade-slot-num">#${i + 1}</span>
+                    <div class="trade-slot-info">
+                        <span class="trade-dir trade-buy">BUY</span>
+                        <span class="trade-slot-res">${resName}</span>
+                        <span class="trade-slot-rate">${formatCoins(spend)}/day &larr; +${TRADE_AMOUNT}/day</span>
+                    </div>
+                    <button class="trade-clear-btn" onclick="clearTradeRoute(${i})">&#x2715;</button>
+                </div>`;
+            }
+        } else {
+            html += `<div class="trade-slot trade-slot-empty">
+                <span class="trade-slot-num">#${i + 1}</span>
+                <select id="trade-sel-${i}" class="trade-res-sel">
+                    <option value="">— select resource —</option>
+                    ${resOpts}
+                </select>
+                <button class="trade-mode-btn trade-sell-btn" onclick="applyTradeRoute(${i}, 'sell')">Sell</button>
+                <button class="trade-mode-btn trade-buy-btn"  onclick="applyTradeRoute(${i}, 'buy')">Buy</button>
+            </div>`;
+        }
+    }
+    container.innerHTML = html;
 }
 
 function gather(key) {
@@ -1270,6 +1405,32 @@ function runOneTick() {
             const tradeIncome = Math.floor(((gameState.resources.cloth || 0) + (gameState.resources.potions || 0)) * 2);
             gameState.resources.coins = (gameState.resources.coins || 0) + tradeIncome;
         }
+        // Market Stall: 5 cp per assigned Merchant per day
+        const stallWorkers = (gameState.workerAssignments && gameState.workerAssignments.marketStall) || 0;
+        if (stallWorkers > 0) {
+            gameState.resources.coins = (gameState.resources.coins || 0) + stallWorkers * 5;
+        }
+        // Trade routes: each configured route executes once per day
+        if (gameState.tradeRoutes && gameState.tradeRoutes.length > 0) {
+            const fencedBonus = (gameState.research && gameState.research.fencedGoods) ? 1.5 : 1;
+            for (const route of gameState.tradeRoutes) {
+                if (!route || !TRADE_RATES[route.resource]) continue;
+                const rate = TRADE_RATES[route.resource];
+                if (route.mode === 'sell') {
+                    const toSell = Math.min(TRADE_AMOUNT, gameState.resources[route.resource] || 0);
+                    if (toSell > 0) {
+                        gameState.resources[route.resource] -= toSell;
+                        gameState.resources.coins = (gameState.resources.coins || 0) + Math.floor(toSell * rate * fencedBonus);
+                    }
+                } else {
+                    const coinCost = TRADE_AMOUNT * rate * 2;
+                    if ((gameState.resources.coins || 0) >= coinCost) {
+                        gameState.resources.coins -= coinCost;
+                        gameState.resources[route.resource] = (gameState.resources[route.resource] || 0) + TRADE_AMOUNT;
+                    }
+                }
+            }
+        }
         gameState.time.day++;
         const totalDays = DAYS_PER_SEASON * 4;
         if (gameState.time.day > totalDays) {
@@ -1380,6 +1541,9 @@ function updateUI() {
     updatePauseBtn();
     updateBankDisplay();
     updateEraTabVisibility();
+    // Re-render the trade tab when it's active so rates and capacities stay current
+    const _activeTabBtn = document.querySelector('.tab-btn.active');
+    if (_activeTabBtn && _activeTabBtn.dataset.tab === 'trade') renderTradeTab();
     renderEra1Tree();
     renderEra1Actions();
     const caps     = getCaps();
@@ -1458,7 +1622,7 @@ function updateUI() {
             let costStr = Object.entries(cost)
                 .map(([res, n]) => `${fmt(n)} ${RESOURCES[res]?.name || res}`)
                 .join(", ");
-            if (def.coinCost) costStr += (costStr ? ", " : "") + formatCoinCost(def.coinCost);
+            if (def.coinCost) costStr += (costStr ? ", " : "") + formatCoins(getEffectiveBuildingCoinCost(def.coinCost));
             costEl.textContent = costStr;
         }
     }
@@ -1666,6 +1830,7 @@ const BUILDING_ERA = {
     kiln:          2, loom:          2, mageTower:   2,
     armory:        2, sulphurVent:   2, arcaneGrinder: 2,
     forge:         2, arcaneBench:   2, scriptorium:  2,
+    marketStall:   2, tradeCart:     2, house:        2, apartment:    2,
     // Era 3 — Endgame / dark
     ritualCircle:  3, spiderNest:    3, arcaneCrucible: 3,
     darkAltar:     3, mithrilForge:  3,
@@ -1681,20 +1846,36 @@ const RESEARCH_ERA = {};
 const ERA_2_RESEARCH = [
     // 2.1
     "taxes", "toolcraft", "timberfelling", "stonemason", "cropRotation", "foragerLore",
+    "wildHarvest", "simplerTinctures",
     // 2.2
     "herbGarden", "animalHusbandry", "carpentry", "quarrying", "oreProspecting",
     "coalBunker", "silverCurrency", "composting", "communalLiving", "taxCollector",
+    "shadowMarket", "prototypeTools", "favoredTerrain", "stoneSplitting", "logDrying",
     // 2.3
     "deepMining", "crystalLore", "sulphurStudy", "bellowsDesign", "concentratedExtracts",
     "highFireKiln", "loomMastery", "packHunting", "trapLines", "bonecraft",
     "reinforcedShelving", "dryCellar", "militiaDrill", "bookkeeping", "rationing", "goldStandard",
+    "warFormations", "refinedAlchemy", "quenchingTechniques", "dwarvenShoring", "communalArchitecture",
+    "ironFittings", "oilRendering", "prefabTimber", "stockpiledStone", "hearthStones", "boneTools",
     // 2.4
     "crystalFocus", "forgeMastery", "mortaredMasonry", "roadNetwork", "tradeGoods",
     "guildCharter", "mintStandard", "arcaneTapping", "arcaneInscription", "loreKeeping", "ironLockbox",
+    "greenwardenLore", "trackerSign", "annotatedTexts", "crystalPolishing", "phosphorLamps",
+    "alchemicalFertilizer", "dedicatedTanners",
     // 2.5
     "runicScript", "essenceHarvest", "ichorRefinement", "silkCulture", "manaConductorCoils",
     "mithrilTemper", "ritualPrep", "darkTexts", "silkenWarren", "manaConduit", "goldOnly", "infernalLore",
+    "fencedGoods", "blueprintLibrary", "steelGrade", "houseDesign",
+    "coalGasification", "pressurizedBellows", "ventilatedShafts", "silkRope",
     // 2.6
+    "shieldGuard", "masterworkPotions", "runesOfTheDeep", "oreConcentrate", "crystalChandeliers",
+    // 2.7
+    "circleOfTheWilds", "rangersConclave", "crossReferenced", "coalReduction",
+    // 2.8
+    "thievesGuild", "masterCraft", "dwarvenAnvil", "apartmentDesign", "runicCalibration",
+    // 2.9
+    "eliteCompany", "stonecuttersGuild", "grandLibrary",
+    // 2.10 (gates)
     "planarRites", "amnizuSummons", "dungeonBlueprint",
 ];
 const ERA_3_RESEARCH = [
@@ -3337,6 +3518,13 @@ function updateEraTabVisibility() {
         if (btn) btn.style.display = era === 1 ? 'none' : '';
     }
 
+    // Trade tab: visible in Era 2 once at least one Market Stall is built
+    const tradeBtn = document.querySelector('.tab-btn[data-tab="trade"]');
+    if (tradeBtn) {
+        const showTrade = era >= 2 && (gameState.buildings.marketStall > 0);
+        tradeBtn.style.display = showTrade ? '' : 'none';
+    }
+
     // Show/hide left-column elements that only belong in Era 2
     const displayEra2 = era === 1 ? 'none' : '';
     document.querySelectorAll('.era2-only').forEach(el => {
@@ -3353,7 +3541,7 @@ function updateEraTabVisibility() {
     } else {
         // In Era 1 — switch away from any Era 2 tab
         const activeTab = document.querySelector('.tab-btn.active');
-        if (!activeTab || era2Tabs.includes(activeTab.dataset.tab)) {
+        if (!activeTab || [...era2Tabs, 'trade'].includes(activeTab.dataset.tab)) {
             switchTab('awakening');
         }
     }
@@ -4503,7 +4691,8 @@ function switchTab(tabId) {
     if (content) content.style.display = "block";
     const btn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
     if (btn) btn.classList.add("active");
-    if (tabId === "settings") updateSettingsUI(); // refresh Restore Backup state
+    if (tabId === "settings") updateSettingsUI();
+    if (tabId === "trade") renderTradeTab();
 }
 
 // ── Bootstrap ─────────────────────────────────────────────────────────────────
@@ -4518,6 +4707,7 @@ if (!gameState.meta.racesPlayed)             gameState.meta.racesPlayed = {};
 if (gameState.meta.quintessence == null) gameState.meta.quintessence = 0;
 if (!gameState.workerAssignments)            gameState.workerAssignments = {};
 if (!gameState.research)                     gameState.research = {};
+if (!Array.isArray(gameState.tradeRoutes))   gameState.tradeRoutes = [];
 if (!gameState.run.era)                      gameState.run.era = 1;
 if (gameState.pauseBank == null || isNaN(gameState.pauseBank)) gameState.pauseBank = 0;
 if (!gameState.era1) gameState.era1 = { unlocked: [], chosen: null };
