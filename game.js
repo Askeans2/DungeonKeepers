@@ -654,7 +654,7 @@ function getResourceBreakdown(res) {
         if (count === 0) continue;
         const n = def.jobs ? (workers[id] || 0) : count;
         if (n === 0) continue;
-        const bldgMult = getResearchBonus('productionBonus', id);
+        const bldgMult = getResearchBonus('productionBonus', id) * getBuildingProductionBonus(id);
         const rate = def.production[res] * n * bldgMult * allBonus;
         const sub = def.jobs ? `${n}w` : `×${count}`;
         lines.push({ label: def.name, sub, value: rate, drain: false });
