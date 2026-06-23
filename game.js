@@ -514,7 +514,7 @@ function getResearchBonus(type, key) {
 }
 
 function getEchoProductionMult() {
-    return 1 + ((gameState.meta && gameState.meta.echoesSpent) || 0) * 0.005;
+    return 1 + ((gameState.meta && gameState.meta.echoes) || 0) * 0.005;
 }
 
 // Returns the actual amount gained by a manual gather action, after all research bonuses.
@@ -760,13 +760,36 @@ function _hideResTooltip() {
     _resTooltipRes = null;
 }
 
+function _buildEchoTooltipHTML() {
+    const echoes   = gameState.meta.echoes || 0;
+    const bonusPct = (echoes * 0.5).toFixed(1);
+    return `<div class="res-tt-header">Echoes</div>
+<div class="res-tt-lore">Remnants of awareness that persist between awakenings — the dungeon does not forget what it has learned.</div>
+<div class="res-tt-divider"></div>
+<div class="res-tt-row"><span class="res-tt-label">Each Echo<span class="res-tt-sub"> resonance</span></span><span class="res-tt-val pos">+0.5% all production</span></div>
+<div class="res-tt-row res-tt-total-row"><span class="res-tt-label">Total bonus<span class="res-tt-sub"> ${echoes} × 0.5%</span></span><span class="res-tt-val pos">+${bonusPct}%</span></div>`;
+}
+
 function initResTooltips() {
     _resTooltipEl = document.getElementById('res-tooltip');
     document.querySelectorAll('[id^="res-row-"]').forEach(el => {
         const res = el.id.replace('res-row-', '');
+        if (res === 'echoes') return; // handled separately below
         el.addEventListener('mouseenter', () => _showResTooltip(el, res));
         el.addEventListener('mouseleave', _hideResTooltip);
     });
+    const echoRow = document.getElementById('res-row-echoes');
+    if (echoRow) {
+        echoRow.addEventListener('mouseenter', () => {
+            if (!_resTooltipEl) return;
+            _resTooltipEl.innerHTML = _buildEchoTooltipHTML();
+            const rect = echoRow.getBoundingClientRect();
+            _resTooltipEl.style.top  = rect.top + 'px';
+            _resTooltipEl.style.left = (rect.right + 8) + 'px';
+            _resTooltipEl.style.display = 'block';
+        });
+        echoRow.addEventListener('mouseleave', _hideResTooltip);
+    }
 }
 
 // ── Gather action tooltips ────────────────────────────────────────────────────
@@ -4327,6 +4350,8 @@ function doPrestige() {
     gameState.time       = { tick: 0, day: 1, year: 1, seasonIndex: 0 };
     for (const k of Object.keys(gameState.stats)) gameState.stats[k] = 0;
     gameState.run  = { biome: null, race: null, mods: [], era: 1 };
+    gameState.era1 = { unlocked: [], chosen: null, raceOptions: null };
+    _era1TreeState = '';
     gameState.meta = savedMeta;
 
     selectStartBiome(false);
@@ -4336,26 +4361,17 @@ function doPrestige() {
     updateIdentityPanel();
 }
 
-function buyEchoResonance() {
-    const balance = (gameState.meta.echoes || 0) - (gameState.meta.echoesSpent || 0);
-    if (balance < 1) return;
-    gameState.meta.echoesSpent = (gameState.meta.echoesSpent || 0) + 1;
-    saveGame();
-    updateUI();
-}
-
 function renderEchoPanel() {
-    const echoes   = gameState.meta.echoes      || 0;
-    const spent    = gameState.meta.echoesSpent || 0;
-    const balance  = echoes - spent;
-    const bonusPct = (spent * 0.5).toFixed(1);
+    const echoes   = gameState.meta.echoes || 0;
+    const bonusPct = (echoes * 0.5).toFixed(1);
     const preview  = calcEchoesEarned();
-    setText('echo-balance',         balance);
-    setText('echo-total',           echoes);
+    setText('echo-balance',         echoes);
     setText('echo-resonance-bonus', `+${bonusPct}% all production`);
     setText('echo-preview',         `+${preview} on next prestige`);
-    const btn = document.getElementById('echo-buy-btn');
-    if (btn) btn.disabled = balance < 1;
+    // Left-column meta section
+    setText('echo-res-count', echoes);
+    const metaSection = document.getElementById('meta-currency-section');
+    if (metaSection) metaSection.style.display = echoes > 0 ? '' : 'none';
 }
 
 // ── Dungeon Identity Panel ────────────────────────────────────────────────────
@@ -4499,7 +4515,6 @@ if (!gameState.meta.seenBiomes)              gameState.meta.seenBiomes = [];
 if (gameState.meta.totalPrestiges == null)   gameState.meta.totalPrestiges = 0;
 if (!gameState.meta.racesPlayed)             gameState.meta.racesPlayed = {};
 if (gameState.meta.echoes == null)           gameState.meta.echoes = 0;
-if (gameState.meta.echoesSpent == null)      gameState.meta.echoesSpent = 0;
 if (!gameState.workerAssignments)            gameState.workerAssignments = {};
 if (!gameState.research)                     gameState.research = {};
 if (!gameState.run.era)                      gameState.run.era = 1;

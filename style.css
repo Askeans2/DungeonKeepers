@@ -604,6 +604,35 @@ h3 {
 .res-tt-val.pos { color: var(--enabled); }
 .res-tt-val.neg { color: var(--disabled); }
 
+.res-tt-lore {
+    font-size: 10px;
+    color: var(--text-muted);
+    font-style: italic;
+    line-height: 1.45;
+    margin-bottom: 7px;
+}
+
+.res-tt-divider {
+    border-top: 1px solid rgba(255,255,255,0.06);
+    margin-bottom: 6px;
+}
+
+.res-tt-total-row {
+    border-top: 1px solid rgba(255,255,255,0.08);
+    margin-top: 4px;
+    padding-top: 4px;
+    font-weight: 600;
+}
+
+.echo-res-name {
+    color: #a89ccc;
+}
+
+.meta-currency-header {
+    color: #a89ccc;
+    opacity: 0.85;
+}
+
 .res-name {
     color: var(--label);
     font-size: 14px;
