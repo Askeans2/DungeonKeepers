@@ -734,26 +734,93 @@ function getResourceBreakdown(res) {
 let _resTooltipEl = null;
 let _resTooltipRes = null;
 
+function _formatTTTime(seconds) {
+    if (seconds <= 0) return 'Full';
+    if (seconds < 60) return Math.ceil(seconds) + 's';
+    if (seconds < 3600) {
+        const m = Math.floor(seconds / 60);
+        const s = Math.ceil(seconds % 60);
+        return s > 0 ? m + 'm ' + s + 's' : m + 'm';
+    }
+    if (seconds < 86400) {
+        const h = Math.floor(seconds / 3600);
+        const m = Math.ceil((seconds % 3600) / 60);
+        return m > 0 ? h + 'h ' + m + 'm' : h + 'h';
+    }
+    const d = (seconds / 86400).toFixed(1);
+    return d + 'd';
+}
+
 function _buildResTooltipHTML(res) {
     const lines = getResourceBreakdown(res);
     if (lines.length === 0) return '';
     const sources = lines.filter(l => !l.drain);
     const drains  = lines.filter(l => l.drain);
-    let html = '';
+
+    // Net per-tick rate (drains already have negative l.value)
+    let netPerTick = 0;
+    for (const l of lines) {
+        netPerTick += l.perDay ? l.value / TICKS_PER_DAY : l.value;
+    }
+
+    // Cap and current for "To Full"
+    const caps = getCaps();
+    const cap  = caps[res] || 0;
+    const cur  = gameState.resources[res] || 0;
+    let toFullHTML = '';
+    if (cap > 0) {
+        const remaining = Math.max(0, cap - cur);
+        if (remaining <= 0) {
+            toFullHTML = `<div class="res-tt-footer"><span>To Full</span><span class="pos">Full</span></div>`;
+        } else if (netPerTick > 0) {
+            const secs = remaining / netPerTick;
+            toFullHTML = `<div class="res-tt-footer"><span>To Full</span><span class="pos">${_formatTTTime(secs)}</span></div>`;
+        } else if (netPerTick < 0) {
+            const depleteSecs = cur > 0 ? cur / (-netPerTick) : 0;
+            const label = depleteSecs > 0 ? _formatTTTime(depleteSecs) : '0s';
+            toFullHTML = `<div class="res-tt-footer"><span>Depletes in</span><span class="neg">${label}</span></div>`;
+        } else {
+            toFullHTML = `<div class="res-tt-footer"><span>To Full</span><span>—</span></div>`;
+        }
+    }
+
+    const resLabel = res.charAt(0).toUpperCase() + res.slice(1);
+    let html = `<div class="res-tt-title">${resLabel}</div><div class="res-tt-cols">`;
+
+    // Left column — income (green)
+    html += `<div class="res-tt-col">`;
+    html += `<div class="res-tt-col-head">Income</div>`;
     if (sources.length > 0) {
-        html += `<div class="res-tt-header">Production</div>`;
         for (const l of sources) {
-            const val = l.perDay ? `+${l.value.toFixed(0)}` : `+${(l.value * TICKS_PER_DAY).toFixed(2)}`;
-            html += `<div class="res-tt-row"><span class="res-tt-label">${l.label}<span class="res-tt-sub"> ${l.sub}</span></span><span class="res-tt-val pos">${val}</span></div>`;
+            const perDay = l.perDay ? l.value : l.value * TICKS_PER_DAY;
+            const valStr = perDay >= 1000 ? '+' + (perDay / 1000).toFixed(1) + 'k'
+                         : perDay >= 10   ? '+' + perDay.toFixed(1)
+                                          : '+' + perDay.toFixed(2);
+            html += `<div class="res-tt-row"><span class="res-tt-label">${l.label}<span class="res-tt-sub"> ${l.sub}</span></span><span class="res-tt-val pos">${valStr}</span></div>`;
         }
+    } else {
+        html += `<div class="res-tt-none">—</div>`;
     }
+    html += `</div>`;
+
+    // Right column — consumption (red)
+    html += `<div class="res-tt-col">`;
+    html += `<div class="res-tt-col-head">Consumption</div>`;
     if (drains.length > 0) {
-        html += `<div class="res-tt-section">Consumption</div>`;
         for (const l of drains) {
-            const val = l.perDay ? `${l.value.toFixed(0)}` : `${(l.value * TICKS_PER_DAY).toFixed(2)}`;
-            html += `<div class="res-tt-row"><span class="res-tt-label">${l.label}<span class="res-tt-sub"> ${l.sub}</span></span><span class="res-tt-val neg">${val}</span></div>`;
+            const perDay = l.perDay ? -l.value : -l.value * TICKS_PER_DAY;
+            const valStr = perDay >= 1000 ? '-' + (perDay / 1000).toFixed(1) + 'k'
+                         : perDay >= 10   ? '-' + perDay.toFixed(1)
+                                          : '-' + perDay.toFixed(2);
+            html += `<div class="res-tt-row"><span class="res-tt-label">${l.label}<span class="res-tt-sub"> ${l.sub}</span></span><span class="res-tt-val neg">${valStr}</span></div>`;
         }
+    } else {
+        html += `<div class="res-tt-none">—</div>`;
     }
+    html += `</div>`;
+
+    html += `</div>`; // .res-tt-cols
+    html += toFullHTML;
     return html;
 }
 
@@ -763,10 +830,16 @@ function _showResTooltip(rowEl, res) {
     const html = _buildResTooltipHTML(res);
     if (!html) { _hideResTooltip(); return; }
     _resTooltipEl.innerHTML = html;
-    const rect = rowEl.getBoundingClientRect();
-    _resTooltipEl.style.top  = rect.top + 'px';
-    _resTooltipEl.style.left = (rect.right + 8) + 'px';
     _resTooltipEl.style.display = 'block';
+    const rect  = rowEl.getBoundingClientRect();
+    const ttW   = _resTooltipEl.offsetWidth || 360;
+    const ttH   = _resTooltipEl.offsetHeight || 200;
+    let left = rect.right + 8;
+    let top  = rect.top;
+    if (left + ttW > window.innerWidth - 8)  left = rect.left - ttW - 8;
+    if (top  + ttH > window.innerHeight - 8) top  = window.innerHeight - ttH - 8;
+    _resTooltipEl.style.top  = Math.max(4, top)  + 'px';
+    _resTooltipEl.style.left = Math.max(4, left) + 'px';
 }
 
 function _hideResTooltip() {
@@ -777,7 +850,7 @@ function _hideResTooltip() {
 function _buildQuintessenceTooltipHTML() {
     const quintessence = gameState.meta.quintessence || 0;
     const bonusPct = (quintessence * 0.5).toFixed(1);
-    return `<div class="res-tt-header">Quintessence</div>
+    return `<div class="res-tt-title">Quintessence</div>
 <div class="res-tt-lore">The solidified will of a dungeon-mind that has lived and died before — carried forward through every binding and every deal. The devil did not give you this. It only ensured you kept it.</div>
 <div class="res-tt-divider"></div>
 <div class="res-tt-row"><span class="res-tt-label">Each Quintessence<span class="res-tt-sub"> resonance</span></span><span class="res-tt-val pos">+0.5% all production</span></div>
