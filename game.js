@@ -2167,16 +2167,7 @@ const ERA_RACE_SVG = (() => {
          <path d="M100,92 L105,86 L110,94 L115,86 L120,92" fill="none" stroke="${G}" stroke-width="1.2" opacity="0.6"/>
          ${eye(103,60,3.8)}${eye(117,60,3.8)}
          ${aura(110,120,46,15)}${shadow(110,143,44)}`;
-    // ── Chromatic Dragon — horizontal crouch, jaws open, wings furled along back ─
-    art['Chromatic Dragon'] =
-        `<path d="M30,80 Q40,64 58,58 Q76,52 96,50 L110,46 L124,50 Q144,52 162,58 Q180,64 190,80 Q180,96 162,102 Q144,108 124,110 L110,114 L96,110 Q76,108 58,102 Q40,96 30,80 Z" fill="${BG}" stroke="${G}" stroke-width="1.8"/>
-         <path d="M30,80 Q20,68 16,54 Q28,62 38,72" fill="${BG}" stroke="${G}" stroke-width="1.4"/>
-         <path d="M16,54 Q22,44 30,38 M38,72 Q28,58 30,46" fill="none" stroke="${G}" stroke-width="1" opacity="0.5"/>
-         <path d="M96,50 Q88,34 84,18 Q92,32 96,48 M124,50 Q132,34 136,18 Q128,32 124,48" fill="${BG}" stroke="${G}" stroke-width="1.2" opacity="0.6"/>
-         <path d="M110,114 Q108,130 104,146 Q110,138 116,146 Q112,130 110,114" fill="${BG}" stroke="${G}" stroke-width="1.2"/>
-         ${eye(82,72,3.8)}${eye(82,88,3.8)}
-         <path d="M26,74 Q18,76 14,80 Q18,84 26,86" fill="${BG}" stroke="${G}" stroke-width="1" opacity="0.7"/>
-         ${aura(110,112,52,16)}${shadow(110,120,52)}`;
+    art['Chromatic Dragon'] = art['Draconic'];
     art['Metallic Dragon'] =
         // metallic sheen variant — upright with swept neck and crest
         `<path d="M110,140 L98,112 L86,104 L84,80 L94,64 L104,52 L110,44 L116,52 L126,64 L136,80 L134,104 L122,112 Z" fill="${BG}" stroke="${G}" stroke-width="1.8"/>
@@ -2411,7 +2402,7 @@ const ERA_RACE_EYES = {
     'Mummy':            [[104,50,3],[116,50,3]],
     'Shadow':           [[105,55,2.4],[115,55,2.4]],
     'Demilich':         [[101,68,3.5],[119,68,3.5]],
-    'Draconic':         [[103,60,3.8],[117,60,3.8]], 'Chromatic Dragon': [[82,72,3.8],[82,88,3.8]],
+    'Draconic':         [[103,60,3.8],[117,60,3.8]], 'Chromatic Dragon': [[103,60,3.8],[117,60,3.8]],
     'Metallic Dragon':  [[100,52,4],[120,52,4]],
     'Kobold':           [[105,72,2.5],[115,72,2.5]],
     'Lizardfolk':       [[104,54,3],[116,54,3]],
@@ -2477,7 +2468,7 @@ function showEraTransition(raceName, onComplete) {
     // Inject pluralised race name into panel III lore
     const racePlural = raceName.endsWith('s') ? raceName : raceName + 's';
     const loreRace = document.querySelector('.era-panel-lore-race');
-    if (loreRace) loreRace.innerHTML = '<em>' + racePlural + '</em> — they answered the dark, eyes burning, purpose unbroken.';
+    if (loreRace) loreRace.innerHTML = '<em>' + racePlural + '</em> — they answered the dark, eyes burning, purpose unbroken. These creatures will grow with you, and protect you, if you nurture them and guide them in turn.';
 
     const overlay = document.getElementById('era-transition-overlay');
     const panels  = document.querySelectorAll('.era-panel');
