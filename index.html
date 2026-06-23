@@ -341,7 +341,8 @@
 
     <div class="panel left">
 
-        <h2>Resources</h2>
+        <h2 class="era1-only">Resources</h2>
+        <h2 class="era2-only">Population</h2>
 
         <div class="res-row era2-only" id="pop-row">
             <span class="res-name">Creatures</span>
@@ -696,7 +697,7 @@
             <div class="grid">
 
                 <button class="build-btn disabled" onclick="build('lair')" id="btn-lair">
-                    <div class="btn-title">Lair</div>
+                    <div class="btn-title">Hovel</div>
                     <div class="btn-count" id="lairCount">0</div>
                     <div class="btn-cost" id="lairCost">15 Wood</div>
                 </button>
@@ -920,7 +921,7 @@
                 <div class="research-card" id="research-foragerLore">
                     <div class="research-info">
                         <div class="research-name">Forager's Lore</div>
-                        <div class="research-desc">Teach your kind to identify medicinal plants on sight. Herb gathering yields +2 per action.</div>
+                        <div class="research-desc">Map the surrounding terrain for productive herb patches and cultivation sites. Herbalist's Dens produce 20% more herbs.</div>
                         <div class="research-cost">Cost: 30 Food, 20 Wood</div>
                     </div>
                     <button class="research-btn" id="btn-research-foragerLore" onclick="doResearch('foragerLore')">Research</button>
@@ -928,7 +929,7 @@
                 <div class="research-card" id="research-crystalLore">
                     <div class="research-info">
                         <div class="research-name">Crystal Lore</div>
-                        <div class="research-desc">Study the resonance of raw crystals. Crystal gathering yields +2 per action.</div>
+                        <div class="research-desc">Study the resonance of raw crystals. Crystal Seams produce 25% more crystals.</div>
                         <div class="research-cost">Cost: 40 Stone, 20 Ore</div>
                     </div>
                     <button class="research-btn" id="btn-research-crystalLore" onclick="doResearch('crystalLore')">Research</button>
@@ -1168,7 +1169,7 @@
                 <div class="research-card" id="research-communalLiving">
                     <div class="research-info">
                         <div class="research-name">Communal Living</div>
-                        <div class="research-desc">Pack the burrows tighter and share the straw. Each Lair holds +2 extra creatures.</div>
+                        <div class="research-desc">Pack the burrows tighter and share the straw. Each Hovel provides +0.1 additional housing capacity.</div>
                         <div class="research-cost">Cost: 60 Wood, 40 Stone</div>
                     </div>
                     <button class="research-btn" id="btn-research-communalLiving" onclick="doResearch('communalLiving')">Research</button>
@@ -1487,7 +1488,7 @@
                 <div class="research-card" id="research-communalArchitecture" style="display:none">
                     <div class="research-info">
                         <div class="research-name">Communal Architecture</div>
-                        <div class="research-desc">Standardized floor plans and shared load-bearing walls make every Lair cheaper to build the more you construct. Lair construction cost growth reduced.</div>
+                        <div class="research-desc">Standardized floor plans and shared load-bearing walls make every Hovel cheaper to build the more you construct. Hovel construction cost growth reduced.</div>
                         <div class="research-cost">Cost: 80 Wood, 60 Stone</div>
                     </div>
                     <button class="research-btn" id="btn-research-communalArchitecture" onclick="doResearch('communalArchitecture')">Research</button>

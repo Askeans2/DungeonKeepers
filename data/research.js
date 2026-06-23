@@ -168,10 +168,10 @@ RESEARCH.composting = {
 RESEARCH.communalLiving = {
     tier: "2.2",
     name: "Communal Living",
-    desc: "Pack the burrows tighter and share the straw. Each Lair holds +2 extra creatures.",
+    desc: "Pack the burrows tighter and share the straw. Each Hovel provides +0.1 additional housing capacity.",
     cost: { wood: 60, stone: 40 },
     requiresResearch: ["taxes"],
-    effects: { housingBonus: { lair: 2 } },
+    effects: { housingBonus: { lair: 0.1 } },
 };
 
 RESEARCH.taxCollector = {
@@ -423,7 +423,7 @@ RESEARCH.dwarvenShoring = {
 RESEARCH.communalArchitecture = {
     tier: "2.3",
     name: "Communal Architecture",
-    desc: "Standardized floor plans and shared load-bearing walls make every Lair cheaper to build the more you construct. Lair construction cost growth reduced.",
+    desc: "Standardized floor plans and shared load-bearing walls make every Hovel cheaper to build the more you construct. Hovel construction cost growth reduced.",
     cost: { wood: 80, stone: 60 },
     requiresResearch: ["communalLiving", "carpentry"],
     effects: { flag: "communalArchitecture" },

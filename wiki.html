@@ -79,7 +79,7 @@
                     <tr><td>Crystals</td><td>75</td><td>Crystal Seam (passive, req. 3 Mine)</td></tr>
                     <tr><td>Coal</td><td>150</td><td>Coal Seam (req. 2 Mine)</td></tr>
                     <tr><td>Clay</td><td>120</td><td>Clay Pit (req. 2 Quarry)</td></tr>
-                    <tr><td>Bones</td><td>100</td><td>Hunting Lodge (req. 3 Lair)</td></tr>
+                    <tr><td>Bones</td><td>100</td><td>Hunting Lodge (req. 3 Hovels)</td></tr>
                     <tr><td>Sulphur</td><td>80</td><td>Sulphur Vent (req. 3 Mine + 1 Smelter)</td></tr>
                 </tbody>
             </table>
@@ -128,7 +128,7 @@
             <h3 class="creature-category">Population &amp; Jobs</h3>
             <p class="wiki-lead">
                 Your dungeon's <b>Creatures</b> count grows toward a population maximum determined by
-                your housing (Lairs and Armories each provide +5 pop cap per building). Population needs
+                your housing (Hovels and Armories each provide +1 pop cap per building). Population needs
                 food to grow and survive; a sustained food deficit leads to starvation. Creatures are
                 assigned to <b>jobs</b> at production buildings — the Population panel shows how many
                 are employed out of the total job slots available.
@@ -137,7 +137,7 @@
             <h3 class="creature-category">Build</h3>
             <p class="wiki-lead">
                 The <b>Build</b> tab holds three manual gather actions — <b>Scavenge Food</b>, <b>Fell a Tree</b>,
-                and <b>Break Stones</b> — plus all your buildings. Lairs provide housing, Storage raises all
+                and <b>Break Stones</b> — plus all your buildings. Hovels provide housing, Storage raises all
                 material resource caps by 50 per building, and production buildings create job slots that
                 turn worker creatures into steady resource income. New building types unlock automatically
                 once their prerequisite building counts are met.
@@ -278,7 +278,7 @@
                 <div class="biome-card">
                     <div class="biome-header"><span class="biome-name">Deep Caverns</span><span class="biome-type biome-natural">Natural</span></div>
                     <p class="biome-desc">A natural underground network; your dungeon expands into pre-existing tunnels. Darkness is the price of depth.</p>
-                    <div class="biome-start"><b>Start:</b> +40 Stone · 1 Free Lair</div>
+                    <div class="biome-start"><b>Start:</b> +40 Stone · 1 Free Hovel</div>
                     <div class="biome-mods"><span class="biome-mod mod-pos">Cavern Network</span><span class="biome-mod mod-pos">Mineral Deposits</span><span class="biome-mod mod-pos">Underground Access</span><span class="biome-mod mod-neg">Perpetual Darkness</span></div>
                     <div class="biome-affinity"><span class="biome-affinity-label">Best:</span><span class="suit-chip suit-excellent">Goblinoid</span><span class="suit-chip suit-excellent">Aberration</span><span class="suit-chip suit-excellent">Ooze</span><span class="biome-affinity-label" style="margin-left:4px">Hard:</span><span class="suit-chip suit-hostile">Fey</span><span class="suit-chip suit-hostile">Giant</span></div>
                 </div>
@@ -427,7 +427,7 @@
                 <div class="mod-row"><span class="mod-n">02</span><span class="mod-name">Ancient Grove</span><span class="mod-cat mod-cat-pos">Positive</span><span class="mod-fx">Wood production from all lumber camps +25%.</span></div>
                 <div class="mod-row"><span class="mod-n">03</span><span class="mod-name">Rich Ore Veins</span><span class="mod-cat mod-cat-pos">Positive</span><span class="mod-fx">Stone production from all quarries +30%.</span></div>
                 <div class="mod-row"><span class="mod-n">04</span><span class="mod-name">Underground Springs</span><span class="mod-cat mod-cat-pos">Positive</span><span class="mod-fx">Food storage cap +50.</span></div>
-                <div class="mod-row"><span class="mod-n">05</span><span class="mod-name">Cavern Network</span><span class="mod-cat mod-cat-pos">Positive</span><span class="mod-fx">Begin run with 1 free Lair already constructed. (Future)</span></div>
+                <div class="mod-row"><span class="mod-n">05</span><span class="mod-name">Cavern Network</span><span class="mod-cat mod-cat-pos">Positive</span><span class="mod-fx">Begin run with 1 free Hovel already constructed. (Future)</span></div>
                 <div class="mod-row"><span class="mod-n">06</span><span class="mod-name">Abundant Wildlife</span><span class="mod-cat mod-cat-pos">Positive</span><span class="mod-fx">Manual food gather (Scavenge Food) yields +2 instead of +1.</span></div>
                 <div class="mod-row"><span class="mod-n">07</span><span class="mod-name">Dense Timber</span><span class="mod-cat mod-cat-pos">Positive</span><span class="mod-fx">Manual wood gather (Fell a Tree) yields +2 instead of +1.</span></div>
                 <div class="mod-row"><span class="mod-n">08</span><span class="mod-name">Exposed Rockface</span><span class="mod-cat mod-cat-pos">Positive</span><span class="mod-fx">Manual stone gather (Break Stones) yields +2 instead of +1.</span></div>
@@ -447,7 +447,7 @@
                 <div class="mod-row"><span class="mod-n">21</span><span class="mod-name">Warm Climate</span><span class="mod-cat mod-cat-pos">Positive</span><span class="mod-fx">Population growth rate +20%.</span></div>
                 <div class="mod-row"><span class="mod-n">22</span><span class="mod-name">Harsh Winters</span><span class="mod-cat mod-cat-neg">Negative</span><span class="mod-fx">Population growth rate −15%.</span></div>
                 <div class="mod-row"><span class="mod-n">23</span><span class="mod-name">Disease Vectors</span><span class="mod-cat mod-cat-neg">Negative</span><span class="mod-fx">Starvation threshold triggers 1 tick earlier than normal.</span></div>
-                <div class="mod-row"><span class="mod-n">24</span><span class="mod-name">Communal Living</span><span class="mod-cat mod-cat-pos">Positive</span><span class="mod-fx">Each Lair provides +1 extra housing capacity.</span></div>
+                <div class="mod-row"><span class="mod-n">24</span><span class="mod-name">Communal Living</span><span class="mod-cat mod-cat-pos">Positive</span><span class="mod-fx">Each Hovel provides +1 extra housing capacity.</span></div>
                 <div class="mod-row"><span class="mod-n">25</span><span class="mod-name">Isolation Instinct</span><span class="mod-cat mod-cat-mix">Mixed</span><span class="mod-fx">Population cap −10% but random negative events disabled. (Future: events)</span></div>
                 <div class="mod-row"><span class="mod-n">26</span><span class="mod-name">Natural Predators</span><span class="mod-cat mod-cat-neg">Negative</span><span class="mod-fx">Each season: 10% chance 1–2 creatures lost to predation. (Future: events)</span></div>
                 <div class="mod-row"><span class="mod-n">27</span><span class="mod-name">Harsh Survival</span><span class="mod-cat mod-cat-mix">Mixed</span><span class="mod-fx">Growth rate −25%; maximum population cap +20%.</span></div>
@@ -459,7 +459,7 @@
                 <div class="mod-row"><span class="mod-n">33</span><span class="mod-name">Symbiotic Ecosystem</span><span class="mod-cat mod-cat-pos">Positive</span><span class="mod-fx">Population growth requires 1 fewer food surplus than normal.</span></div>
                 <div class="mod-row"><span class="mod-n">34</span><span class="mod-name">Overcrowding Risk</span><span class="mod-cat mod-cat-neg">Negative</span><span class="mod-fx">After population reaches 20, growth rate reduced by −10%.</span></div>
                 <div class="mod-row"><span class="mod-n">35</span><span class="mod-name">Pack Mentality</span><span class="mod-cat mod-cat-pos">Positive</span><span class="mod-fx">All workers produce +10% more per tick.</span></div>
-                <div class="mod-row"><span class="mod-n">36</span><span class="mod-name">Territorial Instincts</span><span class="mod-cat mod-cat-pos">Positive</span><span class="mod-fx">Each Lair provides 6 housing instead of the normal 5.</span></div>
+                <div class="mod-row"><span class="mod-n">36</span><span class="mod-name">Territorial Instincts</span><span class="mod-cat mod-cat-pos">Positive</span><span class="mod-fx">Each Hovel provides 6 housing instead of the normal 1.</span></div>
                 <div class="mod-row"><span class="mod-n">37</span><span class="mod-name">Plague Risk</span><span class="mod-cat mod-cat-neg">Negative</span><span class="mod-fx">Every 30 days: 5% chance of a −10% population loss event. (Future: events)</span></div>
                 <div class="mod-row"><span class="mod-n">38</span><span class="mod-name">Elder's Blessing</span><span class="mod-cat mod-cat-pos">Positive</span><span class="mod-fx">First 5 population require no food (they forage independently).</span></div>
                 <div class="mod-row"><span class="mod-n">39</span><span class="mod-name">Starvation Resilience</span><span class="mod-cat mod-cat-pos">Positive</span><span class="mod-fx">Death timer before first starvation death extended by +3 ticks.</span></div>
@@ -468,7 +468,7 @@
                 <div class="mod-row"><span class="mod-n">41</span><span class="mod-name">Solid Foundation</span><span class="mod-cat mod-cat-pos">Positive</span><span class="mod-fx">All building wood costs −10%.</span></div>
                 <div class="mod-row"><span class="mod-n">42</span><span class="mod-name">Abundant Stone</span><span class="mod-cat mod-cat-pos">Positive</span><span class="mod-fx">All building stone costs −20%.</span></div>
                 <div class="mod-row"><span class="mod-n">43</span><span class="mod-name">Poor Infrastructure</span><span class="mod-cat mod-cat-neg">Negative</span><span class="mod-fx">All building costs +15%.</span></div>
-                <div class="mod-row"><span class="mod-n">44</span><span class="mod-name">Dungeon Resonance</span><span class="mod-cat mod-cat-pos">Positive</span><span class="mod-fx">Lair buildings cost −25% wood.</span></div>
+                <div class="mod-row"><span class="mod-n">44</span><span class="mod-name">Dungeon Resonance</span><span class="mod-cat mod-cat-pos">Positive</span><span class="mod-fx">Hovel buildings cost −25% wood.</span></div>
                 <div class="mod-row"><span class="mod-n">45</span><span class="mod-name">Arcane Amplification</span><span class="mod-cat mod-cat-fut">Future</span><span class="mod-fx">Unlock: Mage Tower building (research speed bonus).</span></div>
                 <div class="mod-row"><span class="mod-n">46</span><span class="mod-name">Sacred Ground</span><span class="mod-cat mod-cat-fut">Future</span><span class="mod-fx">Unlock: Shrine of the Keeper building (population growth bonus).</span></div>
                 <div class="mod-row"><span class="mod-n">47</span><span class="mod-name">Defensive Terrain</span><span class="mod-cat mod-cat-fut">Future</span><span class="mod-fx">Unlock: Watch Post building (raid defense bonus).</span></div>
@@ -694,7 +694,7 @@
                     <span class="creature-tag tag-goblinoid">Goblinoid</span>
                     <span class="creature-name">Bugbear</span>
                     <span class="creature-desc">Massive goblinoids who excel at brute labor. Their size makes them less efficient in standard lairs.</span>
-                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Bugbear Brawn — Quarries and Mines extra +10%; lairs house 6 Bugbears.</span></div>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Bugbear Brawn — Quarries and Mines extra +10%; Hovels house 6 Bugbears.</span></div>
                     <span class="creature-biome"><span class="biome-best">Verdant Forest</span><span class="biome-hard">Arctic Glacier</span></span>
                 </div>
                 <div class="creature-entry">
@@ -1336,14 +1336,14 @@
                     <span class="creature-tag tag-legendary">Legendary</span>
                     <span class="creature-name">Chromatic Dragon</span>
                     <span class="creature-desc">An ancient chromatic dragon whose very presence warps the dungeon around it. Their dominance over lesser races increases all production dramatically — but only one can reside in a dungeon at a time, and their appetite is catastrophic.</span>
-                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Chromatic Dominance — Extra +15% all production beyond base Draconic bonus.</span><span class="cmod cmod-neg">▼ Dragon's Appetite — Consumes 3× the food of a normal Draconic creature; only 1 fits per lair.</span></div>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Chromatic Dominance — Extra +15% all production beyond base Draconic bonus.</span><span class="cmod cmod-neg">▼ Dragon's Appetite — Consumes 3× the food of a normal Draconic creature; only 1 fits per Hovel.</span></div>
                     <span class="creature-biome"><span class="biome-best">Volcanic Caldera</span><span class="biome-hard">Arctic Glacier</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-legendary">Legendary</span>
                     <span class="creature-name">Lich</span>
                     <span class="creature-desc">A powerful undead archmage who transcended death to pursue magical mastery. Liches push arcane infrastructure to impossible heights, eat nothing, and demand to be alone in their sanctum.</span>
-                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Phylactery Focus — Crystal Seams, Mage Towers, and Arcane Grinders extra +15%.</span><span class="cmod cmod-pos">▲ Undying Hunger — Does not eat — subsists on soul energy alone; only 1 fits per lair.</span></div>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Phylactery Focus — Crystal Seams, Mage Towers, and Arcane Grinders extra +15%.</span><span class="cmod cmod-pos">▲ Undying Hunger — Does not eat — subsists on soul energy alone; only 1 fits per Hovel.</span></div>
                     <span class="creature-biome"><span class="biome-best">Arcane Nexus</span><span class="biome-hard">Celestial Foothold</span></span>
                 </div>
                 <div class="creature-entry">
@@ -1357,21 +1357,21 @@
                     <span class="creature-tag tag-legendary">Legendary</span>
                     <span class="creature-name">Dracolich</span>
                     <span class="creature-desc">A dragon who refused death and bound its soul to a phylactery. The dracolich fuses draconic production might with undead arcane mastery in one terrible form — and it never needs to eat.</span>
-                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Undying Dominance — Extra +10% all production; Arcane Grinders and Ritual Circles +15%.</span><span class="cmod cmod-pos">▲ Phylactery Bound — Requires no food; only 1 fits per lair.</span></div>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Undying Dominance — Extra +10% all production; Arcane Grinders and Ritual Circles +15%.</span><span class="cmod cmod-pos">▲ Phylactery Bound — Requires no food; only 1 fits per Hovel.</span></div>
                     <span class="creature-biome"><span class="biome-best">Arcane Nexus</span><span class="biome-hard">Celestial Foothold</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-legendary">Legendary</span>
                     <span class="creature-name">Tarrasque</span>
                     <span class="creature-desc">The most feared creature in existence — an engine of annihilation that cannot be permanently slain. Its very presence drives all lesser creatures to work harder out of pure survival instinct. The cost of feeding it is catastrophic.</span>
-                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Primal Terror — Extra +15% all production and +2 to all gather yields.</span><span class="cmod cmod-neg">▼ World-Eater — Consumes 5× the food of a normal Monstrous creature; only 1 fits per lair.</span></div>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Primal Terror — Extra +15% all production and +2 to all gather yields.</span><span class="cmod cmod-neg">▼ World-Eater — Consumes 5× the food of a normal Monstrous creature; only 1 fits per Hovel.</span></div>
                     <span class="creature-biome"><span class="biome-best">Badlands</span><span class="biome-hard">Arcane Nexus</span></span>
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-legendary">Legendary</span>
                     <span class="creature-name">Kraken</span>
                     <span class="creature-desc">The ancient terror of the deep ocean — a being of alien intelligence whose tentacles span entire sea floors. A kraken's dominion over water amplifies all storage and production to impossible scales.</span>
-                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Deep Dominion — Extra +8% all production; Storage buildings hold 30 more; Food cap +200; Coin cap +10,000.</span><span class="cmod cmod-neg">▼ Titanic Appetite — Consumes 2.5× the food of a normal Aquatic creature; only 1 fits per lair.</span></div>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Deep Dominion — Extra +8% all production; Storage buildings hold 30 more; Food cap +200; Coin cap +10,000.</span><span class="cmod cmod-neg">▼ Titanic Appetite — Consumes 2.5× the food of a normal Aquatic creature; only 1 fits per Hovel.</span></div>
                     <span class="creature-biome"><span class="biome-best">Sunken Ruins</span><span class="biome-hard">Desert Wastes</span></span>
                 </div>
             </div>
@@ -1514,6 +1514,21 @@
         <!-- CHANGELOG -->
         <section id="wiki-changelog" class="wiki-section wiki-changelog" style="display:none">
             <h2>Changelog</h2>
+
+            <div class="biome-card">
+                <div><span class="cl-ver">v0.58.2</span><span class="cl-date">2026-06-23</span></div>
+                <p class="biome-desc">Left-column resource panel now shows a "Resources" header in Era 1 and a "Population" header in Era 2, correctly reflecting what each section contains.</p>
+            </div>
+
+            <div class="biome-card">
+                <div><span class="cl-ver">v0.58.1</span><span class="cl-date">2026-06-23</span></div>
+                <p class="biome-desc">Fixed Forager's Lore and Crystal Lore research cards showing stale "gather yields +2" descriptions — they now correctly describe their production bonuses. Reduced Communal Living's Hovel housing bonus from +2 to +0.1 per Hovel for game balance.</p>
+            </div>
+
+            <div class="biome-card">
+                <div><span class="cl-ver">v0.58.0</span><span class="cl-date">2026-06-23</span></div>
+                <p class="biome-desc">Renamed "Lair" to "Hovel" and reduced its housing bonus from +5 to +1. All references updated across buildings, research, race mod descriptions, wiki, and biome text.</p>
+            </div>
 
             <div class="biome-card">
                 <div><span class="cl-ver">v0.57.9</span><span class="cl-date">2026-06-23</span></div>
@@ -2454,7 +2469,7 @@ function showWiki(id) {
         'Shadow':             { desc: 'Creatures of pure darkness, shadows need almost no sustenance and multiply faster than their undead kin.', mods: [{n:'Shade Multiplication',p:true,d:'Further halved food consumption; grows much faster than base Undead.'}] },
         'Goblin':             { desc: 'The quintessential dungeon fodder — cowardly alone, dangerous in overwhelming numbers. Speed and chaos are their weapons.' },
         'Hobgoblin':          { desc: 'Disciplined goblinoid soldiers who bring military order to the dungeon. Their regimented labor is more efficient than frenzied mob work.', mods: [{n:'Military Discipline',p:true,d:'Extra all-production bonus.'}] },
-        'Bugbear':            { desc: 'Massive goblinoids who excel at brute labor. Their size means fewer fit in each lair.', mods: [{n:'Bugbear Brawn',p:true,d:'Quarries and Mines produce more. Fewer Bugbears per Lair.'}] },
+        'Bugbear':            { desc: 'Massive goblinoids who excel at brute labor. Their size means fewer fit in each Hovel.', mods: [{n:'Bugbear Brawn',p:true,d:'Quarries and Mines produce more. Fewer Bugbears per Hovel.'}] },
         'Orc':                { desc: 'Fierce and relentless, orcs raid and conquer to fuel their dungeon\'s growth. Raw aggression yields more from the land.', mods: [{n:'Warchief\'s Drive',p:true,d:'Extra yield on all manual gathers.'}] },
         'Gnoll':              { desc: 'Hyena-folk with an obsessive hunger. Gnolls consume more but their pack hunting brings exceptional bone and food yields.', mods: [{n:'Gnoll Pack Hunt',p:true,d:'Hunting Lodges produce more; extra Bone cap; eats more.'}] },
         'Pixie':              { desc: 'Tiny and mischievous, pixies flit through your dungeon making everything slightly more chaotic — and somehow more productive.', mods: [{n:'Pixie Dust',p:true,d:'Extra yield on all manual gathers.'}] },

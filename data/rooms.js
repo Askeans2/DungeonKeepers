@@ -5,10 +5,10 @@ const ROOMS = {
     // ── Stage 1 — Foundation ────────────────────────────────────────────────────
 
     lair: {
-        name: "Lair",
+        name: "Hovel",
         cost: { wood: 15 },
         costScale: 1.05,
-        housingBonus: 5,
+        housingBonus: 1,
     },
     farm: {
         name: "Farm",

@@ -45,7 +45,7 @@ const BIOME_DATA = {
     "Fetid Swamp":          { type:"Natural",  badge:"badge-natural",  desc:"Dark water and tangled roots; disease festers here, but life erupts from the decay. Many things call this home.",                  start:"+20 Food",                         mods:[{name:"Abundant Wildlife",pos:true},{name:"Flooded Tunnels",pos:true},{name:"Infested Land",pos:false},{name:"Disease Vectors",pos:false}],                                                                                              best:["Aquatic","Flora","Ooze"],                      hard:["Construct","Giant"]                           },
     "Rolling Grasslands":   { type:"Natural",  badge:"badge-natural",  desc:"Open plains stretch to the horizon; your dungeon hides in a hillside. Easy expansion, obvious target.",                           start:"+30 Food · +15 Wood",              mods:[{name:"Fertile Soil",pos:true},{name:"Warm Climate",pos:true},{name:"Contested Territory",pos:false},{name:"Inviting Target",pos:false}],                                                                                                   best:["Humanoid","Lycanthrope","Giant"],              hard:["Aquatic","Aberration"]                        },
     "Volcanic Caldera":     { type:"Natural",  badge:"badge-natural",  desc:"Heat, ash, and the smell of sulfur. The earth bleeds stone and opportunity; structural stability is not guaranteed.",              start:"+50 Stone",                        mods:[{name:"Rich Ore Veins",pos:true},{name:"Volcanic Ash",pos:true},{name:"Oppressive Heat",pos:false},{name:"Unstable Ground",pos:false}],                                                                                               best:["Draconic","Fiend","Construct"],                hard:["Aquatic","Flora","Fey"]                       },
-    "Deep Caverns":         { type:"Natural",  badge:"badge-natural",  desc:"A natural underground network; your dungeon expands into pre-existing tunnels. Darkness is the price of depth.",                  start:"+40 Stone · 1 Free Lair",          mods:[{name:"Cavern Network",pos:true},{name:"Mineral Deposits",pos:true},{name:"Underground Access",pos:true},{name:"Perpetual Darkness",pos:false}],                                                                                          best:["Goblinoid","Aberration","Ooze"],               hard:["Fey","Giant"]                                 },
+    "Deep Caverns":         { type:"Natural",  badge:"badge-natural",  desc:"A natural underground network; your dungeon expands into pre-existing tunnels. Darkness is the price of depth.",                  start:"+40 Stone · 1 Free Hovel",          mods:[{name:"Cavern Network",pos:true},{name:"Mineral Deposits",pos:true},{name:"Underground Access",pos:true},{name:"Perpetual Darkness",pos:false}],                                                                                          best:["Goblinoid","Aberration","Ooze"],               hard:["Fey","Giant"]                                 },
     "Jungle Canopy":        { type:"Natural",  badge:"badge-natural",  desc:"Stifling heat and impossible density; food is everywhere, and so are things that want to eat you.",                               start:"+40 Food · +20 Wood",              mods:[{name:"Fertile Soil",pos:true},{name:"Ancient Grove",pos:true},{name:"Abundant Wildlife",pos:true},{name:"Disease Vectors",pos:false},{name:"Hostile Flora",pos:false}],                                                                   best:["Flora","Fey","Humanoid"],                      hard:["Undead","Giant","Construct"]                  },
     "Arctic Glacier":       { type:"Natural",  badge:"badge-natural",  desc:"A frozen expanse carved by time. Isolation is both your shield and your prison; the cold never relents.",                         start:"+20 Stone",                        mods:[{name:"Isolation Instinct",pos:true},{name:"Hidden Refuge",pos:true},{name:"Harsh Winters",pos:false},{name:"Barren Soil",pos:false},{name:"Crushing Cold",pos:false}],                                                                    best:["Giant (Frost)"],                               hard:["Draconic","Flora","Fey","Aquatic"]             },
     "Sunken Ruins":         { type:"Natural",  badge:"badge-natural",  desc:"A half-drowned ancient civilization; your dungeon inhabits crumbling walls ankle-deep in water and mystery.",                     start:"+30 Food · 1 Free Storage",        mods:[{name:"Ancient Foundations",pos:true},{name:"Arcane Residue",pos:true},{name:"Flooded Tunnels",pos:false},{name:"Unstable Ground",pos:false}],                                                                                         best:["Aquatic","Undead"],                            hard:["Construct","Giant"]                           },
@@ -96,7 +96,7 @@ const MOD_DESCRIPTIONS = {
     "Ancient Grove":          "Wood production from all lumber camps +25%.",
     "Rich Ore Veins":         "Stone production from all quarries +30%.",
     "Underground Springs":    "Food storage cap +50.",
-    "Cavern Network":         "Begin run with 1 free Lair already constructed.",
+    "Cavern Network":         "Begin run with 1 free Hovel already constructed.",
     "Abundant Wildlife":      "Manual food gather (Scavenge Food) yields +2 instead of +1.",
     "Dense Timber":           "Manual wood gather (Fell a Tree) yields +2 instead of +1.",
     "Exposed Rockface":       "Manual stone gather (Break Stones) yields +2 instead of +1.",
@@ -116,7 +116,7 @@ const MOD_DESCRIPTIONS = {
     "Warm Climate":           "Population growth rate +20%.",
     "Harsh Winters":          "Population growth rate −15%.",
     "Disease Vectors":        "Starvation threshold triggers 1 tick earlier than normal.",
-    "Communal Living":        "Each Lair provides +1 extra housing capacity.",
+    "Communal Living":        "Each Hovel provides +1 extra housing capacity.",
     "Isolation Instinct":     "Population cap −10% but random negative events disabled.",
     "Natural Predators":      "Each season: 10% chance 1–2 creatures lost to predation.",
     "Harsh Survival":         "Growth rate −25%; maximum population cap +20%.",
@@ -128,7 +128,7 @@ const MOD_DESCRIPTIONS = {
     "Symbiotic Ecosystem":    "Population growth requires 1 fewer food surplus than normal.",
     "Overcrowding Risk":      "After population reaches 20, growth rate reduced by −10%.",
     "Pack Mentality":         "All workers produce +10% more per tick.",
-    "Territorial Instincts":  "Each Lair provides 6 housing instead of the normal 5.",
+    "Territorial Instincts":  "Each Hovel provides 6 housing instead of the normal 1.",
     "Plague Risk":            "Every 30 days: 5% chance of a −10% population loss event.",
     "Elder's Blessing":       "First 5 population require no food (they forage independently).",
     "Starvation Resilience":  "Death timer before first starvation death extended by +3 ticks.",
@@ -137,7 +137,7 @@ const MOD_DESCRIPTIONS = {
     "Solid Foundation":       "All building wood costs −10%.",
     "Abundant Stone":         "All building stone costs −20%.",
     "Poor Infrastructure":    "All building costs +15%.",
-    "Dungeon Resonance":      "Lair buildings cost −25% wood.",
+    "Dungeon Resonance":      "Hovel buildings cost −25% wood.",
     "Arcane Amplification":   "Unlock: Mage Tower building (research speed bonus).",
     "Sacred Ground":          "Unlock: Shrine of the Keeper building (population growth bonus).",
     "Defensive Terrain":      "Unlock: Watch Post building (raid defense bonus).",
@@ -3780,6 +3780,12 @@ function updateEraTabVisibility() {
         el.style.display = displayEra2;
     });
 
+    // Show/hide elements that only belong in Era 1
+    const displayEra1 = era === 1 ? '' : 'none';
+    document.querySelectorAll('.era1-only').forEach(el => {
+        el.style.display = displayEra1;
+    });
+
     // Active tab switching
     if (era !== 1) {
         // Entering Era 2 — switch away from awakening tab
@@ -3865,7 +3871,7 @@ const LEGENDARY_ROSTER = {
                 { name: "Fast Breeders",    pos: true,  desc: "Growth timer 35% shorter — the horde expands quickly." },
                 { name: "Mob Scavenging",   pos: true,  desc: "+1 to all manual gather yields." },
                 { name: "Ravenous Horde",   pos: false, desc: "Population eats 20% more food per tick." },
-                { name: "Cramped Quarters", pos: true,  desc: "Lairs house 8 creatures instead of 5." },
+                { name: "Cramped Quarters", pos: true,  desc: "Hovels house 8 creatures instead of 1." },
             ],
         },
         "Undead": {
@@ -3953,7 +3959,7 @@ const LEGENDARY_ROSTER = {
                 { name: "Titan's Strength", pos: true,  desc: "All passive production +15%." },
                 { name: "Vast Stores",      pos: true,  desc: "Food cap +200, Stone cap +200, Wood cap +100." },
                 { name: "Titan's Hunger",   pos: false, desc: "Population eats ×2 food per tick." },
-                { name: "Giant Footprint",  pos: false, desc: "Each Lair houses only 2 Giants — they need far more space." },
+                { name: "Giant Footprint",  pos: false, desc: "Each Hovel houses only 2 Giants — they need far more space." },
                 { name: "Slow Giants",      pos: false, desc: "Growth timer ×3 — giants are extraordinarily rare." },
             ],
         },
@@ -4121,7 +4127,7 @@ const LEGENDARY_ROSTER = {
         "Bugbear": {
             desc: "Massive goblinoids who excel at brute labor. Their size makes them less efficient in standard lairs.",
             extraEffects: { productionBonus: { quarry: 1.10, mine: 1.10 }, lairHousing: 6 },
-            extraMods: [{ name: "Bugbear Brawn", pos: true, desc: "Quarries and Mines extra +10%. Lairs house 6 Bugbears." }],
+            extraMods: [{ name: "Bugbear Brawn", pos: true, desc: "Quarries and Mines extra +10%. Hovels house 6 Bugbears." }],
         },
         "Orc": {
             desc: "Fierce and relentless, orcs raid and conquer to fuel their dungeon's growth. Raw aggression yields more from the land.",
@@ -4557,7 +4563,7 @@ const LEGENDARY_ROSTER = {
             extraEffects: { allProductionBonus: 0.15, foodConsumption: 3.0, lairHousing: 1 },
             extraMods: [
                 { name: "Chromatic Dominance", pos: true,  desc: "Extra +15% all production — lesser creatures work harder under a dragon's gaze." },
-                { name: "Dragon's Appetite",   pos: false, desc: "Consumes 3× the food of a normal Draconic creature; only 1 fits per lair." },
+                { name: "Dragon's Appetite",   pos: false, desc: "Consumes 3× the food of a normal Draconic creature; only 1 fits per Hovel." },
             ],
         },
         "Lich": { // legendary — earned, not chosen
@@ -4565,7 +4571,7 @@ const LEGENDARY_ROSTER = {
             extraEffects: { converterBonus: { crystalSeam: 1.15, mageTower: 1.15, arcaneGrinder: 1.15 }, foodConsumption: 0, lairHousing: 1 },
             extraMods: [
                 { name: "Phylactery Focus",  pos: true,  desc: "Crystal Seams, Mage Towers, and Arcane Grinders extra +15%." },
-                { name: "Undying Hunger",    pos: true,  desc: "Liches do not eat — they subsist on soul energy alone; only 1 fits per lair." },
+                { name: "Undying Hunger",    pos: true,  desc: "Liches do not eat — they subsist on soul energy alone; only 1 fits per Hovel." },
             ],
         },
         "Sphinx": { // legendary — earned, not chosen
@@ -4578,7 +4584,7 @@ const LEGENDARY_ROSTER = {
             extraEffects: { allProductionBonus: 0.10, converterBonus: { arcaneGrinder: 1.15, ritualCircle: 1.15 }, foodConsumption: 0, lairHousing: 1 },
             extraMods: [
                 { name: "Undying Dominance", pos: true,  desc: "Extra +10% all production; Arcane Grinders and Ritual Circles +15%." },
-                { name: "Phylactery Bound",  pos: true,  desc: "Requires no food — the dracolich's phylactery sustains it; only 1 fits per lair." },
+                { name: "Phylactery Bound",  pos: true,  desc: "Requires no food — the dracolich's phylactery sustains it; only 1 fits per Hovel." },
             ],
         },
         "Tarrasque": { // legendary — earned, not chosen
@@ -4586,7 +4592,7 @@ const LEGENDARY_ROSTER = {
             extraEffects: { allProductionBonus: 0.15, allGatherBonus: 2, foodConsumption: 5.0, lairHousing: 1 },
             extraMods: [
                 { name: "Primal Terror",    pos: true,  desc: "Extra +15% all production and +2 to all gather yields — pure survival instinct." },
-                { name: "World-Eater",      pos: false, desc: "Consumes 5× the food of a normal Monstrous creature; only 1 fits per lair." },
+                { name: "World-Eater",      pos: false, desc: "Consumes 5× the food of a normal Monstrous creature; only 1 fits per Hovel." },
             ],
         },
         "Kraken": { // legendary — earned, not chosen
@@ -4594,7 +4600,7 @@ const LEGENDARY_ROSTER = {
             extraEffects: { allProductionBonus: 0.08, storageBonus: 30, capBonus: { food: 200 }, coinCapBonus: { flat: 1000, pct: 0.10 }, foodConsumption: 2.5, lairHousing: 1 },
             extraMods: [
                 { name: "Deep Dominion",    pos: true,  desc: "Extra +8% all production; Storage buildings hold 30 more; Food cap +200; Coin cap +1,000 coins + 10% of tier base." },
-                { name: "Titanic Appetite", pos: false, desc: "Consumes 2.5× the food of a normal Aquatic creature; only 1 fits per lair." },
+                { name: "Titanic Appetite", pos: false, desc: "Consumes 2.5× the food of a normal Aquatic creature; only 1 fits per Hovel." },
             ],
         },
     };
