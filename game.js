@@ -513,8 +513,8 @@ function getResearchBonus(type, key) {
     return total;
 }
 
-function getEchoProductionMult() {
-    return 1 + ((gameState.meta && gameState.meta.echoes) || 0) * 0.005;
+function getQuintessenceProductionMult() {
+    return 1 + ((gameState.meta && gameState.meta.quintessence) || 0) * 0.005;
 }
 
 // Returns the actual amount gained by a manual gather action, after all research bonuses.
@@ -629,7 +629,7 @@ function getProduction() {
     const prod      = {};
     for (const res of Object.keys(BASE_CAPS)) prod[res] = 0;
     const workers   = getWorkersPerBuilding();
-    const allBonus  = (1 + getResearchBonus('allProductionBonus')) * getEchoProductionMult();
+    const allBonus  = (1 + getResearchBonus('allProductionBonus')) * getQuintessenceProductionMult();
     for (const [id, def] of Object.entries(ROOMS)) {
         if (!def.production || def.converts) continue;
         const count = gameState.buildings[id] || 0;
@@ -651,7 +651,7 @@ function getProduction() {
 function getResourceBreakdown(res) {
     const lines = [];
     const workers = getWorkersPerBuilding();
-    const allBonus = (1 + getResearchBonus('allProductionBonus')) * getEchoProductionMult();
+    const allBonus = (1 + getResearchBonus('allProductionBonus')) * getQuintessenceProductionMult();
 
     // Passive production buildings
     for (const [id, def] of Object.entries(ROOMS)) {
@@ -760,14 +760,14 @@ function _hideResTooltip() {
     _resTooltipRes = null;
 }
 
-function _buildEchoTooltipHTML() {
-    const echoes   = gameState.meta.echoes || 0;
-    const bonusPct = (echoes * 0.5).toFixed(1);
+function _buildQuintessenceTooltipHTML() {
+    const quintessence = gameState.meta.quintessence || 0;
+    const bonusPct = (quintessence * 0.5).toFixed(1);
     return `<div class="res-tt-header">Quintessence</div>
 <div class="res-tt-lore">The solidified will of a dungeon-mind that has lived and died before — carried forward through every binding and every deal. The devil did not give you this. It only ensured you kept it.</div>
 <div class="res-tt-divider"></div>
 <div class="res-tt-row"><span class="res-tt-label">Each Quintessence<span class="res-tt-sub"> resonance</span></span><span class="res-tt-val pos">+0.5% all production</span></div>
-<div class="res-tt-row res-tt-total-row"><span class="res-tt-label">Total bonus<span class="res-tt-sub"> ${echoes} × 0.5%</span></span><span class="res-tt-val pos">+${bonusPct}%</span></div>`;
+<div class="res-tt-row res-tt-total-row"><span class="res-tt-label">Total bonus<span class="res-tt-sub"> ${quintessence} × 0.5%</span></span><span class="res-tt-val pos">+${bonusPct}%</span></div>`;
 }
 
 function initResTooltips() {
@@ -778,11 +778,11 @@ function initResTooltips() {
         el.addEventListener('mouseenter', () => _showResTooltip(el, res));
         el.addEventListener('mouseleave', _hideResTooltip);
     });
-    const echoRow = document.getElementById('res-row-echoes');
+    const echoRow = document.getElementById('res-row-quintessence');
     if (echoRow) {
         echoRow.addEventListener('mouseenter', () => {
             if (!_resTooltipEl) return;
-            _resTooltipEl.innerHTML = _buildEchoTooltipHTML();
+            _resTooltipEl.innerHTML = _buildQuintessenceTooltipHTML();
             const rect = echoRow.getBoundingClientRect();
             _resTooltipEl.style.top  = rect.top + 'px';
             _resTooltipEl.style.left = (rect.right + 8) + 'px';
@@ -900,7 +900,7 @@ function initGatherTooltips() {
 
 function _bldEffectRates(id, def) {
     const convMult = getResearchBonus('converterBonus', id);
-    const allBonus = (1 + getResearchBonus('allProductionBonus')) * getEchoProductionMult();
+    const allBonus = (1 + getResearchBonus('allProductionBonus')) * getQuintessenceProductionMult();
     if (def.production) {
         const [res, rate] = Object.entries(def.production)[0];
         const bldgMult = getResearchBonus('productionBonus', id);
@@ -1538,7 +1538,7 @@ function updateUI() {
     setText("info-food-total",   fmt(st.foodProduced  || 0));
     setText("info-wood-total",   fmt(st.woodProduced  || 0));
     setText("info-stone-total",  fmt(st.stoneProduced || 0));
-    renderEchoPanel();
+    renderQuintessencePanel();
 
     // Gather action buttons
     for (const [key, action] of Object.entries(GATHER_ACTIONS)) {
@@ -1962,8 +1962,8 @@ function devWipeResources() {
     saveGame();
 }
 
-function devAddEchoes(n) {
-    gameState.meta.echoes = (gameState.meta.echoes || 0) + n;
+function devAddQuintessence(n) {
+    gameState.meta.quintessence = (gameState.meta.quintessence || 0) + n;
     saveGame();
     updateUI();
 }
@@ -4327,7 +4327,7 @@ function selectStartBiome(isFirstRun) {
     gameState.run.mods = mods;
 }
 
-function calcEchoesEarned() {
+function calcQuintessenceEarned() {
     let earned = 3;
     earned += Math.max(0, (gameState.run.era || 1) - 1);
     earned += Math.floor((gameState.stats.peakPopulation || 0) / 50);
@@ -4339,12 +4339,12 @@ function calcEchoesEarned() {
 
 // Called when player prestiges — resets run state, keeps meta progression
 function doPrestige() {
-    const echoPreview = calcEchoesEarned();
-    if (!confirm(`Simulate a Prestige reset?\n\nAll run progress (resources, buildings, population) will be wiped and a new biome assigned. Meta-stats (prestiges, seen biomes, Quintessence) are preserved.\n\nYou will earn ${echoPreview} Quintessence from this run.`)) return;
+    const quintessencePreview = calcQuintessenceEarned();
+    if (!confirm(`Simulate a Prestige reset?\n\nAll run progress (resources, buildings, population) will be wiped and a new biome assigned. Meta-stats (prestiges, seen biomes, Quintessence) are preserved.\n\nYou will earn ${quintessencePreview} Quintessence from this run.`)) return;
 
     const savedMeta = JSON.parse(JSON.stringify(gameState.meta));
     savedMeta.totalPrestiges = (savedMeta.totalPrestiges || 0) + 1;
-    savedMeta.echoes = (savedMeta.echoes || 0) + calcEchoesEarned();
+    savedMeta.quintessence = (savedMeta.quintessence || 0) + calcQuintessenceEarned();
 
     gameState.resources  = {};
     for (const res of Object.keys(BASE_CAPS)) gameState.resources[res] = 0;
@@ -4367,17 +4367,17 @@ function doPrestige() {
     updateIdentityPanel();
 }
 
-function renderEchoPanel() {
-    const echoes   = gameState.meta.echoes || 0;
-    const bonusPct = (echoes * 0.5).toFixed(1);
-    const preview  = calcEchoesEarned();
-    setText('echo-balance',         echoes);
-    setText('echo-resonance-bonus', `+${bonusPct}% all production`);
-    setText('echo-preview',         `+${preview} on next prestige`);
+function renderQuintessencePanel() {
+    const quintessence = gameState.meta.quintessence || 0;
+    const bonusPct = (quintessence * 0.5).toFixed(1);
+    const preview  = calcQuintessenceEarned();
+    setText('quintessence-balance',         quintessence);
+    setText('quintessence-resonance-bonus', `+${bonusPct}% all production`);
+    setText('quintessence-preview',         `+${preview} on next prestige`);
     // Left-column meta section
-    setText('echo-res-count', echoes);
+    setText('quintessence-res-count', quintessence);
     const metaSection = document.getElementById('meta-currency-section');
-    if (metaSection) metaSection.style.display = echoes > 0 ? '' : 'none';
+    if (metaSection) metaSection.style.display = quintessence > 0 ? '' : 'none';
 }
 
 // ── Dungeon Identity Panel ────────────────────────────────────────────────────
@@ -4520,7 +4520,7 @@ if (!gameState.meta)                         gameState.meta = {};
 if (!gameState.meta.seenBiomes)              gameState.meta.seenBiomes = [];
 if (gameState.meta.totalPrestiges == null)   gameState.meta.totalPrestiges = 0;
 if (!gameState.meta.racesPlayed)             gameState.meta.racesPlayed = {};
-if (gameState.meta.echoes == null)           gameState.meta.echoes = 0;
+if (gameState.meta.quintessence == null) gameState.meta.quintessence = 0;
 if (!gameState.workerAssignments)            gameState.workerAssignments = {};
 if (!gameState.research)                     gameState.research = {};
 if (!gameState.run.era)                      gameState.run.era = 1;
