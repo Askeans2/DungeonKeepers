@@ -778,85 +778,48 @@ h3 {
     animation: tipFadeIn 0.12s ease;
 }
 
-.bld-tt-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 8px;
-    padding-bottom: 6px;
-    border-bottom: 1px solid rgba(255,255,255,0.10);
-}
-
 .bld-tt-name {
+    text-align: center;
     font-size: 13px;
     font-weight: 700;
     color: var(--label);
-    margin-bottom: 6px;
-    letter-spacing: 0.02em;
-}
-
-.bld-tt-header .bld-tt-name {
-    margin-bottom: 0;
-}
-
-.bld-tt-count {
-    font-size: 11px;
-    color: var(--text-muted);
-    font-variant-numeric: tabular-nums;
-}
-
-.bld-tt-done {
-    font-size: 11px;
-    color: var(--enabled, #4cae7e);
+    letter-spacing: 0.04em;
+    padding-bottom: 7px;
+    margin-bottom: 7px;
+    border-bottom: 1px solid rgba(255,255,255,0.14);
 }
 
 .bld-tt-desc {
+    text-align: center;
     font-size: 12px;
-    color: var(--text-muted);
-    margin-bottom: 6px;
+    color: var(--text);
     line-height: 1.6;
-}
-
-.bld-tt-cost-section {
-    margin-bottom: 4px;
-}
-
-.bld-tt-cost-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 10px;
-    font-size: 11px;
     margin-bottom: 2px;
 }
 
-.bld-tt-cost-lbl {
-    color: var(--text-muted);
-}
-
-.bld-tt-cost-val {
-    color: var(--label);
-    font-variant-numeric: tabular-nums;
-    font-weight: 600;
+.bld-tt-line {
+    text-align: center;
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.75;
 }
 
 .bld-tt-effect {
+    text-align: center;
     font-size: 12px;
-    color: var(--label);
-    margin-bottom: 8px;
+    color: var(--text);
     line-height: 1.6;
-    border-top: 1px solid rgba(255,255,255,0.10);
-    padding-top: 7px;
 }
 
 .bld-tt-flavor {
+    text-align: center;
     font-size: 11px;
     color: var(--accent);
     font-style: italic;
-    opacity: 0.85;
     line-height: 1.6;
-    border-top: 1px solid rgba(255,255,255,0.10);
+    border-top: 1px solid rgba(255,255,255,0.12);
     padding-top: 7px;
+    margin-top: 6px;
 }
 
 /* Starvation — pulse the population row red */
