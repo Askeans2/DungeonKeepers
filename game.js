@@ -1033,7 +1033,11 @@ function initBldTooltips() {
             _bldTooltipEl.innerHTML = _buildBldTooltipHTML(id, def);
             _bldTooltipEl.style.display = 'block';
         });
-        el.addEventListener('mousemove', e => { if (_bldTooltipEl) _positionBldTooltip(e); });
+        el.addEventListener('mousemove', e => {
+            if (!_bldTooltipEl) return;
+            _bldTooltipEl.innerHTML = _buildBldTooltipHTML(id, def);
+            _positionBldTooltip(e);
+        });
         el.addEventListener('mouseleave', () => { if (_bldTooltipEl) _bldTooltipEl.style.display = 'none'; });
     });
 
@@ -1050,7 +1054,16 @@ function initBldTooltips() {
                 `<div class="bld-tt-flavor">The mind is not a vessel with fixed walls. It is a space you learn to widen.</div>`;
             _bldTooltipEl.style.display = 'block';
         });
-        eaBtn.addEventListener('mousemove', e => { if (_bldTooltipEl) _positionBldTooltip(e); });
+        eaBtn.addEventListener('mousemove', e => {
+            if (!_bldTooltipEl) return;
+            const bonus = getReservoirBonus();
+            _bldTooltipEl.innerHTML =
+                `<div class="bld-tt-name">Expanded Awareness</div>` +
+                `<div class="bld-tt-line">Deepen your mental capacity, increasing the storage cap of all Anima, Influence, and Mana reservoirs by +10 each.</div>` +
+                `<div class="bld-tt-line">Each reservoir building currently grants +${bonus} capacity. Next purchase raises this to +${bonus + 10}.</div>` +
+                `<div class="bld-tt-flavor">The mind is not a vessel with fixed walls. It is a space you learn to widen.</div>`;
+            _positionBldTooltip(e);
+        });
         eaBtn.addEventListener('mouseleave', () => { if (_bldTooltipEl) _bldTooltipEl.style.display = 'none'; });
     }
 }
@@ -1112,6 +1125,23 @@ function _buildBldTooltipHTML(id, def) {
 
     if (def.flavor) html += `<div class="bld-tt-flavor">${def.flavor}</div>`;
 
+    // Idle-worker warning: only for job buildings with production and a declining output
+    if (def.jobs && def.production) {
+        const bldCount = gameState.buildings[id] || 0;
+        if (bldCount > 0) {
+            const slots       = bldCount * def.jobs;
+            const assigned    = (gameState.workerAssignments || {})[id] || 0;
+            const idleWorkers = gameState.population.count - getEmployed();
+            if (slots - assigned > 0 && idleWorkers > 0) {
+                const deltas    = gameState.lastTickDeltas || {};
+                const outputNeg = Object.keys(def.production).some(res => (deltas[res] || 0) < 0);
+                if (outputNeg) {
+                    html += `<div class="bld-tt-warning">⚠ Output declining — idle workers can be assigned here</div>`;
+                }
+            }
+        }
+    }
+
     return html;
 }
 
@@ -1125,7 +1155,11 @@ function initResearchTooltips() {
             _bldTooltipEl.innerHTML = _buildResearchTooltipHTML(key, def);
             _bldTooltipEl.style.display = 'block';
         });
-        el.addEventListener('mousemove', e => { if (_bldTooltipEl) _positionBldTooltip(e); });
+        el.addEventListener('mousemove', e => {
+            if (!_bldTooltipEl) return;
+            _bldTooltipEl.innerHTML = _buildResearchTooltipHTML(key, def);
+            _positionBldTooltip(e);
+        });
         el.addEventListener('mouseleave', () => { if (_bldTooltipEl) _bldTooltipEl.style.display = 'none'; });
     });
 }
@@ -1863,7 +1897,7 @@ function updateUI() {
         }
         const countEl = document.getElementById(id + "Count");
         if (countEl) {
-            countEl.textContent = (def.jobs && count > 0) ? `${count} (${w}★)` : count;
+            countEl.textContent = count;
         }
         const costEl = document.getElementById(id + "Cost");
         if (costEl) {
