@@ -213,7 +213,7 @@ const ROOMS = {
     },
     scriptorium: {
         name: "Scriptorium",
-        desc: "Scribes and scholars recover dungeon lore from old carvings, captured texts, and hard-won experience. Each worker produces 1 Lore per tick. Each Scriptorium raises the Lore cap by 25.",
+        desc: "Scribes and scholars recover dungeon lore from old carvings, captured texts, and hard-won experience. Each worker produces 1 Lore per tick. The base Lore cap is 500; each Scriptorium raises it by 50.",
         cost: { stone: 60, wood: 40, bricks: 20 },
         coinCost: 1500,
         costScale: 1.18,

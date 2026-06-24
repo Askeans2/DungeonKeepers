@@ -23,10 +23,11 @@ const RESEARCH = {};
 // ── 2.1 — Very Early ──────────────────────────────────────────────────────────
 
 RESEARCH.taxes = {
-    tier: "2.1",
+    tier: "2.3",
     name: "Taxation",
     desc: "Levy a tax on your population. Each creature contributes 1 cp per in-game day.",
-    cost: { stone: 50, wood: 30 },
+    cost: { ore: 60, iron: 30 },
+    requiresResearch: ["goldStandard"],
     effects: { taxBonus: 1, flag: "taxesEnabled" },
 };
 
@@ -170,7 +171,7 @@ RESEARCH.communalLiving = {
     name: "Communal Living",
     desc: "Pack the burrows tighter and share the straw. Each Hovel provides +0.1 additional housing capacity.",
     cost: { wood: 60, stone: 40 },
-    requiresResearch: ["taxes"],
+    requiresResearch: ["cropRotation"],
     effects: { housingBonus: { lair: 0.1 } },
 };
 
@@ -189,7 +190,7 @@ RESEARCH.shadowMarket = {
     name: "Shadow Market",
     desc: "Formalize the unofficial trade happening in back alleys and after dark. Taxation yields +1 cp per creature per day.",
     cost: { stone: 40, coins: 200 },
-    requiresResearch: ["taxes", "communalLiving"],
+    requiresResearch: ["communalLiving"],
     effects: { taxBonus: 1 },
 };
 
@@ -532,7 +533,7 @@ RESEARCH.tradeGoods = {
     name: "Trade Caravans",
     desc: "Send wagons of cloth and potions to nearby settlements. Cloth and potions in stock each generate 2 cp per unit per day.",
     cost: { cloth: 30, potions: 15 },
-    requiresResearch: ["taxes", "loomMastery"],
+    requiresResearch: ["loomMastery"],
     effects: { flag: "tradeGoods" },
 };
 
@@ -577,7 +578,7 @@ RESEARCH.loreKeeping = {
     name: "Lore Keeping",
     desc: "Establish a formal record of recovered knowledge. Scribes can now be set to work — unlocks the Scriptorium.",
     cost: { stone: 80, wood: 60 },
-    requiresResearch: ["arcaneTapping"],
+    requiresResearch: ["arcaneTapping", "taxes"],
     effects: { unlockBuildings: ["scriptorium"] },
 };
 
@@ -595,7 +596,7 @@ RESEARCH.greenwardenLore = {
     tier: "2.4",
     name: "Greenwarden's Almanac",
     desc: "Compile the Greenwardens' field almanac of seasonal yields, soil health, and herb cycles. Farms and Herbalist's Dens produce 15% more.",
-    cost: { food: 80, herbs: 60, lore: 15 },
+    cost: { lore: 100 },
     requiresResearch: ["wildHarvest", "loreKeeping"],
     effects: { productionBonus: { farm: 1.15, herbalistDen: 1.15 } },
 };
@@ -605,7 +606,7 @@ RESEARCH.trackerSign = {
     tier: "2.4",
     name: "Tracker's Signs",
     desc: "Read tracks, territorial markings, and migration patterns to predict where the herds will be. Hunting Lodges produce 15% more.",
-    cost: { bones: 50, food: 40, lore: 10 },
+    cost: { lore: 100 },
     requiresResearch: ["favoredTerrain", "trapLines"],
     effects: { productionBonus: { huntingLodge: 1.15 } },
 };
@@ -615,7 +616,7 @@ RESEARCH.annotatedTexts = {
     tier: "2.4",
     name: "Annotated Compendium",
     desc: "Scribes annotate recovered texts with cross-references and corrections, speeding future extraction. Scriptoriums produce 15% more lore.",
-    cost: { stone: 60, wood: 50, lore: 12 },
+    cost: { lore: 120 },
     requiresResearch: ["loreKeeping"],
     effects: { productionBonus: { scriptorium: 1.15 } },
 };
@@ -625,7 +626,7 @@ RESEARCH.crystalPolishing = {
     tier: "2.4",
     name: "Crystal Polishing",
     desc: "Polish raw crystal faces to optical clarity, improving resonance transmission. Crystal Seams produce 15% more and Arcane Dust cap +50.",
-    cost: { crystals: 40, arcaneDust: 20, lore: 10 },
+    cost: { crystals: 40, arcaneDust: 20 },
     requiresResearch: ["crystalLore"],
     effects: { productionBonus: { crystalSeam: 1.15 }, capBonus: { arcaneDust: 50 } },
 };
@@ -666,7 +667,7 @@ RESEARCH.runicScript = {
     tier: "2.5",
     name: "Runic Script",
     desc: "A standardized glyph system makes inscribing faster. Arcane Bench rune output +25% more.",
-    cost: { runes: 40, arcaneDust: 30, lore: 20 },
+    cost: { lore: 220 },
     requiresResearch: ["arcaneInscription"],
     effects: { converterBonus: { arcaneBench: 1.25 } },
 };
@@ -675,7 +676,7 @@ RESEARCH.essenceHarvest = {
     tier: "2.5",
     name: "Essence Harvesting",
     desc: "Capture ambient magical resonance in the circle's stone. Ritual Circle Arcane Essence output +50%.",
-    cost: { arcaneEssence: 15, arcaneDust: 50, lore: 30 },
+    cost: { lore: 270 },
     requiresResearch: ["arcaneTapping"],
     effects: { converterBonus: { ritualCircle: 1.50 } },
 };
@@ -684,7 +685,7 @@ RESEARCH.ichorRefinement = {
     tier: "2.5",
     name: "Ichor Refinement",
     desc: "Render and purify dark altar drippings. Dark Altar ichor output +30%.",
-    cost: { ichor: 10, bones: 60, lore: 25 },
+    cost: { lore: 240 },
     requiresResearch: ["bonecraft"],
     effects: { converterBonus: { darkAltar: 1.30 } },
 };
@@ -693,7 +694,7 @@ RESEARCH.silkCulture = {
     tier: "2.5",
     name: "Spider Keeper's Art",
     desc: "Keep the spiders well-fed and they weave faster. Spider Nest silk output +25%.",
-    cost: { silk: 20, bones: 40, lore: 20 },
+    cost: { lore: 200 },
     requiresResearch: ["packHunting"],
     effects: { converterBonus: { spiderNest: 1.25 } },
 };
@@ -702,7 +703,7 @@ RESEARCH.manaConductorCoils = {
     tier: "2.5",
     name: "Mana Conductor Coils",
     desc: "Wind copper coils into the crucible walls to focus mana flow. Arcane Crucible output +30%.",
-    cost: { manaGold: 15, iron: 60, lore: 35 },
+    cost: { lore: 320 },
     requiresResearch: ["forgeMastery"],
     effects: { converterBonus: { arcaneCrucible: 1.30 } },
 };
@@ -711,7 +712,7 @@ RESEARCH.mithrilTemper = {
     tier: "2.5",
     name: "Mithril Tempering",
     desc: "The precise heat range that turns grey metal silver-bright. Mithril Forge output +30%.",
-    cost: { mithril: 5, steel: 60, lore: 40 },
+    cost: { lore: 340 },
     requiresResearch: ["forgeMastery"],
     effects: { converterBonus: { mithrilForge: 1.30 } },
 };
@@ -720,7 +721,7 @@ RESEARCH.ritualPrep = {
     tier: "2.5",
     name: "Rites of the Ancients",
     desc: "Recover the old ways from crumbling texts and stubborn elders. Unlocks the Ritual Circle. Arcane Essence cap +25.",
-    cost: { arcaneDust: 60, lore: 30 },
+    cost: { lore: 260 },
     requiresResearch: ["arcaneTapping"],
     effects: { unlockBuildings: ["ritualCircle"], capBonus: { arcaneEssence: 25 } },
 };
@@ -729,7 +730,7 @@ RESEARCH.darkTexts = {
     tier: "2.5",
     name: "Forbidden Texts",
     desc: "What you read cannot be unread. Unlocks the Dark Altar.",
-    cost: { arcaneEssence: 20, lore: 40 },
+    cost: { lore: 290 },
     requiresResearch: ["ritualPrep"],
     effects: { unlockBuildings: ["darkAltar"] },
 };
@@ -738,7 +739,7 @@ RESEARCH.silkenWarren = {
     tier: "2.5",
     name: "Silken Warren",
     desc: "Prepare a sealed chamber and convince the spiders to cooperate. Unlocks the Spider Nest.",
-    cost: { bones: 60, lore: 25 },
+    cost: { lore: 210 },
     requiresResearch: ["bonecraft", "militiaDrill"],
     effects: { unlockBuildings: ["spiderNest"] },
 };
@@ -747,7 +748,7 @@ RESEARCH.manaConduit = {
     tier: "2.5",
     name: "Mana Conduit Forging",
     desc: "Forge a network of iron conduits to carry raw mana safely. Unlocks the Arcane Crucible.",
-    cost: { steel: 80, lore: 50 },
+    cost: { lore: 310 },
     requiresResearch: ["arcaneTapping", "forgeMastery"],
     effects: { unlockBuildings: ["arcaneCrucible"] },
 };
@@ -761,11 +762,12 @@ RESEARCH.goldOnly = {
     effects: { flag: "goldOnly" },
 };
 
+
 RESEARCH.infernalLore = {
     tier: "2.5",
     name: "Infernal Codex",
     desc: "Compile what your scholars know of the Nine Hells — their hierarchy, their rulers, and the one principle governing every transaction there: everything has a price. Bind the first pages.",
-    cost: { arcaneEssence: 25, lore: 50 },
+    cost: { lore: 350 },
     requiresResearch: ["darkTexts", "essenceHarvest"],
     effects: { flag: "infernalLore" },
 };
@@ -775,7 +777,7 @@ RESEARCH.fencedGoods = {
     tier: "2.5",
     name: "The Fence's Cut",
     desc: "Establish a fence operation that resells goods at a premium to distant merchants. Trade-good income +50%. (Requires trade route system.)",
-    cost: { silk: 15, potions: 25, lore: 25 },
+    cost: { lore: 190 },
     requiresResearch: ["shadowMarket", "tradeGoods"],
     effects: { flag: "fencedGoods" },
 };
@@ -785,7 +787,7 @@ RESEARCH.blueprintLibrary = {
     tier: "2.5",
     name: "Blueprint Archive",
     desc: "A systematized archive of construction blueprints reduces planning time and material waste on every new build. All building costs −10% further.",
-    cost: { runes: 30, stone: 60, lore: 20 },
+    cost: { lore: 230 },
     requiresResearch: ["prototypeTools", "arcaneInscription"],
     effects: { flag: "blueprintLibrary" },
 };
@@ -795,7 +797,7 @@ RESEARCH.steelGrade = {
     tier: "2.5",
     name: "Graded Steelwork",
     desc: "Classify steel batches by carbon content and route each grade to the right application. Forges produce 15% more steel.",
-    cost: { steel: 40, coal: 50, lore: 25 },
+    cost: { lore: 220 },
     requiresResearch: ["quenchingTechniques", "forgeMastery"],
     effects: { converterBonus: { forge: 1.15 } },
 };
@@ -805,7 +807,7 @@ RESEARCH.houseDesign = {
     tier: "2.5",
     name: "House Design",
     desc: "A proper multi-room house with a shared hearth and sleeping loft. Unlocks the House building, which houses 10 creatures.",
-    cost: { wood: 80, stone: 50, iron: 30, lore: 15 },
+    cost: { lore: 180 },
     requiresResearch: ["communalArchitecture", "reinforcedShelving"],
     effects: { unlockBuildings: ["house"] },
 };
@@ -815,7 +817,7 @@ RESEARCH.coalGasification = {
     tier: "2.5",
     name: "Coal Gasification",
     desc: "Combust coal into a combustible gas piped directly into the kiln chamber, achieving more consistent temperatures. Kilns produce 15% more bricks.",
-    cost: { coal: 80, stone: 50, lore: 20 },
+    cost: { lore: 160 },
     requiresResearch: ["highFireKiln", "sulphurStudy"],
     effects: { converterBonus: { kiln: 1.15 } },
 };
@@ -825,7 +827,7 @@ RESEARCH.pressurizedBellows = {
     tier: "2.5",
     name: "Pressurized Bellows",
     desc: "A water-wheel drives the bellows continuously, keeping a constant high-pressure blast on the smelter. Smelters produce 15% more iron and iron cap +100.",
-    cost: { stone: 60, iron: 60, lore: 20 },
+    cost: { lore: 170 },
     requiresResearch: ["bellowsDesign", "forgeMastery"],
     effects: { converterBonus: { smelter: 1.15 }, capBonus: { iron: 100 } },
 };
@@ -835,7 +837,7 @@ RESEARCH.ventilatedShafts = {
     tier: "2.5",
     name: "Ventilated Shafts",
     desc: "Air shafts and draft doors keep coal seam air clean, letting workers dig deeper veins. Coal Seams produce 15% more and coal cap +50.",
-    cost: { stone: 70, wood: 50, lore: 15 },
+    cost: { lore: 140 },
     requiresResearch: ["coalBunker", "deepMining"],
     effects: { productionBonus: { coalSeam: 1.15 }, capBonus: { coal: 50 } },
 };
@@ -845,7 +847,7 @@ RESEARCH.silkRope = {
     tier: "2.5",
     name: "Braided Silk Rope",
     desc: "Braid surplus silk into high-tensile rope for rigging and scaffolding, reducing the coin spent on construction hardware. Silk cap +50 and all building coin costs −10%.",
-    cost: { silk: 30, lore: 20 },
+    cost: { lore: 150 },
     requiresResearch: ["silkCulture"],
     effects: { capBonus: { silk: 50 }, flag: "silkRope" },
 };
@@ -857,7 +859,7 @@ RESEARCH.shieldGuard = {
     tier: "2.6",
     name: "Shield Guard Doctrine",
     desc: "Trained guards rotate through worksites, keeping workers safe and morale high. All buildings produce 5% more.",
-    cost: { steel: 60, iron: 50, lore: 50 },
+    cost: { lore: 450 },
     requiresResearch: ["warFormations", "forgeMastery"],
     effects: { allProductionBonus: 0.05 },
 };
@@ -867,7 +869,7 @@ RESEARCH.masterworkPotions = {
     tier: "2.6",
     name: "Masterwork Formulae",
     desc: "Grand Magister-level formulae push your lab to its theoretical maximum. Alchemy Lab potion output +25% more and potion cap +50.",
-    cost: { arcaneEssence: 25, potions: 40, lore: 60 },
+    cost: { lore: 520 },
     requiresResearch: ["refinedAlchemy", "essenceHarvest"],
     effects: { converterBonus: { alchemyLab: 1.25 }, capBonus: { potions: 50 } },
 };
@@ -877,7 +879,7 @@ RESEARCH.runesOfTheDeep = {
     tier: "2.6",
     name: "Runes of the Deep",
     desc: "Ancient dwarven runes carved into shaft walls and crystal chambers attune the stone to yield more readily. Mines +15% and Crystal Seams +15%.",
-    cost: { runes: 50, arcaneDust: 40, lore: 55 },
+    cost: { lore: 480 },
     requiresResearch: ["dwarvenShoring", "runicScript"],
     effects: { productionBonus: { mine: 1.15, crystalSeam: 1.15 } },
 };
@@ -887,7 +889,7 @@ RESEARCH.oreConcentrate = {
     tier: "2.6",
     name: "Ore Beneficiation",
     desc: "Crush and separate ore before feeding the Smelter — the building consumes ore more efficiently and produces 15% more iron.",
-    cost: { iron: 60, stone: 50, lore: 45 },
+    cost: { lore: 400 },
     requiresResearch: ["bellowsDesign", "deepMining"],
     effects: { converterBonus: { smelter: 1.15 } },
 };
@@ -897,7 +899,7 @@ RESEARCH.crystalChandeliers = {
     tier: "2.6",
     name: "Crystal Chandeliers",
     desc: "Suspended crystal arrays in the Mage Tower focus ambient light into pure arcane energy. Mage Towers produce 15% more crystals.",
-    cost: { crystals: 60, arcaneDust: 40, lore: 50 },
+    cost: { lore: 420 },
     requiresResearch: ["arcaneTapping", "crystalFocus"],
     effects: { productionBonus: { mageTower: 1.15 } },
 };
@@ -909,7 +911,7 @@ RESEARCH.circleOfTheWilds = {
     tier: "2.7",
     name: "Circle of the Wild",
     desc: "Formally induct nature wardens into the settlement's leadership — their deep knowledge transforms your harvests. Farms and Herbalist's Dens produce 20% more and food cap +200.",
-    cost: { arcaneEssence: 30, silk: 20, lore: 80 },
+    cost: { lore: 640 },
     requiresResearch: ["greenwardenLore", "ritualPrep"],
     effects: { productionBonus: { farm: 1.20, herbalistDen: 1.20 }, capBonus: { food: 200 } },
 };
@@ -919,7 +921,7 @@ RESEARCH.rangersConclave = {
     tier: "2.7",
     name: "Ranger's Conclave",
     desc: "A formal conclave of scouts and guides shares knowledge across the region, transforming your hunters into experts. Hunting Lodges produce 25% more and bones cap +200.",
-    cost: { ichor: 20, bones: 80, lore: 80 },
+    cost: { lore: 680 },
     requiresResearch: ["trackerSign", "loreKeeping"],
     effects: { productionBonus: { huntingLodge: 1.25 }, capBonus: { bones: 200 } },
 };
@@ -929,7 +931,7 @@ RESEARCH.crossReferenced = {
     tier: "2.7",
     name: "Cross-Referenced Index",
     desc: "A master index cards links every recovered text to every other — scribes spend less time searching and more time transcribing. Scriptoriums produce 25% more lore and lore cap +100.",
-    cost: { silk: 20, runes: 50, lore: 90 },
+    cost: { lore: 720 },
     requiresResearch: ["annotatedTexts", "runicScript"],
     effects: { productionBonus: { scriptorium: 1.25 }, capBonus: { lore: 100 } },
 };
@@ -939,7 +941,7 @@ RESEARCH.coalReduction = {
     tier: "2.7",
     name: "Efficient Burn",
     desc: "Improved combustion chambers and preheated air reduce the coal demanded by each smelting cycle. Forges produce 10% more steel.",
-    cost: { steel: 60, coal: 80, lore: 70 },
+    cost: { lore: 600 },
     requiresResearch: ["forgeMastery", "manaConductorCoils"],
     effects: { converterBonus: { forge: 1.10 } },
 };
@@ -951,7 +953,7 @@ RESEARCH.thievesGuild = {
     tier: "2.8",
     name: "Thieves' Guild Charter",
     desc: "Grant the guild a formal charter — they pay their dues in information, coin, and silence. Taxation yields +2 cp per creature per day and coin cap +25,000.",
-    cost: { iron: 80, coins: 3000, lore: 100 },
+    cost: { lore: 930 },
     requiresResearch: ["fencedGoods", "guildCharter"],
     effects: { taxBonus: 2, flag: "thievesGuild" },
 };
@@ -961,7 +963,7 @@ RESEARCH.masterCraft = {
     tier: "2.8",
     name: "Mastercrafted Works",
     desc: "Artificer-grade precision in every component eliminates all material waste. All building costs −15% further and coin costs −20%.",
-    cost: { steel: 80, mithril: 4, lore: 100 },
+    cost: { lore: 1000 },
     requiresResearch: ["blueprintLibrary", "forgeMastery"],
     effects: { flag: "masterCraft" },
 };
@@ -971,7 +973,7 @@ RESEARCH.dwarvenAnvil = {
     tier: "2.8",
     name: "Dwarven Anvil",
     desc: "A true dwarven-grade anvil of the right mass and temper makes every hammer blow count. Smelters +20%, Forges +20%, and mithril cap +10.",
-    cost: { mithril: 6, steel: 70, lore: 90 },
+    cost: { lore: 880 },
     requiresResearch: ["steelGrade", "mithrilTemper"],
     effects: { converterBonus: { smelter: 1.20, forge: 1.20 }, capBonus: { mithril: 10 } },
 };
@@ -981,7 +983,7 @@ RESEARCH.apartmentDesign = {
     tier: "2.8",
     name: "Apartment Design",
     desc: "Stack multiple family quarters vertically with shared stairwells and common areas. Unlocks the Apartment building, which houses 15 creatures.",
-    cost: { stone: 120, bricks: 80, iron: 50, lore: 90 },
+    cost: { lore: 800 },
     requiresResearch: ["houseDesign", "mortaredMasonry"],
     effects: { unlockBuildings: ["apartment"] },
 };
@@ -991,7 +993,7 @@ RESEARCH.runicCalibration = {
     tier: "2.8",
     name: "Runic Calibration",
     desc: "Calibrate each rune engraving to the precise arcane resonance band that maximizes stability. Arcane Benches produce 25% more runes and rune cap +100.",
-    cost: { runes: 70, mithril: 3, lore: 100 },
+    cost: { lore: 840 },
     requiresResearch: ["runicScript", "arcaneInscription"],
     effects: { converterBonus: { arcaneBench: 1.25 }, capBonus: { runes: 100 } },
 };
@@ -1003,7 +1005,7 @@ RESEARCH.eliteCompany = {
     tier: "2.9",
     name: "Elite Company",
     desc: "A veteran elite company in mithril-reinforced gear. Each Armory houses +8 more creatures and the settlement's overall production rises 5%.",
-    cost: { mithril: 8, steel: 80, lore: 120 },
+    cost: { lore: 1200 },
     requiresResearch: ["shieldGuard", "mithrilTemper"],
     effects: { housingBonus: { armory: 8 }, allProductionBonus: 0.05 },
 };
@@ -1013,7 +1015,7 @@ RESEARCH.stonecuttersGuild = {
     tier: "2.9",
     name: "Stonecutters' Guild",
     desc: "A formal guild of dwarven-trained stone workers optimizes every dig and cut. Quarries +25%, Mines +25%, and stone cap +500.",
-    cost: { mithril: 6, ichor: 25, stone: 150, lore: 120 },
+    cost: { lore: 1100 },
     requiresResearch: ["runesOfTheDeep", "mortaredMasonry"],
     effects: { productionBonus: { quarry: 1.25, mine: 1.25 }, capBonus: { stone: 500 } },
 };
@@ -1023,7 +1025,7 @@ RESEARCH.grandLibrary = {
     tier: "2.9",
     name: "Grand Library",
     desc: "A grand repository of all knowledge accumulated by the settlement. Scriptoriums produce 25% more lore and the lore cap expands by 300.",
-    cost: { mithril: 5, arcaneEssence: 40, stone: 150, lore: 130 },
+    cost: { lore: 1300 },
     requiresResearch: ["crossReferenced", "runesOfTheDeep"],
     effects: { productionBonus: { scriptorium: 1.25 }, capBonus: { lore: 300 } },
 };
@@ -1035,7 +1037,7 @@ RESEARCH.planarRites = {
     tier: "2.10",
     name: "Rites of Planar Contact",
     desc: "Inscribe infernal geometries into the Ritual Circle floor — angles that should not fit in three dimensions. The circle can now reach further than it was designed to. Something on the other side has noticed.",
-    cost: { arcaneEssence: 45, ichor: 30, runes: 40, lore: 70 },
+    cost: { lore: 1350 },
     requiresResearch: ["infernalLore", "ichorRefinement"],
     effects: { flag: "planarContact" },
 };
@@ -1044,7 +1046,7 @@ RESEARCH.amnizuSummons = {
     tier: "2.10",
     name: "The Amnizu Summons",
     desc: "The geometries are drawn. You speak the invitation — not a summoning, not a command. Just an offer to negotiate. An Amnizu steps through. It already knows what you have built. It is only waiting to see how much of it you are willing to give.",
-    cost: { arcaneEssence: 60, ichor: 45, mithril: 8, lore: 90 },
+    cost: { lore: 1500 },
     requiresResearch: ["planarRites", "mithrilTemper"],
     effects: { flag: "amnizuAvailable" },
 };
@@ -1053,7 +1055,7 @@ RESEARCH.dungeonBlueprint = {
     tier: "2.10",
     name: "Dungeon Blueprint",
     desc: "Maps, schematics, and the first load-bearing column of something far grander than a village. Era 3 awaits.",
-    cost: { arcaneEssence: 30, ichor: 15, lore: 75 },
+    cost: { lore: 1400 },
     requiresResearch: ["ritualPrep", "darkTexts", "manaConduit", "mithrilTemper", "forgeMastery", "roadNetwork"],
     effects: { flag: "eraThreeUnlocked" },
 };

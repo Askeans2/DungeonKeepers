@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=EB+Garamond:ital@0;1&display=swap');
 
 /* Evolve-inspired dark theme */
 
@@ -3429,21 +3429,35 @@ body.reduce-motion *::after {
 }
 
 /* ── INTRO TRANSITION — new-game comic overlay ──────────────────────────────
- * Mirrors era-transition structure but for 4 panels only (no panel-final).
- * Uses the same D&D parchment palette and Cinzel font.
+ * 2×2 comic-panel grid with CSS-animated illustrations.
  */
+
+/* Keyframes */
+@keyframes introPulseGlow  { 0%,100%{opacity:.55;transform:translate(-50%,-50%) scale(.92)} 50%{opacity:1;transform:translate(-50%,-50%) scale(1.12)} }
+@keyframes introTwinkle    { 0%,100%{opacity:.12} 50%{opacity:.8} }
+@keyframes introSeam       { 0%,100%{opacity:.4}  50%{opacity:.95} }
+@keyframes introGhostPhase { 0%{opacity:0;filter:blur(13px);transform:translate(-50%,16px)} 28%{opacity:.92;filter:blur(2px);transform:translate(-50%,0)} 74%{opacity:.92;filter:blur(2px);transform:translate(-50%,-4px)} 100%{opacity:0;filter:blur(13px);transform:translate(-50%,-18px)} }
+@keyframes introGhostSway  { 0%,100%{transform:translateX(-4px) rotate(-2.5deg)} 50%{transform:translateX(4px) rotate(2.5deg)} }
+@keyframes introFloorGlow  { 0%,100%{opacity:.3} 50%{opacity:.6} }
+@keyframes introMindPulse  { 0%,100%{opacity:.6;transform:translate(-50%,-50%) scale(.82)} 50%{opacity:1;transform:translate(-50%,-50%) scale(1.18)} }
+@keyframes introBeam       { 0%,100%{opacity:.22} 50%{opacity:.7} }
+@keyframes introAuraPulse  { 0%,100%{opacity:.38;transform:translate(-50%,-50%) scale(.9)} 50%{opacity:.85;transform:translate(-50%,-50%) scale(1.12)} }
+@keyframes introPickFloat  { 0%,100%{transform:translateY(0) rotate(-4deg)} 50%{transform:translateY(-10px) rotate(5deg)} }
+@keyframes introSpark      { 0%{transform:translateY(0) scale(1);opacity:0} 30%{opacity:.9} 100%{transform:translateY(-22px) scale(.4);opacity:0} }
+@keyframes introBtnBreathe { 0%,100%{box-shadow:0 0 0 1px rgba(201,160,90,.45),0 0 22px rgba(201,160,90,.12)} 50%{box-shadow:0 0 0 1px rgba(201,160,90,.8),0 0 34px rgba(201,160,90,.28)} }
+
 #intro-transition-overlay {
     position: fixed;
     inset: 0;
-    z-index: 10001;  /* above era-transition-overlay */
-    background: rgba(4, 2, 1, 0.94);
-    backdrop-filter: blur(3px);
+    z-index: 10001;
+    background: radial-gradient(120% 90% at 50% 0%, #15100a 0%, #0a0706 48%, #070504 100%);
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     overflow-y: auto;
-    padding: clamp(8px, 1.5vh, 20px) 0;
+    padding: 46px 24px 60px;
+    box-sizing: border-box;
+    font-family: 'EB Garamond', 'Georgia', serif;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.5s ease;
@@ -3457,136 +3471,255 @@ body.reduce-motion *::after {
     pointer-events: none;
 }
 
+#intro-kicker {
+    font-family: 'Cinzel', 'Georgia', serif;
+    font-size: 13px;
+    letter-spacing: .42em;
+    text-indent: .42em;
+    color: #7a5f33;
+    text-transform: uppercase;
+    margin-bottom: 26px;
+}
+
 #intro-comic-panels {
-    --intro-svg-h: clamp(80px, 13vh, 130px);
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    padding: clamp(4px, 0.6vh, 8px);
-    width: min(640px, 92vw);
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    width: 100%;
+    max-width: 968px;
     box-sizing: border-box;
 }
 
 .intro-panel {
-    background: rgba(12,8,4,0.94);
-    border: 1.5px solid rgba(140,110,50,0.30);
-    border-radius: 0;
-    margin-bottom: -1.5px;
-    box-shadow: inset 0 0 0 1px rgba(200,160,40,0.06);
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding: clamp(6px, 1.2vh, 14px) clamp(10px, 1.6vw, 20px);
-    gap: clamp(10px, 1.4vw, 18px);
     position: relative;
+    height: 362px;
+    border: 1px solid rgba(201,160,90,.42);
     overflow: hidden;
+    box-shadow: inset 0 0 60px rgba(0,0,0,.7);
     opacity: 0;
     transform: translateY(16px);
     transition: opacity 0.65s cubic-bezier(0.22,0.61,0.36,1),
-                transform 0.65s cubic-bezier(0.22,0.61,0.36,1),
-                border-color 0.35s ease,
-                box-shadow 0.35s ease;
+                transform 0.65s cubic-bezier(0.22,0.61,0.36,1);
 }
 .intro-panel.intro-panel-in {
     opacity: 1;
     transform: translateY(0);
 }
-.intro-panel:hover {
-    border-color: var(--era-gold);
-    z-index: 1;
-    box-shadow: inset 0 0 0 1px rgba(200,160,40,0.10),
-                0 0 18px rgba(200,140,20,0.20);
-}
-
-.intro-panel-canvas {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 1.2s ease;
-}
-.intro-panel-canvas.intro-canvas-active {
-    opacity: 1;
-}
-
-.intro-panel-svg {
-    flex: 0 0 auto;
-    width: calc(var(--intro-svg-h) * 1.4);
-    height: var(--intro-svg-h);
-    overflow: visible;
-    position: relative;
-    z-index: 1;
-}
-
-.intro-panel-lore {
-    font-family: 'Cinzel', 'Georgia', serif;
-    font-size: clamp(10px, 1.5vh, 13px);
-    color: rgba(220,190,130,0.0);
-    flex: 1;
-    font-style: normal;
-    line-height: 1.65;
-    letter-spacing: 0.03em;
-    transition: color 0.55s ease, opacity 0.55s ease;
-    opacity: 0;
-}
-.intro-panel-lore em {
-    color: var(--era-gold);
-    font-style: italic;
-}
-.intro-lore-left {
-    text-align: left;
-    order: -1;
-}
-.intro-lore-right {
-    text-align: right;
-    order: 1;
-}
-.intro-panel-lore.intro-lore-in {
-    color: rgba(220,190,130,0.8);
-    opacity: 1;
-}
+#intro-panel-1 { background: radial-gradient(120% 120% at 50% 32%, #1a130b 0%, #0c0907 60%, #080605 100%); }
+#intro-panel-2 { background: radial-gradient(120% 120% at 50% 35%, #161009 0%, #0b0807 64%, #080605 100%); }
+#intro-panel-3 { background: radial-gradient(120% 120% at 50% 35%, #161009 0%, #0b0807 64%, #080605 100%); }
+#intro-panel-4 { background: radial-gradient(120% 120% at 50% 40%, #19120a 0%, #0b0807 64%, #080605 100%); }
 
 .intro-panel-num {
     position: absolute;
-    top: 6px;
-    left: 8px;
+    top: 10px;
+    left: 13px;
     font-family: 'Cinzel', 'Georgia', serif;
-    font-size: 9px;
-    color: var(--era-gold);
-    opacity: 0.40;
-    letter-spacing: 0.08em;
+    font-size: 15px;
+    letter-spacing: .1em;
+    color: #c9a05a;
+    opacity: .85;
     pointer-events: none;
     user-select: none;
+    z-index: 2;
 }
 
-#intro-transition-continue {
-    margin-top: clamp(6px, 1vh, 14px);
-    padding: 8px 28px;
-    background: transparent;
-    border: 1px solid rgba(200,160,40,0.35);
-    border-radius: 2px;
-    color: rgba(220,190,130,0.65);
-    font-family: 'Cinzel', 'Georgia', serif;
-    font-size: 12px;
-    letter-spacing: 0.18em;
-    cursor: pointer;
+/* Illustration band */
+.intro-panel-art {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 172px;
+    overflow: hidden;
+}
+.intro-art-stone {
+    background-color: #15100a;
+    background-image:
+        repeating-linear-gradient(0deg, rgba(0,0,0,.32) 0 1px, transparent 1px 40px),
+        repeating-linear-gradient(90deg, rgba(0,0,0,.32) 0 1px, transparent 1px 64px);
+    box-shadow: inset 0 0 50px rgba(0,0,0,.6);
+}
+.intro-stone-offset {
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(90deg, rgba(0,0,0,.32) 0 1px, transparent 1px 64px);
+    background-position: 32px 0;
+    background-size: 64px 80px;
+}
+
+/* Gradient scrim fading art into caption */
+.intro-panel-scrim {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 210px;
+    background: linear-gradient(180deg, transparent, #0a0706 42%);
+    pointer-events: none;
+}
+
+/* Caption */
+.intro-panel-lore {
+    position: absolute;
+    left: 20px; right: 20px; bottom: 18px;
+    margin: 0;
+    font-variant: small-caps;
+    font-size: 15.5px;
+    line-height: 1.72;
+    letter-spacing: .025em;
+    color: rgba(169,133,78,0);
+    text-wrap: pretty;
     opacity: 0;
-    display: flex;
-    align-items: center;
-    transition: opacity 0.4s ease, background 0.15s, color 0.15s,
-                border-color 0.15s, box-shadow 0.15s;
+    transition: color 0.55s ease, opacity 0.55s ease;
+    z-index: 2;
+}
+.intro-panel-lore em {
+    color: #e3bd74;
+    font-style: italic;
+}
+.intro-panel-lore.intro-lore-in {
+    color: #a9854e;
+    opacity: 1;
+}
+
+/* Panel I — glowing mote */
+.intro-mote {
+    position: absolute;
+    left: 50%; top: 50%;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #ffe6a8 0%, #e0b15c 38%, rgba(201,160,90,.35) 62%, transparent 75%);
+    box-shadow: 0 0 26px 8px rgba(224,177,92,.4);
+    animation: introPulseGlow 4.5s ease-in-out infinite;
+}
+.intro-ray {
+    position: absolute;
+    left: 50%; top: 50%;
+    width: 120px; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201,160,90,.32), transparent);
+}
+.intro-twinkle {
+    position: absolute;
+    width: 2px; height: 2px;
+    border-radius: 50%;
+    background: #d9b873;
+    animation: introTwinkle 3.2s ease-in-out infinite;
+}
+
+/* Panel II — cracked wall */
+.intro-crack-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%; height: 100%;
+    overflow: visible;
+    animation: introSeam 3.6s ease-in-out infinite;
+}
+
+/* Panel III — ghost */
+.intro-floor-glow {
+    position: absolute;
+    left: 50%; bottom: 6px;
+    width: 130px; height: 34px;
+    transform: translateX(-50%);
+    background: radial-gradient(ellipse at center, rgba(224,177,92,.4), transparent 70%);
+    filter: blur(4px);
+    animation: introFloorGlow 5s ease-in-out infinite;
+}
+.intro-ghost-wrap {
+    position: absolute;
+    left: 50%; top: 16px;
+    width: 104px; height: 150px;
+    transform: translateX(-50%);
+    animation: introGhostSway 6.5s ease-in-out infinite;
+}
+.intro-ghost-svg {
+    position: absolute;
+    left: 50%; top: 0;
+    width: 100px; height: 140px;
+    transform: translateX(-50%);
+    animation: introGhostPhase 6s ease-in-out infinite;
+}
+.intro-ember {
+    position: absolute;
+    width: 2px; height: 2px;
+    border-radius: 50%;
+    background: #e8c069;
+    animation: introSpark 2.6s ease-out infinite;
+}
+
+/* Panel IV — pickaxe intent */
+.intro-stone-block {
+    position: absolute;
+    height: 36px;
+    border: 1px solid;
+}
+.intro-mind-halo {
+    position: absolute;
+    left: 118px; top: 62px;
+    width: 60px; height: 60px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(224,177,92,.3), transparent 70%);
+    animation: introMindPulse 4s ease-in-out infinite;
+}
+.intro-mind-core {
+    position: absolute;
+    left: 118px; top: 62px;
+    width: 11px; height: 11px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, #ffe6a8 0%, #e0b15c 45%, transparent 72%);
+    box-shadow: 0 0 18px 5px rgba(224,177,92,.55);
+}
+.intro-tether {
+    position: absolute;
+    left: 118px; top: 62px;
+    width: 150px; height: 2px;
+    transform-origin: left center;
+    transform: rotate(2deg);
+    background: linear-gradient(90deg, rgba(224,177,92,.7), rgba(224,177,92,.15) 70%, transparent);
+    animation: introBeam 2.4s ease-in-out infinite;
+}
+.intro-pick-aura {
+    position: absolute;
+    left: 300px; top: 60px;
+    width: 98px; height: 88px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(ellipse at center, rgba(224,177,92,.34), transparent 68%);
+    animation: introAuraPulse 3.6s ease-in-out infinite;
+}
+.intro-pick-wrap {
+    position: absolute;
+    left: 266px; top: 21px;
+    width: 68px; height: 86px;
+    transform-origin: center;
+    animation: introPickFloat 3.8s ease-in-out infinite;
+    filter: drop-shadow(0 0 8px rgba(224,177,92,.5));
+}
+
+/* Awaken button */
+#intro-transition-continue {
+    margin-top: 34px;
+    font-family: 'Cinzel', 'Georgia', serif;
+    font-size: 15px;
+    letter-spacing: .34em;
+    text-indent: .34em;
+    color: #e3bd74;
+    background: rgba(20,15,9,.6);
+    border: 1px solid rgba(201,160,90,.55);
+    padding: 15px 52px;
+    cursor: pointer;
+    text-transform: uppercase;
+    opacity: 0;
+    transition: opacity 0.4s ease, background 0.15s, color 0.15s, border-color 0.15s;
+    animation: introBtnBreathe 4s ease-in-out infinite;
 }
 #intro-transition-continue.intro-btn-in {
     opacity: 1;
 }
 #intro-transition-continue:hover,
 #intro-transition-continue.intro-btn-pulse {
-    background: rgba(200,160,40,0.07);
-    border-color: var(--era-gold);
-    color: var(--era-gold);
-    box-shadow: 0 0 12px rgba(200,140,20,0.3);
+    background: rgba(40,30,16,.85);
+    color: #ffe6a8;
+    border-color: rgba(201,160,90,.9);
 }
 
 /* TRADE TAB */

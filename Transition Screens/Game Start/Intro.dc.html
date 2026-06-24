@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600&family=EB+Garamond:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0;padding:0;background:#080605;}
+  @keyframes pulseGlow{0%,100%{opacity:.55;transform:translate(-50%,-50%) scale(.92)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.12)}}
+  @keyframes twinkle{0%,100%{opacity:.12}50%{opacity:.8}}
+  @keyframes drip{0%{transform:translateY(-6px);opacity:0}15%{opacity:.9}80%{opacity:.9}100%{transform:translateY(58px);opacity:0}}
+  @keyframes seam{0%,100%{opacity:.4}50%{opacity:.95}}
+  @keyframes throneGlow{0%,100%{opacity:.45;filter:blur(6px)}50%{opacity:.9;filter:blur(9px)}}
+  @keyframes ghostPhase{0%{opacity:0;filter:blur(13px);transform:translate(-50%,16px)}28%{opacity:.92;filter:blur(2px);transform:translate(-50%,0)}74%{opacity:.92;filter:blur(2px);transform:translate(-50%,-4px)}100%{opacity:0;filter:blur(13px);transform:translate(-50%,-18px)}}
+  @keyframes ghostSway{0%,100%{transform:translateX(-4px) rotate(-2.5deg)}50%{transform:translateX(4px) rotate(2.5deg)}}
+  @keyframes floorGlow{0%,100%{opacity:.3}50%{opacity:.6}}
+  @keyframes stir{0%,100%{transform:rotate(-46deg)}50%{transform:rotate(-40deg)}}
+  @keyframes spark{0%{transform:translateY(0) scale(1);opacity:0}30%{opacity:.9}100%{transform:translateY(-22px) scale(.4);opacity:0}}
+  @keyframes btnBreathe{0%,100%{box-shadow:0 0 0 1px rgba(201,160,90,.45),0 0 22px rgba(201,160,90,.12)}50%{box-shadow:0 0 0 1px rgba(201,160,90,.8),0 0 34px rgba(201,160,90,.28)}}
+  @keyframes pickFloat{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-10px) rotate(5deg)}}
+  @keyframes auraPulse{0%,100%{opacity:.38;transform:translate(-50%,-50%) scale(.9)}50%{opacity:.85;transform:translate(-50%,-50%) scale(1.12)}}
+  @keyframes mindPulse{0%,100%{opacity:.6;transform:translate(-50%,-50%) scale(.82)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.18)}}
+  @keyframes beamFlicker{0%,100%{opacity:.22}50%{opacity:.7}}
+</style>
+</helmet>
+<div style="min-height:100vh;background:radial-gradient(120% 90% at 50% 0%,#15100a 0%,#0a0706 48%,#070504 100%);display:flex;flex-direction:column;align-items:center;padding:46px 24px 60px;box-sizing:border-box;font-family:'EB Garamond',serif;">
+
+  <div style="font-family:'Cinzel',serif;font-size:13px;letter-spacing:.42em;color:#7a5f33;text-transform:uppercase;margin-bottom:26px;text-indent:.42em;">The Age Begins</div>
+
+  <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;width:100%;max-width:968px;">
+
+    <!-- PANEL I -->
+    <div style="position:relative;height:362px;border:1px solid rgba(201,160,90,.42);background:radial-gradient(120% 120% at 50% 32%,#1a130b 0%,#0c0907 60%,#080605 100%);overflow:hidden;box-shadow:inset 0 0 60px rgba(0,0,0,.7);">
+      <div style="position:absolute;top:10px;left:13px;font-family:'Cinzel',serif;font-size:15px;letter-spacing:.1em;color:#c9a05a;opacity:.85;">I</div>
+      <div style="position:absolute;left:0;right:0;top:0;height:172px;">
+        <div style="position:absolute;left:50%;top:50%;width:120px;height:1px;background:linear-gradient(90deg,transparent,rgba(201,160,90,.32),transparent);transform:translate(-50%,-50%) rotate(0deg);"></div>
+        <div style="position:absolute;left:50%;top:50%;width:120px;height:1px;background:linear-gradient(90deg,transparent,rgba(201,160,90,.32),transparent);transform:translate(-50%,-50%) rotate(60deg);"></div>
+        <div style="position:absolute;left:50%;top:50%;width:120px;height:1px;background:linear-gradient(90deg,transparent,rgba(201,160,90,.32),transparent);transform:translate(-50%,-50%) rotate(120deg);"></div>
+        <div style="position:absolute;left:50%;top:50%;width:14px;height:14px;border-radius:50%;background:radial-gradient(circle,#ffe6a8 0%,#e0b15c 38%,rgba(201,160,90,.35) 62%,transparent 75%);box-shadow:0 0 26px 8px rgba(224,177,92,.4);animation:pulseGlow 4.5s ease-in-out infinite;"></div>
+        <span style="position:absolute;left:24%;top:30%;width:2px;height:2px;border-radius:50%;background:#d9b873;animation:twinkle 3.2s ease-in-out infinite;"></span>
+        <span style="position:absolute;left:74%;top:24%;width:2px;height:2px;border-radius:50%;background:#d9b873;animation:twinkle 4.1s ease-in-out .6s infinite;"></span>
+        <span style="position:absolute;left:66%;top:66%;width:2px;height:2px;border-radius:50%;background:#d9b873;animation:twinkle 3.6s ease-in-out 1.3s infinite;"></span>
+        <span style="position:absolute;left:30%;top:70%;width:2px;height:2px;border-radius:50%;background:#d9b873;animation:twinkle 4.4s ease-in-out .9s infinite;"></span>
+      </div>
+      <div style="position:absolute;left:0;right:0;bottom:0;height:210px;background:linear-gradient(180deg,transparent,#0a0706 42%);"></div>
+      <p style="position:absolute;left:20px;right:20px;bottom:18px;margin:0;font-variant:small-caps;font-size:15.5px;line-height:1.72;letter-spacing:.025em;color:#a9854e;text-wrap:pretty;">Before there was hunger, before there was purpose — there was only the dark. You did not arrive. You simply <em style="color:#e3bd74;">were</em>. A will without a body, a mind pressed between the stones of a world that had forgotten you were there.</p>
+    </div>
+
+    <!-- PANEL II -->
+    <div style="position:relative;height:362px;border:1px solid rgba(201,160,90,.42);background:radial-gradient(120% 120% at 50% 35%,#161009 0%,#0b0807 64%,#080605 100%);overflow:hidden;box-shadow:inset 0 0 60px rgba(0,0,0,.7);">
+      <div style="position:absolute;top:10px;left:13px;font-family:'Cinzel',serif;font-size:15px;letter-spacing:.1em;color:#c9a05a;opacity:.85;">II</div>
+      <div style="position:absolute;left:0;right:0;top:0;height:172px;background-color:#15100a;background-image:repeating-linear-gradient(0deg,rgba(0,0,0,.32) 0 1px,transparent 1px 40px),repeating-linear-gradient(90deg,rgba(0,0,0,.32) 0 1px,transparent 1px 64px);box-shadow:inset 0 0 50px rgba(0,0,0,.6);">
+        <div style="position:absolute;left:0;right:0;top:0;height:100%;background-image:repeating-linear-gradient(90deg,rgba(0,0,0,.32) 0 1px,transparent 1px 64px);background-position:32px 0;background-size:64px 80px;"></div>
+        <div style="position:absolute;left:0;right:0;top:80px;height:1px;background:rgba(0,0,0,.32);"></div>
+        <svg viewBox="0 0 460 172" preserveAspectRatio="xMidYMid slice" style="position:absolute;inset:0;width:100%;height:100%;overflow:visible;animation:seam 3.6s ease-in-out infinite;">
+          <polyline points="230,-6 224,22 244,44 232,70 252,96 238,124 256,150 248,178" fill="none" stroke="#e8c069" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round" style="filter:drop-shadow(0 0 6px rgba(224,177,92,.9));"></polyline>
+          <polyline points="230,-6 224,22 244,44 232,70 252,96 238,124 256,150 248,178" fill="none" stroke="#fff0c8" stroke-width=".9" stroke-linejoin="round" stroke-linecap="round"></polyline>
+          <polyline points="244,44 270,52 286,40" fill="none" stroke="#cf9f55" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round" style="filter:drop-shadow(0 0 4px rgba(224,177,92,.7));"></polyline>
+          <polyline points="238,124 212,132 198,148" fill="none" stroke="#cf9f55" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round" style="filter:drop-shadow(0 0 4px rgba(224,177,92,.7));"></polyline>
+          <polyline points="232,70 206,74" fill="none" stroke="#b88c47" stroke-width="1" stroke-linecap="round"></polyline>
+        </svg>
+      </div>
+      <div style="position:absolute;left:0;right:0;bottom:0;height:210px;background:linear-gradient(180deg,transparent,#0a0706 42%);"></div>
+      <p style="position:absolute;left:20px;right:20px;bottom:18px;margin:0;font-variant:small-caps;font-size:15.5px;line-height:1.72;letter-spacing:.025em;color:#a9854e;text-wrap:pretty;">Then — sensation. The weight of stone above. The slow drip of water somewhere far below. Something had changed in the world above, and the tremor of it reached you, faint as a whispered rumour. You were not summoned. But something had drawn <em style="color:#e3bd74;">near</em>.</p>
+    </div>
+
+    <!-- PANEL III -->
+    <div style="position:relative;height:362px;border:1px solid rgba(201,160,90,.42);background:radial-gradient(120% 120% at 50% 35%,#161009 0%,#0b0807 64%,#080605 100%);overflow:hidden;box-shadow:inset 0 0 60px rgba(0,0,0,.7);">
+      <div style="position:absolute;top:10px;left:13px;font-family:'Cinzel',serif;font-size:15px;letter-spacing:.1em;color:#c9a05a;opacity:.85;">III</div>
+      <div style="position:absolute;left:0;right:0;top:0;height:172px;background-color:#15100a;background-image:repeating-linear-gradient(0deg,rgba(0,0,0,.3) 0 1px,transparent 1px 40px),repeating-linear-gradient(90deg,rgba(0,0,0,.3) 0 1px,transparent 1px 64px);box-shadow:inset 0 0 50px rgba(0,0,0,.65);overflow:hidden;">
+        <!-- soft glow where it manifests -->
+        <div style="position:absolute;left:50%;bottom:6px;width:130px;height:34px;transform:translateX(-50%);background:radial-gradient(ellipse at center,rgba(224,177,92,.4),transparent 70%);filter:blur(4px);animation:floorGlow 5s ease-in-out infinite;"></div>
+        <!-- classic ghost, faceless, phasing in -->
+        <div style="position:absolute;left:50%;top:16px;width:104px;height:150px;transform:translateX(-50%);animation:ghostSway 6.5s ease-in-out infinite;">
+          <svg viewBox="0 0 100 140" style="position:absolute;left:50%;top:0;width:100px;height:140px;transform:translateX(-50%);overflow:visible;animation:ghostPhase 6s ease-in-out infinite;">
+            <defs>
+              <linearGradient id="ghostFill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#fff3d4" stop-opacity=".78"></stop>
+                <stop offset="55%" stop-color="#e6c98c" stop-opacity=".5"></stop>
+                <stop offset="100%" stop-color="#caa45c" stop-opacity=".16"></stop>
+              </linearGradient>
+            </defs>
+            <path d="M12,55 C12,30 30,11 50,11 C70,11 88,30 88,55 L88,112 Q80,124 72,112 Q64,100 56,112 Q48,124 40,112 Q32,100 24,112 Q16,124 12,112 Z"
+              fill="url(#ghostFill)" stroke="#fff0c8" stroke-width="1" stroke-opacity=".55"
+              style="filter:drop-shadow(0 0 16px rgba(224,177,92,.6));"></path>
+          </svg>
+        </div>
+        <span style="position:absolute;left:42%;top:40%;width:2px;height:2px;border-radius:50%;background:#e8c069;animation:spark 2.6s ease-out .4s infinite;"></span>
+        <span style="position:absolute;left:58%;top:50%;width:2px;height:2px;border-radius:50%;background:#e8c069;animation:spark 3s ease-out 1.4s infinite;"></span>
+      </div>
+      <div style="position:absolute;left:0;right:0;bottom:0;height:210px;background:linear-gradient(180deg,transparent,#0a0706 42%);"></div>
+      <p style="position:absolute;left:20px;right:20px;bottom:18px;margin:0;font-variant:small-caps;font-size:15.5px;line-height:1.72;letter-spacing:.025em;color:#a9854e;text-wrap:pretty;">These halls are yours by right of ruin. No deed records them. No king claims them. They were abandoned to silence, and silence answered to no one — until <em style="color:#e3bd74;">now</em>. A dungeon without a mind is merely a grave. You are the difference.</p>
+    </div>
+
+    <!-- PANEL IV -->
+    <div style="position:relative;height:362px;border:1px solid rgba(201,160,90,.42);background:radial-gradient(120% 120% at 50% 40%,#19120a 0%,#0b0807 64%,#080605 100%);overflow:hidden;box-shadow:inset 0 0 60px rgba(0,0,0,.7);">
+      <div style="position:absolute;top:10px;left:13px;font-family:'Cinzel',serif;font-size:15px;letter-spacing:.1em;color:#c9a05a;opacity:.85;">IV</div>
+      <div style="position:absolute;left:0;right:0;top:0;height:172px;overflow:hidden;">
+        <!-- rubble / stone floor -->
+        <div style="position:absolute;left:40px;top:126px;width:60px;height:36px;background:#1c150d;border:1px solid rgba(120,92,48,.4);"></div>
+        <div style="position:absolute;left:100px;top:126px;width:60px;height:36px;background:#16110a;border:1px solid rgba(120,92,48,.3);"></div>
+        <div style="position:absolute;left:300px;top:126px;width:60px;height:36px;background:#16110a;border:1px solid rgba(120,92,48,.3);"></div>
+        <div style="position:absolute;left:360px;top:126px;width:60px;height:36px;background:#1c150d;border:1px solid rgba(120,92,48,.4);"></div>
+        <div style="position:absolute;left:188px;top:120px;width:24px;height:14px;background:#2a1f12;transform:rotate(-12deg);"></div>
+        <div style="position:absolute;left:248px;top:124px;width:18px;height:12px;background:#241a0e;transform:rotate(8deg);"></div>
+
+        <!-- the will / mind: a glowing mote -->
+        <div style="position:absolute;left:118px;top:62px;width:60px;height:60px;border-radius:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(224,177,92,.3),transparent 70%);animation:mindPulse 4s ease-in-out infinite;"></div>
+        <div style="position:absolute;left:118px;top:62px;width:11px;height:11px;border-radius:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,#ffe6a8 0%,#e0b15c 45%,transparent 72%);box-shadow:0 0 18px 5px rgba(224,177,92,.55);"></div>
+
+        <!-- tether of intent: mote -> pick -->
+        <div style="position:absolute;left:118px;top:62px;width:150px;height:2px;transform-origin:left center;transform:rotate(2deg);background:linear-gradient(90deg,rgba(224,177,92,.7),rgba(224,177,92,.15) 70%,transparent);animation:beamFlicker 2.4s ease-in-out infinite;"></div>
+
+        <!-- aura around the pick -->
+        <div style="position:absolute;left:300px;top:60px;width:98px;height:88px;border-radius:50%;transform:translate(-50%,-50%);background:radial-gradient(ellipse at center,rgba(224,177,92,.34),transparent 68%);animation:auraPulse 3.6s ease-in-out infinite;"></div>
+
+        <!-- the pick, stirring with no hand -->
+        <div style="position:absolute;left:266px;top:21px;width:68px;height:86px;transform-origin:center;animation:pickFloat 3.8s ease-in-out infinite;filter:drop-shadow(0 0 8px rgba(224,177,92,.5));">
+          <svg viewBox="0 0 80 100" width="68" height="86" style="overflow:visible;">
+            <defs>
+              <linearGradient id="pkMetal" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#f4dc97"></stop>
+                <stop offset=".5" stop-color="#d8ab54"></stop>
+                <stop offset="1" stop-color="#9a7026"></stop>
+              </linearGradient>
+              <linearGradient id="pkWood" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#8a6a36"></stop>
+                <stop offset=".5" stop-color="#5a4324"></stop>
+                <stop offset="1" stop-color="#3c2c16"></stop>
+              </linearGradient>
+            </defs>
+            <rect x="36" y="30" width="8" height="64" rx="4" fill="url(#pkWood)" stroke="#2e2110" stroke-width=".8"></rect>
+            <path d="M8,46 Q40,4 72,46 Q40,26 8,46 Z" fill="url(#pkMetal)" stroke="#6e4f1c" stroke-width="1.3"></path>
+            <path d="M14,42 Q40,15 66,42" fill="none" stroke="#fff0c8" stroke-width="1.4" stroke-opacity=".7" stroke-linecap="round"></path>
+            <circle cx="40" cy="34" r="6" fill="url(#pkMetal)" stroke="#6e4f1c" stroke-width="1"></circle>
+          </svg>
+        </div>
+
+        <span style="position:absolute;left:296px;top:118px;width:3px;height:3px;border-radius:50%;background:#e8c069;animation:spark 2s ease-out .2s infinite;"></span>
+        <span style="position:absolute;left:312px;top:120px;width:2px;height:2px;border-radius:50%;background:#e8c069;animation:spark 2.4s ease-out 1s infinite;"></span>
+        <span style="position:absolute;left:282px;top:116px;width:2px;height:2px;border-radius:50%;background:#e8c069;animation:spark 2.2s ease-out 1.6s infinite;"></span>
+      </div>
+      <div style="position:absolute;left:0;right:0;bottom:0;height:210px;background:linear-gradient(180deg,transparent,#0a0706 42%);"></div>
+      <p style="position:absolute;left:20px;right:20px;bottom:18px;margin:0;font-variant:small-caps;font-size:15.5px;line-height:1.72;letter-spacing:.025em;color:#a9854e;text-wrap:pretty;">You reach — not with hands, but with <em style="color:#e3bd74;">intent</em>. The pick stirs. The stones remember what they once were: not a tomb, but a stronghold. Not an ending, but a beginning. Your first choice awaits. Make it count, Dungeon Mind. The age has only just begun.</p>
+    </div>
+
+  </div>
+
+  <button onClick="{{ onAwaken }}" style="margin-top:34px;font-family:'Cinzel',serif;font-size:15px;letter-spacing:.34em;text-indent:.34em;color:#e3bd74;background:rgba(20,15,9,.6);border:1px solid rgba(201,160,90,.55);padding:15px 52px;cursor:pointer;text-transform:uppercase;animation:btnBreathe 4s ease-in-out infinite;" style-hover="background:rgba(40,30,16,.85);color:#ffe6a8;">Awaken</button>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      onAwaken: () => {
+        const root = document.querySelector('x-dc') || document.body;
+        const ev = new CustomEvent('intro-awaken', { bubbles: true });
+        root.dispatchEvent(ev);
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>
