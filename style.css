@@ -57,13 +57,18 @@ html, body {
     pointer-events: none;
 }
 
-/* WIKI BUTTON (inline in the status bar, pinned right, opens wiki.html) */
-.wiki-btn {
+/* WIKI / MAIN MENU BUTTONS (pinned right in the status bar) */
+.statusbar-right {
     position: absolute;
     right: 16px;
     top: 50%;
     transform: translateY(-50%);
     z-index: 200;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.wiki-btn {
     padding: 3px 10px;
     font-size: 12px;
     font-weight: bold;
