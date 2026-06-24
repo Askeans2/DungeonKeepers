@@ -170,9 +170,10 @@
             <h2>Biomes</h2>
             <p class="info-text">
                 A biome is the terrain a dungeon is founded in, set at the start of each run. Every
-                biome grants a package of starting resources and a set of persistent run modifiers,
-                and it shapes how well each creature type performs for the rest of the run. The 25
-                biomes are listed below, grouped into Natural, D&amp;D Lore, and Magical origins.
+                biome grants a package of starting resources and shapes how well each creature type
+                performs for the rest of the run. Modifiers are randomly assigned at the time of
+                biome selection and vary each run. The 25 biomes are listed below, grouped into
+                Natural, D&amp;D Lore, and Magical origins.
             </p>
 
             <!-- SUITABILITY SCALE -->
@@ -215,7 +216,6 @@
                     <div class="biome-header"><span class="biome-name">Verdant Forest</span><span class="biome-type biome-natural">Natural</span></div>
                     <p class="biome-desc">Dense canopy conceals your dungeon amid ancient trees. Food and wood are plentiful, but predators stalk the undergrowth.</p>
                     <div class="biome-start"><b>Start:</b> +30 Wood · +20 Food</div>
-                    <div class="biome-mods"><span class="biome-mod mod-pos">Fertile Soil</span><span class="biome-mod mod-pos">Ancient Grove</span><span class="biome-mod mod-pos">Abundant Wildlife</span><span class="biome-mod mod-neg">Natural Predators</span></div>
                     <div class="biome-affinity"><span class="biome-affinity-label">Best:</span><span class="suit-chip suit-excellent">Lycanthrope</span><span class="suit-chip suit-excellent">Flora</span><span class="suit-chip suit-excellent">Goblinoid</span><span class="biome-affinity-label" style="margin-left:4px">Hard:</span><span class="suit-chip suit-hostile">Aquatic</span><span class="suit-chip suit-hostile">Fiend</span></div>
                 </div>
 
@@ -223,7 +223,6 @@
                     <div class="biome-header"><span class="biome-name">Mountain Stronghold</span><span class="biome-type biome-natural">Natural</span></div>
                     <p class="biome-desc">Rocky heights above the treeline; your dungeon is hewn from the mountain itself. Stone is everywhere; warmth is not.</p>
                     <div class="biome-start"><b>Start:</b> +40 Stone · +15 Wood</div>
-                    <div class="biome-mods"><span class="biome-mod mod-pos">Rich Ore Veins</span><span class="biome-mod mod-pos">Exposed Rockface</span><span class="biome-mod mod-pos">Solid Foundation</span><span class="biome-mod mod-neg">Harsh Winters</span></div>
                     <div class="biome-affinity"><span class="biome-affinity-label">Best:</span><span class="suit-chip suit-excellent">Giant</span><span class="suit-chip suit-excellent">Draconic</span><span class="suit-chip suit-excellent">Monstrous</span><span class="biome-affinity-label" style="margin-left:4px">Hard:</span><span class="suit-chip suit-hostile">Aquatic</span><span class="suit-chip suit-hostile">Flora</span></div>
                 </div>
 
@@ -231,7 +230,6 @@
                     <div class="biome-header"><span class="biome-name">Coastal Bluffs</span><span class="biome-type biome-natural">Natural</span></div>
                     <p class="biome-desc">Sea-carved cliffs hold your dungeon above crashing waves. Fish and game are plentiful, but sea raiders take notice.</p>
                     <div class="biome-start"><b>Start:</b> +25 Food · +20 Stone</div>
-                    <div class="biome-mods"><span class="biome-mod mod-pos">Abundant Wildlife</span><span class="biome-mod mod-pos">Fertile Soil</span><span class="biome-mod mod-neg">Contested Territory</span></div>
                     <div class="biome-affinity"><span class="biome-affinity-label">Best:</span><span class="suit-chip suit-excellent">Aquatic</span><span class="suit-chip suit-excellent">Humanoid</span><span class="biome-affinity-label" style="margin-left:4px">Hard:</span><span class="suit-chip suit-hostile">Undead</span><span class="suit-chip suit-hostile">Fiend</span></div>
                 </div>
 
@@ -239,7 +237,6 @@
                     <div class="biome-header"><span class="biome-name">Desert Wastes</span><span class="biome-type biome-natural">Natural</span></div>
                     <p class="biome-desc">Blazing sun and endless sand hide mineral wealth beneath. Survival is the first and constant challenge of this biome.</p>
                     <div class="biome-start"><b>Start:</b> +30 Stone</div>
-                    <div class="biome-mods"><span class="biome-mod mod-pos">Rich Ore Veins</span><span class="biome-mod mod-neg">Barren Soil</span><span class="biome-mod mod-neg">Salt Flats</span><span class="biome-mod mod-neg">Oppressive Heat</span></div>
                     <div class="biome-affinity"><span class="biome-affinity-label">Best:</span><span class="suit-chip suit-excellent">Draconic</span><span class="suit-chip suit-excellent">Monstrous</span><span class="biome-affinity-label" style="margin-left:4px">Hard:</span><span class="suit-chip suit-hostile">Aquatic</span><span class="suit-chip suit-hostile">Flora</span><span class="suit-chip suit-hostile">Fey</span></div>
                 </div>
 
@@ -247,7 +244,6 @@
                     <div class="biome-header"><span class="biome-name">Frozen Tundra</span><span class="biome-type biome-natural">Natural</span></div>
                     <p class="biome-desc">Permafrost and silence; the cold kills slowly and the ground gives nothing. Only the strongest survive here.</p>
                     <div class="biome-start"><b>Start:</b> +10 Wood</div>
-                    <div class="biome-mods"><span class="biome-mod mod-pos">Isolation Instinct</span><span class="biome-mod mod-neg">Harsh Winters</span><span class="biome-mod mod-neg">Barren Soil</span><span class="biome-mod mod-neg">Crushing Cold</span><span class="biome-mod mod-neg">Harsh Survival</span></div>
                     <div class="biome-affinity"><span class="biome-affinity-label">Best:</span><span class="suit-chip suit-excellent">Giant (Frost)</span><span class="suit-chip suit-excellent">Undead</span><span class="biome-affinity-label" style="margin-left:4px">Hard:</span><span class="suit-chip suit-hostile">Draconic</span><span class="suit-chip suit-hostile">Flora</span><span class="suit-chip suit-hostile">Aquatic</span></div>
                 </div>
 
@@ -255,7 +251,6 @@
                     <div class="biome-header"><span class="biome-name">Fetid Swamp</span><span class="biome-type biome-natural">Natural</span></div>
                     <p class="biome-desc">Dark water and tangled roots; disease festers here, but life erupts from the decay. Many things call this home.</p>
                     <div class="biome-start"><b>Start:</b> +20 Food</div>
-                    <div class="biome-mods"><span class="biome-mod mod-pos">Abundant Wildlife</span><span class="biome-mod mod-pos">Flooded Tunnels</span><span class="biome-mod mod-neg">Infested Land</span><span class="biome-mod mod-neg">Disease Vectors</span></div>
                     <div class="biome-affinity"><span class="biome-affinity-label">Best:</span><span class="suit-chip suit-excellent">Aquatic</span><span class="suit-chip suit-excellent">Flora</span><span class="suit-chip suit-excellent">Ooze</span><span class="biome-affinity-label" style="margin-left:4px">Hard:</span><span class="suit-chip suit-hostile">Construct</span><span class="suit-chip suit-hostile">Giant</span></div>
                 </div>
 
@@ -263,7 +258,6 @@
                     <div class="biome-header"><span class="biome-name">Rolling Grasslands</span><span class="biome-type biome-natural">Natural</span></div>
                     <p class="biome-desc">Open plains stretch to the horizon; your dungeon hides in a hillside. Easy expansion, obvious target.</p>
                     <div class="biome-start"><b>Start:</b> +30 Food · +15 Wood</div>
-                    <div class="biome-mods"><span class="biome-mod mod-pos">Fertile Soil</span><span class="biome-mod mod-pos">Warm Climate</span><span class="biome-mod mod-neg">Contested Territory</span><span class="biome-mod mod-neg">Inviting Target</span></div>
                     <div class="biome-affinity"><span class="biome-affinity-label">Best:</span><span class="suit-chip suit-excellent">Humanoid</span><span class="suit-chip suit-excellent">Lycanthrope</span><span class="suit-chip suit-excellent">Giant</span><span class="biome-affinity-label" style="margin-left:4px">Hard:</span><span class="suit-chip suit-hostile">Aquatic</span><span class="suit-chip suit-hostile">Aberration</span></div>
                 </div>
 
@@ -271,7 +265,6 @@
                     <div class="biome-header"><span class="biome-name">Volcanic Caldera</span><span class="biome-type biome-natural">Natural</span></div>
                     <p class="biome-desc">Heat, ash, and the smell of sulfur. The earth bleeds stone and opportunity; structural stability is not guaranteed.</p>
                     <div class="biome-start"><b>Start:</b> +50 Stone</div>
-                    <div class="biome-mods"><span class="biome-mod mod-pos">Rich Ore Veins</span><span class="biome-mod mod-pos">Volcanic Ash</span><span class="biome-mod mod-neg">Oppressive Heat</span><span class="biome-mod mod-neg">Unstable Ground</span></div>
                     <div class="biome-affinity"><span class="biome-affinity-label">Best:</span><span class="suit-chip suit-excellent">Draconic</span><span class="suit-chip suit-excellent">Fiend</span><span class="suit-chip suit-excellent">Construct</span><span class="biome-affinity-label" style="margin-left:4px">Hard:</span><span class="suit-chip suit-hostile">Aquatic</span><span class="suit-chip suit-hostile">Flora</span><span class="suit-chip suit-hostile">Fey</span></div>
                 </div>
 
@@ -279,7 +272,6 @@
                     <div class="biome-header"><span class="biome-name">Deep Caverns</span><span class="biome-type biome-natural">Natural</span></div>
                     <p class="biome-desc">A natural underground network; your dungeon expands into pre-existing tunnels. Darkness is the price of depth.</p>
                     <div class="biome-start"><b>Start:</b> +40 Stone · 1 Free Hovel</div>
-                    <div class="biome-mods"><span class="biome-mod mod-pos">Cavern Network</span><span class="biome-mod mod-pos">Mineral Deposits</span><span class="biome-mod mod-pos">Underground Access</span><span class="biome-mod mod-neg">Perpetual Darkness</span></div>
                     <div class="biome-affinity"><span class="biome-affinity-label">Best:</span><span class="suit-chip suit-excellent">Goblinoid</span><span class="suit-chip suit-excellent">Aberration</span><span class="suit-chip suit-excellent">Ooze</span><span class="biome-affinity-label" style="margin-left:4px">Hard:</span><span class="suit-chip suit-hostile">Fey</span><span class="suit-chip suit-hostile">Giant</span></div>
                 </div>
 
@@ -287,7 +279,6 @@
                     <div class="biome-header"><span class="biome-name">Jungle Canopy</span><span class="biome-type biome-natural">Natural</span></div>
                     <p class="biome-desc">Stifling heat and impossible density; food is everywhere, and so are things that want to eat you.</p>
                     <div class="biome-start"><b>Start:</b> +40 Food · +20 Wood</div>
-                    <div class="biome-mods"><span class="biome-mod mod-pos">Fertile Soil</span><span class="biome-mod mod-pos">Ancient Grove</span><span class="biome-mod mod-pos">Abundant Wildlife</span><span class="biome-mod mod-neg">Disease Vectors</span><span class="biome-mod mod-neg">Hostile Flora</span></div>
                     <div class="biome-affinity"><span class="biome-affinity-label">Best:</span><span class="suit-chip suit-excellent">Flora</span><span class="suit-chip suit-excellent">Fey</span><span class="suit-chip suit-excellent">Humanoid</span><span class="biome-affinity-label" style="margin-left:4px">Hard:</span><span class="suit-chip suit-hostile">Undead</span><span class="suit-chip suit-hostile">Giant</span><span class="suit-chip suit-hostile">Construct</span></div>
                 </div>
 
@@ -295,7 +286,6 @@
                     <div class="biome-header"><span class="biome-name">Arctic Glacier</span><span class="biome-type biome-natural">Natural</span></div>
                     <p class="biome-desc">A frozen expanse carved by time. Isolation is both your shield and your prison; the cold never relents.</p>
                     <div class="biome-start"><b>Start:</b> +20 Stone</div>
-                    <div class="biome-mods"><span class="biome-mod mod-pos">Isolation Instinct</span><span class="biome-mod mod-pos">Hidden Refuge</span><span class="biome-mod mod-neg">Harsh Winters</span><span class="biome-mod mod-neg">Barren Soil</span><span class="biome-mod mod-neg">Crushing Cold</span></div>
                     <div class="biome-affinity"><span class="biome-affinity-label">Best:</span><span class="suit-chip suit-excellent">Giant (Frost)</span><span class="biome-affinity-label" style="margin-left:4px">Hard:</span><span class="suit-chip suit-hostile">Draconic</span><span class="suit-chip suit-hostile">Flora</span><span class="suit-chip suit-hostile">Fey</span><span class="suit-chip suit-hostile">Aquatic</span></div>
                 </div>
 
@@ -303,7 +293,6 @@
                     <div class="biome-header"><span class="biome-name">Sunken Ruins</span><span class="biome-type biome-natural">Natural</span></div>
                     <p class="biome-desc">A half-drowned ancient civilization; your dungeon inhabits crumbling walls ankle-deep in water and mystery.</p>
                     <div class="biome-start"><b>Start:</b> +30 Food · 1 Free Storage</div>
-                    <div class="biome-mods"><span class="biome-mod mod-pos">Ancient Foundations</span><span class="biome-mod mod-pos">Arcane Residue</span><span class="biome-mod mod-neg">Flooded Tunnels</span><span class="biome-mod mod-neg">Unstable Ground</span></div>
                     <div class="biome-affinity"><span class="biome-affinity-label">Best:</span><span class="suit-chip suit-excellent">Aquatic</span><span class="suit-chip suit-excellent">Undead</span><span class="biome-affinity-label" style="margin-left:4px">Hard:</span><span class="suit-chip suit-hostile">Construct</span><span class="suit-chip suit-hostile">Giant</span></div>
                 </div>
 
@@ -311,7 +300,6 @@
                     <div class="biome-header"><span class="biome-name">Badlands</span><span class="biome-type biome-natural">Natural</span></div>
                     <p class="biome-desc">Eroded rock formations and choking dust — defensible terrain if you can survive on what little the land provides.</p>
                     <div class="biome-start"><b>Start:</b> +25 Stone · +10 Wood</div>
-                    <div class="biome-mods"><span class="biome-mod mod-pos">Exposed Rockface</span><span class="biome-mod mod-pos">Defensive Terrain</span><span class="biome-mod mod-neg">Barren Soil</span><span class="biome-mod mod-neg">Inviting Target</span></div>
                     <div class="biome-affinity"><span class="biome-affinity-label">Best:</span><span class="suit-chip suit-excellent">Monstrous</span><span class="suit-chip suit-excellent">Goblinoid</span><span class="suit-chip suit-excellent">Draconic</span><span class="biome-affinity-label" style="margin-left:4px">Hard:</span><span class="suit-chip suit-hostile">Aquatic</span><span class="suit-chip suit-hostile">Flora</span><span class="suit-chip suit-hostile">Fey</span></div>
                 </div>
 
@@ -321,7 +309,6 @@
                     <div class="biome-header"><span class="biome-name">Underdark Depths</span><span class="biome-type biome-dnd">D&amp;D</span></div>
                     <p class="biome-desc">Far below any sunlit surface, in the realm of dark elves and stranger things. Rich beyond measure; strange beyond reckoning.</p>
                     <div class="biome-start"><b>Start:</b> +45 Stone · +15 Food (fungi)</div>
-                    <div class="biome-mods"><span class="biome-mod mod-pos">Mineral Deposits</span><span class="biome-mod mod-pos">Fungal Bloom</span><span class="biome-mod mod-pos">Cavern Network</span><span class="biome-mod mod-pos">Underground Access</span><span class="biome-mod mod-neg">Perpetual Darkness</span></div>
                     <div class="biome-affinity"><span class="biome-affinity-label">Best:</span><span class="suit-chip suit-excellent">Aberration</span><span class="suit-chip suit-excellent">Goblinoid</span><span class="suit-chip suit-excellent">Ooze</span><span class="biome-affinity-label" style="margin-left:4px">Hard:</span><span class="suit-chip suit-hostile">Giant</span><span class="suit-chip suit-hostile">Humanoid</span><span class="suit-chip suit-hostile">Fey</span></div>
                 </div>
 
@@ -329,7 +316,6 @@
                     <div class="biome-header"><span class="biome-name">Ancient Battlefield</span><span class="biome-type biome-dnd">D&amp;D</span></div>
                     <p class="biome-desc">The ground still remembers the war. Bones outnumber stones; residual magic pools in craters and corroded armor.</p>
                     <div class="biome-start"><b>Start:</b> +20 Food · +20 Wood · +20 Stone</div>
-                    <div class="biome-mods"><span class="biome-mod mod-pos">Battleground Residue</span><span class="biome-mod mod-pos">Ancient Foundations</span><span class="biome-mod mod-neg">Contested Territory</span><span class="biome-mod mod-neg">Natural Predators</span></div>
                     <div class="biome-affinity"><span class="biome-affinity-label">Best:</span><span class="suit-chip suit-excellent">Undead</span><span class="suit-chip suit-excellent">Monstrous</span><span class="suit-chip suit-excellent">Humanoid</span><span class="biome-affinity-label" style="margin-left:4px">Hard:</span><span class="suit-chip suit-hostile">Fey</span><span class="suit-chip suit-hostile">Flora</span></div>
                 </div>
 
@@ -337,7 +323,6 @@
                     <div class="biome-header"><span class="biome-name">Haunted Moor</span><span class="biome-type biome-dnd">D&amp;D</span></div>
                     <p class="biome-desc">Fog rolls in with the dead. The moor is alive with restless spirits and the slow surrender of all living things.</p>
                     <div class="biome-start"><b>Start:</b> +20 Food · +15 Stone</div>
-                    <div class="biome-mods"><span class="biome-mod mod-pos">Arcane Residue</span><span class="biome-mod mod-neg">Disease Vectors</span><span class="biome-mod mod-neg">Cursed Ground</span><span class="biome-mod mod-neg">Natural Predators</span><span class="biome-mod mod-neg">Plague Risk</span></div>
                     <div class="biome-affinity"><span class="biome-affinity-label">Best:</span><span class="suit-chip suit-excellent">Undead</span><span class="suit-chip suit-excellent">Fiend</span><span class="biome-affinity-label" style="margin-left:4px">Hard:</span><span class="suit-chip suit-hostile">Fey</span><span class="suit-chip suit-hostile">Flora</span><span class="suit-chip suit-hostile">Construct</span></div>
                 </div>
 
@@ -345,7 +330,6 @@
                     <div class="biome-header"><span class="biome-name">Abyssal Rift</span><span class="biome-type biome-dnd">D&amp;D</span></div>
                     <p class="biome-desc">A crack in the mortal plane bleeds Abyss energy constantly. Demons trickle through; power flows in both directions.</p>
                     <div class="biome-start"><b>Start:</b> +30 Stone</div>
-                    <div class="biome-mods"><span class="biome-mod mod-pos">Planar Tear</span><span class="biome-mod mod-pos">Forbidden Lore</span><span class="biome-mod mod-neg">Toxic Atmosphere</span><span class="biome-mod mod-neg">Planar Pressure</span><span class="biome-mod mod-neg">Unstable Plane</span></div>
                     <div class="biome-affinity"><span class="biome-affinity-label">Best:</span><span class="suit-chip suit-excellent">Fiend</span><span class="suit-chip suit-excellent">Aberration</span><span class="biome-affinity-label" style="margin-left:4px">Hard:</span><span class="suit-chip suit-hostile">Humanoid</span><span class="suit-chip suit-hostile">Fey</span><span class="suit-chip suit-hostile">Flora</span><span class="suit-chip suit-hostile">Construct</span></div>
                 </div>
 
@@ -353,7 +337,6 @@
                     <div class="biome-header"><span class="biome-name">Dragonspine Ridge</span><span class="biome-type biome-dnd">D&amp;D</span></div>
                     <p class="biome-desc">Scorched peaks where ancient dragons once nested. Their power lingers in the stone and sky in equal measure.</p>
                     <div class="biome-start"><b>Start:</b> +35 Stone · +15 Food</div>
-                    <div class="biome-mods"><span class="biome-mod mod-pos">Rich Ore Veins</span><span class="biome-mod mod-pos">Fearsome Reputation</span><span class="biome-mod mod-pos">Warlord's Domain</span><span class="biome-mod mod-neg">Oppressive Heat</span></div>
                     <div class="biome-affinity"><span class="biome-affinity-label">Best:</span><span class="suit-chip suit-excellent">Draconic</span><span class="suit-chip suit-excellent">Monstrous</span><span class="biome-affinity-label" style="margin-left:4px">Hard:</span><span class="suit-chip suit-hostile">Aquatic</span><span class="suit-chip suit-hostile">Flora</span><span class="suit-chip suit-hostile">Fey</span></div>
                 </div>
 
@@ -361,7 +344,6 @@
                     <div class="biome-header"><span class="biome-name">Giant's Graveyard</span><span class="biome-type biome-dnd">D&amp;D</span></div>
                     <p class="biome-desc">Colossal bones provide shelter and raw material; the lingering power of titans seeps into your dungeon's foundations.</p>
                     <div class="biome-start"><b>Start:</b> +60 Stone</div>
-                    <div class="biome-mods"><span class="biome-mod mod-pos">Mineral Deposits</span><span class="biome-mod mod-pos">Solid Foundation</span><span class="biome-mod mod-pos">Ancestral Home</span><span class="biome-mod mod-pos">Pack Mentality</span></div>
                     <div class="biome-affinity"><span class="biome-affinity-label">Best:</span><span class="suit-chip suit-excellent">Giant</span><span class="suit-chip suit-excellent">Construct</span><span class="biome-affinity-label" style="margin-left:4px">Hard:</span><span class="suit-chip suit-hostile">Fey</span><span class="suit-chip suit-hostile">Aquatic</span><span class="suit-chip suit-hostile">Flora</span></div>
                 </div>
 
@@ -371,7 +353,6 @@
                     <div class="biome-header"><span class="biome-name">Shadowfell Crossing</span><span class="biome-type biome-magical">Magical</span></div>
                     <p class="biome-desc">The boundary between worlds is paper-thin. The dead walk freely, the light never fully arrives, and dark knowledge seeps through.</p>
                     <div class="biome-start"><b>Start:</b> +10 Food · +10 Wood · +10 Stone</div>
-                    <div class="biome-mods"><span class="biome-mod mod-pos">Arcane Residue</span><span class="biome-mod mod-pos">Forbidden Lore</span><span class="biome-mod mod-pos">Planar Alignment</span><span class="biome-mod mod-neg">Perpetual Darkness</span><span class="biome-mod mod-neg">Cursed Ground</span></div>
                     <div class="biome-affinity"><span class="biome-affinity-label">Best:</span><span class="suit-chip suit-excellent">Undead</span><span class="suit-chip suit-excellent">Fiend</span><span class="biome-affinity-label" style="margin-left:4px">Hard:</span><span class="suit-chip suit-hostile">Fey</span><span class="suit-chip suit-hostile">Humanoid</span><span class="suit-chip suit-hostile">Flora</span></div>
                 </div>
 
@@ -379,7 +360,6 @@
                     <div class="biome-header"><span class="biome-name">Feywild Glade</span><span class="biome-type biome-magical">Magical</span></div>
                     <p class="biome-desc">The Feywild bleeds through in flashes of impossible color. Time is unreliable; life explodes everywhere; magic is uncontrolled.</p>
                     <div class="biome-start"><b>Start:</b> +30 Food · +20 Wood</div>
-                    <div class="biome-mods"><span class="biome-mod mod-pos">Fertile Soil</span><span class="biome-mod mod-pos">Warm Climate</span><span class="biome-mod mod-pos">Rapid Breeding</span><span class="biome-mod mod-neg">Wild Magic Zone</span><span class="biome-mod mod-neg">Binding Contract</span></div>
                     <div class="biome-affinity"><span class="biome-affinity-label">Best:</span><span class="suit-chip suit-excellent">Fey</span><span class="suit-chip suit-excellent">Flora</span><span class="biome-affinity-label" style="margin-left:4px">Hard:</span><span class="suit-chip suit-hostile">Undead</span><span class="suit-chip suit-hostile">Fiend</span><span class="suit-chip suit-hostile">Construct</span></div>
                 </div>
 
@@ -387,7 +367,6 @@
                     <div class="biome-header"><span class="biome-name">Arcane Nexus</span><span class="biome-type biome-magical">Magical</span></div>
                     <p class="biome-desc">Ley lines converge in a web of invisible power. Magic saturates the very stone; knowledge comes easily, caution less so.</p>
                     <div class="biome-start"><b>Start:</b> +25 Food · +10 Stone</div>
-                    <div class="biome-mods"><span class="biome-mod mod-pos">Ley Line Nexus</span><span class="biome-mod mod-pos">Arcane Amplification</span><span class="biome-mod mod-pos">Resonant Ley Lines</span><span class="biome-mod mod-neg">Wild Magic Zone</span></div>
                     <div class="biome-affinity"><span class="biome-affinity-label">Best:</span><span class="suit-chip suit-excellent">Aberration</span><span class="suit-chip suit-excellent">Construct</span><span class="suit-chip suit-excellent">Humanoid</span><span class="biome-affinity-label" style="margin-left:4px">Hard:</span><span class="suit-chip suit-hostile">Goblinoid</span><span class="suit-chip suit-hostile">Monstrous</span></div>
                 </div>
 
@@ -395,7 +374,6 @@
                     <div class="biome-header"><span class="biome-name">Blighted Wastes</span><span class="biome-type biome-magical">Magical</span></div>
                     <p class="biome-desc">A cursed land where life struggles and death triumphs. Dangerous for the living; a paradise for those beyond it.</p>
                     <div class="biome-start"><b>Start:</b> +10 Stone</div>
-                    <div class="biome-mods"><span class="biome-mod mod-pos">Forbidden Lore</span><span class="biome-mod mod-neg">Barren Soil</span><span class="biome-mod mod-neg">Cursed Ground</span><span class="biome-mod mod-neg">Toxic Atmosphere</span><span class="biome-mod mod-neg">Blighted Air</span><span class="biome-mod mod-neg">Disease Vectors</span></div>
                     <div class="biome-affinity"><span class="biome-affinity-label">Best:</span><span class="suit-chip suit-excellent">Undead</span><span class="suit-chip suit-excellent">Fiend</span><span class="biome-affinity-label" style="margin-left:4px">Hard:</span><span class="suit-chip suit-hostile">Flora</span><span class="suit-chip suit-hostile">Fey</span><span class="suit-chip suit-hostile">Humanoid</span><span class="suit-chip suit-hostile">Aquatic</span></div>
                 </div>
 
@@ -403,7 +381,6 @@
                     <div class="biome-header"><span class="biome-name">Elemental Confluence</span><span class="biome-type biome-magical">Magical</span></div>
                     <p class="biome-desc">All four elements war constantly. Chaotic and powerful — nothing is predictable, everything is possible here.</p>
                     <div class="biome-start"><b>Start:</b> +20 Food · +20 Wood · +20 Stone</div>
-                    <div class="biome-mods"><span class="biome-mod mod-pos">Arcane Residue</span><span class="biome-mod mod-pos">Abundant Prey</span><span class="biome-mod mod-neg">Unstable Ground</span><span class="biome-mod mod-neg">Geological Instability</span><span class="biome-mod mod-neg">Wild Magic Zone</span></div>
                     <div class="biome-affinity"><span class="biome-affinity-label">Best:</span><span class="suit-chip suit-excellent">Ooze/Elemental</span><span class="suit-chip suit-excellent">Draconic</span><span class="suit-chip suit-excellent">Aberration</span><span class="biome-affinity-label" style="margin-left:4px">Hard:</span><span class="suit-chip suit-hostile">Lycanthrope</span><span class="suit-chip suit-hostile">Flora</span><span class="suit-chip suit-hostile">Humanoid</span></div>
                 </div>
 
@@ -411,7 +388,6 @@
                     <div class="biome-header"><span class="biome-name">Celestial Foothold</span><span class="biome-type biome-magical">Magical</span></div>
                     <p class="biome-desc">Where divine light once burned, creation flourishes. The easiest start — for those the land deems worthy. Darkness is repelled.</p>
                     <div class="biome-start"><b>Start:</b> +25 Food · +25 Wood</div>
-                    <div class="biome-mods"><span class="biome-mod mod-pos">Warm Climate</span><span class="biome-mod mod-pos">Sacred Ground</span><span class="biome-mod mod-pos">Blessed Ground</span><span class="biome-mod mod-pos">Hidden Refuge</span><span class="biome-mod mod-pos">Unyielding</span></div>
                     <div class="biome-affinity"><span class="biome-affinity-label">Best:</span><span class="suit-chip suit-excellent">Humanoid</span><span class="suit-chip suit-excellent">Fey</span><span class="suit-chip suit-excellent">Flora</span><span class="biome-affinity-label" style="margin-left:4px">Hard:</span><span class="suit-chip suit-hostile">Undead</span><span class="suit-chip suit-hostile">Fiend</span><span class="suit-chip suit-hostile">Aberration</span></div>
                 </div>
 
@@ -1514,6 +1490,26 @@
         <!-- CHANGELOG -->
         <section id="wiki-changelog" class="wiki-section wiki-changelog" style="display:none">
             <h2>Changelog</h2>
+
+            <div class="biome-card">
+                <div><span class="cl-ver">v0.60.2</span><span class="cl-date">2026-06-24</span></div>
+                <p class="biome-desc">Fixed a bug where the era transition panel III always showed the generic Humanoid silhouette for any creature without its own dedicated artwork. The type-based fallback (e.g. Goblinoid, Ooze, Elemental) was dead code due to a faulty <code>window.RACE_DATA</code> guard — now all creatures correctly fall back to their type's silhouette.</p>
+            </div>
+
+            <div class="biome-card">
+                <div><span class="cl-ver">v0.60.1</span><span class="cl-date">2026-06-24</span></div>
+                <p class="biome-desc">Capped all "+% all production" race modifiers at +2% (down from values as high as +15%). Removed duplicate modifier entries — races that had a standalone "+% all production" mod with no other effect now show that bonus silently, keeping the modifier list clean and unique.</p>
+            </div>
+
+            <div class="biome-card">
+                <div><span class="cl-ver">v0.60.0</span><span class="cl-date">2026-06-24</span></div>
+                <p class="biome-desc">Added 10 new races to bring all types up to at least 6 options: Barghest (Goblinoid), Oblex (Ooze), Magmin and Galeb Duhr (Elemental), Clay Golem, Flesh Golem, and Clockwork Horror (Construct), Weretiger (Lycanthrope), and Sea Hag and Locathah (Aquatic). Each new race has unique flavor, effects, and modifiers.</p>
+            </div>
+
+            <div class="biome-card">
+                <div><span class="cl-ver">v0.59.5</span><span class="cl-date">2026-06-24</span></div>
+                <p class="biome-desc">Removed hardcoded biome modifiers from the wiki Biomes page. Modifiers are randomly assigned at biome selection and vary each run, so listing them statically was misleading.</p>
+            </div>
 
             <div class="biome-card">
                 <div><span class="cl-ver">v0.59.4</span><span class="cl-date">2026-06-24</span></div>
