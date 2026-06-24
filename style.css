@@ -154,6 +154,17 @@ html, body {
     color: #fff;
     box-shadow: 0 0 0 1px var(--accent);
 }
+.wiki-nav-sub {
+    margin-left: 14px;
+    font-size: 12px;
+    padding: 7px 10px 7px 12px;
+    margin-bottom: 7px;
+    opacity: 0.82;
+    border-style: dashed;
+}
+.wiki-nav-sub.active {
+    opacity: 1;
+}
 .wiki-content {
     flex: 1;
     min-width: 0;
@@ -1535,6 +1546,91 @@ kbd {
 .biome-hard         { color: #c84040; }
 .biome-hard::before { content: "▼ "; }
 
+/* ── CREATURE SEARCH ─────────────────────────────────────────────────────────── */
+
+.creature-search-wrap {
+    margin-bottom: 18px;
+}
+.creature-search-box {
+    position: relative;
+    display: inline-block;
+}
+#creature-search-input {
+    width: 280px;
+    padding: 7px 12px;
+    background: #1a2020;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    color: var(--text);
+    font-size: 13px;
+    font-family: Lato, sans-serif;
+    outline: none;
+    transition: border-color 0.15s;
+}
+#creature-search-input:focus {
+    border-color: var(--accent);
+}
+.creature-ac-list {
+    position: absolute;
+    top: calc(100% + 3px);
+    left: 0;
+    width: 100%;
+    background: #1a2020;
+    border: 1px solid var(--accent);
+    border-radius: 5px;
+    list-style: none;
+    margin: 0;
+    padding: 4px 0;
+    z-index: 50;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+    max-height: 240px;
+    overflow-y: auto;
+}
+.creature-ac-list li {
+    padding: 6px 12px;
+    font-size: 13px;
+    color: var(--text);
+    cursor: pointer;
+    transition: background 0.1s;
+}
+.creature-ac-list li:hover,
+.creature-ac-list li.ac-active {
+    background: rgba(184,144,42,0.18);
+    color: var(--accent);
+}
+.creature-ac-list li strong {
+    color: var(--accent);
+    font-weight: bold;
+}
+.creature-search-history {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+}
+.csh-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+.csh-chip {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--text-muted);
+    font-size: 12px;
+    font-family: Lato, sans-serif;
+    padding: 3px 10px;
+    cursor: pointer;
+    transition: border-color 0.12s, color 0.12s;
+}
+.csh-chip:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
 /* ── CREATURE SELECTOR TAB ───────────────────────────────────────────────────── */
 
 .creature-category {
@@ -2067,6 +2163,38 @@ body.reduce-motion *::after {
 }
 .rtree-corner-tr { top: 0; right: 0; transform: rotate(90deg); }
 .rtree-corner-bl { bottom: 0; left: 0; transform: rotate(270deg); }
+
+/* Creature Tree zoom/reset controls */
+.rtrace-controls {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+.rtrace-btn {
+    background: var(--bg-dark);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text-muted);
+    font-family: Lato, sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 4px 10px;
+    cursor: pointer;
+    line-height: 1;
+    transition: border-color 0.12s, color 0.12s, background 0.12s;
+    user-select: none;
+}
+.rtrace-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--bg-hover);
+}
+.rtrace-btn-reset {
+    font-size: 12px;
+    font-weight: normal;
+    padding: 4px 12px;
+}
 
 /* Zoom indicator */
 .rtree-zoom-label {

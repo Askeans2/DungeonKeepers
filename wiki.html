@@ -18,8 +18,8 @@
         <a class="wiki-nav-link"        data-section="gameplay"  onclick="showWiki('gameplay')">Gameplay</a>
         <a class="wiki-nav-link"        data-section="biomes"    onclick="showWiki('biomes')">Biomes</a>
         <a class="wiki-nav-link"        data-section="creatures" onclick="showWiki('creatures')">Creatures</a>
+        <a class="wiki-nav-link wiki-nav-sub" data-section="racetree" onclick="showWiki('racetree')">&#8627; Creature Tree</a>
         <a class="wiki-nav-link"        data-section="research"  onclick="showWiki('research')">Research</a>
-        <a class="wiki-nav-link"        data-section="racetree"  onclick="showWiki('racetree')">Race Tree</a>
         <a class="wiki-nav-link"        data-section="extension" onclick="showWiki('extension')">Extension</a>
         <a class="wiki-nav-link"        data-section="changelog" onclick="showWiki('changelog')">Changelog</a>
     </nav>
@@ -517,8 +517,21 @@
                 Creatures are the inhabitants of a dungeon. Each is a distinct D&amp;D-inspired race
                 that defines a run's playstyle, bonuses, and flavour. The full bestiary is listed
                 below, grouped by creature type. Bonuses shown are creature-specific traits on top of
-                the base type bonuses visible in the Race Lineage Tree.
+                the base type bonuses visible in the Creature Tree.
             </p>
+
+            <!-- Creature search -->
+            <div class="creature-search-wrap" id="creature-search-wrap">
+                <div class="creature-search-box">
+                    <input id="creature-search-input" type="text" autocomplete="off"
+                        placeholder="Search creatures…"
+                        aria-label="Search creatures" />
+                    <ul id="creature-search-ac" class="creature-ac-list" style="display:none"></ul>
+                </div>
+                <div id="creature-search-history" class="creature-search-history" style="display:none">
+                    <span class="csh-label">Recent:</span>
+                </div>
+            </div>
 
             <!-- DRACONIC & REPTILIAN -->
             <h3 class="creature-category">Draconic &amp; Reptilian</h3>
@@ -1102,8 +1115,29 @@
                     <span class="creature-tag tag-construct">Construct</span>
                     <span class="creature-name">Animated Armor</span>
                     <span class="creature-desc">Hollow suits of enchanted armor that guard and work in equal measure. Their intimidating presence improves tax compliance.</span>
-                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Armored Presence — +1 cp/creature/day; extra +5% all production.</span></div>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Armored Presence — +1 cp/creature/day; extra +2% all production.</span></div>
                     <span class="creature-biome"><span class="biome-best">Ancient Battlefield</span><span class="biome-hard">Fetid Swamp</span></span>
+                </div>
+                <div class="creature-entry">
+                    <span class="creature-tag tag-construct">Construct</span>
+                    <span class="creature-name">Clay Golem</span>
+                    <span class="creature-desc">Shaped from cursed clay and animated by divine script. Clay Golems are prone to berserk rages that paradoxically accelerate their labor.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Berserk Labor — Extra +2% all production — the clay golem's rage is productively channeled; Stone cap +50.</span></div>
+                    <span class="creature-biome"><span class="biome-best">Deep Caverns</span><span class="biome-hard">Feywild Glade</span></span>
+                </div>
+                <div class="creature-entry">
+                    <span class="creature-tag tag-construct">Construct</span>
+                    <span class="creature-name">Flesh Golem</span>
+                    <span class="creature-desc">Stitched together from the corpses of the fallen, the flesh golem labors without complaint and its composite anatomy is oddly efficient at bone-work.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Charnel Assembly — Hunting Lodges extra +10%; Bone cap +75.</span><span class="cmod cmod-neg">▼ Flesh Hunger — Requires additional flesh — eats 15% more.</span></div>
+                    <span class="creature-biome"><span class="biome-best">Ancient Battlefield</span><span class="biome-hard">Feywild Glade</span></span>
+                </div>
+                <div class="creature-entry">
+                    <span class="creature-tag tag-construct">Construct</span>
+                    <span class="creature-name">Clockwork Horror</span>
+                    <span class="creature-desc">A self-replicating mechanical spider-construct of unknown origin. Clockwork Horrors harvest metal with ruthless efficiency and slowly build more of themselves from salvaged parts.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Self-Replication — Mines extra +15%; Smelters extra +10%; emerges slightly faster — it builds its own replacements.</span></div>
+                    <span class="creature-biome"><span class="biome-best">Volcanic Caldera</span><span class="biome-hard">Fetid Swamp</span></span>
                 </div>
             </div>
 
@@ -1144,6 +1178,13 @@
                     <span class="creature-desc">Six-legged predators who shift phase to avoid predators — and the tax collector. Fearsome hunters, elusive taxpayers.</span>
                     <div class="creature-mods"><span class="cmod cmod-pos">▲ Phase Predator — Hunting Lodges extra +15%.</span><span class="cmod cmod-neg">▼ Tax Evader — -1 cp/creature/day — they dodge the tax collector.</span></div>
                     <span class="creature-biome"><span class="biome-best">Verdant Forest</span><span class="biome-hard">Elemental Confluence</span></span>
+                </div>
+                <div class="creature-entry">
+                    <span class="creature-tag tag-lycanthrope">Lycanthrope</span>
+                    <span class="creature-name">Weretiger</span>
+                    <span class="creature-desc">Solitary and supremely self-reliant, weretigers are apex hunters who work alone and expect no help — and need none. Their efficiency in isolation yields exceptional results.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Solitary Hunter — Extra +1 to all gather yields; Hunting Lodges extra +10%. Breeds slower than most lycanthropes — they work alone.</span></div>
+                    <span class="creature-biome"><span class="biome-best">Jungle Canopy</span><span class="biome-hard">Arctic Glacier</span></span>
                 </div>
             </div>
 
@@ -1222,8 +1263,22 @@
                     <span class="creature-tag tag-aquatic">Aquatic</span>
                     <span class="creature-name">Triton</span>
                     <span class="creature-desc">Noble sea-folk guardians of the deep. Tritons bring military discipline and aquatic mastery to clay and stone extraction.</span>
-                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Deep Warden — Clay Pits extra +15%; extra +5% all production.</span></div>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Deep Warden — Clay Pits extra +15%; extra +2% all production.</span></div>
                     <span class="creature-biome"><span class="biome-best">Coastal Bluffs</span><span class="biome-hard">Blighted Wastes</span></span>
+                </div>
+                <div class="creature-entry">
+                    <span class="creature-tag tag-aquatic">Aquatic</span>
+                    <span class="creature-name">Sea Hag</span>
+                    <span class="creature-desc">A sunken crone of horrifying visage whose mere glance can break minds. Sea Hags brew foul concoctions from deep-sea ingredients and their presence drives workers to produce out of sheer dread.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Death Glare — Extra +2% all production; Alchemy Labs extra +15%; eats 15% less.</span></div>
+                    <span class="creature-biome"><span class="biome-best">Fetid Swamp</span><span class="biome-hard">Desert Wastes</span></span>
+                </div>
+                <div class="creature-entry">
+                    <span class="creature-tag tag-aquatic">Aquatic</span>
+                    <span class="creature-name">Locathah</span>
+                    <span class="creature-desc">Fierce tribal fish-folk who have survived eons of deep-sea oppression through tenacity and sheer grit. Locathah are exceptional gatherers and their communal bonds accelerate growth.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Survivor's Tenacity — Extra +1 to all gather yields; Food cap +50; breeds faster than most Aquatic.</span></div>
+                    <span class="creature-biome"><span class="biome-best">Coastal Bluffs</span><span class="biome-hard">Mountain Stronghold</span></span>
                 </div>
             </div>
 
@@ -1384,9 +1439,9 @@
             </div>
         </section>
 
-        <!-- RACE LINEAGE TREE -->
+        <!-- CREATURE TREE -->
         <section id="wiki-racetree" class="wiki-section" style="display:none">
-            <h2>Race Lineage Tree</h2>
+            <h2>Creature Tree</h2>
             <p class="wiki-lead">
                 All 91 playable creatures across 15 race types, organized by four lineage paths.
                 <b>Drag</b> to pan &middot; <b>Scroll</b> to zoom &middot; <b>Hover</b> a node for details &middot; <b>Search</b> to highlight.
@@ -1398,6 +1453,11 @@
                 <span class="rtleg"><span class="rtleg-sw" style="background:#9b6dbe"></span>Shadow</span>
                 <span class="rtleg"><span class="rtleg-sw" style="background:#3cb0c8"></span>Arcane</span>
                 <span class="rtleg"><span class="rtleg-sw" style="background:#88a0b0"></span>Civilized</span>
+            </div>
+            <div class="rtrace-controls">
+                <button class="rtrace-btn" id="rtrace-zoom-in"  title="Zoom in">+</button>
+                <button class="rtrace-btn" id="rtrace-zoom-out" title="Zoom out">−</button>
+                <button class="rtrace-btn rtrace-btn-reset" id="rtrace-reset" title="Reset view">&#8635; Reset</button>
             </div>
             <div class="rtree-wrap" id="rtrace-wrap">
                 <div class="rtree-corner-tr"></div>
@@ -1490,6 +1550,11 @@
         <!-- CHANGELOG -->
         <section id="wiki-changelog" class="wiki-section wiki-changelog" style="display:none">
             <h2>Changelog</h2>
+
+            <div class="biome-card">
+                <div><span class="cl-ver">v0.61.0</span><span class="cl-date">2026-06-24</span></div>
+                <p class="biome-desc">Wiki overhaul: added 6 missing creatures to the bestiary (Weretiger, Clay Golem, Flesh Golem, Clockwork Horror, Sea Hag, Locathah). Renamed "Race Tree" to "Creature Tree" and moved it as a subtab under Creatures in the nav. Added a creature search bar with autocomplete and last-3-searches recall to the Creatures tab. Added zoom +/−, and a Reset View button to the Creature Tree.</p>
+            </div>
 
             <div class="biome-card">
                 <div><span class="cl-ver">v0.60.5</span><span class="cl-date">2026-06-24</span></div>
@@ -3062,7 +3127,9 @@ function showWiki(id) {
         (function () {
             var wrap = document.getElementById('rtrace-wrap');
             var zlbl = document.getElementById('rtrace-zoom-label');
-            var scale = 0.32, dragging = false, lx = 0, ly = 0, panX = 0, panY = 0;
+            var DEFAULT_SCALE = 0.32;
+            var scale = DEFAULT_SCALE, dragging = false, lx = 0, ly = 0, panX = 0, panY = 0;
+            var defaultPanX, defaultPanY;
 
             function apply() {
                 g.setAttribute('transform', 'translate(' + panX + ',' + panY + ') scale(' + scale + ')');
@@ -3070,8 +3137,9 @@ function showWiki(id) {
             }
 
             requestAnimationFrame(function () {
-                panX = wrap.offsetWidth  / 2 - CX * scale;
-                panY = wrap.offsetHeight / 2 - CY * scale;
+                panX = wrap.offsetWidth  / 2 - CX * DEFAULT_SCALE;
+                panY = wrap.offsetHeight / 2 - CY * DEFAULT_SCALE;
+                defaultPanX = panX; defaultPanY = panY;
                 apply();
             });
 
@@ -3088,8 +3156,177 @@ function showWiki(id) {
                 scale = Math.min(4, Math.max(0.14, scale * (e.deltaY < 0 ? 1.12 : 0.89)));
                 apply();
             }, { passive: false });
+
+            var btnIn  = document.getElementById('rtrace-zoom-in');
+            var btnOut = document.getElementById('rtrace-zoom-out');
+            var btnReset = document.getElementById('rtrace-reset');
+
+            if (btnIn)  btnIn.addEventListener('click',  function () { scale = Math.min(4,    scale * 1.20); apply(); });
+            if (btnOut) btnOut.addEventListener('click', function () { scale = Math.max(0.14, scale * 0.83); apply(); });
+            if (btnReset) btnReset.addEventListener('click', function () {
+                scale = DEFAULT_SCALE;
+                panX  = defaultPanX !== undefined ? defaultPanX : wrap.offsetWidth  / 2 - CX * DEFAULT_SCALE;
+                panY  = defaultPanY !== undefined ? defaultPanY : wrap.offsetHeight / 2 - CY * DEFAULT_SCALE;
+                apply();
+            });
         })();
     }
+})();
+</script>
+
+<script>
+/* ── Creature Search (Creatures tab) ────────────────────────────────────────── */
+(function () {
+    var MAX_HISTORY = 3;
+    var history = [];
+
+    function allCreatureNames() {
+        return Array.from(document.querySelectorAll('#wiki-creatures .creature-name'))
+            .map(function (el) { return el.textContent.trim(); });
+    }
+
+    function saveHistory(name) {
+        history = history.filter(function (h) { return h !== name; });
+        history.unshift(name);
+        if (history.length > MAX_HISTORY) history = history.slice(0, MAX_HISTORY);
+        renderHistory();
+    }
+
+    function renderHistory() {
+        var wrap = document.getElementById('creature-search-history');
+        if (!history.length) { wrap.style.display = 'none'; return; }
+        wrap.style.display = 'flex';
+        var chips = wrap.querySelectorAll('.csh-chip');
+        chips.forEach(function (c) { c.parentNode.removeChild(c); });
+        history.forEach(function (name) {
+            var chip = document.createElement('button');
+            chip.className = 'csh-chip';
+            chip.textContent = name;
+            chip.addEventListener('click', function () { runSearch(name); });
+            wrap.appendChild(chip);
+        });
+    }
+
+    function runSearch(name) {
+        var input = document.getElementById('creature-search-input');
+        input.value = name;
+        hideAC();
+        applyFilter(name);
+        saveHistory(name);
+        input.focus();
+    }
+
+    function applyFilter(q) {
+        var entries = document.querySelectorAll('#wiki-creatures .creature-entry');
+        var headers = document.querySelectorAll('#wiki-creatures .creature-category, #wiki-creatures .legendary-section-header');
+        q = q.trim().toLowerCase();
+        if (!q) {
+            entries.forEach(function (e) { e.style.display = ''; });
+            headers.forEach(function (h) { h.style.display = ''; });
+            return;
+        }
+        /* Track which category headers had at least one match */
+        var visibleCategories = new Set();
+        entries.forEach(function (entry) {
+            var nameEl = entry.querySelector('.creature-name');
+            var name = nameEl ? nameEl.textContent.toLowerCase() : '';
+            var show = name.indexOf(q) !== -1;
+            entry.style.display = show ? '' : 'none';
+            if (show) {
+                /* Find preceding h3 to mark it visible */
+                var prev = entry.parentNode.previousElementSibling;
+                if (prev) visibleCategories.add(prev);
+                /* Also handle legendary-section-header which precedes .creature-list */
+                var grandParent = entry.parentNode.parentNode;
+                var leg = grandParent.querySelector('.legendary-section-header');
+                if (leg && entry.closest('.creature-list') === grandParent.querySelector('.creature-list:last-of-type')) {
+                    visibleCategories.add(leg);
+                }
+            }
+        });
+        headers.forEach(function (h) {
+            h.style.display = visibleCategories.has(h) ? '' : 'none';
+        });
+    }
+
+    function hideAC() {
+        document.getElementById('creature-search-ac').style.display = 'none';
+    }
+
+    function showAC(matches, q) {
+        var list = document.getElementById('creature-search-ac');
+        list.innerHTML = '';
+        if (!matches.length) { list.style.display = 'none'; return; }
+        matches.forEach(function (name) {
+            var li = document.createElement('li');
+            /* Bold the matching portion */
+            var idx = name.toLowerCase().indexOf(q.toLowerCase());
+            if (idx >= 0) {
+                li.innerHTML = name.slice(0, idx)
+                    + '<strong>' + name.slice(idx, idx + q.length) + '</strong>'
+                    + name.slice(idx + q.length);
+            } else {
+                li.textContent = name;
+            }
+            li.addEventListener('mousedown', function (e) {
+                e.preventDefault();
+                runSearch(name);
+            });
+            list.appendChild(li);
+        });
+        list.style.display = 'block';
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var input  = document.getElementById('creature-search-input');
+        if (!input) return;
+
+        input.addEventListener('input', function () {
+            var q = this.value.trim();
+            if (!q) { applyFilter(''); hideAC(); return; }
+            var names = allCreatureNames();
+            var matches = names.filter(function (n) {
+                return n.toLowerCase().indexOf(q.toLowerCase()) !== -1;
+            }).slice(0, 8);
+            showAC(matches, q);
+            applyFilter(q);
+        });
+
+        input.addEventListener('keydown', function (e) {
+            var list = document.getElementById('creature-search-ac');
+            var items = list.querySelectorAll('li');
+            var active = list.querySelector('li.ac-active');
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (!active) { if (items[0]) items[0].classList.add('ac-active'); }
+                else {
+                    active.classList.remove('ac-active');
+                    var next = active.nextElementSibling;
+                    if (next) next.classList.add('ac-active'); else if (items[0]) items[0].classList.add('ac-active');
+                }
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (!active) { if (items[items.length - 1]) items[items.length - 1].classList.add('ac-active'); }
+                else {
+                    active.classList.remove('ac-active');
+                    var prev = active.previousElementSibling;
+                    if (prev) prev.classList.add('ac-active'); else if (items[items.length - 1]) items[items.length - 1].classList.add('ac-active');
+                }
+            } else if (e.key === 'Enter') {
+                var sel = list.querySelector('li.ac-active');
+                if (sel) { runSearch(sel.textContent); }
+                else if (this.value.trim()) { saveHistory(this.value.trim()); applyFilter(this.value.trim()); hideAC(); }
+            } else if (e.key === 'Escape') {
+                hideAC();
+                applyFilter('');
+                this.value = '';
+            }
+        });
+
+        input.addEventListener('blur', function () {
+            setTimeout(hideAC, 150);
+        });
+    });
 })();
 </script>
 </body>
