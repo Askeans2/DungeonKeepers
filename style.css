@@ -846,6 +846,10 @@ h3 {
     line-height: 1.75;
 }
 
+.bld-tt-cant-afford {
+    color: #e07878 !important;
+}
+
 .bld-tt-divider {
     border-top: 1px solid rgba(255,255,255,0.10);
     margin: 6px 0 4px;
@@ -1939,6 +1943,56 @@ kbd {
 .setting-action-btn.danger:hover {
     background: rgba(194, 0, 0, 0.12);
     border-color: var(--disabled);
+}
+
+.tab-title-controls {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.tab-title-select {
+    height: 28px;
+    padding: 0 8px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    color: var(--text-muted);
+    font-family: 'Lato', Arial, sans-serif;
+    font-size: 12px;
+    cursor: pointer;
+    transition: border-color 0.08s, color 0.08s;
+}
+
+.tab-title-select:hover,
+.tab-title-select:focus {
+    outline: none;
+    border-color: var(--text-muted);
+    color: var(--text);
+}
+
+.tab-title-input {
+    width: 140px;
+    height: 28px;
+    padding: 0 8px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    color: var(--text);
+    font-family: 'Lato', Arial, sans-serif;
+    font-size: 12px;
+    box-sizing: border-box;
+    transition: border-color 0.08s;
+}
+
+.tab-title-input:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.tab-title-input::placeholder {
+    color: var(--text-muted);
 }
 
 .save-io-heading {

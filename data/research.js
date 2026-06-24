@@ -186,7 +186,7 @@ RESEARCH.taxCollector = {
 
 // Chain B — The Thieves' Quarter (step 1)
 RESEARCH.shadowMarket = {
-    tier: "2.2",
+    tier: "2.3",
     name: "Shadow Market",
     desc: "Formalize the unofficial trade happening in back alleys and after dark. Taxation yields +1 cp per creature per day.",
     cost: { stone: 40, coins: 200 },
@@ -196,7 +196,7 @@ RESEARCH.shadowMarket = {
 
 // Chain C — The Artificer's Craft (step 1)
 RESEARCH.prototypeTools = {
-    tier: "2.2",
+    tier: "2.3",
     name: "Prototype Tools",
     desc: "Your settlement's tinkerers design purpose-built jigs and clamps for each construction task. All building wood and stone costs −10%.",
     cost: { wood: 60, iron: 30 },
@@ -216,7 +216,7 @@ RESEARCH.favoredTerrain = {
 
 // Standalone: Split-Face Quarrying
 RESEARCH.stoneSplitting = {
-    tier: "2.2",
+    tier: "2.3",
     name: "Split-Face Quarrying",
     desc: "Strike the natural fault lines and the stone breaks true. Quarries produce 10% more and manual stone gathering yields +1.",
     cost: { stone: 50, iron: 15 },
@@ -226,7 +226,7 @@ RESEARCH.stoneSplitting = {
 
 // Standalone: Seasoned Timber
 RESEARCH.logDrying = {
-    tier: "2.2",
+    tier: "2.3",
     name: "Seasoned Timber",
     desc: "Let cut logs cure in the yard before use — the wood is stronger and cuts to size with far less waste. Lumber Camps produce 15% more.",
     cost: { wood: 60, stone: 20 },
@@ -318,7 +318,7 @@ RESEARCH.trapLines = {
 };
 
 RESEARCH.bonecraft = {
-    tier: "2.3",
+    tier: "2.5",
     name: "Bonework",
     desc: "Render, cure, and stack bones properly. Bone storage cap +150.",
     cost: { bones: 60, stone: 20 },
@@ -363,7 +363,7 @@ RESEARCH.bookkeeping = {
 };
 
 RESEARCH.rationing = {
-    tier: "2.3",
+    tier: "2.5",
     name: "Strict Rationing",
     desc: "Half-portions and no complaints. Your population consumes 20% less food per tick.",
     cost: { food: 100, wood: 30 },
@@ -382,7 +382,7 @@ RESEARCH.goldStandard = {
 
 // Chain D — The War Caster (step 1)
 RESEARCH.warFormations = {
-    tier: "2.3",
+    tier: "2.4",
     name: "Combat Formations",
     desc: "Tactical formations and bunk rotation increase how many fighters an Armory supports. Each Armory houses +5 additional creatures.",
     cost: { iron: 50, wood: 40 },
@@ -392,7 +392,7 @@ RESEARCH.warFormations = {
 
 // Chain E — The Alchemist's Circle (step 2)
 RESEARCH.refinedAlchemy = {
-    tier: "2.3",
+    tier: "2.4",
     name: "Refined Alchemy",
     desc: "Precise temperature control and staged distillation push your lab's output further. Alchemy Lab potion output +15% more.",
     cost: { herbs: 60, potions: 20 },
@@ -402,7 +402,7 @@ RESEARCH.refinedAlchemy = {
 
 // Chain G — The Dwarven Smith (step 1)
 RESEARCH.quenchingTechniques = {
-    tier: "2.3",
+    tier: "2.4",
     name: "Tempering & Quench",
     desc: "Oil-quench and draw the iron at the right temperature. Your Smelters produce 15% more iron.",
     cost: { iron: 50, coal: 40 },
@@ -412,7 +412,7 @@ RESEARCH.quenchingTechniques = {
 
 // Chain I — Runes of the Deep (step 1)
 RESEARCH.dwarvenShoring = {
-    tier: "2.3",
+    tier: "2.4",
     name: "Dwarven Shoring",
     desc: "Dwarven-style timber frames and stone wedges brace the mine shafts, letting workers dig deeper and faster. Mines produce 15% more ore.",
     cost: { wood: 80, stone: 60, iron: 20 },
@@ -422,7 +422,7 @@ RESEARCH.dwarvenShoring = {
 
 // Chain K — Settlement Housing (step 1)
 RESEARCH.communalArchitecture = {
-    tier: "2.3",
+    tier: "2.4",
     name: "Communal Architecture",
     desc: "Standardized floor plans and shared load-bearing walls make every Hovel cheaper to build the more you construct. Hovel construction cost growth reduced.",
     cost: { wood: 80, stone: 60 },
@@ -432,7 +432,7 @@ RESEARCH.communalArchitecture = {
 
 // Standalone: Iron Fittings
 RESEARCH.ironFittings = {
-    tier: "2.3",
+    tier: "2.4",
     name: "Iron Fittings",
     desc: "Iron brackets, corner plates, and raised floor channels reinforce every Storage building's shelving. Each Storage building grants +15 additional cap to all resources.",
     cost: { iron: 40, wood: 50 },
@@ -442,7 +442,7 @@ RESEARCH.ironFittings = {
 
 // Standalone: Rendered Oil
 RESEARCH.oilRendering = {
-    tier: "2.3",
+    tier: "2.4",
     name: "Rendered Oil",
     desc: "Render animal fat into lamp oil and distribute it throughout the settlement. Brighter worksites mean longer shifts — all buildings produce 5% more.",
     cost: { bones: 50, food: 40 },
@@ -452,7 +452,7 @@ RESEARCH.oilRendering = {
 
 // Standalone: Pre-Cut Timber
 RESEARCH.prefabTimber = {
-    tier: "2.3",
+    tier: "2.4",
     name: "Pre-Cut Timber",
     desc: "Dimension lumber in the yard before the job site needs it. All building wood costs reduced by 15%.",
     cost: { wood: 70, iron: 25 },
@@ -462,7 +462,7 @@ RESEARCH.prefabTimber = {
 
 // Standalone: Stockpiled Dressed Stone
 RESEARCH.stockpiledStone = {
-    tier: "2.3",
+    tier: "2.4",
     name: "Stockpiled Dressed Stone",
     desc: "Cut and stack stone at the quarry face so it's ready when construction starts. All building stone costs reduced by 15%.",
     cost: { stone: 70, iron: 20 },
@@ -472,7 +472,7 @@ RESEARCH.stockpiledStone = {
 
 // Standalone: Hearthstones
 RESEARCH.hearthStones = {
-    tier: "2.3",
+    tier: "2.5",
     name: "Hearthstones",
     desc: "Dense kiln-fired hearthstones hold heat through the night, keeping the soil warm for longer growing seasons. Farms produce 10% more food.",
     cost: { stone: 50, coal: 30 },
@@ -482,7 +482,7 @@ RESEARCH.hearthStones = {
 
 // Standalone: Bone-Handled Tools
 RESEARCH.boneTools = {
-    tier: "2.3",
+    tier: "2.5",
     name: "Bone-Handled Tools",
     desc: "Light, grippy bone handles improve control on every hand tool in the settlement. All manual gathering yields +1.",
     cost: { bones: 60, iron: 20 },
@@ -529,7 +529,7 @@ RESEARCH.roadNetwork = {
 };
 
 RESEARCH.tradeGoods = {
-    tier: "2.4",
+    tier: "2.5",
     name: "Trade Caravans",
     desc: "Send wagons of cloth and potions to nearby settlements. Cloth and potions in stock each generate 2 cp per unit per day.",
     cost: { cloth: 30, potions: 15 },
@@ -623,7 +623,7 @@ RESEARCH.annotatedTexts = {
 
 // Standalone: Crystal Polishing
 RESEARCH.crystalPolishing = {
-    tier: "2.4",
+    tier: "2.5",
     name: "Crystal Polishing",
     desc: "Polish raw crystal faces to optical clarity, improving resonance transmission. Crystal Seams produce 15% more and Arcane Dust cap +50.",
     cost: { crystals: 40, arcaneDust: 20 },
@@ -633,7 +633,7 @@ RESEARCH.crystalPolishing = {
 
 // Standalone: Sulphur-Lamp Shifts
 RESEARCH.phosphorLamps = {
-    tier: "2.4",
+    tier: "2.5",
     name: "Sulphur-Lamp Shifts",
     desc: "Sulphur-burning lanterns extend the effective work shift into the evening. All buildings produce 3% more.",
     cost: { sulphur: 30, iron: 40, lore: 8 },
@@ -643,7 +643,7 @@ RESEARCH.phosphorLamps = {
 
 // Standalone: Alchemical Fertilizer
 RESEARCH.alchemicalFertilizer = {
-    tier: "2.4",
+    tier: "2.5",
     name: "Alchemical Fertilizer",
     desc: "Alchemical byproducts mixed into compost accelerate crop growth. Farms produce 15% more food.",
     cost: { herbs: 60, potions: 20, lore: 10 },
@@ -653,7 +653,7 @@ RESEARCH.alchemicalFertilizer = {
 
 // Standalone: Dedicated Tanners
 RESEARCH.dedicatedTanners = {
-    tier: "2.4",
+    tier: "2.5",
     name: "Dedicated Tanners",
     desc: "Full-time tanners process every kill for bones, hide, and sinew instead of leaving it to the hunters. Hunting Lodges produce 15% more.",
     cost: { bones: 60, cloth: 20, lore: 8 },
@@ -691,10 +691,10 @@ RESEARCH.ichorRefinement = {
 };
 
 RESEARCH.silkCulture = {
-    tier: "2.5",
+    tier: "2.6",
     name: "Spider Keeper's Art",
     desc: "Keep the spiders well-fed and they weave faster. Spider Nest silk output +25%.",
-    cost: { lore: 200 },
+    cost: { lore: 380 },
     requiresResearch: ["packHunting"],
     effects: { converterBonus: { spiderNest: 1.25 } },
 };
@@ -774,10 +774,10 @@ RESEARCH.infernalLore = {
 
 // Chain B — The Thieves' Quarter (step 2)
 RESEARCH.fencedGoods = {
-    tier: "2.5",
+    tier: "2.7",
     name: "The Fence's Cut",
     desc: "Establish a fence operation that resells goods at a premium to distant merchants. Trade-good income +50%. (Requires trade route system.)",
-    cost: { lore: 190 },
+    cost: { lore: 550 },
     requiresResearch: ["shadowMarket", "tradeGoods"],
     effects: { flag: "fencedGoods" },
 };
@@ -804,50 +804,50 @@ RESEARCH.steelGrade = {
 
 // Chain K — Settlement Housing (step 2)
 RESEARCH.houseDesign = {
-    tier: "2.5",
+    tier: "2.6",
     name: "House Design",
     desc: "A proper multi-room house with a shared hearth and sleeping loft. Unlocks the House building, which houses 10 creatures.",
-    cost: { lore: 180 },
+    cost: { lore: 410 },
     requiresResearch: ["communalArchitecture", "reinforcedShelving"],
     effects: { unlockBuildings: ["house"] },
 };
 
 // Standalone: Coal Gasification
 RESEARCH.coalGasification = {
-    tier: "2.5",
+    tier: "2.6",
     name: "Coal Gasification",
     desc: "Combust coal into a combustible gas piped directly into the kiln chamber, achieving more consistent temperatures. Kilns produce 15% more bricks.",
-    cost: { lore: 160 },
+    cost: { lore: 430 },
     requiresResearch: ["highFireKiln", "sulphurStudy"],
     effects: { converterBonus: { kiln: 1.15 } },
 };
 
 // Standalone: Pressurized Bellows
 RESEARCH.pressurizedBellows = {
-    tier: "2.5",
+    tier: "2.6",
     name: "Pressurized Bellows",
     desc: "A water-wheel drives the bellows continuously, keeping a constant high-pressure blast on the smelter. Smelters produce 15% more iron and iron cap +100.",
-    cost: { lore: 170 },
+    cost: { lore: 440 },
     requiresResearch: ["bellowsDesign", "forgeMastery"],
     effects: { converterBonus: { smelter: 1.15 }, capBonus: { iron: 100 } },
 };
 
 // Standalone: Ventilated Shafts
 RESEARCH.ventilatedShafts = {
-    tier: "2.5",
+    tier: "2.6",
     name: "Ventilated Shafts",
     desc: "Air shafts and draft doors keep coal seam air clean, letting workers dig deeper veins. Coal Seams produce 15% more and coal cap +50.",
-    cost: { lore: 140 },
+    cost: { lore: 460 },
     requiresResearch: ["coalBunker", "deepMining"],
     effects: { productionBonus: { coalSeam: 1.15 }, capBonus: { coal: 50 } },
 };
 
 // Standalone: Braided Silk Rope
 RESEARCH.silkRope = {
-    tier: "2.5",
+    tier: "2.6",
     name: "Braided Silk Rope",
     desc: "Braid surplus silk into high-tensile rope for rigging and scaffolding, reducing the coin spent on construction hardware. Silk cap +50 and all building coin costs −10%.",
-    cost: { lore: 150 },
+    cost: { lore: 390 },
     requiresResearch: ["silkCulture"],
     effects: { capBonus: { silk: 50 }, flag: "silkRope" },
 };
@@ -856,50 +856,50 @@ RESEARCH.silkRope = {
 
 // Chain D — The War Caster (step 2)
 RESEARCH.shieldGuard = {
-    tier: "2.6",
+    tier: "2.7",
     name: "Shield Guard Doctrine",
     desc: "Trained guards rotate through worksites, keeping workers safe and morale high. All buildings produce 5% more.",
-    cost: { lore: 450 },
+    cost: { lore: 580 },
     requiresResearch: ["warFormations", "forgeMastery"],
     effects: { allProductionBonus: 0.05 },
 };
 
 // Chain E — The Alchemist's Circle (step 3)
 RESEARCH.masterworkPotions = {
-    tier: "2.6",
+    tier: "2.8",
     name: "Masterwork Formulae",
     desc: "Grand Magister-level formulae push your lab to its theoretical maximum. Alchemy Lab potion output +25% more and potion cap +50.",
-    cost: { lore: 520 },
+    cost: { lore: 770 },
     requiresResearch: ["refinedAlchemy", "essenceHarvest"],
     effects: { converterBonus: { alchemyLab: 1.25 }, capBonus: { potions: 50 } },
 };
 
 // Chain I — Runes of the Deep (step 2)
 RESEARCH.runesOfTheDeep = {
-    tier: "2.6",
+    tier: "2.8",
     name: "Runes of the Deep",
     desc: "Ancient dwarven runes carved into shaft walls and crystal chambers attune the stone to yield more readily. Mines +15% and Crystal Seams +15%.",
-    cost: { lore: 480 },
+    cost: { lore: 750 },
     requiresResearch: ["dwarvenShoring", "runicScript"],
     effects: { productionBonus: { mine: 1.15, crystalSeam: 1.15 } },
 };
 
 // Standalone: Ore Beneficiation
 RESEARCH.oreConcentrate = {
-    tier: "2.6",
+    tier: "2.7",
     name: "Ore Beneficiation",
     desc: "Crush and separate ore before feeding the Smelter — the building consumes ore more efficiently and produces 15% more iron.",
-    cost: { lore: 400 },
+    cost: { lore: 560 },
     requiresResearch: ["bellowsDesign", "deepMining"],
     effects: { converterBonus: { smelter: 1.15 } },
 };
 
 // Standalone: Crystal Chandeliers
 RESEARCH.crystalChandeliers = {
-    tier: "2.6",
+    tier: "2.7",
     name: "Crystal Chandeliers",
     desc: "Suspended crystal arrays in the Mage Tower focus ambient light into pure arcane energy. Mage Towers produce 15% more crystals.",
-    cost: { lore: 420 },
+    cost: { lore: 570 },
     requiresResearch: ["arcaneTapping", "crystalFocus"],
     effects: { productionBonus: { mageTower: 1.15 } },
 };
@@ -908,40 +908,40 @@ RESEARCH.crystalChandeliers = {
 
 // Chain A — The Druid's Grove (step 3)
 RESEARCH.circleOfTheWilds = {
-    tier: "2.7",
+    tier: "2.8",
     name: "Circle of the Wild",
     desc: "Formally induct nature wardens into the settlement's leadership — their deep knowledge transforms your harvests. Farms and Herbalist's Dens produce 20% more and food cap +200.",
-    cost: { lore: 640 },
+    cost: { lore: 780 },
     requiresResearch: ["greenwardenLore", "ritualPrep"],
     effects: { productionBonus: { farm: 1.20, herbalistDen: 1.20 }, capBonus: { food: 200 } },
 };
 
 // Chain F — The Ranger's Path (step 3)
 RESEARCH.rangersConclave = {
-    tier: "2.7",
+    tier: "2.9",
     name: "Ranger's Conclave",
     desc: "A formal conclave of scouts and guides shares knowledge across the region, transforming your hunters into experts. Hunting Lodges produce 25% more and bones cap +200.",
-    cost: { lore: 680 },
+    cost: { lore: 950 },
     requiresResearch: ["trackerSign", "loreKeeping"],
     effects: { productionBonus: { huntingLodge: 1.25 }, capBonus: { bones: 200 } },
 };
 
 // Chain J — The Loremaster's Archive (step 2)
 RESEARCH.crossReferenced = {
-    tier: "2.7",
+    tier: "2.9",
     name: "Cross-Referenced Index",
     desc: "A master index cards links every recovered text to every other — scribes spend less time searching and more time transcribing. Scriptoriums produce 25% more lore and lore cap +100.",
-    cost: { lore: 720 },
+    cost: { lore: 970 },
     requiresResearch: ["annotatedTexts", "runicScript"],
     effects: { productionBonus: { scriptorium: 1.25 }, capBonus: { lore: 100 } },
 };
 
 // Standalone: Efficient Burn
 RESEARCH.coalReduction = {
-    tier: "2.7",
+    tier: "2.8",
     name: "Efficient Burn",
     desc: "Improved combustion chambers and preheated air reduce the coal demanded by each smelting cycle. Forges produce 10% more steel.",
-    cost: { lore: 600 },
+    cost: { lore: 760 },
     requiresResearch: ["forgeMastery", "manaConductorCoils"],
     effects: { converterBonus: { forge: 1.10 } },
 };
@@ -950,50 +950,50 @@ RESEARCH.coalReduction = {
 
 // Chain B — The Thieves' Quarter (step 3)
 RESEARCH.thievesGuild = {
-    tier: "2.8",
+    tier: "2.9",
     name: "Thieves' Guild Charter",
     desc: "Grant the guild a formal charter — they pay their dues in information, coin, and silence. Taxation yields +2 cp per creature per day and coin cap +25,000.",
-    cost: { lore: 930 },
+    cost: { lore: 960 },
     requiresResearch: ["fencedGoods", "guildCharter"],
     effects: { taxBonus: 2, flag: "thievesGuild" },
 };
 
 // Chain C — The Artificer's Craft (step 3)
 RESEARCH.masterCraft = {
-    tier: "2.8",
+    tier: "2.10",
     name: "Mastercrafted Works",
     desc: "Artificer-grade precision in every component eliminates all material waste. All building costs −15% further and coin costs −20%.",
-    cost: { lore: 1000 },
+    cost: { lore: 1050 },
     requiresResearch: ["blueprintLibrary", "forgeMastery"],
     effects: { flag: "masterCraft" },
 };
 
 // Chain G — The Dwarven Smith (step 3)
 RESEARCH.dwarvenAnvil = {
-    tier: "2.8",
+    tier: "2.9",
     name: "Dwarven Anvil",
     desc: "A true dwarven-grade anvil of the right mass and temper makes every hammer blow count. Smelters +20%, Forges +20%, and mithril cap +10.",
-    cost: { lore: 880 },
+    cost: { lore: 940 },
     requiresResearch: ["steelGrade", "mithrilTemper"],
     effects: { converterBonus: { smelter: 1.20, forge: 1.20 }, capBonus: { mithril: 10 } },
 };
 
 // Chain K — Settlement Housing (step 3)
 RESEARCH.apartmentDesign = {
-    tier: "2.8",
+    tier: "2.10",
     name: "Apartment Design",
     desc: "Stack multiple family quarters vertically with shared stairwells and common areas. Unlocks the Apartment building, which houses 15 creatures.",
-    cost: { lore: 800 },
+    cost: { lore: 1020 },
     requiresResearch: ["houseDesign", "mortaredMasonry"],
     effects: { unlockBuildings: ["apartment"] },
 };
 
 // Standalone: Runic Calibration
 RESEARCH.runicCalibration = {
-    tier: "2.8",
+    tier: "2.9",
     name: "Runic Calibration",
     desc: "Calibrate each rune engraving to the precise arcane resonance band that maximizes stability. Arcane Benches produce 25% more runes and rune cap +100.",
-    cost: { lore: 840 },
+    cost: { lore: 980 },
     requiresResearch: ["runicScript", "arcaneInscription"],
     effects: { converterBonus: { arcaneBench: 1.25 }, capBonus: { runes: 100 } },
 };
@@ -1022,10 +1022,10 @@ RESEARCH.stonecuttersGuild = {
 
 // Chain J — The Loremaster's Archive (step 3)
 RESEARCH.grandLibrary = {
-    tier: "2.9",
+    tier: "2.10",
     name: "Grand Library",
     desc: "A grand repository of all knowledge accumulated by the settlement. Scriptoriums produce 25% more lore and the lore cap expands by 300.",
-    cost: { lore: 1300 },
+    cost: { lore: 1100 },
     requiresResearch: ["crossReferenced", "runesOfTheDeep"],
     effects: { productionBonus: { scriptorium: 1.25 }, capBonus: { lore: 300 } },
 };

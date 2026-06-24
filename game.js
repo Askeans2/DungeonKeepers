@@ -259,7 +259,18 @@ const gameSettings = {
     autosaveInterval:   1,        // ticks between saves; 0 = disabled
     numberFormat:       "abbrev", // "abbrev" | "full"
     reducedAnimations:  false,
+    tabTitle:           "",       // custom browser tab title; "" = default
 };
+
+const TAB_TITLE_PRESETS = [
+    "Q3 Budget Review",
+    "Staff Meeting Notes",
+    "Project Timeline - Draft",
+    "HR Policy Documentation",
+    "Weekly Status Report",
+    "Compliance Checklist 2026",
+    "Vendor Contract Overview",
+];
 
 const AUTOSAVE_CYCLE = [
     { value: 1,  label: "Every Tick" },
@@ -282,7 +293,35 @@ function saveSettings() {
 
 function applySettings() {
     document.body.classList.toggle("reduce-motion", gameSettings.reducedAnimations);
+    applyTabTitle();
     updateSettingsUI();
+}
+
+function applyTabTitle() {
+    document.title = gameSettings.tabTitle || "Dungeon Keepers";
+}
+
+function setTabTitleFromPreset() {
+    const sel = document.getElementById("set-title-preset");
+    if (!sel || !sel.value) return;
+    gameSettings.tabTitle = sel.value;
+    saveSettings();
+    applyTabTitle();
+    const input = document.getElementById("set-title-input");
+    if (input) input.value = "";
+}
+
+function setTabTitleFromInput() {
+    const input = document.getElementById("set-title-input");
+    if (!input) return;
+    const val = input.value.trim();
+    if (!val) return;
+    gameSettings.tabTitle = val;
+    saveSettings();
+    applyTabTitle();
+    input.value = "";
+    const sel = document.getElementById("set-title-preset");
+    if (sel) sel.value = "";
 }
 
 function updateSettingsUI() {
@@ -304,6 +343,11 @@ function updateSettingsUI() {
     if (rBtn) {
         rBtn.textContent = gameSettings.reducedAnimations ? "ON" : "OFF";
         rBtn.className   = "setting-toggle" + (gameSettings.reducedAnimations ? " is-on" : "");
+    }
+    // Tab title preset dropdown — reflect saved value
+    const tSel = document.getElementById("set-title-preset");
+    if (tSel) {
+        tSel.value = TAB_TITLE_PRESETS.includes(gameSettings.tabTitle) ? gameSettings.tabTitle : "";
     }
     // Restore Backup button — reflects whether a checkpoint exists.
     const bkBtn  = document.getElementById("set-restore");
@@ -1119,11 +1163,14 @@ function _buildBldTooltipHTML(id, def) {
     const hasCost = def.coinCost || Object.keys(costs).length > 0;
     if (hasCost) html += `<div class="bld-tt-divider"></div>`;
     if (def.coinCost) {
-        html += `<div class="bld-tt-line">${formatCoins(getEffectiveBuildingCoinCost(def.coinCost))}</div>`;
+        const coinCost = getEffectiveBuildingCoinCost(def.coinCost);
+        const canAffordCoins = (gameState.resources.coins || 0) >= coinCost;
+        html += `<div class="bld-tt-line${canAffordCoins ? '' : ' bld-tt-cant-afford'}">${formatCoins(coinCost)}</div>`;
     }
     for (const [res, amt] of Object.entries(costs)) {
         const rname = (RESOURCES[res] && RESOURCES[res].name) || (res.charAt(0).toUpperCase() + res.slice(1));
-        html += `<div class="bld-tt-line">${rname}: ${fmt(amt)}</div>`;
+        const canAffordRes = (gameState.resources[res] || 0) >= amt;
+        html += `<div class="bld-tt-line${canAffordRes ? '' : ' bld-tt-cant-afford'}">${rname}: ${fmt(amt)}</div>`;
     }
 
     if (def.flavor) html += `<div class="bld-tt-flavor">${def.flavor}</div>`;
@@ -2149,36 +2196,38 @@ const RESEARCH_ERA = {};
 // Era 1 has no research (the research tab is introduced in Era 2).
 const ERA_2_RESEARCH = [
     // 2.1
-    "taxes", "toolcraft", "timberfelling", "stonemason", "cropRotation", "foragerLore",
+    "toolcraft", "timberfelling", "stonemason", "cropRotation", "foragerLore",
     "wildHarvest", "simplerTinctures",
     // 2.2
     "herbGarden", "animalHusbandry", "carpentry", "quarrying", "oreProspecting",
-    "coalBunker", "silverCurrency", "composting", "communalLiving", "taxCollector",
-    "shadowMarket", "prototypeTools", "favoredTerrain", "stoneSplitting", "logDrying",
+    "coalBunker", "silverCurrency", "composting", "communalLiving", "taxCollector", "favoredTerrain",
     // 2.3
+    "shadowMarket", "prototypeTools", "stoneSplitting", "logDrying",
     "deepMining", "crystalLore", "sulphurStudy", "bellowsDesign", "concentratedExtracts",
-    "highFireKiln", "loomMastery", "packHunting", "trapLines", "bonecraft",
-    "reinforcedShelving", "dryCellar", "militiaDrill", "bookkeeping", "rationing", "goldStandard",
-    "warFormations", "refinedAlchemy", "quenchingTechniques", "dwarvenShoring", "communalArchitecture",
-    "ironFittings", "oilRendering", "prefabTimber", "stockpiledStone", "hearthStones", "boneTools",
+    "highFireKiln", "loomMastery", "packHunting", "trapLines",
+    "reinforcedShelving", "dryCellar", "militiaDrill", "bookkeeping", "goldStandard", "taxes",
     // 2.4
-    "crystalFocus", "forgeMastery", "mortaredMasonry", "roadNetwork", "tradeGoods",
+    "warFormations", "refinedAlchemy", "quenchingTechniques", "dwarvenShoring", "communalArchitecture",
+    "ironFittings", "oilRendering", "prefabTimber", "stockpiledStone",
+    "crystalFocus", "forgeMastery", "mortaredMasonry", "roadNetwork",
     "guildCharter", "mintStandard", "arcaneTapping", "arcaneInscription", "loreKeeping", "ironLockbox",
-    "greenwardenLore", "trackerSign", "annotatedTexts", "crystalPolishing", "phosphorLamps",
-    "alchemicalFertilizer", "dedicatedTanners",
+    "greenwardenLore", "trackerSign", "annotatedTexts",
     // 2.5
-    "runicScript", "essenceHarvest", "ichorRefinement", "silkCulture", "manaConductorCoils",
+    "bonecraft", "boneTools", "hearthStones", "rationing", "phosphorLamps",
+    "alchemicalFertilizer", "dedicatedTanners", "crystalPolishing", "tradeGoods",
+    "runicScript", "essenceHarvest", "ichorRefinement", "manaConductorCoils",
     "mithrilTemper", "ritualPrep", "darkTexts", "silkenWarren", "manaConduit", "goldOnly", "infernalLore",
-    "fencedGoods", "blueprintLibrary", "steelGrade", "houseDesign",
-    "coalGasification", "pressurizedBellows", "ventilatedShafts", "silkRope",
+    "blueprintLibrary", "steelGrade",
     // 2.6
-    "shieldGuard", "masterworkPotions", "runesOfTheDeep", "oreConcentrate", "crystalChandeliers",
+    "silkCulture", "silkRope", "houseDesign", "coalGasification", "pressurizedBellows", "ventilatedShafts",
     // 2.7
-    "circleOfTheWilds", "rangersConclave", "crossReferenced", "coalReduction",
+    "fencedGoods", "oreConcentrate", "crystalChandeliers", "shieldGuard",
     // 2.8
-    "thievesGuild", "masterCraft", "dwarvenAnvil", "apartmentDesign", "runicCalibration",
+    "runesOfTheDeep", "coalReduction", "masterworkPotions", "circleOfTheWilds",
     // 2.9
-    "eliteCompany", "stonecuttersGuild", "grandLibrary",
+    "dwarvenAnvil", "rangersConclave", "thievesGuild", "crossReferenced", "runicCalibration",
+    // 2.10
+    "apartmentDesign", "masterCraft", "grandLibrary",
     // 2.10 (gates)
     "planarRites", "amnizuSummons", "dungeonBlueprint",
 ];

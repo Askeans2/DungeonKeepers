@@ -2494,6 +2494,27 @@
                 <button class="setting-toggle" id="set-anim" onclick="toggleAnimations()" data-stip="Disables or re-enables CSS transitions and animations throughout the UI. Helpful if you prefer a static interface or notice performance issues.">OFF</button>
             </div>
 
+            <div class="setting-row">
+                <div>
+                    <span class="setting-label">Tab Title</span>
+                    <div class="setting-desc">Rename this tab to something more… professional.</div>
+                </div>
+                <div class="tab-title-controls">
+                    <select id="set-title-preset" class="tab-title-select" onchange="setTabTitleFromPreset()" data-stip="Pick a preset name to instantly rename the browser tab.">
+                        <option value="">— Presets —</option>
+                        <option value="Q3 Budget Review">Q3 Budget Review</option>
+                        <option value="Staff Meeting Notes">Staff Meeting Notes</option>
+                        <option value="Project Timeline - Draft">Project Timeline - Draft</option>
+                        <option value="HR Policy Documentation">HR Policy Documentation</option>
+                        <option value="Weekly Status Report">Weekly Status Report</option>
+                        <option value="Compliance Checklist 2026">Compliance Checklist 2026</option>
+                        <option value="Vendor Contract Overview">Vendor Contract Overview</option>
+                    </select>
+                    <input type="text" id="set-title-input" class="tab-title-input" maxlength="64" placeholder="Custom title…" />
+                    <button class="setting-action-btn" onclick="setTabTitleFromInput()" data-stip="Sets the browser tab to whatever you typed in the field to the left.">Set</button>
+                </div>
+            </div>
+
             <h2 class="section-gap">Data</h2>
 
             <div class="setting-action-row">
