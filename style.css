@@ -3563,7 +3563,7 @@ body.reduce-motion *::after {
 
 #intro-transition-continue {
     margin-top: clamp(6px, 1vh, 14px);
-    padding: 8px 24px 8px 16px;
+    padding: 8px 28px;
     background: transparent;
     border: 1px solid rgba(200,160,40,0.35);
     border-radius: 2px;
@@ -3575,7 +3575,6 @@ body.reduce-motion *::after {
     opacity: 0;
     display: flex;
     align-items: center;
-    gap: 10px;
     transition: opacity 0.4s ease, background 0.15s, color 0.15s,
                 border-color 0.15s, box-shadow 0.15s;
 }
@@ -3588,16 +3587,6 @@ body.reduce-motion *::after {
     border-color: var(--era-gold);
     color: var(--era-gold);
     box-shadow: 0 0 12px rgba(200,140,20,0.3);
-}
-#intro-timer-ring {
-    width: 22px;
-    height: 22px;
-    flex-shrink: 0;
-    opacity: 0;
-    transition: opacity 0.8s ease;
-}
-#intro-transition-continue.intro-btn-in #intro-timer-ring {
-    animation: eraTimerGlow 1.5s ease-in-out infinite;
 }
 
 /* TRADE TAB */

@@ -2630,7 +2630,6 @@ function unlockEra1Node(nodeId) {
 // ── New Game Intro Comic Transition ──────────────────────────────────────────
 
 let _introTransitionCallback = null;
-let _introTimerRAF  = null;
 let _introTimerTimeout = null;
 let _introCanvasRAF = null;
 
@@ -2640,9 +2639,7 @@ function showIntroTransition(onComplete) {
     const overlay = document.getElementById('intro-transition-overlay');
     const panels  = document.querySelectorAll('.intro-panel');
     const btn     = document.getElementById('intro-transition-continue');
-    const arc     = document.getElementById('intro-timer-arc');
 
-    if (_introTimerRAF)     { cancelAnimationFrame(_introTimerRAF); _introTimerRAF = null; }
     if (_introTimerTimeout) { clearTimeout(_introTimerTimeout); _introTimerTimeout = null; }
 
     panels.forEach(p => {
@@ -2650,7 +2647,6 @@ function showIntroTransition(onComplete) {
         p.querySelectorAll('.intro-panel-lore').forEach(l => l.classList.remove('intro-lore-in'));
     });
     btn.classList.remove('intro-btn-in', 'intro-btn-pulse');
-    if (arc) { arc.style.strokeDashoffset = '0'; arc.style.stroke = '#c8a028'; }
     overlay.classList.remove('intro-hiding');
     overlay.classList.add('intro-active');
 
@@ -2879,42 +2875,17 @@ function showIntroTransition(onComplete) {
     // Start canvases after first panel begins to appear
     setTimeout(initIntroCanvases, 200);
 
-    // Show continue button and start auto-advance timer after all panels are in
+    // Show continue button after all panels are in
     const BTN_DELAY = 2800;
-    const AUTO_ADVANCE_MS = 20000;
-    setTimeout(() => {
+    _introTimerTimeout = setTimeout(() => {
         const btn2 = document.getElementById('intro-transition-continue');
         if (!btn2) return;
         btn2.classList.add('intro-btn-in');
-
-        const ring = document.getElementById('intro-timer-ring');
-        if (ring) ring.style.opacity = '1';
-
-        const arc2 = document.getElementById('intro-timer-arc');
-        const CIRCUMFERENCE = 94.2;
-        const start = performance.now();
-
-        function tick(now) {
-            const elapsed  = now - start;
-            const progress = Math.min(elapsed / AUTO_ADVANCE_MS, 1);
-            if (arc2) arc2.style.strokeDashoffset = String(CIRCUMFERENCE * progress);
-
-            const ov2 = document.getElementById('intro-transition-overlay');
-            if (!ov2 || !ov2.classList.contains('intro-active')) return;
-
-            if (progress < 1) {
-                _introTimerRAF = requestAnimationFrame(tick);
-            } else {
-                btn2.classList.add('intro-btn-pulse');
-                _introTimerTimeout = setTimeout(() => introTransitionContinue(), 400);
-            }
-        }
-        _introTimerRAF = requestAnimationFrame(tick);
+        _introTimerTimeout = null;
     }, BTN_DELAY);
 }
 
 function introTransitionContinue() {
-    if (_introTimerRAF)     { cancelAnimationFrame(_introTimerRAF); _introTimerRAF = null; }
     if (_introTimerTimeout) { clearTimeout(_introTimerTimeout); _introTimerTimeout = null; }
     if (_introCanvasRAF)    { cancelAnimationFrame(_introCanvasRAF); _introCanvasRAF = null; }
 
