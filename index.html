@@ -858,7 +858,77 @@
                     <div class="btn-cost" id="storageCost">20 Wood, 10 Stone</div>
                 </button>
 
-                <!-- Stage 2 — Early Unlocks -->
+                <!-- Craftsmen's Quarter -->
+
+                <div class="grid-section-label">Craftsmen's Quarter</div>
+
+                <button class="build-btn disabled" onclick="build('smelter')" id="btn-smelter" style="display:none">
+                    <div class="btn-title">Smelter</div>
+                    <div class="btn-count" id="smelterCount">0</div>
+                    <div class="btn-cost" id="smelterCost"></div>
+                </button>
+
+                <button class="build-btn disabled" onclick="build('kiln')" id="btn-kiln" style="display:none">
+                    <div class="btn-title">Kiln</div>
+                    <div class="btn-count" id="kilnCount">0</div>
+                    <div class="btn-cost" id="kilnCost"></div>
+                </button>
+
+                <button class="build-btn disabled" onclick="build('loom')" id="btn-loom" style="display:none">
+                    <div class="btn-title">Loom</div>
+                    <div class="btn-count" id="loomCount">0</div>
+                    <div class="btn-cost" id="loomCost"></div>
+                </button>
+
+                <button class="build-btn disabled" onclick="build('alchemyLab')" id="btn-alchemyLab" style="display:none">
+                    <div class="btn-title">Alchemy Lab</div>
+                    <div class="btn-count" id="alchemyLabCount">0</div>
+                    <div class="btn-cost" id="alchemyLabCost"></div>
+                </button>
+
+                <button class="build-btn disabled" onclick="build('forge')" id="btn-forge" style="display:none">
+                    <div class="btn-title">Forge</div>
+                    <div class="btn-count" id="forgeCount">0</div>
+                    <div class="btn-cost" id="forgeCost"></div>
+                </button>
+
+                <button class="build-btn disabled" onclick="build('arcaneGrinder')" id="btn-arcaneGrinder" style="display:none">
+                    <div class="btn-title">Arcane Grinder</div>
+                    <div class="btn-count" id="arcaneGrinderCount">0</div>
+                    <div class="btn-cost" id="arcaneGrinderCost"></div>
+                </button>
+
+                <button class="build-btn disabled" onclick="build('arcaneBench')" id="btn-arcaneBench" style="display:none">
+                    <div class="btn-title">Arcane Bench</div>
+                    <div class="btn-count" id="arcaneBenchCount">0</div>
+                    <div class="btn-cost" id="arcaneBenchCost"></div>
+                </button>
+
+                <button class="build-btn disabled" onclick="build('sulphurVent')" id="btn-sulphurVent" style="display:none">
+                    <div class="btn-title">Sulphur Vent</div>
+                    <div class="btn-count" id="sulphurVentCount">0</div>
+                    <div class="btn-cost" id="sulphurVentCost"></div>
+                </button>
+
+                <!-- The Warren -->
+
+                <div class="grid-section-label">The Warren</div>
+
+                <button class="build-btn disabled" onclick="build('house')" id="btn-house" style="display:none">
+                    <div class="btn-title">House</div>
+                    <div class="btn-count" id="houseCount">0</div>
+                    <div class="btn-cost" id="houseCost"></div>
+                </button>
+
+                <button class="build-btn disabled" onclick="build('apartment')" id="btn-apartment" style="display:none">
+                    <div class="btn-title">Apartment</div>
+                    <div class="btn-count" id="apartmentCount">0</div>
+                    <div class="btn-cost" id="apartmentCost"></div>
+                </button>
+
+                <!-- Merchant's Row -->
+
+                <div class="grid-section-label">Merchant's Row</div>
 
                 <button class="build-btn disabled" onclick="build('marketStall')" id="btn-marketStall" style="display:none">
                     <div class="btn-title">Market Stall</div>
@@ -872,6 +942,36 @@
                     <div class="btn-cost" id="tradeCartCost"></div>
                 </button>
 
+                <!-- Arcane Quarter -->
+
+                <div class="grid-section-label">Arcane Quarter</div>
+
+                <button class="build-btn disabled" onclick="build('mageTower')" id="btn-mageTower" style="display:none">
+                    <div class="btn-title">Mage Tower</div>
+                    <div class="btn-count" id="mageTowerCount">0</div>
+                    <div class="btn-cost" id="mageTowerCost"></div>
+                </button>
+
+                <button class="build-btn disabled" onclick="build('scriptorium')" id="btn-scriptorium" style="display:none">
+                    <div class="btn-title">Scriptorium</div>
+                    <div class="btn-count" id="scriptoriumCount">0</div>
+                    <div class="btn-cost" id="scriptoriumCost"></div>
+                </button>
+
+                <!-- War Quarters -->
+
+                <div class="grid-section-label">War Quarters</div>
+
+                <button class="build-btn disabled" onclick="build('armory')" id="btn-armory" style="display:none">
+                    <div class="btn-title">Armory</div>
+                    <div class="btn-count" id="armoryCount">0</div>
+                    <div class="btn-cost" id="armoryCost"></div>
+                </button>
+
+                <!-- Extraction -->
+
+                <div class="grid-section-label">Extraction</div>
+
                 <button class="build-btn disabled" onclick="build('mine')" id="btn-mine" style="display:none">
                     <div class="btn-title">Mine</div>
                     <div class="btn-count" id="mineCount">0</div>
@@ -882,6 +982,12 @@
                     <div class="btn-title">Coal Seam</div>
                     <div class="btn-count" id="coalSeamCount">0</div>
                     <div class="btn-cost" id="coalSeamCost"></div>
+                </button>
+
+                <button class="build-btn disabled" onclick="build('crystalSeam')" id="btn-crystalSeam" style="display:none">
+                    <div class="btn-title">Crystal Seam</div>
+                    <div class="btn-count" id="crystalSeamCount">0</div>
+                    <div class="btn-cost" id="crystalSeamCost"></div>
                 </button>
 
                 <button class="build-btn disabled" onclick="build('herbalistDen')" id="btn-herbalistDen" style="display:none">
@@ -900,94 +1006,6 @@
                     <div class="btn-title">Clay Pit</div>
                     <div class="btn-count" id="clayPitCount">0</div>
                     <div class="btn-cost" id="clayPitCost"></div>
-                </button>
-
-                <button class="build-btn disabled" onclick="build('crystalSeam')" id="btn-crystalSeam" style="display:none">
-                    <div class="btn-title">Crystal Seam</div>
-                    <div class="btn-count" id="crystalSeamCount">0</div>
-                    <div class="btn-cost" id="crystalSeamCost"></div>
-                </button>
-
-                <button class="build-btn disabled" onclick="build('house')" id="btn-house" style="display:none">
-                    <div class="btn-title">House</div>
-                    <div class="btn-count" id="houseCount">0</div>
-                    <div class="btn-cost" id="houseCost"></div>
-                </button>
-
-                <button class="build-btn disabled" onclick="build('apartment')" id="btn-apartment" style="display:none">
-                    <div class="btn-title">Apartment</div>
-                    <div class="btn-count" id="apartmentCount">0</div>
-                    <div class="btn-cost" id="apartmentCost"></div>
-                </button>
-
-                <!-- Stage 3 — Industry -->
-
-                <button class="build-btn disabled" onclick="build('smelter')" id="btn-smelter" style="display:none">
-                    <div class="btn-title">Smelter</div>
-                    <div class="btn-count" id="smelterCount">0</div>
-                    <div class="btn-cost" id="smelterCost"></div>
-                </button>
-
-                <button class="build-btn disabled" onclick="build('alchemyLab')" id="btn-alchemyLab" style="display:none">
-                    <div class="btn-title">Alchemy Lab</div>
-                    <div class="btn-count" id="alchemyLabCount">0</div>
-                    <div class="btn-cost" id="alchemyLabCost"></div>
-                </button>
-
-                <button class="build-btn disabled" onclick="build('kiln')" id="btn-kiln" style="display:none">
-                    <div class="btn-title">Kiln</div>
-                    <div class="btn-count" id="kilnCount">0</div>
-                    <div class="btn-cost" id="kilnCost"></div>
-                </button>
-
-                <button class="build-btn disabled" onclick="build('loom')" id="btn-loom" style="display:none">
-                    <div class="btn-title">Loom</div>
-                    <div class="btn-count" id="loomCount">0</div>
-                    <div class="btn-cost" id="loomCost"></div>
-                </button>
-
-                <!-- Stage 4 — Advanced -->
-
-                <button class="build-btn disabled" onclick="build('arcaneGrinder')" id="btn-arcaneGrinder" style="display:none">
-                    <div class="btn-title">Arcane Grinder</div>
-                    <div class="btn-count" id="arcaneGrinderCount">0</div>
-                    <div class="btn-cost" id="arcaneGrinderCost"></div>
-                </button>
-
-                <button class="build-btn disabled" onclick="build('forge')" id="btn-forge" style="display:none">
-                    <div class="btn-title">Forge</div>
-                    <div class="btn-count" id="forgeCount">0</div>
-                    <div class="btn-cost" id="forgeCost"></div>
-                </button>
-
-                <button class="build-btn disabled" onclick="build('arcaneBench')" id="btn-arcaneBench" style="display:none">
-                    <div class="btn-title">Arcane Bench</div>
-                    <div class="btn-count" id="arcaneBenchCount">0</div>
-                    <div class="btn-cost" id="arcaneBenchCost"></div>
-                </button>
-
-                <button class="build-btn disabled" onclick="build('mageTower')" id="btn-mageTower" style="display:none">
-                    <div class="btn-title">Mage Tower</div>
-                    <div class="btn-count" id="mageTowerCount">0</div>
-                    <div class="btn-cost" id="mageTowerCost"></div>
-                </button>
-
-                <button class="build-btn disabled" onclick="build('armory')" id="btn-armory" style="display:none">
-                    <div class="btn-title">Armory</div>
-                    <div class="btn-count" id="armoryCount">0</div>
-                    <div class="btn-cost" id="armoryCost"></div>
-                </button>
-
-                <button class="build-btn disabled" onclick="build('sulphurVent')" id="btn-sulphurVent" style="display:none">
-                    <div class="btn-title">Sulphur Vent</div>
-                    <div class="btn-count" id="sulphurVentCount">0</div>
-                    <div class="btn-cost" id="sulphurVentCost"></div>
-                </button>
-
-                <button class="build-btn disabled" onclick="build('scriptorium')" id="btn-scriptorium" style="display:none">
-                    <div class="btn-title">Scriptorium</div>
-                    <div class="btn-count" id="scriptoriumCount">0</div>
-                    <div class="btn-cost" id="scriptoriumCost"></div>
                 </button>
 
                 <!-- Stage 5 — Endgame -->

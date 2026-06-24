@@ -779,10 +779,11 @@ function getResourceBreakdown(res) {
             lines.push({ label: 'Taxation', sub: `${taxRate} cp/creature`, value: perDay, drain: false, perDay: true });
         }
         if (gameState.research && gameState.research.tradeGoods) {
-            const cloth = gameState.resources.cloth || 0;
-            const potions = gameState.resources.potions || 0;
-            const perDay = Math.floor((cloth + potions) * 2);
-            lines.push({ label: 'Trade Caravans', sub: `${cloth} cloth + ${potions} pot`, value: perDay, drain: false, perDay: true });
+            const caps = getCaps();
+            const clothOk = (gameState.resources.cloth || 0) >= (caps.cloth || 0) * 0.75;
+            const potionsOk = (gameState.resources.potions || 0) >= (caps.potions || 0) * 0.75;
+            const perDay = (clothOk && potionsOk) ? 10 : 0;
+            lines.push({ label: 'Trade Caravans', sub: clothOk && potionsOk ? 'stocks ≥75%' : 'stocks below 75%', value: perDay, drain: false, perDay: true });
         }
     }
 
@@ -1733,10 +1734,14 @@ function runOneTick() {
         if (taxRate > 0) {
             gameState.resources.coins = (gameState.resources.coins || 0) + gameState.population.count * taxRate;
         }
-        // Trade Caravans: cloth and potions in stock each generate 2 cp per unit per day
+        // Trade Caravans: 10 cp/day if both cloth and potions are at or above 75% of their cap
         if (gameState.research && gameState.research.tradeGoods) {
-            const tradeIncome = Math.floor(((gameState.resources.cloth || 0) + (gameState.resources.potions || 0)) * 2);
-            gameState.resources.coins = (gameState.resources.coins || 0) + tradeIncome;
+            const caps = getCaps();
+            const clothOk = (gameState.resources.cloth || 0) >= (caps.cloth || 0) * 0.75;
+            const potionsOk = (gameState.resources.potions || 0) >= (caps.potions || 0) * 0.75;
+            if (clothOk && potionsOk) {
+                gameState.resources.coins = (gameState.resources.coins || 0) + 10;
+            }
         }
         // Market Stall: 5 cp per assigned Merchant per day
         const stallWorkers = (gameState.workerAssignments && gameState.workerAssignments.marketStall) || 0;
@@ -1778,6 +1783,11 @@ function runOneTick() {
         }
     }
 
+    // Snapshot unclamped values before clamping so the rate display shows the true
+    // net rate even when a resource is pinned at 0 or at cap.
+    const _preClamp = {};
+    for (const k of Object.keys(gameState.resources)) _preClamp[k] = gameState.resources[k] || 0;
+
     // Final clamp — applied once after all production and consumption so resources
     // can fill to cap even when consumption is non-zero within the same tick
     for (const res of Object.keys(caps)) {
@@ -1786,10 +1796,11 @@ function runOneTick() {
         }
     }
 
-    // Record true per-tick deltas for the rate display
+    // Record true per-tick deltas for the rate display (use pre-clamp values so
+    // negative rates remain visible when the resource is pinned at 0)
     const deltas = {};
     for (const k of Object.keys(gameState.resources)) {
-        const d = (gameState.resources[k] || 0) - (_preSnap[k] || 0);
+        const d = (_preClamp[k] || 0) - (_preSnap[k] || 0);
         if (d !== 0) deltas[k] = d;
     }
     gameState.lastTickDeltas = deltas;
@@ -2180,7 +2191,7 @@ const BUILDING_ERA = {
     crystalSeam:   2, smelter:       2, alchemyLab:  2,
     kiln:          2, loom:          2, mageTower:   2,
     armory:        2, sulphurVent:   2, arcaneGrinder: 2,
-    forge:         2, arcaneBench:   2, scriptorium:  2,
+    forge:         2, arcaneBench:   2,
     marketStall:   2, tradeCart:     2, house:        2, apartment:    2,
     // Era 3 — Endgame / dark
     ritualCircle:  3, spiderNest:    3, arcaneCrucible: 3,

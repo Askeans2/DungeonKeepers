@@ -531,7 +531,7 @@ RESEARCH.roadNetwork = {
 RESEARCH.tradeGoods = {
     tier: "2.5",
     name: "Trade Caravans",
-    desc: "Send wagons of cloth and potions to nearby settlements. Cloth and potions in stock each generate 2 cp per unit per day.",
+    desc: "Send wagons of cloth and potions to nearby settlements. If both cloth and potions are at least 75% of their storage cap, generate 10 cp per day.",
     cost: { cloth: 30, potions: 15 },
     requiresResearch: ["loomMastery"],
     effects: { flag: "tradeGoods" },
