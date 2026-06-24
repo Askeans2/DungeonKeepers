@@ -1202,26 +1202,31 @@ let _settingsTipTimer = null;
 
 function initSettingsTooltips() {
     _settingsTipEl = document.getElementById('settings-tooltip');
-    document.querySelectorAll('[data-stip]').forEach(el => {
-        el.addEventListener('mouseenter', e => {
-            clearTimeout(_settingsTipTimer);
-            _settingsTipTimer = setTimeout(() => {
-                if (!_settingsTipEl) return;
-                _settingsTipEl.textContent = el.dataset.stip;
-                _settingsTipEl.style.display = 'block';
-                _positionSettingsTip(e);
-            }, 1500);
-        });
-        el.addEventListener('mousemove', e => {
-            if (_settingsTipEl && _settingsTipEl.style.display === 'block') {
-                _positionSettingsTip(e);
-            }
-        });
-        el.addEventListener('mouseleave', () => {
-            clearTimeout(_settingsTipTimer);
-            if (_settingsTipEl) _settingsTipEl.style.display = 'none';
-        });
-    });
+
+    // Delegated listeners so dynamically-generated [data-stip] elements work too
+    document.addEventListener('mouseenter', e => {
+        const el = e.target.closest('[data-stip]');
+        if (!el) return;
+        clearTimeout(_settingsTipTimer);
+        _settingsTipTimer = setTimeout(() => {
+            if (!_settingsTipEl) return;
+            _settingsTipEl.textContent = el.dataset.stip;
+            _settingsTipEl.style.display = 'block';
+            _positionSettingsTip(e);
+        }, 1500);
+    }, true);
+
+    document.addEventListener('mousemove', e => {
+        if (_settingsTipEl && _settingsTipEl.style.display === 'block') {
+            _positionSettingsTip(e);
+        }
+    }, true);
+
+    document.addEventListener('mouseleave', e => {
+        if (!e.target.closest('[data-stip]')) return;
+        clearTimeout(_settingsTipTimer);
+        if (_settingsTipEl) _settingsTipEl.style.display = 'none';
+    }, true);
 }
 
 function _positionSettingsTip(e) {
@@ -3581,14 +3586,14 @@ function renderEra1Actions() {
 
     let html = '<h2>Actions</h2><div class="actions-row">';
 
-    html += `<button class="action-btn" onclick="gatherEra1('essence')">
-        <span class="action-title">Concentrate</span>
+    html += `<button class="action-btn" onclick="gatherEra1('essence')" data-stip="Anima is the raw spiritual energy that underlies all dungeon power — the ambient force of will, hunger, and dark intent given form. You draw it inward through focused stillness, coalescing the latent essence of this place into something you can wield.">
+        <span class="action-title">Manifest</span>
         <span class="action-yield">+1 Anima</span>
     </button>`;
 
     {
         const cls = canInfluence ? '' : ' disabled';
-        html += `<button class="action-btn${cls}" onclick="gatherEra1('toInfluence')">
+        html += `<button class="action-btn${cls}" onclick="gatherEra1('toInfluence')" data-stip="Influence is the measure of your presence in the world beyond these walls — how feared, revered, or acknowledged you are by those above. Exerting Will burns portions of your stored Anima to push that presence outward, bending perception and reputation through sheer force of dark intent.">
             <span class="action-title">Exert Will</span>
             <span class="action-yield">-2 Anima → +1 Influence</span>
         </button>`;
@@ -3596,7 +3601,7 @@ function renderEra1Actions() {
 
     {
         const cls = canMana ? '' : ' disabled';
-        html += `<button class="action-btn${cls}" onclick="gatherEra1('toMana')">
+        html += `<button class="action-btn${cls}" onclick="gatherEra1('toMana')" data-stip="The Weave is the invisible lattice of magical energy that suffuses all of existence in the Forgotten Realms — the medium through which spells are cast, artifacts empowered, and arcane will made manifest. You reach into its threads and draw out a measure of raw Mana, spending deep reserves of Anima to bridge the gap between your will and the fabric of magic itself.">
             <span class="action-title">Tap the Weave</span>
             <span class="action-yield">-5 Anima → +1 Mana</span>
         </button>`;
