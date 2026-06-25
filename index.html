@@ -2686,7 +2686,7 @@
     <!-- RIGHT: Log -->
     <div class="panel right">
         <h2>Log</h2>
-        <p style="color:var(--text-muted); font-size:12px;">Nothing yet.</p>
+        <div id="event-log"><p class="log-empty">Nothing yet.</p></div>
     </div>
 
 </div>
@@ -2694,7 +2694,7 @@
 <script>
     // Load local game scripts in dependency order, cache-busted by GAME_VERSION (see version.js).
     // lz-string must precede save.js (save/load uses LZString for (de)compression).
-    ["lib/lz-string.min.js", "data/resources.js", "data/rooms.js", "data/research.js", "data/era1tree.js", "save.js", "game.js"].forEach(function (src) {
+    ["lib/lz-string.min.js", "data/resources.js", "data/rooms.js", "data/research.js", "data/era1tree.js", "data/randomEvents.js", "save.js", "game.js"].forEach(function (src) {
         document.write('<scr' + 'ipt src="' + src + '?v=' + window.GAME_VERSION + '"></scr' + 'ipt>');
     });
 </script>

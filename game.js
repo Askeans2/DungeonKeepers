@@ -236,6 +236,7 @@ const gameState = {
     meta:       { seenBiomes: [], totalPrestiges: 0, racesPlayed: {} },
     time:       { tick: 0, day: 1, year: 1, seasonIndex: 0 },
     pauseBank:  0,   // seconds of Accelerated Time banked from pausing
+    randomEventCooldowns: {}, // eventId → absolute day the cooldown expires
     era1: {
         unlocked: [],   // node ids the player has purchased
         chosen:   null, // L5 race node id picked (null until Era 2 gate)
@@ -1829,6 +1830,7 @@ function runOneTick() {
         }
         gameState.time.seasonIndex = Math.floor((gameState.time.day - 1) / DAYS_PER_SEASON) % 4;
         flashEl('day');
+        maybeFireRandomEvent();
         if (gameState.time.day % DAYS_PER_SEASON === 1 && gameState.time.day !== 1) {
             flashEl('season');
         }
@@ -5926,6 +5928,82 @@ if ((gameState.run.era || 1) === 1 && !gameState.run.race) {
 if (gameState.resources.influence == null) gameState.resources.influence = 0;
 if (gameState.resources.mana == null) gameState.resources.mana = 0;
 if (gameState.resources.arcaneEssence == null) gameState.resources.arcaneEssence = 0;
+// ── Random Event System ───────────────────────────────────────────────────────
+
+function addLogEntry(text, effectSummary) {
+    const el = document.getElementById('event-log');
+    if (!el) return;
+    const empty = el.querySelector('.log-empty');
+    if (empty) empty.remove();
+
+    const entry = document.createElement('div');
+    entry.className = 'log-entry';
+    const { day, year } = gameState.time;
+    const season = ['Spring', 'Summer', 'Autumn', 'Winter'][gameState.time.seasonIndex];
+    entry.innerHTML =
+        `<div class="log-meta">Day ${day}, ${season} — Year ${year}</div>` +
+        `<div class="log-text">${text}</div>` +
+        (effectSummary ? `<div class="log-effect">${effectSummary}</div>` : '');
+    el.insertBefore(entry, el.firstChild);
+
+    // Keep at most 40 entries
+    while (el.children.length > 40) el.removeChild(el.lastChild);
+}
+
+function _weightedPick(pool) {
+    const totalWeight = pool.reduce((s, e) => s + (e.weight || 1), 0);
+    let roll = Math.random() * totalWeight;
+    for (const e of pool) {
+        roll -= (e.weight || 1);
+        if (roll <= 0) return e;
+    }
+    return pool[pool.length - 1];
+}
+
+function _applyEventEffects(effects) {
+    const parts = [];
+    for (const fx of effects) {
+        if (fx.type === 'resource') {
+            gameState.resources[fx.resource] = (gameState.resources[fx.resource] || 0) + fx.amount;
+            if (fx.amount === 0) continue;
+            const rdef = RESOURCES && RESOURCES[fx.resource];
+            const rname = (rdef && rdef.name) || (fx.resource.charAt(0).toUpperCase() + fx.resource.slice(1));
+            parts.push(fx.amount > 0 ? `+${fx.amount} ${rname}` : `${fx.amount} ${rname}`);
+        }
+    }
+    return parts.join(', ');
+}
+
+function maybeFireRandomEvent() {
+    if (typeof RANDOM_EVENTS === 'undefined') return;
+    const era = (gameState.run && gameState.run.era) || 1;
+    const currentDay = gameState.time.day + (gameState.time.year - 1) * DAYS_PER_SEASON * 4;
+    const cooldowns = gameState.randomEventCooldowns || (gameState.randomEventCooldowns = {});
+
+    // Roll once per day with a ~30% chance to fire any event
+    if (Math.random() > 0.30) return;
+
+    let pool = [];
+    if (era === 1) {
+        pool = (RANDOM_EVENTS.era1 || []).filter(e => (cooldowns[e.id] || 0) <= currentDay);
+    } else {
+        const general = (RANDOM_EVENTS.era2General || []).filter(e => (cooldowns[e.id] || 0) <= currentDay);
+        const raceName = gameState.run && gameState.run.race;
+        const raceType = raceName && RACE_DATA[raceName] && RACE_DATA[raceName].tagLabel;
+        const byType   = raceType && RANDOM_EVENTS.era2ByType && RANDOM_EVENTS.era2ByType[raceType]
+            ? RANDOM_EVENTS.era2ByType[raceType].filter(e => (cooldowns[e.id] || 0) <= currentDay)
+            : [];
+        pool = [...general, ...byType];
+    }
+
+    if (!pool.length) return;
+
+    const event = _weightedPick(pool);
+    const effectSummary = _applyEventEffects(event.effects || []);
+    addLogEntry(event.text, effectSummary);
+    cooldowns[event.id] = currentDay + (event.cooldownDays || 20);
+}
+
 // Assign biome on first load (fresh game or old save with no mods yet)
 if (!gameState.run || !gameState.run.mods || gameState.run.mods.length === 0) {
     if (!gameState.run) gameState.run = { biome: null, race: null, mods: [] };
