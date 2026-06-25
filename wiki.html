@@ -1934,6 +1934,21 @@
             <h2>Changelog</h2>
 
             <div class="biome-card">
+                <div><span class="cl-ver">v0.72.8</span><span class="cl-date">2026-06-25</span></div>
+                <p class="biome-desc">Wiki Creature Tree: spread the three domain branches evenly at 0°/120°/240° and expanded each branch's arc from 90° to 120°, eliminating overlap and filling all sides of the radial layout.</p>
+            </div>
+
+            <div class="biome-card">
+                <div><span class="cl-ver">v0.72.7</span><span class="cl-date">2026-06-25</span></div>
+                <p class="biome-desc">Renamed the Legendary type node to Sovereign and replaced its six races (Ancient Dragon, Nightwalker, Roc, Dragon Turtle, Void Dragon, Phoenix) with lower-key alternatives: Wyrm, Umbral Hunter, Storm Roc, Ironback, Rift Drake, Ashborn.</p>
+            </div>
+
+            <div class="biome-card">
+                <div><span class="cl-ver">v0.72.6</span><span class="cl-date">2026-06-25</span></div>
+                <p class="biome-desc">Each layer of the Awakening tree now uses distinct colors: L3 Form nodes and L4 Type nodes each have their own accent color instead of inheriting their parent's tint.</p>
+            </div>
+
+            <div class="biome-card">
                 <div><span class="cl-ver">v0.72.5</span><span class="cl-date">2026-06-25</span></div>
                 <p class="biome-desc">Replaced four Awakening tree race picks that conflicted with the earnable Legendary Roster: Tarrasque→Behemoth (Titan), Lich→Death Knight (Cursed), Sphinx→Nightwalker and Kraken→Void Dragon (Legendary). Updated era1tree.js, game.js, and the wiki bestiary and Creature Tree accordingly.</p>
             </div>
@@ -3237,8 +3252,8 @@ function showWiki(id) {
 
     var RACE_PATHS = [
         { name: 'The Deep',   color: '#8899aa', angle: 0,   types: ['Goblinoid','Giant','Titan','Swarm','Aberration','Construct','Cursed','Draconic'] },
-        { name: 'The Wild',   color: '#5a9e60', angle: 90,  types: ['Flora','Ooze','Lycanthrope','Fey','Aquatic','Monstrous','Legendary','Beast'] },
-        { name: 'The Beyond', color: '#8866bb', angle: 180, types: ['Undead','Specter','Elemental','Primordial','Fiend','Humanoid','Planar','Celestial'] },
+        { name: 'The Wild',   color: '#5a9e60', angle: 120, types: ['Flora','Ooze','Lycanthrope','Fey','Aquatic','Monstrous','Sovereign','Beast'] },
+        { name: 'The Beyond', color: '#8866bb', angle: 240, types: ['Undead','Specter','Elemental','Primordial','Fiend','Humanoid','Planar','Celestial'] },
     ];
 
     var ROSTER = {
@@ -3264,7 +3279,7 @@ function showWiki(id) {
         'Titan':       ['Empyrean','Behemoth','Astral Dreadnought','Leviathan','War Colossus','Elder Titan'],
         'Cursed':      ['Death Knight','Petrified Medusa','Werewolf','Serpent Abomination','Cursed Knight','Wereraven'],
         'Fey':         ['Pixie','Satyr','Dryad','Redcap','Quickling','Green Hag'],
-        'Legendary':   ['Ancient Dragon','Nightwalker','Roc','Dragon Turtle','Void Dragon','Phoenix'],
+        'Sovereign':   ['Wyrm','Umbral Hunter','Storm Roc','Ironback','Rift Drake','Ashborn'],
         'Primordial':  ['Elder Tempest','Zaratan','Abyssal Tide','Elder Fire','Obyrith','Void Shard'],
     };
 
@@ -3275,7 +3290,7 @@ function showWiki(id) {
         'Aquatic':'#40a8c8','Monstrous':'#c84040','Beast':'#b06030',
         'Undead':'#9b6dbe','Elemental':'#e8c040','Specter':'#7060a0',
         'Fiend':'#d04060','Humanoid':'#60a8d0','Planar':'#60a0b0','Celestial':'#d4b840',
-        'Titan':'#c05030','Cursed':'#8040a0','Fey':'#c878d8','Legendary':'#e8c040','Primordial':'#3080a0',
+        'Titan':'#c05030','Cursed':'#8040a0','Fey':'#c878d8','Sovereign':'#e8c040','Primordial':'#3080a0',
     };
 
     var PATH_DESCS = {
@@ -3307,7 +3322,7 @@ function showWiki(id) {
         'Titan':       'Colossi of the primordial age — beings of mythic scale whose very presence amplifies everything nearby. Consume vast food, but produce at a scale nothing else can match.',
         'Cursed':      'Not born but unmade and remade — beings transformed by curses, oaths, or forbidden knowledge into something unrecognizable and formidable.',
         'Fey':         'Ancient, enchanted, and utterly unconcerned with mortal logic. Fey do not follow rules — they follow moods, whims, and oaths sworn under moonlight that meant something once.',
-        'Legendary':   'Singular phenomena — creatures so far beyond others of their kind that they exist as categories of one. The world bends slightly around their presence without meaning to.',
+        'Sovereign':   'Apex beings that rule their domain absolutely — not through numbers or cunning, but through sheer presence. Where a Sovereign exists, everything else exists around it.',
         'Primordial':  'Older than elements. Beings from before the planes were separated, who never agreed to the rules that followed. Their power is foundational in ways elementals cannot match.',
     };
 
@@ -3474,13 +3489,13 @@ function showWiki(id) {
         'Wereraven':          { desc: 'Cursed watchers who carry the affliction lightly — or so they claim. Wereravens observe, remember, and report.', mods: [{n:'Dark Wing Network',p:true,d:'+2 to all manual gather yields; Hunting Lodges extra +10%.'}] },
         // ── Fey ───────────────────────────────────────────────────────────────────
         'Redcap':             { desc: 'A murderous faerie that keeps its cap red by soaking it in the blood of its kills. Their violent labor drives exceptional bone yields.', mods: [{n:'Blood-Soaked Cap',p:true,d:'Hunting Lodges extra +10%; Bone cap +50; +1 to all manual gather yields.'}] },
-        // ── Legendary ─────────────────────────────────────────────────────────────
-        'Ancient Dragon':     { desc: 'Not a species — a milestone. Ancient Dragons have lived long enough that they no longer bother with the concerns of other creatures.', mods: [{n:'Ancient Dominance',p:true,d:'Extra +3% all production; Coin cap +2,000 + 15% of tier base.'}] },
-        'Nightwalker':        { desc: 'A massive entity of living darkness spawned in the Shadowfell. The Nightwalker does not move through shadow — it IS shadow, and its passage drains light and vitality from everything around it.', mods: [{n:'Consuming Dark',p:true,d:'Extra +3% all production; Arcane Essence cap +50; Coin cap +1,000 + 10% of tier base.'}] },
-        'Roc':                { desc: 'A bird large enough to mistake elephants for prey and correct that assumption by eating them. Their aerial dominance gathers resources at mythic scale.', mods: [{n:'Sky Sovereign',p:true,d:'+3 to all manual gather yields; Hunting Lodges extra +20%.'}] },
-        'Dragon Turtle':      { desc: 'Ancient beyond reckoning, the Dragon Turtle sleeps in the deep ocean and wakes when it feels like it. Vast storage and aquatic amplification.', mods: [{n:'Ancient Shell',p:true,d:'Storage buildings hold +30 per building; Clay Pits extra +20%; Food cap +200.'}] },
-        'Void Dragon':        { desc: 'A dragon that flew too deep into the astral sea and came back as something else. The Void Dragon transcended flesh into pure possibility — a being of staggering presence and cosmic production.', mods: [{n:'Astral Transcendence',p:true,d:'Extra +3% all production; Coin cap +2,000 + 15% of tier base; only 1 fits per Hovel.'}] },
-        'Phoenix':            { desc: 'A being of pure elemental fire that cannot die — only transform. Supercharges all fire and metal operations.', mods: [{n:'Eternal Flame',p:true,d:'Smelters and Forges extra +25%; Coal Seams extra +15%; never needs food — the flame sustains it.'}] },
+        // ── Sovereign ─────────────────────────────────────────────────────────────
+        'Wyrm':               { desc: 'Older than most kingdoms and larger than some. A Wyrm is what a dragon becomes when it has outlived every reason to be reasonable.', mods: [{n:'Ancient Dominance',p:true,d:'Extra +3% all production; Coin cap +2,000 + 15% of tier base.'}] },
+        'Umbral Hunter':      { desc: 'A predator that has made shadow into a hunting ground. It does not move through darkness — it is the reason darkness feels like it is watching you.', mods: [{n:'Living Dark',p:true,d:'Ritual Circles extra +20%; Arcane Grinders extra +15%; Arcane Essence cap +75.'}] },
+        'Storm Roc':          { desc: 'A bird large enough that its wingspan generates its own weather. Their aerial dominance gathers resources at mythic scale.', mods: [{n:'Sky Sovereign',p:true,d:'+1 to all manual gather yields; Hunting Lodges extra +20%.'}] },
+        'Ironback':           { desc: 'So heavily armored by centuries of growth it has become a landscape feature. Nothing has survived making one feel rushed.', mods: [{n:'Ancient Shell',p:true,d:'Storage buildings hold +30 per building; Clay Pits extra +20%; Food cap +200.'}] },
+        'Rift Drake':         { desc: 'A drake that has fed on planar energy long enough that it no longer fully exists in one place. Its arcane output reflects something that has stopped finding reality binding.', mods: [{n:'Void-Touched',p:true,d:'Extra +3% all production; Arcane Grinders extra +20%; further 50% food reduction.'}] },
+        'Ashborn':            { desc: 'Not a phoenix — something that has burned so many times it has stopped bothering to fully come back. Supercharges all fire and metal operations.', mods: [{n:'Eternal Flame',p:true,d:'Smelters and Forges extra +25%; Coal Seams extra +15%; nearly foodless — the flame sustains it.'}] },
         // ── Planar ────────────────────────────────────────────────────────────────
         'Githzerai':          { desc: 'Ascetics of Limbo who impose order on chaos through sheer will. Their mental discipline amplifies all production.', mods: [{n:'Zerth Discipline',p:true,d:'Extra +2% all production; slightly faster growth.'}] },
         'Githyanki':          { desc: 'Astral conquerors with silver swords. Their aggressive efficiency translates to exceptional gathering.', mods: [{n:'Astral Raid',p:true,d:'+2 to all manual gather yields; +1 cp/creature/day.'}] },
@@ -3527,7 +3542,7 @@ function showWiki(id) {
         'Celestial':  'M0,-9 L1,-3 L7,-5 L3,1 L8,3 L2,3 L2,8 L0,5 L-2,8 L-2,3 L-8,3 L-3,1 L-7,-5 L-1,-3 Z',
         'Titan':      'M-6,-8 L6,-8 L8,0 L6,8 L-6,8 L-8,0 Z M0,-8 L0,8 M-8,0 L8,0',
         'Cursed':     'M0,-8 C4,-6 6,-2 4,2 C2,6 -2,7 -2,4 C-2,1 2,0 2,-3 C2,-6 0,-7 0,-8 Z M0,7 a1,1 0 1,0 2,0 a1,1 0 1,0 -2,0',
-        'Legendary':  'M0,-9 L2,-3 L8,-3 L3,0 L5,7 L0,3 L-5,7 L-3,0 L-8,-3 L-2,-3 Z M0,-5 L1,-2 L4,-2 L2,0 L3,4 L0,2 L-3,4 L-2,0 L-4,-2 L-1,-2 Z',
+        'Sovereign':  'M0,-9 L2,-3 L8,-3 L3,0 L5,7 L0,3 L-5,7 L-3,0 L-8,-3 L-2,-3 Z M0,-5 L1,-2 L4,-2 L2,0 L3,4 L0,2 L-3,4 L-2,0 L-4,-2 L-1,-2 Z',
         'Primordial': 'M0,-8 C6,0 4,7 0,9 C-4,7 -6,0 0,-8 Z M-5,-3 C-2,0 2,0 5,-3 M-4,3 C-2,1 2,1 4,3',
     };
 
@@ -3728,9 +3743,9 @@ function showWiki(id) {
             var typeCreatureCounts = path.types.map(function(t) { return (ROSTER[t] || []).length; });
             var totalCreatures = typeCreatureCounts.reduce(function(a,b){return a+b;}, 0);
             var typeAngles = [];
-            var cursor = path.angle - 45;
+            var cursor = path.angle - 60;
             path.types.forEach(function(typeName, ti) {
-                var arc = typeCreatureCounts[ti] / totalCreatures * 90;
+                var arc = typeCreatureCounts[ti] / totalCreatures * 120;
                 typeAngles.push({ start: cursor, mid: cursor + arc / 2, end: cursor + arc });
                 cursor += arc;
             });

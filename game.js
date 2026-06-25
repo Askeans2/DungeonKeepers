@@ -4127,9 +4127,7 @@ function renderEra1TreeLegacy() {
         const ppos = positions.get(node.parent);
         const cpos = positions.get(nodeId);
         if (!ppos || !cpos) continue;
-        const drive  = era1GetDrive(nodeId) || era1GetDrive(node.parent);
-        const domain = era1GetDomain(nodeId) || era1GetDomain(node.parent);
-        const color  = ERA1_DRIVE_COLORS[drive] || DOMAIN_COLORS[domain] || '#666';
+        const color  = era1GetColor(nodeId, DOMAIN_COLORS);
         const px = ppos.x + ox;
         const py = ppos.y + ox; // note: using separate axes below
         const cx = cpos.x + ox;
@@ -4322,6 +4320,13 @@ function era1ShowLegendaryPanel(name, e) {
     if (node) era1ShowPanel(node.id, e);
 }
 
+// Apply the most-specific color for a node as an inline --dn-clr CSS variable.
+const _ERA1_DOMAIN_COLORS_STATIC = { deep: '#8899aa', wild: '#5a9e60', beyond: '#8866bb' };
+function era1ApplyColorClass(el, nodeId) {
+    const color = era1GetColor(nodeId, _ERA1_DOMAIN_COLORS_STATIC);
+    if (color) el.style.setProperty('--dn-clr', color);
+}
+
 // Classify and apply CSS state classes to all nodes without full rebuild.
 function era1UpdateNodeStyles(unlocked, revealed, offeredNames, prestiged) {
     const era1    = gameState.era1 || {};
@@ -4341,10 +4346,7 @@ function era1UpdateNodeStyles(unlocked, revealed, offeredNames, prestiged) {
             'era1-cn-hunt', 'era1-cn-undying', 'era1-cn-bargain'
         );
 
-        const drive  = era1GetDrive(nodeId);
-        const domain = era1GetDomain(nodeId);
-        if (drive) el.classList.add('era1-cn-' + drive);
-        else if (domain) el.classList.add('era1-cn-' + domain);
+        era1ApplyColorClass(el, nodeId);
 
         if (node.layer === 0) {
             el.classList.add('era1-cn-root');
@@ -4624,9 +4626,7 @@ function era1RenderDiscoveryScene(centerId, unlocked, revealed, offeredNames, pr
         const node = ERA1_TREE[slot.id];
         if (!node) return '';
         const mid = { x: slot.x + slot.w / 2, y: slot.y + slot.h / 2 };
-        const drive  = era1GetDrive(node.id) || era1GetDrive(center.id);
-        const domain = era1GetDomain(node.id) || era1GetDomain(center.id);
-        const color = ERA1_DRIVE_COLORS[drive] || colors[domain] || '#6b706f';
+        const color = era1GetColor(node.id, colors) || era1GetColor(center.id, colors) || '#6b706f';
         const opacity = slot.forceUnknown ? 0.28 : 0.58;
         if (slot.role.indexOf('sibling') === 0) {
             return `<path d="M${centerMid.x},${centerMid.y} C${centerMid.x},${mid.y} ${mid.x},${centerMid.y} ${mid.x},${mid.y}" stroke="${color}" stroke-width="1.5" fill="none" opacity="${opacity}"/>`;
@@ -4659,8 +4659,6 @@ function era1CreateDiscoveryNode(slot, unlocked, revealed, offeredNames, prestig
     if (!node) return null;
     const knowledge = slot.forceUnknown ? 'unknown' : era1NodeKnowledge(node, unlocked, revealed, offeredNames, prestiged);
     const el = document.createElement('div');
-    const drive  = era1GetDrive(node.id);
-    const domain = era1GetDomain(node.id);
     const isCenter = slot.role === 'center';
     const isUnlocked = unlocked.has(node.id) || node.id === 'root';
     const isOffered = node.layer === 5 && offeredNames.has(node.race);
@@ -4668,8 +4666,7 @@ function era1CreateDiscoveryNode(slot, unlocked, revealed, offeredNames, prestig
     const canUnlock = era1NodeCanUnlock(node, unlocked, offeredNames);
 
     el.className = 'era1-cn era1-dnode era1-dnode-' + slot.role;
-    if (drive) el.classList.add('era1-cn-' + drive);
-    else if (domain) el.classList.add('era1-cn-' + domain);
+    era1ApplyColorClass(el, node.id);
     if (node.id === 'root') el.classList.add('era1-cn-root');
     if (isCenter) el.classList.add('era1-cn-chosen', 'era1-dnode-center');
     else if (knowledge === 'unknown') el.classList.add('era1-cn-fogged', 'era1-dnode-unknown');
@@ -4790,7 +4787,7 @@ const CREATURE_ROSTER = {
     "Titan":       ["Empyrean", "Behemoth", "Astral Dreadnought", "Leviathan", "War Colossus", "Elder Titan"],
     "Cursed":      ["Death Knight", "Petrified Medusa", "Werewolf", "Serpent Abomination", "Cursed Knight", "Wereraven"],
     "Fey":         ["Pixie", "Satyr", "Dryad", "Redcap", "Quickling", "Green Hag"],
-    "Legendary":   ["Ancient Dragon", "Nightwalker", "Roc", "Dragon Turtle", "Void Dragon", "Phoenix"],
+    "Sovereign":   ["Wyrm", "Umbral Hunter", "Storm Roc", "Ironback", "Rift Drake", "Ashborn"],
     "Primordial":  ["Elder Tempest", "Zaratan", "Abyssal Tide", "Elder Fire", "Obyrith", "Void Shard"],
 };
 
@@ -5865,34 +5862,34 @@ const LEGENDARY_ROSTER = {
             extraMods: [{ name: "Blood-Soaked Cap", pos: true, desc: "Hunting Lodges extra +10%; Bone cap +50; +1 to all manual gather yields." }],
         },
 
-        // ── Legendary (selectable) ────────────────────────────────────────────
-        "Ancient Dragon": {
-            desc: "Not a species — a milestone. Ancient Dragons have lived long enough that they no longer bother with the concerns of other creatures.",
+        // ── Sovereign (selectable) ────────────────────────────────────────────
+        "Wyrm": {
+            desc: "Older than most kingdoms and larger than some. A Wyrm is what a dragon becomes when it has outlived every reason to be reasonable.",
             extraEffects: { allProductionBonus: 0.03, coinCapBonus: { flat: 2000, pct: 0.15 } },
             extraMods: [{ name: "Ancient Dominance", pos: true, desc: "Extra +3% all production; Coin cap +2,000 + 15% of tier base." }],
         },
-        "Nightwalker": {
-            desc: "A massive entity of living darkness from the Shadowfell where the absence of light has become something that moves with purpose. Arcane and ritual processes warp around its presence.",
+        "Umbral Hunter": {
+            desc: "A predator that has made shadow into a hunting ground. Arcane and ritual processes warp around its presence.",
             extraEffects: { converterBonus: { ritualCircle: 1.20, arcaneGrinder: 1.15 }, capBonus: { arcaneEssence: 75 } },
             extraMods: [{ name: "Living Dark", pos: true, desc: "Ritual Circles extra +20%; Arcane Grinders extra +15%; Arcane Essence cap +75." }],
         },
-        "Roc": {
-            desc: "A bird large enough to mistake elephants for prey and correct that assumption by eating them. Their aerial dominance gathers resources at mythic scale.",
+        "Storm Roc": {
+            desc: "A bird large enough that its wingspan generates its own weather. Their aerial dominance gathers resources at mythic scale.",
             extraEffects: { allGatherBonus: 1, productionBonus: { huntingLodge: 1.20 } },
             extraMods: [{ name: "Sky Sovereign", pos: true, desc: "Extra +1 to all manual gather yields; Hunting Lodges extra +20%." }],
         },
-        "Dragon Turtle": {
-            desc: "Ancient beyond reckoning, the Dragon Turtle sleeps in the deep ocean and wakes when it feels like it. Vast storage and aquatic amplification.",
+        "Ironback": {
+            desc: "So heavily armored by centuries of growth it has become a landscape feature. Vast storage and aquatic amplification.",
             extraEffects: { storageBonus: 30, productionBonus: { clayPit: 1.20 }, capBonus: { food: 200 } },
             extraMods: [{ name: "Ancient Shell", pos: true, desc: "Storage buildings hold 30 more; Clay Pits extra +20%; Food cap +200." }],
         },
-        "Void Dragon": {
-            desc: "A dragon that flew too deep into the astral sea and came back changed. Void Dragons have shed hunger, territory, and kin for something older — and their arcane output reflects it.",
+        "Rift Drake": {
+            desc: "A drake that has fed on planar energy long enough that it no longer fully exists in one place. Its arcane output reflects something that has stopped finding reality binding.",
             extraEffects: { allProductionBonus: 0.03, converterBonus: { arcaneGrinder: 1.20 }, foodConsumption: 0.50 },
             extraMods: [{ name: "Void-Touched", pos: true, desc: "Extra +3% all production; Arcane Grinders extra +20%; further 50% food reduction." }],
         },
-        "Phoenix": {
-            desc: "A being of pure elemental fire that cannot die — only transform. The Phoenix supercharges all fire and metal operations.",
+        "Ashborn": {
+            desc: "Not a phoenix — something that has burned so many times it has stopped bothering to fully come back. Supercharges all fire and metal operations.",
             extraEffects: { converterBonus: { smelter: 1.25, forge: 1.25 }, productionBonus: { coalSeam: 1.15 }, foodConsumption: 0.05 },
             extraMods: [{ name: "Eternal Flame", pos: true, desc: "Smelters and Forges extra +25%; Coal Seams extra +15%; nearly foodless — the flame sustains it." }],
         },

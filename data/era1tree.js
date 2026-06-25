@@ -234,10 +234,10 @@ const ERA1_TREE = {
         type: 'Monstrous', race: null,
     },
     'type-legendary': {
-        id: 'type-legendary', name: 'Legendary', layer: 4, parent: 'apex',
-        flavor: 'Singular. Not a species but a phenomenon — creatures so far beyond others of their kind that they exist as categories of one. The world bends slightly around their presence without meaning to.',
+        id: 'type-legendary', name: 'Sovereign', layer: 4, parent: 'apex',
+        flavor: 'Apex beings that rule their domain absolutely — not through numbers or cunning, but through sheer presence. Where a Sovereign exists, everything else exists around it.',
         cost: { essence: 800, influence: 600, mana: 300 }, children: [],
-        type: 'Legendary', race: null,
+        type: 'Sovereign', race: null,
     },
     'type-beast': {
         id: 'type-beast', name: 'Beast', layer: 4, parent: 'pack',
@@ -502,13 +502,13 @@ const RACE_LEAF_DEFS = [
     { race: 'Quickling',     type: 'Fey', flavor: 'A fey that traded its lifespan for speed and got a terrible deal in retrospect. Quicklings move faster than the eye can follow and die younger than they expected. They do not slow down for either reason.' },
     { race: 'Green Hag',     type: 'Fey', flavor: 'Ancient, cunning, and deeply invested in the misery of others as both craft and hobby. Green Hags form covens, broker terrible bargains, and take payment in pieces of the soul that the victim won\'t miss until later.' },
 
-    // Legendary
-    { race: 'Ancient Dragon',    type: 'Legendary', flavor: 'Not a species — a milestone. Ancient Dragons have lived long enough that they no longer bother with the concerns of other creatures. They have goals that take centuries and the patience to match.' },
-    { race: 'Nightwalker',       type: 'Legendary', flavor: 'A massive entity of living darkness spawned in the Shadowfell, where the absence of light has become something that moves with purpose. The Nightwalker does not pursue prey — it erases it, methodically, one source of light at a time.' },
-    { race: 'Roc',               type: 'Legendary', flavor: 'A bird large enough to mistake elephants for prey and correct that assumption by eating them. Rocs do not see dungeons — they see nesting sites and the small things that live in them.' },
-    { race: 'Dragon Turtle',     type: 'Legendary', flavor: 'Ancient beyond reckoning, the Dragon Turtle sleeps in the deep ocean and wakes when it feels like it. Sailors have mistaken it for an island. This has not ended well for the sailors.' },
-    { race: 'Void Dragon',       type: 'Legendary', flavor: 'A dragon that flew too deep into the astral sea and came back changed — or did not come back at all, and what returned merely wore the shape. Void Dragons have shed hunger, territory, and kin for something older. They are singular in a way that makes other singular things feel crowded.' },
-    { race: 'Phoenix',           type: 'Legendary', flavor: 'A being of pure elemental fire that cannot die — only transform. The Phoenix burns, rises, and burns again with a serenity that suggests it has made peace with the cycle. It has not made peace with you.' },
+    // Sovereign
+    { race: 'Wyrm',              type: 'Sovereign', flavor: 'Older than most kingdoms and larger than some, a Wyrm is what a dragon becomes when it has outlived every reason to be reasonable. They do not hoard gold. They hoard time.' },
+    { race: 'Umbral Hunter',     type: 'Sovereign', flavor: 'A predator that has made shadow into a hunting ground. The Umbral Hunter does not stalk through darkness — it is the reason darkness feels like it is watching you.' },
+    { race: 'Storm Roc',         type: 'Sovereign', flavor: 'A bird large enough that its wingspan generates its own weather. Storm Rocs do not migrate — they arrive, and the sky adjusts accordingly.' },
+    { race: 'Ironback',          type: 'Sovereign', flavor: 'A creature so heavily armored by centuries of growth that it has become a landscape feature. Ironbacks move slowly and do not need to move quickly — nothing has survived making them feel rushed.' },
+    { race: 'Rift Drake',        type: 'Sovereign', flavor: 'A drake that has fed on planar energy long enough that it no longer fully exists in one place. Rift Drakes phase in and out of the material world with the casual indifference of a creature that has stopped finding reality binding.' },
+    { race: 'Ashborn',           type: 'Sovereign', flavor: 'Not a phoenix — something that has burned so many times it has stopped bothering to fully come back. The Ashborn exists in a permanent state of smoldering, and everything near it knows it.' },
 
     // Primordial
     { race: 'Elder Tempest',    type: 'Primordial', flavor: 'A storm that predates weather — a conscious atmospheric event from the era before the elemental planes were separated. The Elder Tempest does not rage. It simply is rage, expressed meteorologically.' },
@@ -590,3 +590,74 @@ const ERA1_DRIVE_COLORS = {
     undying:   '#6666cc',
     bargain:   '#bb55aa',
 };
+
+// Per-form colors (each L3 node gets its own accent)
+const ERA1_FORM_COLORS = {
+    horde:    '#5577dd',   // dominance — cool blue-violet
+    colossus: '#99bbee',   // dominance — pale steel blue
+    anomaly:  '#33ccbb',   // wisdom — teal
+    forged:   '#77ccdd',   // wisdom — sky
+    'root-node': '#33bb55',// growth — emerald
+    changed:  '#88cc44',   // growth — lime
+    pack:     '#bbcc22',   // hunt — yellow-green
+    apex:     '#ddaa11',   // hunt — amber
+    kept:     '#9955ee',   // undying — violet
+    anchored: '#5544cc',   // undying — indigo
+    pact:     '#ee44aa',   // bargain — pink
+    covenant: '#cc2266',   // bargain — crimson
+};
+
+// Per-type colors (each L4 node gets its own accent)
+const ERA1_TYPE_COLORS = {
+    'type-goblinoid':  '#4466ee',
+    'type-swarm':      '#6688ff',
+    'type-giant':      '#88aaff',
+    'type-titan':      '#aabbff',
+    'type-aberration': '#22ddcc',
+    'type-draconic':   '#44eebb',
+    'type-construct':  '#66bbdd',
+    'type-cursed':     '#99ddee',
+    'type-flora':      '#22cc66',
+    'type-ooze':       '#55dd44',
+    'type-lycanthrope':'#99ee44',
+    'type-fey':        '#bbff55',
+    'type-aquatic':    '#ccdd00',
+    'type-beast':      '#eebb11',
+    'type-monstrous':  '#ffaa22',
+    'type-legendary':  '#ff8800',
+    'type-undead':     '#8833ff',
+    'type-specter':    '#aa55ff',
+    'type-elemental':  '#4433bb',
+    'type-primordial': '#6644dd',
+    'type-fiend':      '#ff3388',
+    'type-humanoid':   '#ff66aa',
+    'type-planar':     '#cc1155',
+    'type-celestial':  '#ee4477',
+};
+
+// Get the L3 ancestor id for a node
+function era1GetForm(nodeId) {
+    let node = ERA1_TREE[nodeId];
+    while (node && node.layer > 3) node = ERA1_TREE[node.parent];
+    return (node && node.layer === 3) ? node.id : null;
+}
+
+// Get the L4 ancestor id for a node
+function era1GetType(nodeId) {
+    let node = ERA1_TREE[nodeId];
+    while (node && node.layer > 4) node = ERA1_TREE[node.parent];
+    return (node && node.layer === 4) ? node.id : null;
+}
+
+// Resolve the most-specific color for any node
+function era1GetColor(nodeId, domainColors) {
+    const typeId = era1GetType(nodeId);
+    if (typeId && ERA1_TYPE_COLORS[typeId]) return ERA1_TYPE_COLORS[typeId];
+    const formId = era1GetForm(nodeId);
+    if (formId && ERA1_FORM_COLORS[formId]) return ERA1_FORM_COLORS[formId];
+    const driveId = era1GetDrive(nodeId);
+    if (driveId && ERA1_DRIVE_COLORS[driveId]) return ERA1_DRIVE_COLORS[driveId];
+    const domainId = era1GetDomain(nodeId);
+    if (domainId && domainColors && domainColors[domainId]) return domainColors[domainId];
+    return '#666';
+}
