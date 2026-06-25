@@ -4641,10 +4641,11 @@ function era1CreateDiscoveryNode(slot, unlocked, revealed, offeredNames, prestig
     el.addEventListener('mousemove', e => _era1MoveTooltip(e));
     el.addEventListener('mouseleave', () => era1HidePanel());
     el.addEventListener('click', () => {
-        if (isUnlocked) {
+        if (isUnlocked && slot.role !== 'parent') {
             era1FocusNode(node.id);
             return;
         }
+        if (isUnlocked) return;
         if (!canUnlock) {
             el.classList.add('era1-flash-deny');
             setTimeout(() => el.classList.remove('era1-flash-deny'), 600);
