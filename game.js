@@ -3936,11 +3936,11 @@ let _era1TreeState = '';
 let _era1Canvas = null; // { wrapper, svg, nodeLayer, zoom, panX, panY }
 
 // Node dimensions and spacing
-const ERA1_NODE_W  = 110;
-const ERA1_NODE_H  = 48;
+const ERA1_NODE_W  = 130;
+const ERA1_NODE_H  = 54;
 
 // Radial layout parameters
-const ERA1_RADII = [0, 200, 380, 560, 760, 1020]; // radius per layer (L0–L5)
+const ERA1_RADII = [0, 260, 500, 740, 1000, 1320]; // radius per layer (L0–L5)
 const ERA1_LEAF_ARC_GAP = 0.018; // radians of gap between adjacent leaves on the outer ring
 
 // Compute layout positions for all nodes in the full tree.
@@ -4178,7 +4178,7 @@ function renderEra1Tree() {
     era1RenderLegendary(prestiged);
 
     // ── Pan & zoom ────────────────────────────────────────────────────────────
-    let zoom = 0.72, panX = 0, panY = 0;
+    let zoom = 0.52, panX = 0, panY = 0;
     let dragging = false, lastMX = 0, lastMY = 0;
 
     function applyTransform() {
@@ -4227,6 +4227,16 @@ function renderEra1Tree() {
         lastMY = e.clientY;
         wrap.style.cursor = 'grabbing';
     });
+
+    // ── Auto-recenter after 3s of no mouse movement over the wrap ────────────
+    let _idleTimer = null;
+    function resetIdleTimer() {
+        clearTimeout(_idleTimer);
+        _idleTimer = setTimeout(() => era1PanToMostRecent(), 3000);
+    }
+    wrap.addEventListener('mousemove', resetIdleTimer);
+    wrap.addEventListener('mouseleave', () => clearTimeout(_idleTimer));
+
     window.addEventListener('mousemove', e => {
         if (!dragging) return;
         panX += e.clientX - lastMX;
@@ -4234,6 +4244,7 @@ function renderEra1Tree() {
         lastMX = e.clientX;
         lastMY = e.clientY;
         applyTransform();
+        resetIdleTimer();
     });
     window.addEventListener('mouseup', () => {
         dragging = false;
