@@ -5950,10 +5950,16 @@ if (gameState.resources.mana == null) gameState.resources.mana = 0;
 if (gameState.resources.arcaneEssence == null) gameState.resources.arcaneEssence = 0;
 // ── Random Event System ───────────────────────────────────────────────────────
 
+let _logActiveTab = 'all';
+
 function _renderLogEntry(el, record) {
     const season = ['Spring', 'Summer', 'Autumn', 'Winter'][record.seasonIndex];
     const entry = document.createElement('div');
     entry.className = 'log-entry';
+    entry.dataset.category = record.category || 'events';
+    if (_logActiveTab !== 'all' && entry.dataset.category !== _logActiveTab) {
+        entry.style.display = 'none';
+    }
     entry.innerHTML =
         `<div class="log-meta">Day ${record.day}, ${season} — Year ${record.year}</div>` +
         `<div class="log-text">${record.text}</div>` +
@@ -5961,7 +5967,7 @@ function _renderLogEntry(el, record) {
     el.insertBefore(entry, el.firstChild);
 }
 
-function addLogEntry(text, effectSummary) {
+function addLogEntry(text, effectSummary, category) {
     const el = document.getElementById('event-log');
     if (!el) return;
     const empty = el.querySelector('.log-empty');
@@ -5970,6 +5976,7 @@ function addLogEntry(text, effectSummary) {
     const record = {
         text,
         effectSummary: effectSummary || '',
+        category:    category || 'events',
         day:         gameState.time.day,
         year:        gameState.time.year,
         seasonIndex: gameState.time.seasonIndex,
@@ -5981,6 +5988,22 @@ function addLogEntry(text, effectSummary) {
 
     _renderLogEntry(el, record);
     while (el.children.length > 40) el.removeChild(el.lastChild);
+    _checkLogEmpty(el);
+}
+
+function _checkLogEmpty(el) {
+    const hasVisible = [...el.querySelectorAll('.log-entry')].some(e => e.style.display !== 'none');
+    let empty = el.querySelector('.log-empty');
+    if (!hasVisible) {
+        if (!empty) {
+            empty = document.createElement('p');
+            empty.className = 'log-empty';
+            empty.textContent = 'Nothing yet.';
+            el.appendChild(empty);
+        }
+    } else if (empty) {
+        empty.remove();
+    }
 }
 
 function restoreEventLog() {
@@ -5990,10 +6013,30 @@ function restoreEventLog() {
     if (!records || !records.length) return;
     const empty = el.querySelector('.log-empty');
     if (empty) empty.remove();
-    // Records are newest-first; render in order so insertBefore produces correct stack
     for (const record of records) {
         _renderLogEntry(el, record);
     }
+    _checkLogEmpty(el);
+}
+
+function setLogTab(tab) {
+    _logActiveTab = tab;
+    document.querySelectorAll('.log-tab').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tab === tab);
+    });
+    const el = document.getElementById('event-log');
+    if (!el) return;
+    el.querySelectorAll('.log-entry').forEach(entry => {
+        entry.style.display = (tab === 'all' || entry.dataset.category === tab) ? '' : 'none';
+    });
+    _checkLogEmpty(el);
+}
+
+function clearEventLog() {
+    gameState.randomEventLog = [];
+    const el = document.getElementById('event-log');
+    if (!el) return;
+    el.innerHTML = '<p class="log-empty">Nothing yet.</p>';
 }
 
 function _weightedPick(pool) {

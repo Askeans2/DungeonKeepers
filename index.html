@@ -2692,7 +2692,15 @@
 
     <!-- RIGHT: Log -->
     <div class="panel right">
-        <h2>Log</h2>
+        <div class="log-header">
+            <h2>Log</h2>
+            <button class="log-clear-btn" onclick="clearEventLog()">Clear</button>
+        </div>
+        <div class="log-tabs">
+            <button class="log-tab active" data-tab="all" onclick="setLogTab('all')">All</button>
+            <button class="log-tab" data-tab="progress" onclick="setLogTab('progress')">Progress</button>
+            <button class="log-tab" data-tab="events" onclick="setLogTab('events')">Events</button>
+        </div>
         <div id="event-log"><p class="log-empty">Nothing yet.</p></div>
     </div>
 

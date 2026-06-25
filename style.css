@@ -538,10 +538,62 @@ html, body {
     padding: 10px 0 0;
 }
 
-.right h2 {
+.log-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
     padding: 0 12px 5px;
-    margin: 0 0 8px;
     flex-shrink: 0;
+}
+
+.log-header h2 {
+    padding: 0;
+    margin: 0;
+    border-bottom: none;
+}
+
+.log-clear-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 12px;
+    cursor: pointer;
+    padding: 0;
+    letter-spacing: 0.03em;
+}
+
+.log-clear-btn:hover {
+    color: var(--text);
+}
+
+.log-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+    padding: 0 12px;
+    flex-shrink: 0;
+    margin-bottom: 6px;
+}
+
+.log-tab {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--text-muted);
+    font-size: 12px;
+    cursor: pointer;
+    padding: 4px 10px 4px 0;
+    margin-bottom: -1px;
+    letter-spacing: 0.03em;
+}
+
+.log-tab:hover {
+    color: var(--text);
+}
+
+.log-tab.active {
+    color: var(--label);
+    border-bottom-color: var(--accent);
 }
 
 #event-log {
