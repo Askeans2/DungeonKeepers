@@ -3957,64 +3957,62 @@ function era1ComputeLayout() {
 
     // Domain base angles: Deep=270° (up), Wild=30° (lower-right), Beyond=150° (lower-left)
     const DOMAIN_BASE_DEG = { deep: 270, wild: 30, beyond: 150 };
+    const SECTOR   = (2 * Math.PI) / 3;  // 120° per domain
+    const EDGE_GAP = 0.08;               // radians kept from each sector edge
 
-    // ── Step 1: assign L4 angles via domain sector allocation ──────────────────
-    // Each domain owns exactly 1/3 of the circle (120°).
-    // Within that sector, L4 nodes are evenly spaced; inner nodes sit at the
-    // angular centroid of their children's L4 angles.
-
-    // Count L4 nodes per domain
-    function collectL4s(nodeId) {
+    // ── Leaf count: how many L5 descendants does a node have? ──────────────────
+    function leafCount(nodeId) {
         const node = ERA1_TREE[nodeId];
-        if (!node) return [];
-        if (node.layer === 4) return [nodeId];
-        return node.children.flatMap(collectL4s);
+        if (!node) return 0;
+        if (node.children.length === 0) return 1;
+        return node.children.reduce((s, cid) => s + leafCount(cid), 0);
     }
 
-    const domainL4s = {
-        deep:   collectL4s('deep'),
-        wild:   collectL4s('wild'),
-        beyond: collectL4s('beyond'),
-    };
+    // ── Recursive weighted placement (L0–L4) ───────────────────────────────────
+    // arcStart/arcEnd: the angular slice this node owns.
+    // The node is placed at the center of its slice; children divide the slice
+    // proportionally by their leaf counts.
+    function placeNode(nodeId, arcStart, arcEnd) {
+        const node   = ERA1_TREE[nodeId];
+        if (!node) return;
+        const midAng = (arcStart + arcEnd) / 2;
+        const r      = ERA1_RADII[node.layer] || 0;
+        pos.set(nodeId, { x: Math.cos(midAng) * r, y: Math.sin(midAng) * r });
 
-    const SECTOR   = (2 * Math.PI) / 3;  // 120°
-    const EDGE_GAP = 0.10;               // radians kept back from each sector edge
+        if (node.layer === 4 || node.children.length === 0) return;
 
-    const l4Angle = new Map(); // l4 nodeId → angle
-
-    for (const [domainId, l4nodes] of Object.entries(domainL4s)) {
-        if (l4nodes.length === 0) continue;
-        const baseRad  = DOMAIN_BASE_DEG[domainId] * Math.PI / 180;
-        const arcStart = baseRad - SECTOR / 2 + EDGE_GAP;
-        const arcEnd   = baseRad + SECTOR / 2 - EDGE_GAP;
-        const n = l4nodes.length;
-        for (let i = 0; i < n; i++) {
-            const t = n === 1 ? 0.5 : i / (n - 1);
-            l4Angle.set(l4nodes[i], arcStart + t * (arcEnd - arcStart));
+        const total  = node.children.reduce((s, cid) => s + leafCount(cid), 0);
+        const usable = arcEnd - arcStart;
+        let cursor   = arcStart;
+        for (const cid of node.children) {
+            const share = (leafCount(cid) / total) * usable;
+            placeNode(cid, cursor, cursor + share);
+            cursor += share;
         }
     }
 
-    // Place L4 nodes on their ring
-    const R4 = ERA1_RADII[4];
-    for (const [nodeId, angle] of l4Angle) {
-        pos.set(nodeId, { x: Math.cos(angle) * R4, y: Math.sin(angle) * R4 });
+    // Root at center
+    pos.set('root', { x: 0, y: 0 });
+
+    // Each domain gets exactly 120°; within that, weighted by leaf count
+    for (const domainId of ERA1_DOMAINS) {
+        const baseRad  = DOMAIN_BASE_DEG[domainId] * Math.PI / 180;
+        const arcStart = baseRad - SECTOR / 2 + EDGE_GAP;
+        const arcEnd   = baseRad + SECTOR / 2 - EDGE_GAP;
+        placeNode(domainId, arcStart, arcEnd);
     }
 
-    // ── Step 2: place L5 leaves orbiting their L4 parent in a local circle ──────
-    // Leaves are evenly distributed on a small circle centered on the L4 node.
-    // The orbit is rotated so that no leaf points straight back toward the root
-    // (we start from the outward radial direction and sweep evenly around).
-    const LEAF_ORBIT_R = 185; // radius of the local orbit circle around each L4 node
+    // ── L5 leaves: orbit their L4 parent in a local circle ─────────────────────
+    // Distributed evenly around the L4 node, orbit starts outward (away from root).
+    const LEAF_ORBIT_R = 185;
 
-    for (const [l4Id, l4angle] of l4Angle) {
-        const l4node = ERA1_TREE[l4Id];
-        const leaves = l4node.children || [];
-        const n      = leaves.length;
-        if (n === 0) continue;
-        const l4pos  = pos.get(l4Id);
-        // Start from the outward radial direction and distribute evenly around the orbit.
-        // Offset by half a step so the cluster is centered on the outward direction.
-        const startAng = l4angle - Math.PI * (n - 1) / n;
+    for (const [nodeId, node] of Object.entries(ERA1_TREE)) {
+        if (node.layer !== 4 || node.children.length === 0) continue;
+        const leaves  = node.children;
+        const n       = leaves.length;
+        const l4pos   = pos.get(nodeId);
+        const l4ang   = Math.atan2(l4pos.y, l4pos.x); // outward radial direction
+        const startAng = l4ang - Math.PI * (n - 1) / n;
         for (let i = 0; i < n; i++) {
             const a = startAng + i * (2 * Math.PI / n);
             pos.set(leaves[i], {
@@ -4023,34 +4021,6 @@ function era1ComputeLayout() {
             });
         }
     }
-
-    // ── Step 3: place L0–L3 at their ring radii, angle = circular mean of L4 children ──
-    function meanAngle(angles) {
-        if (angles.length === 0) return 0;
-        const sinSum = angles.reduce((s, a) => s + Math.sin(a), 0);
-        const cosSum = angles.reduce((s, a) => s + Math.cos(a), 0);
-        return Math.atan2(sinSum / angles.length, cosSum / angles.length);
-    }
-
-    function subtreeL4Angles(nodeId) {
-        const node = ERA1_TREE[nodeId];
-        if (!node) return [];
-        if (node.layer === 4) return [l4Angle.get(nodeId)].filter(a => a !== undefined);
-        return node.children.flatMap(subtreeL4Angles);
-    }
-
-    function placeInnerNode(nodeId) {
-        const node = ERA1_TREE[nodeId];
-        if (!node || node.layer >= 4) return;
-        const angles = subtreeL4Angles(nodeId);
-        const angle  = meanAngle(angles);
-        const r      = ERA1_RADII[node.layer];
-        pos.set(nodeId, { x: Math.cos(angle) * r, y: Math.sin(angle) * r });
-        for (const cid of node.children) placeInnerNode(cid);
-    }
-
-    pos.set('root', { x: 0, y: 0 });
-    for (const domainId of ERA1_DOMAINS) placeInnerNode(domainId);
 
     return pos;
 }
