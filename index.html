@@ -3,9 +3,12 @@
 <head>
     <title>Dungeon Keeper</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&display=swap">
     <!-- Load the version fresh (timestamp-busted), then stamp local assets with ?v=GAME_VERSION. See version.js. -->
     <script>document.write('<scr' + 'ipt src="version.js?t=' + Date.now() + '"></scr' + 'ipt>');</script>
     <script>document.write('<link rel="stylesheet" href="style.css?v=' + window.GAME_VERSION + '">');</script>
+    <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+    <script>document.write('<scr' + 'ipt src="d20-background.js?v=' + window.GAME_VERSION + '"></scr' + 'ipt>');</script>
 </head>
 
 <body>
@@ -329,27 +332,8 @@
     <div class="splash-bg-runes"></div>
     <div class="splash-particles" id="splash-particles"></div>
 
-    <!-- d20 — 10 icosahedral faces, each drawn as a triangle
-         Vertices:  T=(100,10) UL=(45,46) UR=(155,46)
-                    L=(16,100)             R=(184,100)
-                    LL=(45,154) LR=(155,154) B=(100,188) -->
-    <div class="splash-d20" id="splash-d20" aria-hidden="true">
-        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"
-             stroke="currentColor" stroke-width="1.4" stroke-linejoin="round">
-            <!-- Upper 5 faces -->
-            <polygon points="100,10  45,46  155,46"   fill="rgba(184,144,42,0.05)"/><!-- T-UL-UR -->
-            <polygon points="100,10  16,100  45,46"   fill="rgba(184,144,42,0.03)"/><!-- T-L-UL -->
-            <polygon points="100,10 155,46 184,100"   fill="rgba(184,144,42,0.06)"/><!-- T-UR-R -->
-            <polygon points="155,46  16,100 184,100"  fill="rgba(184,144,42,0.02)"/><!-- UR-L-R -->
-            <polygon points=" 45,46 155,46 184,100"   fill="rgba(184,144,42,0.05)"/><!-- UL-UR-R -->
-            <!-- Lower 5 faces (mirror of upper) -->
-            <polygon points="100,188  45,154 155,154" fill="rgba(184,144,42,0.05)"/><!-- B-LL-LR -->
-            <polygon points="100,188  16,100  45,154" fill="rgba(184,144,42,0.06)"/><!-- B-L-LL -->
-            <polygon points="100,188 155,154 184,100" fill="rgba(184,144,42,0.03)"/><!-- B-LR-R -->
-            <polygon points="155,154  16,100 184,100" fill="rgba(184,144,42,0.05)"/><!-- LR-L-R -->
-            <polygon points=" 45,154 155,154 184,100" fill="rgba(184,144,42,0.02)"/><!-- LL-LR-R -->
-        </svg>
-    </div>
+    <!-- d20 — WebGL 3D icosahedron via D20Background / Three.js -->
+    <canvas id="splash-d20" aria-hidden="true"></canvas>
 
     <!-- Chronicle panel (shown when button clicked) -->
     <div id="splash-chronicle" class="splash-chronicle">
@@ -2720,8 +2704,6 @@
     (function () {
         var SPLASH_KEY   = 'dk_splash_seen';
         var WHATSNEW_KEY = 'dk_whatsnew_' + (window.GAME_VERSION || '0');
-        var D20_SIZE     = 400;
-        var ROLL_RADIUS  = 176; // effective rolling radius in px (≈ D20_SIZE * 0.44)
 
         // ── Utilities ─────────────────────────────────────────────────────────
         var SAVE_KEY = 'dungeonKeeperSave';
@@ -2791,67 +2773,18 @@
             if (c) c.innerHTML = '';
         }
 
-        // ── d20 Physics ───────────────────────────────────────────────────────
-        var d20State = null, d20RAF = null;
-        var mouse    = { x: -9999, y: -9999 };
-
-        function onMouseMove(e) { mouse.x = e.clientX; mouse.y = e.clientY; }
-        function onMouseLeave()  { mouse.x = -9999; mouse.y = -9999; }
+        // ── d20 WebGL (D20Background / Three.js) ──────────────────────────────
+        var d20bg = null;
 
         function startD20() {
-            var W = window.innerWidth, H = window.innerHeight, HALF = D20_SIZE / 2;
-            d20State = { x: W * 0.78, y: H * 0.26, vx: -0.6, vy: 0.3, angle: 10 };
-            var ov = document.getElementById('splash-overlay');
-            ov.addEventListener('mousemove', onMouseMove);
-            ov.addEventListener('mouseleave', onMouseLeave);
-            d20Tick();
+            var canvas = document.getElementById('splash-d20');
+            if (!canvas || !window.D20Background) return;
+            d20bg = new D20Background({ canvas: canvas, attachClickToRoll: false });
+            d20bg.start();
         }
 
         function stopD20() {
-            if (d20RAF) { cancelAnimationFrame(d20RAF); d20RAF = null; }
-            d20State = null;
-            var ov = document.getElementById('splash-overlay');
-            if (ov) { ov.removeEventListener('mousemove', onMouseMove); ov.removeEventListener('mouseleave', onMouseLeave); }
-            mouse.x = mouse.y = -9999;
-        }
-
-        function d20Tick() {
-            var el = document.getElementById('splash-d20');
-            if (!el || !d20State) return;
-            var s = d20State, HALF = D20_SIZE / 2;
-            var W = window.innerWidth, H = window.innerHeight;
-
-            // Gravity
-            s.vy += 0.20;
-
-            // Mouse repulsion
-            var dx = s.x - mouse.x, dy = s.y - mouse.y;
-            var dist = Math.sqrt(dx * dx + dy * dy);
-            if (dist < 240 && dist > 1) {
-                var f = ((240 - dist) / 240) * 6;
-                s.vx += (dx / dist) * f;
-                s.vy += (dy / dist) * f;
-            }
-
-            // Speed cap
-            var spd = Math.sqrt(s.vx * s.vx + s.vy * s.vy);
-            if (spd > 20) { s.vx = s.vx / spd * 20; s.vy = s.vy / spd * 20; }
-
-            // Integrate & damp
-            s.x += s.vx; s.y += s.vy;
-            s.vx *= 0.991; s.vy *= 0.991;
-
-            // Rolling rotation driven by horizontal velocity
-            s.angle += s.vx * (360 / (2 * Math.PI * ROLL_RADIUS));
-
-            // Boundary bounce (d20 center must stay inside)
-            if (s.x - HALF < 0)    { s.x =  HALF;    s.vx =  Math.abs(s.vx) * 0.52; }
-            if (s.x + HALF > W)    { s.x =  W - HALF; s.vx = -Math.abs(s.vx) * 0.52; }
-            if (s.y - HALF < 0)    { s.y =  HALF;    s.vy =  Math.abs(s.vy) * 0.52; }
-            if (s.y + HALF > H)    { s.y =  H - HALF; s.vy = -Math.abs(s.vy) * 0.52; }
-
-            el.style.transform = 'translate(' + (s.x - HALF).toFixed(1) + 'px,' + (s.y - HALF).toFixed(1) + 'px) rotate(' + s.angle.toFixed(1) + 'deg)';
-            d20RAF = requestAnimationFrame(d20Tick);
+            if (d20bg) { d20bg.destroy(); d20bg = null; }
         }
 
         // ── Keyboard shortcuts ────────────────────────────────────────────────

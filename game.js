@@ -4279,9 +4279,16 @@ function renderEra1Tree() {
 }
 
 // Render the Legendary Races box below the canvas.
+let _era1LegendaryKey = null;
 function era1RenderLegendary(prestiged) {
     const container = document.getElementById('era1-tree');
     if (!container) return;
+
+    const allLegendary = Object.values(LEGENDARY_ROSTER).flat();
+    const stateKey = allLegendary.map(n => prestiged.has(n) ? '1' : '0').join('');
+    if (stateKey === _era1LegendaryKey && document.getElementById('era1-legendary-box')) return;
+    _era1LegendaryKey = stateKey;
+
     let box = document.getElementById('era1-legendary-box');
     if (!box) {
         box = document.createElement('div');
@@ -4290,7 +4297,6 @@ function era1RenderLegendary(prestiged) {
         container.appendChild(box);
     }
 
-    const allLegendary = Object.values(LEGENDARY_ROSTER).flat();
     let html = `<div class="era1-legendary-title">✦ Legendary Races ✦</div><div class="era1-legendary-grid">`;
     for (const name of allLegendary) {
         const seen = prestiged.has(name);
