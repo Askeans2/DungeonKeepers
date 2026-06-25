@@ -3945,7 +3945,7 @@ const ERA1_LEAF_H  = 44;   // L5 leaf node height
 const ERA1_RADII = [0, 260, 500, 740, 1000]; // radius per layer (L0–L4)
 // Angular step between adjacent leaves in a cluster, in radians.
 // At R=1000, step=0.14 rad → ~140px chord, comfortably larger than LEAF_W.
-const ERA1_LEAF_STEP = 0.145;
+const ERA1_LEAF_STEP = 0.245;
 
 // Compute layout positions for all nodes in the full tree.
 // Returns Map<nodeId, {x, y}> in canvas coordinates.
@@ -4000,22 +4000,27 @@ function era1ComputeLayout() {
         pos.set(nodeId, { x: Math.cos(angle) * R4, y: Math.sin(angle) * R4 });
     }
 
-    // ── Step 2: place L5 leaves in a tight arc around their L4 parent ──────────
-    // Each leaf cluster fans outward along the L4 node's radial direction.
-    // Leaves are placed at R4 + leaf offset, centered on the L4's angle.
-    const LEAF_R_OFFSET = 220; // extra radius beyond R4 for leaf centers
+    // ── Step 2: place L5 leaves orbiting their L4 parent in a local circle ──────
+    // Leaves are evenly distributed on a small circle centered on the L4 node.
+    // The orbit is rotated so that no leaf points straight back toward the root
+    // (we start from the outward radial direction and sweep evenly around).
+    const LEAF_ORBIT_R = 185; // radius of the local orbit circle around each L4 node
 
     for (const [l4Id, l4angle] of l4Angle) {
-        const l4node   = ERA1_TREE[l4Id];
-        const leaves   = l4node.children || [];
-        const n        = leaves.length;
+        const l4node = ERA1_TREE[l4Id];
+        const leaves = l4node.children || [];
+        const n      = leaves.length;
         if (n === 0) continue;
-        const totalArc = (n - 1) * ERA1_LEAF_STEP;
-        const startAng = l4angle - totalArc / 2;
-        const leafR    = R4 + LEAF_R_OFFSET;
+        const l4pos  = pos.get(l4Id);
+        // Start from the outward radial direction and distribute evenly around the orbit.
+        // Offset by half a step so the cluster is centered on the outward direction.
+        const startAng = l4angle - Math.PI * (n - 1) / n;
         for (let i = 0; i < n; i++) {
-            const a = startAng + i * ERA1_LEAF_STEP;
-            pos.set(leaves[i], { x: Math.cos(a) * leafR, y: Math.sin(a) * leafR });
+            const a = startAng + i * (2 * Math.PI / n);
+            pos.set(leaves[i], {
+                x: l4pos.x + Math.cos(a) * LEAF_ORBIT_R,
+                y: l4pos.y + Math.sin(a) * LEAF_ORBIT_R,
+            });
         }
     }
 
