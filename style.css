@@ -3262,7 +3262,7 @@ body.reduce-motion *::after {
 /* State: completed / chosen */
 .era1-node-done {
     border-color: var(--accent);
-    background: rgba(62,120,80,0.18);
+    background: #2e3f33;
     cursor: default;
 }
 .era1-node-done .era1-node-name { color: var(--label); }
@@ -3275,7 +3275,7 @@ body.reduce-motion *::after {
 }
 .era1-node-active:hover {
     border-color: var(--accent);
-    background: rgba(62,120,80,0.12);
+    background: #263630;
 }
 
 /* State: waiting (can't afford yet) */
@@ -3298,7 +3298,7 @@ body.reduce-motion *::after {
 /* Root node */
 .era1-root-node {
     border-color: rgba(184,144,42,0.5);
-    background: rgba(184,144,42,0.06);
+    background: #2a2b20;
     cursor: default;
     min-width: 140px;
 }
@@ -3309,17 +3309,17 @@ body.reduce-motion *::after {
 .era1-node.era1-wild   { --branch-clr: #5a9e60; }
 .era1-node.era1-beyond { --branch-clr: #8866bb; }
 
-.era1-node-done.era1-deep   { border-color: #8899aa; background: rgba(136,153,170,0.12); }
-.era1-node-done.era1-wild   { border-color: #5a9e60; background: rgba(90,158,96,0.14); }
-.era1-node-done.era1-beyond { border-color: #8866bb; background: rgba(136,102,187,0.12); }
+.era1-node-done.era1-deep   { border-color: #8899aa; background: #272d31; }
+.era1-node-done.era1-wild   { border-color: #5a9e60; background: #243028; }
+.era1-node-done.era1-beyond { border-color: #8866bb; background: #282232; }
 
 .era1-node-active.era1-deep   { border-color: rgba(136,153,170,0.6); box-shadow: 0 0 6px rgba(136,153,170,0.18); }
 .era1-node-active.era1-wild   { border-color: rgba(90,158,96,0.6);   box-shadow: 0 0 6px rgba(90,158,96,0.2); }
 .era1-node-active.era1-beyond { border-color: rgba(136,102,187,0.6); box-shadow: 0 0 6px rgba(136,102,187,0.18); }
 
-.era1-node-active.era1-deep:hover   { border-color: #8899aa; background: rgba(136,153,170,0.1); }
-.era1-node-active.era1-wild:hover   { border-color: #5a9e60; background: rgba(90,158,96,0.12); }
-.era1-node-active.era1-beyond:hover { border-color: #8866bb; background: rgba(136,102,187,0.1); }
+.era1-node-active.era1-deep:hover   { border-color: #8899aa; background: #242b30; }
+.era1-node-active.era1-wild:hover   { border-color: #5a9e60; background: #202e24; }
+.era1-node-active.era1-beyond:hover { border-color: #8866bb; background: #231e2d; }
 
 /* Awakening canvas panel — lore bar + tree canvas stacked */
 .era1-canvas-panel {
