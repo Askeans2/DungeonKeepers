@@ -5980,8 +5980,8 @@ function maybeFireRandomEvent() {
     const currentDay = gameState.time.day + (gameState.time.year - 1) * DAYS_PER_SEASON * 4;
     const cooldowns = gameState.randomEventCooldowns || (gameState.randomEventCooldowns = {});
 
-    // Roll once per day with a ~30% chance to fire any event
-    if (Math.random() > 0.30) return;
+    // Roll once per day with a ~1.5% chance to fire any event
+    if (Math.random() > 0.015) return;
 
     let pool = [];
     if (era === 1) {
