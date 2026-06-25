@@ -4520,11 +4520,12 @@ function era1RenderBreadcrumbs(centerId) {
     const era1 = gameState.era1 || {};
     const unlocked = new Set(era1.unlocked || []);
     const hasChosenDomain = ['deep', 'wild', 'beyond'].some(id => unlocked.has(id));
+    // Once a domain is committed the breadcrumb trail has no navigable entries — hide it entirely
+    el.style.display = hasChosenDomain ? 'none' : '';
+    if (hasChosenDomain) return;
     era1PathToRoot(centerId).forEach((nodeId, idx, path) => {
         const node = ERA1_TREE[nodeId];
         if (!node) return;
-        // Hide root crumb once a domain is committed
-        if (nodeId === 'root' && hasChosenDomain) return;
         const btn = document.createElement('button');
         btn.className = 'era1-crumb' + (nodeId === centerId ? ' era1-crumb-current' : '');
         btn.textContent = node.name;
@@ -4594,15 +4595,20 @@ function era1RenderDiscoveryScene(centerId, unlocked, revealed, offeredNames, pr
     spread(parentIds, 'parent', 84, 132, 58, 3);
     spread(childIds, 'child', 684, 132, center.layer === 4 ? 48 : 58, 8);
 
-    const sibs = siblingIds.slice(0, 6);
-    sibs.filter((_, i) => i % 2 === 0).forEach((id, i) => {
-        slots.push({ id, role: 'sibling', x: 278 + i * 118, y: 58, w: 112, h: 46 });
-    });
-    sibs.filter((_, i) => i % 2 === 1).forEach((id, i) => {
-        slots.push({ id, role: 'sibling', x: 278 + i * 118, y: 376, w: 112, h: 46 });
-    });
-    if (siblingIds.length > 6 && sibs.length) {
-        slots.push({ id: sibs[sibs.length - 1], role: 'sibling-more', forceUnknown: true, x: 632, y: 376, w: 112, h: 46 });
+    // Only show siblings when the center node itself has not been committed yet —
+    // once unlocked, the player has chosen past them so they shouldn't appear connected.
+    const centerIsUnlocked = unlocked.has(center.id) || center.id === 'root';
+    if (!centerIsUnlocked) {
+        const sibs = siblingIds.slice(0, 6);
+        sibs.filter((_, i) => i % 2 === 0).forEach((id, i) => {
+            slots.push({ id, role: 'sibling', x: 278 + i * 118, y: 58, w: 112, h: 46 });
+        });
+        sibs.filter((_, i) => i % 2 === 1).forEach((id, i) => {
+            slots.push({ id, role: 'sibling', x: 278 + i * 118, y: 376, w: 112, h: 46 });
+        });
+        if (siblingIds.length > 6 && sibs.length) {
+            slots.push({ id: sibs[sibs.length - 1], role: 'sibling-more', forceUnknown: true, x: 632, y: 376, w: 112, h: 46 });
+        }
     }
 
     const colors = { deep: '#8899aa', wild: '#5a9e60', beyond: '#8866bb' };
