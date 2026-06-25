@@ -2135,7 +2135,9 @@ function updateUI() {
         const card = document.getElementById("research-" + key);
         if (!card) continue;
         const done       = !!(gameState.research && gameState.research[key]);
-        const prereqsMet = !def.requiresResearch || def.requiresResearch.every(k => gameState.research && gameState.research[k]);
+        const researchMet  = !def.requiresResearch  || def.requiresResearch.every(k => gameState.research && gameState.research[k]);
+        const buildingsMet = !def.requiresBuildings || Object.entries(def.requiresBuildings).every(([b, n]) => (gameState.buildings[b] || 0) >= n);
+        const prereqsMet = researchMet && buildingsMet;
         const eraOk      = (RESEARCH_ERA[key] || 2) <= (gameState.run.era || 1);
         card.style.display = (!done && prereqsMet && eraOk) ? "" : "none";
         if (done) continue;
@@ -2471,6 +2473,11 @@ function canAffordResearch(key) {
     if (def.requiresResearch) {
         for (const reqKey of def.requiresResearch) {
             if (!gameState.research || !gameState.research[reqKey]) return false;
+        }
+    }
+    if (def.requiresBuildings) {
+        for (const [b, n] of Object.entries(def.requiresBuildings)) {
+            if ((gameState.buildings[b] || 0) < n) return false;
         }
     }
     for (const [res, amount] of Object.entries(def.cost)) {

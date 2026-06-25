@@ -23,11 +23,11 @@ const RESEARCH = {};
 // ── 2.1 — Very Early ──────────────────────────────────────────────────────────
 
 RESEARCH.taxes = {
-    tier: "2.3",
+    tier: "2.1",
     name: "Taxation",
     desc: "Levy a tax on your population. Each creature contributes 1 cp per in-game day.",
-    cost: { ore: 60, iron: 30 },
-    requiresResearch: ["goldStandard"],
+    cost: { ore: 30, wood: 20 },
+    requiresBuildings: { house: 30 },
     effects: { taxBonus: 1, flag: "taxesEnabled" },
 };
 
@@ -379,6 +379,7 @@ RESEARCH.goldStandard = {
     requiresResearch: ["silverCurrency"],
     effects: { flag: "goldStandard" },
 };
+
 
 // Chain D — The War Caster (step 1)
 RESEARCH.warFormations = {
