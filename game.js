@@ -2610,6 +2610,25 @@ function devWipeResources() {
     saveGame();
 }
 
+function devFireRandomEvent() {
+    const era = (gameState.run && gameState.run.era) || 1;
+    let pool = [];
+    if (era === 1) {
+        pool = RANDOM_EVENTS.era1 || [];
+    } else {
+        const general = RANDOM_EVENTS.era2General || [];
+        const raceName = gameState.run && gameState.run.race;
+        const raceType = raceName && RACE_DATA[raceName] && RACE_DATA[raceName].tagLabel;
+        const byType   = raceType && RANDOM_EVENTS.era2ByType && RANDOM_EVENTS.era2ByType[raceType] || [];
+        pool = [...general, ...byType];
+    }
+    if (!pool.length) return;
+    const event = _weightedPick(pool);
+    const effectSummary = _applyEventEffects(event.effects || []);
+    addLogEntry(event.text, effectSummary);
+    updateUI();
+}
+
 function devAddQuintessence(n) {
     gameState.meta.quintessence = (gameState.meta.quintessence || 0) + n;
     saveGame();
