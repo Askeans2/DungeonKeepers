@@ -2323,7 +2323,7 @@ const BUILDING_ERA = {
     forge:         2, arcaneBench:   2,
     marketStall:   2, tradeCart:     2, house:        2, apartment:    2,
     // Era 3 — Endgame / dark
-    ritualCircle:  3, spiderNest:    3, arcaneCrucible: 3,
+    ritualCircle:  3, arcaneCrucible: 3,
     darkAltar:     3, mithrilForge:  3,
 };
 
