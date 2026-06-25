@@ -132,6 +132,7 @@ const ROOMS = {
         name: "Smelter",
         cost: { stone: 50, wood: 30, ore: 20 },
         coinCost: 200,
+        coinFreeBelow: 5,
         costScale: 1.15,
         converts: { inputs: { ore: 1.0 }, output: "iron", outputRate: 0.5 },
         unlock: { mine: 1 },

@@ -1174,9 +1174,16 @@ function _buildBldTooltipHTML(id, def) {
     const hasCost = def.coinCost || Object.keys(costs).length > 0;
     if (hasCost) html += `<div class="bld-tt-divider"></div>`;
     if (def.coinCost) {
-        const coinCost = getEffectiveBuildingCoinCost(def.coinCost);
-        const canAffordCoins = (gameState.resources.coins || 0) >= coinCost;
-        html += `<div class="bld-tt-line${canAffordCoins ? '' : ' bld-tt-cant-afford'}">${formatCoins(coinCost)}</div>`;
+        const bldCount = gameState.buildings[id] || 0;
+        const coinFree = def.coinFreeBelow != null && bldCount < def.coinFreeBelow;
+        if (coinFree) {
+            html += `<div class="bld-tt-line" style="text-decoration:line-through;opacity:0.5">${formatCoins(getEffectiveBuildingCoinCost(def.coinCost))}</div>`;
+            html += `<div class="bld-tt-line" style="color:var(--accent);font-size:10px">Free (${bldCount + 1}/${def.coinFreeBelow})</div>`;
+        } else {
+            const coinCost = getEffectiveBuildingCoinCost(def.coinCost);
+            const canAffordCoins = (gameState.resources.coins || 0) >= coinCost;
+            html += `<div class="bld-tt-line${canAffordCoins ? '' : ' bld-tt-cant-afford'}">${formatCoins(coinCost)}</div>`;
+        }
     }
     for (const [res, amt] of Object.entries(costs)) {
         const rname = (RESOURCES[res] && RESOURCES[res].name) || (res.charAt(0).toUpperCase() + res.slice(1));
@@ -1464,7 +1471,11 @@ function canAfford(id) {
         if ((gameState.resources[res] || 0) < amount) return false;
     }
     const def = ROOMS[id];
-    if (def.coinCost && (gameState.resources.coins || 0) < getEffectiveBuildingCoinCost(def.coinCost)) return false;
+    if (def.coinCost) {
+        const bldCount = gameState.buildings[id] || 0;
+        const coinFree = def.coinFreeBelow != null && bldCount < def.coinFreeBelow;
+        if (!coinFree && (gameState.resources.coins || 0) < getEffectiveBuildingCoinCost(def.coinCost)) return false;
+    }
     return true;
 }
 
@@ -1490,7 +1501,11 @@ function build(id) {
         }
         const def = ROOMS[id];
         if (def.coinCost) {
-            gameState.resources.coins = Math.max(0, (gameState.resources.coins || 0) - getEffectiveBuildingCoinCost(def.coinCost));
+            const bldCount = (gameState.buildings[id] || 0);
+            const coinFree = def.coinFreeBelow != null && bldCount < def.coinFreeBelow;
+            if (!coinFree) {
+                gameState.resources.coins = Math.max(0, (gameState.resources.coins || 0) - getEffectiveBuildingCoinCost(def.coinCost));
+            }
         }
         gameState.buildings[id] = (gameState.buildings[id] || 0) + 1;
         bought++;
@@ -2055,7 +2070,11 @@ function updateUI() {
             let costStr = Object.entries(cost)
                 .map(([res, n]) => `${fmt(n)} ${RESOURCES[res]?.name || res}`)
                 .join(", ");
-            if (def.coinCost) costStr += (costStr ? ", " : "") + formatCoins(getEffectiveBuildingCoinCost(def.coinCost));
+            if (def.coinCost) {
+                const bldCount = gameState.buildings[id] || 0;
+                const coinFree = def.coinFreeBelow != null && bldCount < def.coinFreeBelow;
+                if (!coinFree) costStr += (costStr ? ", " : "") + formatCoins(getEffectiveBuildingCoinCost(def.coinCost));
+            }
             costEl.textContent = costStr;
         }
     }
