@@ -4415,14 +4415,17 @@ function renderEra1Tree() {
 
     const centerId = era1GetDiscoveryFocusId();
     _era1FocusedNodeId = centerId;
-    const resourceKey = ['essence', 'influence', 'mana'].map(res => Math.floor(gameState.resources[res] || 0)).join(',');
+    // Only re-render when affordability changes, not on every resource tick.
+    const affordableKey = Object.keys(ERA1_TREE)
+        .filter(id => era1NodeCanUnlock(ERA1_TREE[id], unlocked, offeredNames))
+        .sort().join(',');
     const stateKey = [
         centerId,
         [...unlocked].join(','),
         [...revealed].join(','),
         [...offeredNames].join(','),
         [...prestiged].join(','),
-        resourceKey,
+        affordableKey,
     ].join('|');
     if (stateKey === _era1TreeState && document.getElementById('era1-discovery-wrap')) return;
 
