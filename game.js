@@ -3909,10 +3909,16 @@ const ERA1_LORE = [
     },
 ];
 
+let _era1LoreLayer = -1;
 function renderEra1Lore(frontierLayer) {
     const el = document.getElementById('era1-lore');
     if (!el) return;
-    if (frontierLayer < 1 || frontierLayer > 5) { el.innerHTML = ''; return; }
+    if (frontierLayer < 1 || frontierLayer > 5) {
+        if (_era1LoreLayer !== 0) { el.innerHTML = ''; _era1LoreLayer = 0; }
+        return;
+    }
+    if (frontierLayer === _era1LoreLayer) return;
+    _era1LoreLayer = frontierLayer;
     const lore = ERA1_LORE[frontierLayer - 1];
     el.innerHTML =
         `<div class="era1-lore">` +

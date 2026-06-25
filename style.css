@@ -2729,7 +2729,7 @@ body.reduce-motion *::after {
 
 /* ── d20 WebGL canvas (full-screen, sits behind splash content) ───────────── */
 #splash-d20 {
-    position: fixed;
+    position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
