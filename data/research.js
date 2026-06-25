@@ -27,7 +27,7 @@ RESEARCH.taxes = {
     name: "Taxation",
     desc: "Levy a tax on your population. Each creature contributes 1 cp per in-game day.",
     cost: { ore: 30, wood: 20 },
-    requiresBuildings: { house: 30 },
+    requiresBuildings: { lair: 30 },
     effects: { taxBonus: 1, flag: "taxesEnabled" },
 };
 
