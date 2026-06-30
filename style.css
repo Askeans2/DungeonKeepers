@@ -4473,47 +4473,6 @@ body.reduce-motion *::after {
     padding: 20px 8px;
     font-style: italic;
 }
-.trade-rates-panel {
-    margin: 16px auto 0;
-    max-width: 400px;
-    border-top: 1px solid rgba(255,255,255,0.06);
-    padding-top: 10px;
-}
-.trade-rates-title {
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--text-muted);
-    margin-bottom: 6px;
-}
-.trade-rates-note {
-    font-style: italic;
-    text-transform: none;
-    letter-spacing: 0;
-}
-.trade-rates-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
-.trade-rate-row {
-    display: flex;
-    gap: 6px;
-    font-size: 11px;
-    padding: 1px 0;
-}
-.trade-rate-res {
-    color: var(--label);
-    min-width: 90px;
-    flex-shrink: 0;
-}
-.trade-rate-sell {
-    color: var(--enabled);
-    min-width: 80px;
-}
-.trade-rate-buy {
-    color: var(--accent);
-}
 
 /* ── Game footer bar ─────────────────────────────────────────────────────── */
 #game-footer {
