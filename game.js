@@ -833,6 +833,18 @@ function getResourceBreakdown(res) {
         lines.push({ label: 'Population', sub: '', value: -drain, drain: true });
     }
 
+    // Trade routes: buying adds to income, selling adds to consumption
+    if (gameState.tradeRoutes && gameState.tradeRoutes[res]) {
+        const count = gameState.tradeRoutes[res];
+        if (count > 0) {
+            const perDay = TRADE_AMOUNT * count;
+            lines.push({ label: 'Trade', sub: '', value: perDay, drain: false, perDay: true });
+        } else if (count < 0) {
+            const perDay = TRADE_AMOUNT * -count;
+            lines.push({ label: 'Trade', sub: '', value: -perDay, drain: true, perDay: true });
+        }
+    }
+
     // Coins: daily income sources
     if (res === 'coins') {
         const taxRate = getResearchBonus('taxBonus');
@@ -1284,6 +1296,18 @@ function _buildBldTooltipHTML(id, def) {
     }
 
     return html;
+}
+
+function initResearchCardContent() {
+    document.querySelectorAll('[id^="research-"]').forEach(card => {
+        const key = card.id.replace('research-', '');
+        const def = RESEARCH[key];
+        if (!def) return;
+        const nameEl = card.querySelector('.research-name');
+        const descEl = card.querySelector('.research-desc');
+        if (nameEl && def.name) nameEl.textContent = def.name;
+        if (descEl && def.desc) descEl.textContent = def.desc;
+    });
 }
 
 function initResearchTooltips() {
@@ -6673,6 +6697,7 @@ _initDevTransitionSelect();
 initResTooltips();
 initGatherTooltips();
 initBldTooltips();
+initResearchCardContent();
 initResearchTooltips();
 initIdentityTooltips();
 initSettingsTooltips();
