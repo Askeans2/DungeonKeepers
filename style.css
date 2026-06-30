@@ -120,6 +120,23 @@ body[data-theme="royal"] {
     --border:       rgba(214,40,57,0.25);
 }
 
+/* High Contrast theme — accessibility-focused: strong luminance separation and a
+   blue/orange enabled-disabled pairing that stays distinguishable for red-green
+   color blindness, rather than relying on hue alone. */
+body[data-theme="contrast"] {
+    --bg:           #000000;
+    --bg-panel:     #0d0d0d;
+    --bg-hover:     #2a2a2a;
+    --bg-dark:      #000000;
+    --text:         #ffffff;
+    --text-muted:   #d8d8d8;
+    --accent:       #ffffff;
+    --enabled:      #3ba7ff;
+    --disabled:     #ff9f1c;
+    --label:        #ffe600;
+    --border:       rgba(255,255,255,0.4);
+}
+
 * {
     box-sizing: border-box;
 }
