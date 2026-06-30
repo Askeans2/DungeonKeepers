@@ -783,10 +783,9 @@ function getResourceBreakdown(res) {
         const activeFrac = getActiveBuildingFraction(id);
         const n = (def.jobs ? (workers[id] || 0) : count) * activeFrac;
         if (n === 0) continue;
-        const paused = (gameState.buildingDisabled && gameState.buildingDisabled[id]) || 0;
         const bldgMult = getResearchBonus('productionBonus', id) * getBuildingProductionBonus(id);
         const rate = def.production[res] * n * bldgMult * allBonus;
-        const sub = (def.jobs ? `${Math.round(n)}w` : `×${count}`) + (paused > 0 ? ` · ${paused} paused` : '');
+        const sub = def.jobs ? `${Math.round(n)}w` : `×${count}`;
         lines.push({ label: def.name, sub, value: rate, drain: false });
 
         // Surface stacking productionBonus buildings (e.g. Focused Meditation) as a sub-line
@@ -799,9 +798,7 @@ function getResourceBreakdown(res) {
             const totalMult = Math.pow(perUnit, bonusCount);
             const bonusRate = rate - rate / totalMult;
             if (bonusRate === 0) continue;
-            const pctEach = ((perUnit - 1) * 100).toFixed(0);
-            const totalPct = ((totalMult - 1) * 100).toFixed(0);
-            lines.push({ label: `↳ ${bonusDef.name}`, sub: `+${pctEach}% × ${bonusCount} = +${totalPct}%, included above`, value: bonusRate, drain: false, isBonus: true });
+            lines.push({ label: `↳ ${bonusDef.name} (included above)`, sub: `×${bonusCount}`, value: bonusRate, drain: false, isBonus: true });
         }
     }
 
@@ -813,10 +810,9 @@ function getResourceBreakdown(res) {
         const activeFrac = getActiveBuildingFraction(id);
         const n = (def.jobs ? (workers[id] || 0) : count) * activeFrac;
         if (n === 0) continue;
-        const paused = (gameState.buildingDisabled && gameState.buildingDisabled[id]) || 0;
         const convMult = getResearchBonus('converterBonus', id);
         const rate = def.converts.outputRate * convMult * n;
-        const sub = (def.jobs ? `${Math.round(n)}w` : `×${count}`) + (paused > 0 ? ` · ${paused} paused` : ' · max');
+        const sub = def.jobs ? `${Math.round(n)}w` : `×${count}`;
         lines.push({ label: def.name, sub, value: rate, drain: false });
     }
 
@@ -828,9 +824,8 @@ function getResourceBreakdown(res) {
         const activeFrac = getActiveBuildingFraction(id);
         const n = (def.jobs ? (workers[id] || 0) : count) * activeFrac;
         if (n === 0) continue;
-        const paused = (gameState.buildingDisabled && gameState.buildingDisabled[id]) || 0;
         const rate = def.converts.inputs[res] * n;
-        const sub = (def.jobs ? `${Math.round(n)}w` : `×${count}`) + (paused > 0 ? ` · ${paused} paused` : ' · max');
+        const sub = def.jobs ? `${Math.round(n)}w` : `×${count}`;
         lines.push({ label: def.name, sub, value: -rate, drain: true });
     }
 
@@ -838,7 +833,7 @@ function getResourceBreakdown(res) {
     if (res === 'food' && gameState.population.count > 0) {
         const mult = getResearchBonus('foodConsumption');
         const drain = Math.ceil(gameState.population.count * mult);
-        lines.push({ label: 'Population', sub: `${gameState.population.count} creatures`, value: -drain, drain: true });
+        lines.push({ label: 'Population', sub: '', value: -drain, drain: true });
     }
 
     // Coins: daily income sources
@@ -846,14 +841,14 @@ function getResourceBreakdown(res) {
         const taxRate = getResearchBonus('taxBonus');
         if (taxRate > 0) {
             const perDay = gameState.population.count * taxRate;
-            lines.push({ label: 'Taxation', sub: `${taxRate} cp/creature`, value: perDay, drain: false, perDay: true });
+            lines.push({ label: 'Taxation', sub: '', value: perDay, drain: false, perDay: true });
         }
         if (gameState.research && gameState.research.tradeGoods) {
             const caps = getCaps();
             const clothOk = (gameState.resources.cloth || 0) >= (caps.cloth || 0) * 0.75;
             const potionsOk = (gameState.resources.potions || 0) >= (caps.potions || 0) * 0.75;
             const perDay = (clothOk && potionsOk) ? 10 : 0;
-            lines.push({ label: 'Trade Caravans', sub: clothOk && potionsOk ? 'stocks ≥75%' : 'stocks below 75%', value: perDay, drain: false, perDay: true });
+            lines.push({ label: 'Trade Caravans', sub: '', value: perDay, drain: false, perDay: true });
         }
     }
 
@@ -926,7 +921,8 @@ function _buildResTooltipHTML(res) {
                          : perDay >= 10   ? '+' + perDay.toFixed(1)
                                           : '+' + perDay.toFixed(2);
             const rowCls = l.isBonus ? ' res-tt-bonus-row' : '';
-            html += `<div class="res-tt-row${rowCls}"><span class="res-tt-label">${l.label}<span class="res-tt-sub"> ${l.sub}</span></span><span class="res-tt-val pos">${valStr}</span></div>`;
+            const subHtml = l.sub ? `<span class="res-tt-sub"> ${l.sub}</span>` : '';
+            html += `<div class="res-tt-row${rowCls}"><span class="res-tt-label">${l.label}${subHtml}</span><span class="res-tt-val pos">${valStr}</span></div>`;
         }
     } else {
         html += `<div class="res-tt-none">—</div>`;
@@ -942,7 +938,8 @@ function _buildResTooltipHTML(res) {
             const valStr = perDay >= 1000 ? '-' + (perDay / 1000).toFixed(1) + 'k'
                          : perDay >= 10   ? '-' + perDay.toFixed(1)
                                           : '-' + perDay.toFixed(2);
-            html += `<div class="res-tt-row"><span class="res-tt-label">${l.label}<span class="res-tt-sub"> ${l.sub}</span></span><span class="res-tt-val neg">${valStr}</span></div>`;
+            const subHtml = l.sub ? `<span class="res-tt-sub"> ${l.sub}</span>` : '';
+            html += `<div class="res-tt-row"><span class="res-tt-label">${l.label}${subHtml}</span><span class="res-tt-val neg">${valStr}</span></div>`;
         }
     } else {
         html += `<div class="res-tt-none">—</div>`;
