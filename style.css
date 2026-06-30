@@ -42,6 +42,45 @@ body[data-theme="arcane"] {
     --border:       rgba(255,255,255,0.12);
 }
 
+/* Verdant Forest theme */
+body[data-theme="verdant"] {
+    --bg:           #1a2420;
+    --bg-panel:     #21302a;
+    --bg-hover:     #2e443a;
+    --bg-dark:      #0e1512;
+    --accent:       #2ecc71;
+    --enabled:      #7cd62e;
+    --disabled:     #e74c3c;
+    --label:        #d4f7a0;
+    --border:       rgba(255,255,255,0.12);
+}
+
+/* Golden Royal theme */
+body[data-theme="golden"] {
+    --bg:           #241f17;
+    --bg-panel:     #2f2819;
+    --bg-hover:     #443a22;
+    --bg-dark:      #15110b;
+    --accent:       #d4a017;
+    --enabled:      #8bc34a;
+    --disabled:     #e35b3c;
+    --label:        #ffe9a8;
+    --border:       rgba(255,255,255,0.12);
+}
+
+/* Frost theme */
+body[data-theme="frost"] {
+    --bg:           #161f26;
+    --bg-panel:     #1d2933;
+    --bg-hover:     #2a3b47;
+    --bg-dark:      #0c1318;
+    --accent:       #4fc3f7;
+    --enabled:      #00c8a0;
+    --disabled:     #ff6b6b;
+    --label:        #bde6ff;
+    --border:       rgba(255,255,255,0.12);
+}
+
 * {
     box-sizing: border-box;
 }
