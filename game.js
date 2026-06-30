@@ -1,7 +1,7 @@
 const SEASONS        = ["Spring", "Summer", "Autumn", "Winter"];
 const TICKS_PER_DAY  = 2;
 const DAYS_PER_SEASON = 30;
-const GROWTH_TICKS   = 15;
+const GROWTH_TICKS   = 20;
 const STARVE_TICKS   = 5;
 
 const BASE_CAPS = {
@@ -1443,15 +1443,15 @@ function getBuildCost(id) {
     if (r.communalArchitecture && id === 'lair') scale = Math.max(1.01, scale - 0.02);
     const guildDiscount = r.guildCharter && GUILD_DISCOUNT_BUILDINGS.has(id);
     let matReduction = 0;
-    if (r.prototypeTools)   matReduction += 0.10;
-    if (r.blueprintLibrary) matReduction += 0.10;
-    if (r.masterCraft)      matReduction += 0.15;
+    if (r.prototypeTools)   matReduction += 0.05;
+    if (r.blueprintLibrary) matReduction += 0.07;
+    if (r.masterCraft)      matReduction += 0.08;
     for (const [res, base] of Object.entries(def.cost)) {
         let cost = Math.floor(base * Math.pow(scale, n));
-        if (guildDiscount) cost = Math.floor(cost * 0.80);
+        if (guildDiscount) cost = Math.floor(cost * 0.85);
         let resReduction = matReduction;
-        if (res === 'wood'  && r.prefabTimber)    resReduction += 0.15;
-        if (res === 'stone' && r.stockpiledStone) resReduction += 0.15;
+        if (res === 'wood'  && r.prefabTimber)    resReduction += 0.10;
+        if (res === 'stone' && r.stockpiledStone) resReduction += 0.10;
         if (resReduction > 0) cost = Math.floor(cost * Math.max(0.05, 1 - resReduction));
         out[res] = cost;
     }
@@ -1462,8 +1462,8 @@ function getEffectiveBuildingCoinCost(coinBase) {
     if (!coinBase) return 0;
     const r = gameState.research || {};
     let reduction = 0;
-    if (r.masterCraft) reduction += 0.20;
-    if (r.silkRope)    reduction += 0.10;
+    if (r.masterCraft) reduction += 0.10;
+    if (r.silkRope)    reduction += 0.05;
     const reduced = reduction > 0 ? Math.floor(coinBase * Math.max(0.05, 1 - reduction)) : coinBase;
     return effectiveCoinCost(reduced);
 }
@@ -4807,7 +4807,7 @@ const CREATURE_ROSTER = {
     "Beast":       ["Dire Wolf", "Cave Bear", "Giant Eagle", "Sabre Cat", "Giant Ape", "Bulette"],
     "Undead":      ["Skeleton", "Zombie", "Vampire", "Wight", "Ghoul", "Revenant", "Banshee", "Wraith", "Mummy", "Demilich", "Shadow"],
     "Elemental":   ["Fire Elemental", "Earth Elemental", "Water Elemental", "Air Elemental", "Magmin", "Galeb Duhr"],
-    "Specter":     ["Ghost", "Specter", "Poltergeist", "Shadow Demon", "Nighthaunt", "Allip"],
+    "Specter":     ["Ghost", "Specter", "Poltergeist", "Will-o'-Wisp", "Nighthaunt", "Allip"],
     "Fiend":       ["Imp", "Cambion", "Barbed Devil", "Night Hag", "Succubus/Incubus", "Pit Fiend", "Balor", "Rakshasa", "Quasit", "Shadow Demon"],
     "Humanoid":    ["Kenku", "Tabaxi", "Aarakocra", "Tortle", "Centaur", "Human", "Elf", "Dwarf", "Half-Orc", "Gnome"],
     "Planar":      ["Githzerai", "Githyanki", "Modron", "Slaad", "Xorn", "Inevitables"],
@@ -5072,8 +5072,8 @@ const LEGENDARY_ROSTER = {
                 { name: "Slow Corruption", pos: false, desc: "Growth timer 1.2× longer — curses spread at their own pace." },
             ],
         },
-        "Legendary": {
-            tag: "tag-legendary",
+        "Sovereign": {
+            tag: "tag-sovereign",
             effects: { foodConsumption: 2.0, growthBonus: 3.0, allProductionBonus: 0.03, coinCapBonus: { flat: 2000, pct: 0.15 }, lairHousing: 1 },
             mods: [
                 { name: "Singular Power",  pos: true,  desc: "+3% all production and Coin cap +2,000 + 15% of tier base — legends reshape the dungeon." },
@@ -5744,6 +5744,11 @@ const LEGENDARY_ROSTER = {
             extraEffects: { allProductionBonus: 0.02, storageBonus: 10 },
             extraMods: [{ name: "Kinetic Fury", pos: true, desc: "Extra +2% all production; Storage buildings hold 10 more per building." }],
         },
+        "Will-o'-Wisp": {
+            desc: "A malevolent light that leads travelers to their doom. Will-o'-Wisps sustain themselves on the life force of the lost, eating almost nothing and amplifying arcane output with eerie efficiency.",
+            extraEffects: { foodConsumption: 0.25, capBonus: { arcaneEssence: 50 }, converterBonus: { ritualCircle: 1.10 } },
+            extraMods: [{ name: "Luring Light", pos: true, desc: "75% food reduction; Arcane Essence cap +50; Ritual Circles extra +10%." }],
+        },
         "Nighthaunt": {
             desc: "Spectral warriors bound to a cause that ended centuries ago. Their dread manifests as tax compliance.",
             extraEffects: { taxBonus: 1, allProductionBonus: 0.02 },
@@ -6356,6 +6361,14 @@ if (!gameState.meta.seenBiomes)              gameState.meta.seenBiomes = [];
 if (gameState.meta.totalPrestiges == null)   gameState.meta.totalPrestiges = 0;
 if (!gameState.meta.racesPlayed)             gameState.meta.racesPlayed = {};
 if (gameState.meta.quintessence == null) gameState.meta.quintessence = 0;
+if (!gameState.stats)                        gameState.stats = {};
+if (gameState.stats.peakPopulation       == null) gameState.stats.peakPopulation       = 0;
+if (gameState.stats.buildingsConstructed == null) gameState.stats.buildingsConstructed = 0;
+if (gameState.stats.manualGathers        == null) gameState.stats.manualGathers        = 0;
+if (gameState.stats.starvationDeaths     == null) gameState.stats.starvationDeaths     = 0;
+if (gameState.stats.foodProduced         == null) gameState.stats.foodProduced         = 0;
+if (gameState.stats.woodProduced         == null) gameState.stats.woodProduced         = 0;
+if (gameState.stats.stoneProduced        == null) gameState.stats.stoneProduced        = 0;
 if (!gameState.workerAssignments)            gameState.workerAssignments = {};
 if (!gameState.research)                     gameState.research = {};
 if (!Array.isArray(gameState.tradeRoutes))   gameState.tradeRoutes = [];

@@ -1502,9 +1502,9 @@
                 </div>
                 <div class="creature-entry">
                     <span class="creature-tag tag-specter">Specter</span>
-                    <span class="creature-name">Shadow Demon</span>
-                    <span class="creature-desc">A demon bound into incorporeal shadow-form, either by punishment or preference. It hungers for darkness and for the warmth it can no longer possess — making it exceptionally efficient at dark rituals.</span>
-                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Shadow Rite — Further 50% food reduction; Ritual Circles +15%; Arcane Essence cap +50.</span></div>
+                    <span class="creature-name">Will-o'-Wisp</span>
+                    <span class="creature-desc">A cold light over dark water, leading the unwary somewhere they will not return from. Will-o'-Wisps do not hunt so much as wait — patient, luminous, and entirely without mercy.</span>
+                    <div class="creature-mods"><span class="cmod cmod-pos">▲ Luring Light — 75% food reduction; Arcane Essence cap +50; Ritual Circles extra +10%.</span></div>
                     <span class="creature-biome"><span class="biome-best">Shadowfell Crossing</span><span class="biome-hard">Celestial Foothold</span></span>
                 </div>
                 <div class="creature-entry">
@@ -1930,6 +1930,26 @@
         <!-- CHANGELOG -->
         <section id="wiki-changelog" class="wiki-section wiki-changelog" style="display:none">
             <h2>Changelog</h2>
+
+            <div class="biome-card">
+                <div><span class="cl-ver">v0.73.0</span><span class="cl-date">2026-06-29</span></div>
+                <p class="biome-desc">Major balance pass to slow the game down: research production and converter bonuses reduced by ~33% across the board, all-production bonuses trimmed, food consumption research halved, and building cost-reduction stacking capped at 20% total. Building cost scaling raised by tier (basic +0.03, converters +0.03), lore costs for mid/late research (tiers 2.5–2.10) increased by 50–65%, population growth slowed (GROWTH_TICKS 15→20), and storage cap bonuses from research reduced ~30%.</p>
+            </div>
+
+            <div class="biome-card">
+                <div><span class="cl-ver">v0.72.23</span><span class="cl-date">2026-06-29</span></div>
+                <p class="biome-desc">Fixed old saves missing the stats object crashing the tick loop; added migration guards for all seven stats fields on load.</p>
+            </div>
+
+            <div class="biome-card">
+                <div><span class="cl-ver">v0.72.22</span><span class="cl-date">2026-06-29</span></div>
+                <p class="biome-desc">Fixed Shadow Demon appearing in both Specter and Fiend rosters; it is now Fiend-only. Replaced the Specter slot with Will-o'-Wisp (low food, Arcane Essence cap bonus, Ritual Circle boost).</p>
+            </div>
+
+            <div class="biome-card">
+                <div><span class="cl-ver">v0.72.21</span><span class="cl-date">2026-06-29</span></div>
+                <p class="biome-desc">Fixed Sovereign races (Wyrm, Umbral Hunter, Storm Roc, Ironback, Rift Drake, Ashborn) having no type-level effects or mods; renamed the TYPES key from "Legendary" to "Sovereign" and added a distinct silver tag color for the type.</p>
+            </div>
 
             <div class="biome-card">
                 <div><span class="cl-ver">v0.72.20</span><span class="cl-date">2026-06-29</span></div>
@@ -3324,7 +3344,7 @@ function showWiki(id) {
         'Beast':       ['Dire Wolf','Cave Bear','Giant Eagle','Sabre Cat','Giant Ape','Bulette'],
         'Undead':      ['Skeleton','Zombie','Vampire','Wight','Ghoul','Revenant','Banshee','Wraith','Mummy','Demilich','Shadow'],
         'Elemental':   ['Fire Elemental','Earth Elemental','Water Elemental','Air Elemental','Magmin','Galeb Duhr'],
-        'Specter':     ['Ghost','Specter','Poltergeist','Shadow Demon','Nighthaunt','Allip'],
+        'Specter':     ['Ghost','Specter','Poltergeist',"Will-o'-Wisp",'Nighthaunt','Allip'],
         'Fiend':       ['Imp','Cambion','Barbed Devil','Night Hag','Succubus/Incubus','Pit Fiend','Balor','Rakshasa','Quasit','Shadow Demon'],
         'Humanoid':    ['Kenku','Tabaxi','Aarakocra','Tortle','Centaur','Human','Elf','Dwarf','Half-Orc','Gnome'],
         'Planar':      ['Githzerai','Githyanki','Modron','Slaad','Xorn','Inevitables'],
@@ -3343,7 +3363,7 @@ function showWiki(id) {
         'Aquatic':'#40a8c8','Monstrous':'#c84040','Beast':'#b06030',
         'Undead':'#9b6dbe','Elemental':'#e8c040','Specter':'#7060a0',
         'Fiend':'#d04060','Humanoid':'#60a8d0','Planar':'#60a0b0','Celestial':'#d4b840',
-        'Titan':'#c05030','Cursed':'#8040a0','Fey':'#c878d8','Sovereign':'#e8c040','Primordial':'#3080a0',
+        'Titan':'#c05030','Cursed':'#8040a0','Fey':'#c878d8','Sovereign':'#c8d8e8','Primordial':'#3080a0',
     };
 
     var PATH_DESCS = {
@@ -3525,6 +3545,7 @@ function showWiki(id) {
         'Ghost':              { desc: 'The unfinished dead, haunting the place of their greatest regret. Ghosts are powerful and unpredictable.', mods: [{n:'Lingering Presence',p:true,d:'+1 cp/creature/day; Arcane Essence cap +25.'}] },
         'Specter':            { desc: 'Pure malice stripped of everything human. The Specter does not remember what it was. It knows only cold.' },
         'Poltergeist':        { desc: 'A ghost too angry to manifest fully, expressing its rage through hurled objects. Its chaos paradoxically accelerates production.', mods: [{n:'Kinetic Fury',p:true,d:'Extra +2% all production; Storage buildings hold 10 more per building.'}] },
+        "Will-o'-Wisp":       { desc: "A cold light over dark water, leading the unwary somewhere they will not return from. Will-o'-Wisps do not hunt so much as wait — patient, luminous, and entirely without mercy.", mods: [{n:'Luring Light',p:true,d:'75% food reduction; Arcane Essence cap +50; Ritual Circles extra +10%.'}] },
         'Nighthaunt':         { desc: 'Spectral warriors bound to a cause that ended centuries ago. Their dread manifests as tax compliance.', mods: [{n:'Grievous Dread',p:true,d:'+1 cp/creature/day; extra +2% all production.'}] },
         'Allip':              { desc: 'The mad remnant of someone driven to self-destruction by forbidden knowledge. Its babbling accelerates arcane processes.', mods: [{n:'Mad Babbling',p:true,d:'Arcane Grinders and Arcane Benches extra +15%.'}] },
         // ── Titan ─────────────────────────────────────────────────────────────────
