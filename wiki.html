@@ -3359,11 +3359,11 @@ function showWiki(id) {
     if (id === 'research') rtreeMaybeBuild();
     if (id === 'racetree') rtraceMaybeBuild();
 }
-(function () {
+window.addEventListener('DOMContentLoaded', function () {
     var id = (location.hash || '#intro').slice(1);
     if (!document.getElementById('wiki-' + id)) id = 'intro';
     showWiki(id);
-})();
+});
 </script>
 
 <script>
