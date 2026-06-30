@@ -372,7 +372,7 @@ RESEARCH.rationing = {
 };
 
 RESEARCH.goldStandard = {
-    tier: "2.3",
+    tier: "2.6",
     name: "Gold Standard",
     desc: "Establish gold as the realm's reserve currency. Every 10 sp rolls into 1 gp, revealing the full gp / sp / cp denomination.",
     cost: { ore: 240, iron: 120 },
@@ -548,7 +548,7 @@ RESEARCH.guildCharter = {
 };
 
 RESEARCH.mintStandard = {
-    tier: "2.4",
+    tier: "2.7",
     name: "Mint Standard",
     desc: "Phase out copper entirely. All costs below 1 sp round up. Treasury displays in gold and silver only.",
     cost: { iron: 160, stone: 120, coins: 500 },
@@ -755,7 +755,7 @@ RESEARCH.manaConduit = {
 };
 
 RESEARCH.goldOnly = {
-    tier: "2.5",
+    tier: "2.9",
     name: "Gold Coin Realm",
     desc: "Silver is for peasants. All costs below 1 gp round up to 1 gp. Treasury and all prices display in gold pieces only.",
     cost: { iron: 240, coins: 2000 },
