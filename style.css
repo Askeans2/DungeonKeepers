@@ -81,6 +81,45 @@ body[data-theme="frost"] {
     --border:       rgba(255,255,255,0.12);
 }
 
+/* Inferno Tide theme — magma orange clashed against deep cyan */
+body[data-theme="inferno"] {
+    --bg:           #201615;
+    --bg-panel:     #2b1c19;
+    --bg-hover:     #402923;
+    --bg-dark:      #120c0b;
+    --accent:       #ff7517;
+    --enabled:      #2dd4bf;
+    --disabled:     #ff3b3b;
+    --label:        #22e0e0;
+    --border:       rgba(255,160,60,0.18);
+}
+
+/* Toxic Bloom theme — acid purple clashed against venom green */
+body[data-theme="toxic"] {
+    --bg:           #1a1722;
+    --bg-panel:     #23202e;
+    --bg-hover:     #332c44;
+    --bg-dark:      #100e15;
+    --accent:       #b042ff;
+    --enabled:      #aef62a;
+    --disabled:     #ff4d6d;
+    --label:        #c6ff4a;
+    --border:       rgba(190,90,255,0.18);
+}
+
+/* Royal Bloodline theme — royal blue, gold, and crimson woven together */
+body[data-theme="royal"] {
+    --bg:           #131a2b;
+    --bg-panel:     #1a2438;
+    --bg-hover:     #243150;
+    --bg-dark:      #0a0e1a;
+    --accent:       #3b6fe0;
+    --enabled:      #ffd34d;
+    --disabled:     #d62839;
+    --label:        #ffd34d;
+    --border:       rgba(214,40,57,0.25);
+}
+
 * {
     box-sizing: border-box;
 }
