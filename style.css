@@ -1082,7 +1082,8 @@ kbd {
     align-items: center;
     padding: 6px 0 8px;
     border-bottom: 1px solid rgba(255,255,255,0.08);
-    margin-bottom: 8px;
+    margin: 0 auto 8px;
+    max-width: 400px;
     font-size: 12px;
     color: var(--text);
 }
@@ -1102,6 +1103,7 @@ kbd {
     border-bottom: 1px solid rgba(255,255,255,0.04);
     gap: 8px;
     max-width: 400px;
+    margin: 0 auto;
 }
 
 .worker-peasant {
@@ -1109,7 +1111,7 @@ kbd {
     border-radius: 3px;
     padding: 6px 4px;
     border-bottom: 1px solid rgba(255,255,255,0.08);
-    margin-bottom: 2px;
+    margin: 0 auto 2px;
 }
 
 .worker-left {
@@ -1373,7 +1375,6 @@ kbd {
 .tab-bar {
     display: flex;
     align-items: center;
-    justify-content: center;
     gap: 4px;
     padding: 8px 12px;
     border-bottom: 1px solid var(--border);
@@ -1411,6 +1412,7 @@ kbd {
 }
 
 .tab-btn.dev-tab {
+    margin-left: auto;
     border-color: rgba(243, 156, 18, 0.25);
     color: #c27a28;
 }
@@ -4417,7 +4419,8 @@ body.reduce-motion *::after {
 .trade-header {
     padding: 6px 0 10px;
     border-bottom: 1px solid rgba(255,255,255,0.08);
-    margin-bottom: 10px;
+    margin: 0 auto 10px;
+    max-width: 400px;
 }
 .trade-header-row {
     display: flex;
@@ -4471,7 +4474,8 @@ body.reduce-motion *::after {
     font-style: italic;
 }
 .trade-rates-panel {
-    margin-top: 16px;
+    margin: 16px auto 0;
+    max-width: 400px;
     border-top: 1px solid rgba(255,255,255,0.06);
     padding-top: 10px;
 }
