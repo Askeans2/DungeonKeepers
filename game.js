@@ -231,7 +231,7 @@ const gameState = {
         ritualCircle: 0, spiderNest: 0, arcaneCrucible: 0, darkAltar: 0, mithrilForge: 0,
     },
     tradeRoutes: {},
-    buildingDisabled: {}, // building id → true if player has paused its production/consumption
+    buildingDisabled: {}, // building id → count of that building's units currently paused (0..count)
     research:          {},
     workerAssignments: {},
     population: { count: 0, growthTimer: 0, starveTick: 0 },
@@ -736,6 +736,14 @@ function getBuildingProductionBonus(targetId) {
     return mult;
 }
 
+// Fraction (0..1) of a building's units that are still active (not paused by the player).
+function getActiveBuildingFraction(id) {
+    const count = gameState.buildings[id] || 0;
+    if (count === 0) return 1;
+    const paused = Math.min(count, (gameState.buildingDisabled && gameState.buildingDisabled[id]) || 0);
+    return (count - paused) / count;
+}
+
 function getProduction() {
     const prod      = {};
     for (const res of Object.keys(BASE_CAPS)) prod[res] = 0;
@@ -743,11 +751,12 @@ function getProduction() {
     const allBonus  = (1 + getResearchBonus('allProductionBonus')) * getQuintessenceProductionMult();
     for (const [id, def] of Object.entries(ROOMS)) {
         if (!def.production || def.converts) continue;
-        if (gameState.buildingDisabled && gameState.buildingDisabled[id]) continue;
         const count = gameState.buildings[id] || 0;
         if (count === 0) continue;
+        const activeFrac = getActiveBuildingFraction(id);
+        if (activeFrac === 0) continue;
         // Worker buildings scale by assigned workers; all others scale by building count
-        const n = def.jobs ? (workers[id] || 0) : count;
+        const n = (def.jobs ? (workers[id] || 0) : count) * activeFrac;
         if (n === 0) continue;
         const bldgMult = getResearchBonus('productionBonus', id)
                        * getBuildingProductionBonus(id);
@@ -771,12 +780,13 @@ function getResourceBreakdown(res) {
         if (def.production[res] === undefined) continue;
         const count = gameState.buildings[id] || 0;
         if (count === 0) continue;
-        const n = def.jobs ? (workers[id] || 0) : count;
+        const activeFrac = getActiveBuildingFraction(id);
+        const n = (def.jobs ? (workers[id] || 0) : count) * activeFrac;
         if (n === 0) continue;
-        const isOff = gameState.buildingDisabled && gameState.buildingDisabled[id];
+        const paused = (gameState.buildingDisabled && gameState.buildingDisabled[id]) || 0;
         const bldgMult = getResearchBonus('productionBonus', id) * getBuildingProductionBonus(id);
-        const rate = isOff ? 0 : def.production[res] * n * bldgMult * allBonus;
-        const sub = (def.jobs ? `${n}w` : `×${count}`) + (isOff ? ' · paused' : '');
+        const rate = def.production[res] * n * bldgMult * allBonus;
+        const sub = (def.jobs ? `${Math.round(n)}w` : `×${count}`) + (paused > 0 ? ` · ${paused} paused` : '');
         lines.push({ label: def.name, sub, value: rate, drain: false });
     }
 
@@ -785,12 +795,13 @@ function getResourceBreakdown(res) {
         if (!def.converts || def.converts.output !== res) continue;
         const count = gameState.buildings[id] || 0;
         if (count === 0) continue;
-        const n = def.jobs ? (workers[id] || 0) : count;
+        const activeFrac = getActiveBuildingFraction(id);
+        const n = (def.jobs ? (workers[id] || 0) : count) * activeFrac;
         if (n === 0) continue;
-        const isOff = gameState.buildingDisabled && gameState.buildingDisabled[id];
+        const paused = (gameState.buildingDisabled && gameState.buildingDisabled[id]) || 0;
         const convMult = getResearchBonus('converterBonus', id);
-        const rate = isOff ? 0 : def.converts.outputRate * convMult * n;
-        const sub = (def.jobs ? `${n}w` : `×${count}`) + (isOff ? ' · paused' : ' · max');
+        const rate = def.converts.outputRate * convMult * n;
+        const sub = (def.jobs ? `${Math.round(n)}w` : `×${count}`) + (paused > 0 ? ` · ${paused} paused` : ' · max');
         lines.push({ label: def.name, sub, value: rate, drain: false });
     }
 
@@ -799,11 +810,12 @@ function getResourceBreakdown(res) {
         if (!def.converts || def.converts.inputs[res] === undefined) continue;
         const count = gameState.buildings[id] || 0;
         if (count === 0) continue;
-        const n = def.jobs ? (workers[id] || 0) : count;
+        const activeFrac = getActiveBuildingFraction(id);
+        const n = (def.jobs ? (workers[id] || 0) : count) * activeFrac;
         if (n === 0) continue;
-        const isOff = gameState.buildingDisabled && gameState.buildingDisabled[id];
-        const rate = isOff ? 0 : def.converts.inputs[res] * n;
-        const sub = (def.jobs ? `${n}w` : `×${count}`) + (isOff ? ' · paused' : ' · max');
+        const paused = (gameState.buildingDisabled && gameState.buildingDisabled[id]) || 0;
+        const rate = def.converts.inputs[res] * n;
+        const sub = (def.jobs ? `${Math.round(n)}w` : `×${count}`) + (paused > 0 ? ` · ${paused} paused` : ' · max');
         lines.push({ label: def.name, sub, value: -rate, drain: true });
     }
 
@@ -1590,12 +1602,16 @@ function build(id) {
     saveGame();
 }
 
-// Toggles whether a production/converter building runs its production+consumption.
-// Used to let players pause overbuilt converters without losing the buildings.
-function toggleBuildingEnabled(id, event) {
+// Adjusts how many units of a building are paused (production+consumption skipped),
+// one at a time. Lets players dial down an overbuilt converter without losing units.
+function adjustBuildingPaused(id, delta, event) {
     if (event) event.stopPropagation();
     if (!gameState.buildingDisabled) gameState.buildingDisabled = {};
-    gameState.buildingDisabled[id] = !gameState.buildingDisabled[id];
+    const count   = gameState.buildings[id] || 0;
+    const current = gameState.buildingDisabled[id] || 0;
+    const next    = Math.max(0, Math.min(count, current + delta));
+    if (next === 0) delete gameState.buildingDisabled[id];
+    else gameState.buildingDisabled[id] = next;
     updateUI();
     saveGame();
 }
@@ -1869,11 +1885,12 @@ function runOneTick() {
     const workers2 = getWorkersPerBuilding();
     for (const [id, def] of Object.entries(ROOMS)) {
         if (!def.converts) continue;
-        if (gameState.buildingDisabled && gameState.buildingDisabled[id]) continue;
         const count = gameState.buildings[id] || 0;
         if (count === 0) continue;
+        const activeFrac = getActiveBuildingFraction(id);
+        if (activeFrac === 0) continue;
         // Worker buildings need assigned workers; others run automatically per building
-        const w = def.jobs ? (workers2[id] || 0) : count;
+        const w = (def.jobs ? (workers2[id] || 0) : count) * activeFrac;
         if (w === 0) continue;
         const conv = def.converts;
         let ratio = 1;
@@ -2210,23 +2227,30 @@ function updateUI() {
             btn.style.display = checkUnlock(id) ? "" : "none";
             btn.classList.toggle("disabled", !canAfford(id));
         }
-        // Pause toggle for production/converter buildings — lets players stop an
-        // overbuilt building from consuming/producing without demolishing it
+        // Pause stepper for production/converter buildings — lets players idle some
+        // units of an overbuilt building without demolishing them. Hidden until hover.
         if (btn && (def.production || def.converts) && count > 0) {
-            let toggleEl = btn.querySelector(".btn-pause-toggle");
-            if (!toggleEl) {
-                toggleEl = document.createElement("div");
-                toggleEl.className = "btn-pause-toggle";
-                toggleEl.onclick = (e) => toggleBuildingEnabled(id, e);
-                btn.appendChild(toggleEl);
+            let stepperEl = btn.querySelector(".btn-pause-stepper");
+            if (!stepperEl) {
+                stepperEl = document.createElement("div");
+                stepperEl.className = "btn-pause-stepper";
+                stepperEl.innerHTML =
+                    '<span class="pause-step pause-step-minus">−</span>' +
+                    '<span class="pause-count"></span>' +
+                    '<span class="pause-step pause-step-plus">+</span>';
+                stepperEl.querySelector(".pause-step-minus").onclick = (e) => adjustBuildingPaused(id, -1, e);
+                stepperEl.querySelector(".pause-step-plus").onclick  = (e) => adjustBuildingPaused(id, 1, e);
+                btn.appendChild(stepperEl);
             }
-            const isOff = !!(gameState.buildingDisabled && gameState.buildingDisabled[id]);
-            toggleEl.classList.toggle("is-paused", isOff);
-            toggleEl.title = isOff ? "Paused — click to resume" : "Click to pause production";
-            btn.classList.toggle("building-paused", isOff);
+            const paused = (gameState.buildingDisabled && gameState.buildingDisabled[id]) || 0;
+            stepperEl.querySelector(".pause-count").textContent = paused + " / " + count + " idle";
+            stepperEl.title = "Idle units skip production and consumption";
+            stepperEl.querySelector(".pause-step-minus").classList.toggle("at-limit", paused <= 0);
+            stepperEl.querySelector(".pause-step-plus").classList.toggle("at-limit", paused >= count);
+            btn.classList.toggle("building-paused", paused > 0);
         } else if (btn) {
-            const toggleEl = btn.querySelector(".btn-pause-toggle");
-            if (toggleEl) toggleEl.remove();
+            const stepperEl = btn.querySelector(".btn-pause-stepper");
+            if (stepperEl) stepperEl.remove();
             btn.classList.remove("building-paused");
         }
         const countEl = document.getElementById(id + "Count");

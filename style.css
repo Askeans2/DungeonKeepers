@@ -1491,31 +1491,71 @@ kbd {
     background: var(--disabled);
 }
 
-/* PAUSE TOGGLE (per-building production on/off) */
-.btn-pause-toggle {
+/* PAUSE STEPPER (idle some units of a production/converter building) */
+/* Hidden until hover, tucked into the bottom-right corner where the status dot
+   normally sits, so it doesn't compete for attention with the build action. */
+.btn-pause-stepper {
     position: absolute;
-    top: 8px;
-    left: 10px;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    border: 1.5px solid var(--enabled);
-    background: transparent;
-    cursor: pointer;
+    bottom: 22px;
+    right: 8px;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 9px;
+    color: var(--text-muted);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.1s;
     z-index: 2;
 }
 
-.btn-pause-toggle:hover {
-    border-color: var(--accent);
+.build-btn:hover .btn-pause-stepper {
+    opacity: 1;
+    pointer-events: auto;
 }
 
-.btn-pause-toggle.is-paused {
-    background: var(--disabled);
-    border-color: var(--disabled);
+/* Keep showing it without hover once units are actually idle, so the player
+   isn't left guessing why output dropped. */
+.build-btn.building-paused .btn-pause-stepper {
+    opacity: 0.85;
+    pointer-events: auto;
+}
+
+.btn-pause-stepper .pause-step {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 12px;
+    height: 12px;
+    line-height: 1;
+    border-radius: 2px;
+    border: 1px solid var(--border);
+    background: var(--bg-panel);
+    color: var(--text-muted);
+    cursor: pointer;
+}
+
+.btn-pause-stepper .pause-step:hover {
+    border-color: var(--accent);
+    color: var(--text);
+}
+
+.btn-pause-stepper .pause-step.at-limit {
+    opacity: 0.35;
+    cursor: default;
+}
+
+.btn-pause-stepper .pause-step.at-limit:hover {
+    border-color: var(--border);
+    color: var(--text-muted);
+}
+
+.btn-pause-stepper .pause-count {
+    white-space: nowrap;
 }
 
 .build-btn.building-paused {
-    opacity: 0.6;
+    opacity: 0.75;
 }
 
 .build-btn.building-paused .btn-title {
