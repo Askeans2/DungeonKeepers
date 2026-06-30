@@ -16,6 +16,32 @@
     --border:       rgba(255,255,255,0.12);
 }
 
+/* Crimson Stone theme */
+body[data-theme="crimson"] {
+    --bg:           #241a1a;
+    --bg-panel:     #2f2121;
+    --bg-hover:     #432e2e;
+    --bg-dark:      #150f0f;
+    --accent:       #c0392b;
+    --enabled:      #6fae00;
+    --disabled:     #ff4d4d;
+    --label:        #ffce9e;
+    --border:       rgba(255,255,255,0.12);
+}
+
+/* Arcane Violet theme */
+body[data-theme="arcane"] {
+    --bg:           #1c1a26;
+    --bg-panel:     #252233;
+    --bg-hover:     #36304a;
+    --bg-dark:      #110f17;
+    --accent:       #8e6fd6;
+    --enabled:      #00b894;
+    --disabled:     #e74c3c;
+    --label:        #c9b8ff;
+    --border:       rgba(255,255,255,0.12);
+}
+
 * {
     box-sizing: border-box;
 }
@@ -669,9 +695,9 @@ h3 {
     display: grid;
     grid-template-columns: 1fr auto auto;
     align-items: center;
-    padding: 4px 0;
+    padding: 2px 0;
     border-bottom: 1px solid rgba(255,255,255,0.04);
-    line-height: 1.6;
+    line-height: 1.35;
     gap: 0 6px;
 }
 
@@ -810,12 +836,12 @@ h3 {
 
 .res-name {
     color: var(--label);
-    font-size: 17px;
+    font-size: 14px;
 }
 
 .res-right {
     color: var(--text);
-    font-size: 17px;
+    font-size: 14px;
     text-align: right;
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
@@ -823,7 +849,7 @@ h3 {
 
 .rate {
     color: var(--enabled);
-    font-size: 15px;
+    font-size: 12px;
     font-variant-numeric: tabular-nums;
     text-align: right;
     white-space: nowrap;
@@ -832,7 +858,7 @@ h3 {
 
 .res-label-sm {
     color: var(--text-muted);
-    font-size: 14px;
+    font-size: 12px;
     margin-left: 3px;
 }
 

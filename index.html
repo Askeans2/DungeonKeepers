@@ -2505,6 +2505,18 @@
 
             <div class="setting-row">
                 <div>
+                    <span class="setting-label">Color Theme</span>
+                    <div class="setting-desc">Choose the UI's color palette.</div>
+                </div>
+                <select id="set-theme" class="tab-title-select" onchange="setColorTheme()" data-stip="Switches the UI's color palette between Default, Crimson Stone, and Arcane Violet.">
+                    <option value="default">Default</option>
+                    <option value="crimson">Crimson Stone</option>
+                    <option value="arcane">Arcane Violet</option>
+                </select>
+            </div>
+
+            <div class="setting-row">
+                <div>
                     <span class="setting-label">Tab Title</span>
                     <div class="setting-desc">Rename this tab to something more… professional.</div>
                 </div>
@@ -2521,6 +2533,7 @@
                     </select>
                     <input type="text" id="set-title-input" class="tab-title-input" maxlength="64" placeholder="Custom title…" />
                     <button class="setting-action-btn" onclick="setTabTitleFromInput()" data-stip="Sets the browser tab to whatever you typed in the field to the left.">Set</button>
+                    <button class="setting-action-btn" onclick="resetTabTitle()" data-stip="Resets the browser tab title back to the default.">Reset</button>
                 </div>
             </div>
 

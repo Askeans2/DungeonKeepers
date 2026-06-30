@@ -264,6 +264,7 @@ const gameSettings = {
     numberFormat:       "abbrev", // "abbrev" | "full"
     reducedAnimations:  false,
     tabTitle:           "",       // custom browser tab title; "" = default
+    colorTheme:         "default", // "default" | "crimson" | "arcane"
 };
 
 const TAB_TITLE_PRESETS = [
@@ -298,11 +299,29 @@ function saveSettings() {
 function applySettings() {
     document.body.classList.toggle("reduce-motion", gameSettings.reducedAnimations);
     applyTabTitle();
+    applyColorTheme();
     updateSettingsUI();
 }
 
 function applyTabTitle() {
     document.title = gameSettings.tabTitle || "Dungeon Keepers";
+}
+
+function applyColorTheme() {
+    const theme = gameSettings.colorTheme || "default";
+    if (theme === "default") {
+        document.body.removeAttribute("data-theme");
+    } else {
+        document.body.setAttribute("data-theme", theme);
+    }
+}
+
+function setColorTheme() {
+    const sel = document.getElementById("set-theme");
+    if (!sel) return;
+    gameSettings.colorTheme = sel.value;
+    saveSettings();
+    applyColorTheme();
 }
 
 function setTabTitleFromPreset() {
@@ -324,6 +343,16 @@ function setTabTitleFromInput() {
     saveSettings();
     applyTabTitle();
     input.value = "";
+    const sel = document.getElementById("set-title-preset");
+    if (sel) sel.value = "";
+}
+
+function resetTabTitle() {
+    gameSettings.tabTitle = "";
+    saveSettings();
+    applyTabTitle();
+    const input = document.getElementById("set-title-input");
+    if (input) input.value = "";
     const sel = document.getElementById("set-title-preset");
     if (sel) sel.value = "";
 }
@@ -352,6 +381,11 @@ function updateSettingsUI() {
     const tSel = document.getElementById("set-title-preset");
     if (tSel) {
         tSel.value = TAB_TITLE_PRESETS.includes(gameSettings.tabTitle) ? gameSettings.tabTitle : "";
+    }
+    // Color theme dropdown — reflect saved value
+    const thSel = document.getElementById("set-theme");
+    if (thSel) {
+        thSel.value = gameSettings.colorTheme || "default";
     }
     // Restore Backup button — reflects whether a checkpoint exists.
     const bkBtn  = document.getElementById("set-restore");
@@ -2097,8 +2131,13 @@ function updateUI() {
     if (popRow) popRow.classList.toggle("starving", isStarving);
 
     // Coins (now in Population section)
-    setText("coinsDisplay", formatCoins(gameState.resources.coins || 0));
-    setText("coinsCap",     formatCoins(caps.coins));
+    const coinsNow = gameState.resources.coins || 0;
+    setText("coinsDisplay", formatCoinsCompact(coinsNow));
+    setText("coinsCap",     formatCoinsCompact(caps.coins));
+    const coinsDisplayEl = document.getElementById("coinsDisplay");
+    if (coinsDisplayEl) coinsDisplayEl.title = formatCoins(coinsNow);
+    const coinsCapEl = document.getElementById("coinsCap");
+    if (coinsCapEl) coinsCapEl.title = formatCoins(caps.coins);
     const coinsRateEl = document.getElementById("coinsRate");
     if (coinsRateEl) {
         const dailyNet = getCoinsDailyRate();
@@ -2106,7 +2145,8 @@ function updateUI() {
             coinsRateEl.style.display = "none";
         } else {
             const sign = dailyNet > 0 ? "+" : "-";
-            coinsRateEl.textContent = sign + formatCoins(Math.abs(dailyNet)) + "/day";
+            coinsRateEl.title = sign + formatCoins(Math.abs(dailyNet)) + "/day";
+            coinsRateEl.textContent = sign + formatCoinsCompact(Math.abs(dailyNet)) + "/day";
             coinsRateEl.style.display = "";
             coinsRateEl.style.color = dailyNet < 0 ? "var(--disabled)" : "var(--enabled)";
         }
@@ -2407,6 +2447,38 @@ function formatCoins(n) {
 // denominations have been researched, so display matches what is charged.
 function formatCoinCost(n) {
     return formatCoins(effectiveCoinCost(n));
+}
+
+// Compact single-denomination display for the main resource bar: shows only
+// the highest unlocked unit, with a decimal remainder instead of stacking
+// gp/sp/cp chunks. Full breakdown is still available via formatCoins() in tooltips.
+function formatCoinsCompact(n) {
+    n = Math.floor(n);
+    if (n <= 0) return gameState.research && gameState.research.goldOnly ? "0 gp"
+        : (gameState.research && gameState.research.silverCurrency ? "0 sp" : "0 cp");
+    const r = gameState.research || {};
+    const oneDecimal = (whole, sub) => {
+        const d = Math.floor(sub / 10);
+        return d ? `${whole}.${d}` : `${whole}`;
+    };
+    if (r.goldOnly || r.goldStandard) {
+        const gp = Math.floor(n / 1000);
+        if (gp > 0) return oneDecimal(gp, n % 1000) + " gp";
+        const sp = Math.floor(n / 100);
+        if (sp > 0) return oneDecimal(sp, n % 100) + " sp";
+        return n + " cp";
+    }
+    if (r.mintStandard) {
+        const gp = Math.floor(n / 1000);
+        if (gp > 0) return oneDecimal(gp, n % 1000) + " gp";
+        return Math.floor(n / 100) + " sp";
+    }
+    if (r.silverCurrency) {
+        const sp = Math.floor(n / 100);
+        if (sp > 0) return oneDecimal(sp, n % 100) + " sp";
+        return n + " cp";
+    }
+    return n + " cp";
 }
 
 // ── Era system ────────────────────────────────────────────────────────────────
