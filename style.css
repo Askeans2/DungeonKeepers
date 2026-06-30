@@ -1373,6 +1373,7 @@ kbd {
 .tab-bar {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 4px;
     padding: 8px 12px;
     border-bottom: 1px solid var(--border);
@@ -1410,7 +1411,6 @@ kbd {
 }
 
 .tab-btn.dev-tab {
-    margin-left: auto;
     border-color: rgba(243, 156, 18, 0.25);
     color: #c27a28;
 }
