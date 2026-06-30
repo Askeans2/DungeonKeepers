@@ -2809,9 +2809,9 @@
             if (d20bg) { d20bg.destroy(); d20bg = null; }
         }
 
-        function splashRollDice() {
+        window.splashRollDice = function () {
             if (d20bg) d20bg.roll();
-        }
+        };
 
         // ── Keyboard shortcuts ────────────────────────────────────────────────
         document.addEventListener('keydown', function (e) {
