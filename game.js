@@ -1179,10 +1179,10 @@ function _buildBldTooltipHTML(id, def) {
         const bldCount = gameState.buildings[id] || 0;
         const coinFree = def.coinFreeBelow != null && bldCount < def.coinFreeBelow;
         if (coinFree) {
-            html += `<div class="bld-tt-line" style="text-decoration:line-through;opacity:0.5">${formatCoins(getEffectiveBuildingCoinCost(def.coinCost))}</div>`;
+            html += `<div class="bld-tt-line" style="text-decoration:line-through;opacity:0.5">${formatCoins(getEffectiveBuildingCoinCost(def.coinCost, id))}</div>`;
             html += `<div class="bld-tt-line" style="color:var(--accent);font-size:10px">Free (${bldCount + 1}/${def.coinFreeBelow})</div>`;
         } else {
-            const coinCost = getEffectiveBuildingCoinCost(def.coinCost);
+            const coinCost = getEffectiveBuildingCoinCost(def.coinCost, id);
             const canAffordCoins = (gameState.resources.coins || 0) >= coinCost;
             html += `<div class="bld-tt-line${canAffordCoins ? '' : ' bld-tt-cant-afford'}">${formatCoins(coinCost)}</div>`;
         }
@@ -1487,13 +1487,17 @@ function getBuildCost(id) {
     return out;
 }
 
-function getEffectiveBuildingCoinCost(coinBase) {
+function getEffectiveBuildingCoinCost(coinBase, id) {
     if (!coinBase) return 0;
     const r = gameState.research || {};
+    const def = id ? ROOMS[id] : null;
+    const scale = def?.costScale || 1.2;
+    const n = id ? (gameState.buildings[id] || 0) : 0;
+    const scaled = Math.floor(coinBase * Math.pow(scale, n));
     let reduction = 0;
     if (r.masterCraft) reduction += 0.10;
     if (r.silkRope)    reduction += 0.05;
-    const reduced = reduction > 0 ? Math.floor(coinBase * Math.max(0.05, 1 - reduction)) : coinBase;
+    const reduced = reduction > 0 ? Math.floor(scaled * Math.max(0.05, 1 - reduction)) : scaled;
     return effectiveCoinCost(reduced);
 }
 
@@ -1505,7 +1509,7 @@ function canAfford(id) {
     if (def.coinCost) {
         const bldCount = gameState.buildings[id] || 0;
         const coinFree = def.coinFreeBelow != null && bldCount < def.coinFreeBelow;
-        if (!coinFree && (gameState.resources.coins || 0) < getEffectiveBuildingCoinCost(def.coinCost)) return false;
+        if (!coinFree && (gameState.resources.coins || 0) < getEffectiveBuildingCoinCost(def.coinCost, id)) return false;
     }
     return true;
 }
@@ -1535,7 +1539,7 @@ function build(id) {
             const bldCount = (gameState.buildings[id] || 0);
             const coinFree = def.coinFreeBelow != null && bldCount < def.coinFreeBelow;
             if (!coinFree) {
-                gameState.resources.coins = Math.max(0, (gameState.resources.coins || 0) - getEffectiveBuildingCoinCost(def.coinCost));
+                gameState.resources.coins = Math.max(0, (gameState.resources.coins || 0) - getEffectiveBuildingCoinCost(def.coinCost, id));
             }
         }
         gameState.buildings[id] = (gameState.buildings[id] || 0) + 1;
@@ -1654,11 +1658,11 @@ function renderTradeTab() {
                 </div>
                 <div class="worker-controls">
                     <span class="trade-dir-col" id="tdir-${res}"></span>
-                    <button class="wbtn wbtn-mm" onclick="setTradeRouteBuyMax('${res}')" title="Buy max">&#9664;&#9664;</button>
-                    <button class="wbtn" onclick="adjustTradeRoute('${res}', 1)" title="Buy one more route">&#9664;</button>
+                    <button class="wbtn wbtn-mm" onclick="setTradeRouteSellMax('${res}')" title="Sell max">&#9664;&#9664;</button>
+                    <button class="wbtn" onclick="adjustTradeRoute('${res}', -1)" title="Decrease (sell more)">&#9664;</button>
                     <input  class="winput" type="number" id="tinput-${res}" oninput="setTradeRouteInput('${res}', this.value)">
-                    <button class="wbtn" onclick="adjustTradeRoute('${res}', -1)" title="Sell one more route">&#9654;</button>
-                    <button class="wbtn wbtn-mm" onclick="setTradeRouteSellMax('${res}')" title="Sell max">&#9654;&#9654;</button>
+                    <button class="wbtn" onclick="adjustTradeRoute('${res}', 1)" title="Increase (buy more)">&#9654;</button>
+                    <button class="wbtn wbtn-mm" onclick="setTradeRouteBuyMax('${res}')" title="Buy max">&#9654;&#9654;</button>
                 </div>
             </div>`;
         }
@@ -2163,7 +2167,7 @@ function updateUI() {
             if (def.coinCost) {
                 const bldCount = gameState.buildings[id] || 0;
                 const coinFree = def.coinFreeBelow != null && bldCount < def.coinFreeBelow;
-                if (!coinFree) costStr += (costStr ? ", " : "") + formatCoins(getEffectiveBuildingCoinCost(def.coinCost));
+                if (!coinFree) costStr += (costStr ? ", " : "") + formatCoins(getEffectiveBuildingCoinCost(def.coinCost, id));
             }
             costEl.textContent = costStr;
         }
