@@ -687,7 +687,7 @@ function getMoraleTarget() {
     // Idle peasant drain
     target -= idle * 1.0;
 
-    // Entertainer's Stage boost (per assigned Entertainer)
+    // Entertainer's Stage boost (per assigned Bard)
     const entDef = ROOMS.entertainersStage;
     if (entDef) {
         const basePerWorker = entDef.moralePerWorker || 3;
@@ -1237,6 +1237,19 @@ function _buildResTooltipHTML(res) {
     html += `</div>`;
 
     html += `</div>`; // .res-tt-cols
+
+    // Morale effect note for coins and lore
+    if (res === 'coins' || res === 'lore') {
+        const morMult = getMoraleMult();
+        if (morMult !== 1) {
+            const morPct  = (morMult * 100).toFixed(1);
+            const morCls  = morMult < 1 ? 'neg' : 'pos';
+            const morArrow = morMult < 1 ? '▼' : '▲';
+            html += `<div class="res-tt-divider"></div>`;
+            html += `<div class="res-tt-row"><span class="res-tt-label">Morale multiplier</span><span class="res-tt-val ${morCls}">${morArrow} ${morPct}%</span></div>`;
+        }
+    }
+
     html += toFullHTML;
     return html;
 }
@@ -1274,6 +1287,17 @@ function _buildQuintessenceTooltipHTML() {
 <div class="res-tt-row res-tt-total-row"><span class="res-tt-label">Total bonus<span class="res-tt-sub"> ${quintessence} × 0.5%</span></span><span class="res-tt-val pos">+${bonusPct}%</span></div>`;
 }
 
+function _buildPopTooltipHTML() {
+    const morMult  = getMoraleMult();
+    const morPct   = (morMult * 100).toFixed(1);
+    const morCls   = morMult < 1 ? 'neg' : morMult > 1 ? 'pos' : '';
+    const morArrow = morMult < 1 ? '▼' : morMult > 1 ? '▲' : '=';
+    let html = `<div class="res-tt-title">Creatures</div>`;
+    html += `<div class="res-tt-divider"></div>`;
+    html += `<div class="res-tt-row"><span class="res-tt-label">Growth speed</span><span class="res-tt-val ${morCls}">${morArrow} morale ${morPct}%</span></div>`;
+    return html;
+}
+
 function initResTooltips() {
     _resTooltipEl = document.getElementById('res-tooltip');
     document.querySelectorAll('[id^="res-row-"]').forEach(el => {
@@ -1282,6 +1306,26 @@ function initResTooltips() {
         el.addEventListener('mouseenter', () => _showResTooltip(el, res));
         el.addEventListener('mouseleave', _hideResTooltip);
     });
+    const popRow = document.getElementById('pop-row');
+    if (popRow) {
+        popRow.addEventListener('mouseenter', () => {
+            if (!_resTooltipEl) return;
+            const morMult = getMoraleMult();
+            if (morMult === 1) return;
+            _resTooltipEl.innerHTML = _buildPopTooltipHTML();
+            _resTooltipEl.style.display = 'block';
+            const rect = popRow.getBoundingClientRect();
+            const ttW  = _resTooltipEl.offsetWidth || 240;
+            const ttH  = _resTooltipEl.offsetHeight || 80;
+            let left = rect.right + 8;
+            let top  = rect.top;
+            if (left + ttW > window.innerWidth - 8)  left = rect.left - ttW - 8;
+            if (top  + ttH > window.innerHeight - 8) top  = window.innerHeight - ttH - 8;
+            _resTooltipEl.style.top  = Math.max(4, top)  + 'px';
+            _resTooltipEl.style.left = Math.max(4, left) + 'px';
+        });
+        popRow.addEventListener('mouseleave', _hideResTooltip);
+    }
     const echoRow = document.getElementById('res-row-quintessence');
     if (echoRow) {
         echoRow.addEventListener('mouseenter', () => {
@@ -2597,53 +2641,6 @@ function updateUI() {
             }
         }
 
-        // Sub-line on coins row
-        const _coinsMoraleSub = document.getElementById('coinsMoraleSub');
-        if (_coinsMoraleSub) {
-            if (mult < 1) {
-                _coinsMoraleSub.textContent   = '▼ morale ' + mv + '%';
-                _coinsMoraleSub.style.display = '';
-                _coinsMoraleSub.className     = 'res-rate-sub neg';
-            } else if (mult > 1) {
-                _coinsMoraleSub.textContent   = '▲ morale ' + mv + '%';
-                _coinsMoraleSub.style.display = '';
-                _coinsMoraleSub.className     = 'res-rate-sub pos';
-            } else {
-                _coinsMoraleSub.style.display = 'none';
-            }
-        }
-
-        // Sub-line on lore row
-        const _loreMoraleSub = document.getElementById('loreMoraleSub');
-        if (_loreMoraleSub) {
-            if (mult < 1) {
-                _loreMoraleSub.textContent   = '▼ morale ' + mv + '%';
-                _loreMoraleSub.style.display = '';
-                _loreMoraleSub.className     = 'res-rate-sub neg';
-            } else if (mult > 1) {
-                _loreMoraleSub.textContent   = '▲ morale ' + mv + '%';
-                _loreMoraleSub.style.display = '';
-                _loreMoraleSub.className     = 'res-rate-sub pos';
-            } else {
-                _loreMoraleSub.style.display = 'none';
-            }
-        }
-
-        // Sub-line on pop-row
-        const _popMoraleSub = document.getElementById('popGrowthMorale');
-        if (_popMoraleSub) {
-            if (mult < 1) {
-                _popMoraleSub.textContent   = '▼ slow';
-                _popMoraleSub.style.display = '';
-                _popMoraleSub.style.color   = 'var(--disabled)';
-            } else if (mult > 1) {
-                _popMoraleSub.textContent   = '▲ fast';
-                _popMoraleSub.style.display = '';
-                _popMoraleSub.style.color   = 'var(--enabled)';
-            } else {
-                _popMoraleSub.style.display = 'none';
-            }
-        }
     }
 
     // Coins (now in Population section)
@@ -6967,7 +6964,7 @@ function renderReligionTab() {
         if (entWorkers > 0) {
             const bardMult = research.bardMastery ? 1.5 : 1;
             const entBonus = entWorkers * (ROOMS.entertainersStage.moralePerWorker || 3) * bardMult;
-            lines.push(`<div class="morale-line boost"><span>Entertainers (${entWorkers})</span><span>+${entBonus.toFixed(1)}</span></div>`);
+            lines.push(`<div class="morale-line boost"><span>Bards (${entWorkers})</span><span>+${entBonus.toFixed(1)}</span></div>`);
         }
         for (const id of ['shrine', 'temple', 'pelorSanctuary', 'sylvanGrove']) {
             const cnt = gameState.buildings[id] || 0;
