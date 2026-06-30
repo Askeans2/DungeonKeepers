@@ -789,7 +789,8 @@ function getResourceBreakdown(res) {
         const sub = (def.jobs ? `${Math.round(n)}w` : `×${count}`) + (paused > 0 ? ` · ${paused} paused` : '');
         lines.push({ label: def.name, sub, value: rate, drain: false });
 
-        // Surface stacking productionBonus buildings (e.g. Focused Meditation) as their own line
+        // Surface stacking productionBonus buildings (e.g. Focused Meditation) as a sub-line
+        // showing how much of the line above is attributable to the buff (not additive income).
         for (const [bonusId, bonusDef] of Object.entries(ROOMS)) {
             if (!bonusDef.productionBonus || !bonusDef.productionBonus[id]) continue;
             const bonusCount = gameState.buildings[bonusId] || 0;
@@ -799,7 +800,8 @@ function getResourceBreakdown(res) {
             const bonusRate = rate - rate / totalMult;
             if (bonusRate === 0) continue;
             const pctEach = ((perUnit - 1) * 100).toFixed(0);
-            lines.push({ label: bonusDef.name, sub: `+${pctEach}% × ${bonusCount}`, value: bonusRate, drain: false, isBonus: true });
+            const totalPct = ((totalMult - 1) * 100).toFixed(0);
+            lines.push({ label: `↳ ${bonusDef.name}`, sub: `+${pctEach}% × ${bonusCount} = +${totalPct}%, included above`, value: bonusRate, drain: false, isBonus: true });
         }
     }
 
@@ -923,7 +925,8 @@ function _buildResTooltipHTML(res) {
             const valStr = perDay >= 1000 ? '+' + (perDay / 1000).toFixed(1) + 'k'
                          : perDay >= 10   ? '+' + perDay.toFixed(1)
                                           : '+' + perDay.toFixed(2);
-            html += `<div class="res-tt-row"><span class="res-tt-label">${l.label}<span class="res-tt-sub"> ${l.sub}</span></span><span class="res-tt-val pos">${valStr}</span></div>`;
+            const rowCls = l.isBonus ? ' res-tt-bonus-row' : '';
+            html += `<div class="res-tt-row${rowCls}"><span class="res-tt-label">${l.label}<span class="res-tt-sub"> ${l.sub}</span></span><span class="res-tt-val pos">${valStr}</span></div>`;
         }
     } else {
         html += `<div class="res-tt-none">—</div>`;
@@ -2039,10 +2042,14 @@ function runOneTick() {
     }
 
     // Record true per-tick deltas for the rate display (use pre-clamp values so
-    // negative rates remain visible when the resource is pinned at 0)
+    // negative rates remain visible when the resource is pinned at 0). Positive
+    // deltas are zeroed once the resource is actually capped post-clamp, since
+    // nothing is being stored anymore even though gross production is non-zero.
     const deltas = {};
     for (const k of Object.keys(gameState.resources)) {
-        const d = (_preClamp[k] || 0) - (_preSnap[k] || 0);
+        let d = (_preClamp[k] || 0) - (_preSnap[k] || 0);
+        const cap = caps[k];
+        if (d > 0 && cap !== undefined && gameState.resources[k] >= cap) d = 0;
         if (d !== 0) deltas[k] = d;
     }
     gameState.lastTickDeltas = deltas;
