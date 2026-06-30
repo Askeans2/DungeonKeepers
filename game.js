@@ -1580,6 +1580,13 @@ function _buildBldTooltipHTML(id, def) {
         if (!def.production && !def.converts && !def.housingBonus && !def.jobs && r.cap) {
             html += `<div class="bld-tt-effect">+${r.cap} to all material storage (except Lore)</div>`;
         }
+        if (def.productionBonus) {
+            for (const [targetId, mult] of Object.entries(def.productionBonus)) {
+                const targetName = (ROOMS[targetId] && ROOMS[targetId].name) || targetId;
+                const pct = Math.round((mult - 1) * 100);
+                html += `<div class="bld-tt-effect">+${pct}% ${targetName} production (multiplicative, per tower)</div>`;
+            }
+        }
     }
 
     // Cost section with visual separator

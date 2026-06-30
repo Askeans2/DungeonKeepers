@@ -196,7 +196,7 @@ const ROOMS = {
         cost: { stone: 80, iron: 40 },
         coinCost: 1000,
         costScale: 1.18,
-        production: { crystals: 0.3 },
+        production: { crystals: 0.1 },
         productionBonus: { crystalSeam: 1.05 },
         unlock: { smelter: 1 },
     },
