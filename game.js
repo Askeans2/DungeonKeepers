@@ -629,7 +629,7 @@ function getHousing() {
         const researchExtra = getResearchBonus('housingBonus', id);
         if (researchExtra > 0) total += count * researchExtra;
     }
-    return total;
+    return Math.floor(total);
 }
 
 function getJobs() {
