@@ -3514,6 +3514,80 @@ const ERA_RACE_SVG = (() => {
          <path d="M80,70 Q68,50 60,34 M140,70 Q152,50 160,34" fill="none" stroke="${G}" stroke-width="1.3" opacity="0.45"/>
          ${aura(110,124,42,14)}${shadow(110,143,42)}`;
 
+    // ── Swarm — cluster of many small bodies, scattered eye glints ────────────
+    art['Swarm'] =
+        `<circle cx="80" cy="100" r="16" fill="${BGd}" stroke="${Gd}" stroke-width="1.2"/>
+         <circle cx="106" cy="84" r="20" fill="${BG}" stroke="${G}" stroke-width="1.6"/>
+         <circle cx="138" cy="102" r="15" fill="${BGd}" stroke="${Gd}" stroke-width="1.2"/>
+         <circle cx="118" cy="118" r="17" fill="${BG}" stroke="${G}" stroke-width="1.4"/>
+         <circle cx="88" cy="124" r="13" fill="${BGd}" stroke="${Gd}" stroke-width="1"/>
+         <circle cx="64" cy="118" r="11" fill="${BGd}" stroke="${Gd}" stroke-width="1" opacity="0.7"/>
+         <circle cx="150" cy="122" r="11" fill="${BGd}" stroke="${Gd}" stroke-width="1" opacity="0.7"/>
+         ${eye(80,98,1.8)}${eye(101,80,2.4)}${eye(111,80,2.4)}${eye(138,100,1.8)}${eye(112,116,2)}${eye(124,118,2)}${eye(88,122,1.4)}
+         ${aura(110,128,40,13)}${shadow(110,143,42)}`;
+
+    // ── Beast — quadruped, low body and tail, alert ears ──────────────────────
+    art['Beast'] =
+        `<path d="M48,108 Q44,96 54,90 Q60,80 72,80 L82,68 Q90,60 98,64 L94,76 Q108,70 124,76 L150,80 Q166,84 172,98 Q176,108 168,114 L168,128 L156,128 L154,116 L100,116 L96,128 L84,128 L84,114 Q64,112 52,116 Z" fill="${BG}" stroke="${G}" stroke-width="1.6"/>
+         <path d="M150,80 Q160,68 158,54 Q170,66 166,82" fill="${BG}" stroke="${G}" stroke-width="1.2"/>
+         ${eye(86,72,2.6)}
+         <path d="M44,100 Q34,96 26,100 Q36,104 46,106" fill="${BGd}" stroke="${Gd}" stroke-width="1.2" opacity="0.6"/>
+         ${aura(110,124,52,14)}${shadow(110,143,52)}`;
+
+    // ── Specter — wispy trailing form, faint and incorporeal ──────────────────
+    art['Specter'] =
+        `<path d="M110,24 Q132,38 134,66 Q138,86 130,100 Q140,110 132,122 Q140,128 128,136 Q138,140 122,144 Q110,148 98,144 Q82,140 92,136 Q80,128 88,122 Q80,110 90,100 Q82,86 86,66 Q88,38 110,24 Z" fill="${BG}" stroke="${G}" stroke-width="1.3" opacity="0.65"/>
+         ${eye(103,56,2.4)}${eye(117,56,2.4)}
+         <path d="M86,66 Q70,72 60,84 M134,66 Q150,72 160,84" fill="none" stroke="${Gd}" stroke-width="1" opacity="0.4"/>
+         ${aura(110,120,32,11)}${shadow(110,144,24)}`;
+
+    // ── Planar — angular geometric form, otherworldly symmetry ────────────────
+    art['Planar'] =
+        `<path d="M110,16 L142,52 L132,98 L150,140 L110,124 L70,140 L88,98 L78,52 Z" fill="${BG}" stroke="${G}" stroke-width="1.8"/>
+         <path d="M110,16 L110,124 M78,52 L142,52 M88,98 L132,98" fill="none" stroke="${G}" stroke-width="0.9" opacity="0.35"/>
+         ${eye(103,58,3)}${eye(117,58,3)}
+         ${aura(110,116,40,13)}${shadow(110,143,40)}`;
+
+    // ── Celestial — winged, radiant, halo aura ─────────────────────────────────
+    art['Celestial'] =
+        `<path d="M110,138 L98,104 L86,96 L90,72 L102,64 L104,40 L110,24 L116,40 L118,64 L130,72 L134,96 L122,104 Z" fill="${BG}" stroke="${G}" stroke-width="1.6"/>
+         <path d="M90,72 Q60,64 36,68 Q56,80 86,86 M130,72 Q160,64 184,68 Q164,80 134,86" fill="${BG}" stroke="${G}" stroke-width="1.3" opacity="0.7"/>
+         <ellipse cx="110" cy="32" rx="14" ry="5" fill="none" stroke="${G}" stroke-width="1.3" opacity="0.6"/>
+         ${eye(105,52,2.8)}${eye(115,52,2.8)}
+         ${aura(110,110,42,13)}${shadow(110,143,38)}`;
+
+    // ── Titan — colossal, layered shoulders, towering ──────────────────────────
+    art['Titan'] =
+        `<path d="M110,148 L82,102 L58,90 L66,56 L92,40 L94,14 L110,2 L126,14 L128,40 L154,56 L162,90 L138,102 Z" fill="${BG}" stroke="${G}" stroke-width="2.1"/>
+         <path d="M58,90 Q40,92 28,102 M162,90 Q180,92 192,102" fill="${BGd}" stroke="${Gd}" stroke-width="1.4"/>
+         ${eye(99,32,4.2)}${eye(121,32,4.2)}
+         ${aura(110,124,52,16)}${shadow(110,148,54)}`;
+
+    // ── Cursed — humanoid marred by cracks and binding chains ─────────────────
+    art['Cursed'] =
+        `<path d="M110,140 L94,106 L80,98 L84,74 L98,64 L100,44 L110,32 L120,44 L122,64 L136,74 L140,98 L126,106 Z" fill="${BG}" stroke="${G}" stroke-width="1.7"/>
+         <path d="M100,50 L108,62 L98,72 L112,86 M120,52 L112,66 L122,76" fill="none" stroke="${G}" stroke-width="1" opacity="0.45"/>
+         <path d="M88,100 Q84,116 90,130 M132,100 Q136,116 130,130" fill="none" stroke="${Gd}" stroke-width="1.3" opacity="0.55"/>
+         ${eye(104,50,3)}${eye(116,50,3)}
+         ${aura(110,112,38,12)}${shadow(110,143,38)}`;
+
+    // ── Sovereign — crowned apex dragon, wings and horns ───────────────────────
+    art['Sovereign'] =
+        `<path d="M110,142 L90,108 L72,98 L78,70 L96,58 L98,34 L110,18 L122,34 L124,58 L142,70 L148,98 L130,108 Z" fill="${BG}" stroke="${G}" stroke-width="1.9"/>
+         <path d="M78,70 Q46,58 22,60 Q48,78 80,86 M142,70 Q174,58 198,60 Q172,78 140,86" fill="${BG}" stroke="${G}" stroke-width="1.4" opacity="0.75"/>
+         <path d="M98,32 Q92,16 82,6 Q98,16 100,34 M122,32 Q128,16 138,6 Q122,16 120,34" fill="${BG}" stroke="${G}" stroke-width="1.3"/>
+         <ellipse cx="110" cy="24" rx="16" ry="5" fill="none" stroke="${G}" stroke-width="1.2" opacity="0.55"/>
+         ${eye(103,54,3.4)}${eye(117,54,3.4)}
+         ${aura(110,114,44,14)}${shadow(110,144,44)}`;
+
+    // ── Primordial — ancient elemental mass, swirling runes ───────────────────
+    art['Primordial'] =
+        `<path d="M110,144 L84,116 L64,100 L72,68 L94,50 L98,20 L110,4 L122,20 L126,50 L148,68 L156,100 L136,116 Z" fill="${BG}" stroke="${G}" stroke-width="2"/>
+         <ellipse cx="110" cy="78" rx="34" ry="34" fill="none" stroke="${Gd}" stroke-width="1.1" opacity="0.5"/>
+         <path d="M86,60 Q110,50 134,60 M84,98 Q110,108 136,98" fill="none" stroke="${G}" stroke-width="1" opacity="0.4"/>
+         ${eye(101,46,3.8)}${eye(119,46,3.8)}
+         ${aura(110,120,48,15)}${shadow(110,146,48)}`;
+
     // ── Humanoid — general upright form ──────────────────────────────────────
     art['Humanoid'] =
         `<path d="M110,140 L94,106 L80,100 L84,78 L98,70 L100,50 L110,38 L120,50 L122,70 L136,78 L140,100 L126,106 Z" fill="${BG}" stroke="${G}" stroke-width="1.8"/>
@@ -3570,6 +3644,15 @@ const ERA_RACE_EYES = {
     'Flora':            [[103,60,3],[117,60,3]],
     'Aquatic':          [[103,38,3.8],[117,38,3.8]],
     'Kraken':           [[98,76,4],[122,76,4]],
+    'Swarm':            [[80,98,1.8],[101,80,2.4],[111,80,2.4],[138,100,1.8],[112,116,2],[124,118,2],[88,122,1.4]],
+    'Beast':            [[86,72,2.6]],
+    'Specter':          [[103,56,2.4],[117,56,2.4]],
+    'Planar':           [[103,58,3],[117,58,3]],
+    'Celestial':        [[105,52,2.8],[115,52,2.8]],
+    'Titan':            [[99,32,4.2],[121,32,4.2]],
+    'Cursed':           [[104,50,3],[116,50,3]],
+    'Sovereign':        [[103,54,3.4],[117,54,3.4]],
+    'Primordial':       [[101,46,3.8],[119,46,3.8]],
     'Humanoid':         [[104,54,3],[116,54,3]],
 };
 
@@ -3583,6 +3666,9 @@ function _setEraP3Art(raceName) {
         'tag-elemental': 'Elemental', 'tag-monstrous': 'Monstrous', 'tag-fiend': 'Fiend',
         'tag-giant': 'Giant', 'tag-construct': 'Construct', 'tag-lycanthrope': 'Lycanthrope',
         'tag-flora': 'Flora', 'tag-aquatic': 'Aquatic', 'tag-humanoid': 'Humanoid',
+        'tag-swarm': 'Swarm', 'tag-beast': 'Beast', 'tag-specter': 'Specter',
+        'tag-planar': 'Planar', 'tag-celestial': 'Celestial', 'tag-titan': 'Titan',
+        'tag-cursed': 'Cursed', 'tag-sovereign': 'Sovereign', 'tag-primordial': 'Primordial',
     };
     let key = raceName;
     let artSvg = ERA_RACE_SVG[key];
@@ -6327,7 +6413,8 @@ function _initDevTransitionSelect() {
     if (!sel) return;
     // Types first, then specific creatures — sorted within each group
     const types = ['Goblinoid','Undead','Draconic','Fey','Aberration','Ooze',
-                   'Elemental','Monstrous','Fiend','Giant','Construct','Lycanthrope','Flora','Aquatic','Humanoid'];
+                   'Elemental','Monstrous','Fiend','Giant','Construct','Lycanthrope','Flora','Aquatic','Humanoid',
+                   'Swarm','Beast','Specter','Planar','Celestial','Titan','Cursed','Sovereign','Primordial'];
     const creatures = Object.keys(ERA_RACE_SVG).filter(k => !types.includes(k)).sort();
     sel.innerHTML = '';
     const tGroup = document.createElement('optgroup');
