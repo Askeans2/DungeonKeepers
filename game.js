@@ -2368,6 +2368,9 @@ function updateUI() {
             const aHidden = a.style.display === 'none';
             const bHidden = b.style.display === 'none';
             if (aHidden !== bHidden) return aHidden ? 1 : -1;
+            const aAfford = canAffordResearch(aKey);
+            const bAfford = canAffordResearch(bKey);
+            if (aAfford !== bAfford) return aAfford ? -1 : 1;
             return researchSortValue(aKey) - researchSortValue(bKey);
         });
         cards.forEach(c => resList.appendChild(c));
