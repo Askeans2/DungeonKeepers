@@ -6864,6 +6864,29 @@ function doPrestige() {
     const quintessencePreview = calcQuintessenceEarned();
     if (!confirm(`Simulate a Prestige reset?\n\nAll run progress (resources, buildings, population) will be wiped and a new biome assigned. Meta-stats (prestiges, seen biomes, Quintessence) are preserved.\n\nYou will earn ${quintessencePreview} Quintessence from this run.`)) return;
 
+    // Capture run stats before reset for analytics
+    if (typeof posthog !== 'undefined') {
+        const runTicks = gameState.time.tick;
+        const runDays  = gameState.time.day + (gameState.time.year - 1) * 365;
+        posthog.capture('prestige', {
+            race:                 gameState.run.race,
+            biome:                gameState.run.biome,
+            era:                  gameState.run.era,
+            mods:                 (gameState.run.mods || []).join(','),
+            run_days:             runDays,
+            quintessence_earned:  quintessencePreview,
+            total_prestiges:      (gameState.meta.totalPrestiges || 0) + 1,
+            peak_population:      gameState.stats.peakPopulation || 0,
+            buildings_built:      gameState.stats.buildingsConstructed || 0,
+            starvation_deaths:    gameState.stats.starvationDeaths || 0,
+            research_unlocks:     Object.keys(gameState.research || {}).filter(k => gameState.research[k]).length,
+            manual_gathers:       gameState.stats.manualGathers || 0,
+            trade_route_count:    Object.keys(gameState.tradeRoutes || {}).length,
+            deity:                gameState.religion.deity || 'none',
+            theme:                (typeof gameSettings !== 'undefined' ? gameSettings.colorTheme : null) || 'default',
+        });
+    }
+
     const savedMeta = JSON.parse(JSON.stringify(gameState.meta));
     savedMeta.totalPrestiges = (savedMeta.totalPrestiges || 0) + 1;
     savedMeta.quintessence = (savedMeta.quintessence || 0) + calcQuintessenceEarned();
